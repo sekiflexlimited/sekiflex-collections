@@ -219,3 +219,172 @@ video {
     padding: 24px;
   }
 }
+
+/* =====================================
+   SEKIFLEX COLLECTIONS
+   LUXURY DARK & GOLD FINISH
+   ===================================== */
+
+:root {
+  --sf-black: #08090b;
+  --sf-dark: #111318;
+  --sf-panel: #191c22;
+  --sf-gold: #d4af37;
+  --sf-light-gold: #f5d76e;
+  --sf-white: #f8f8f8;
+}
+
+/* Premium dark glossy background */
+html,
+body {
+  min-height: 100%;
+  background:
+    radial-gradient(ellipse at 50% 0%, #29251a 0%, transparent 42%),
+    linear-gradient(145deg, #08090b 0%, #111318 48%, #08090b 100%) !important;
+  color: var(--sf-white) !important;
+}
+
+/* Main content */
+main,
+.container,
+.dashboard,
+.content {
+  background: transparent !important;
+}
+
+/* Dark glossy panels */
+.card,
+.order-card,
+.dashboard-card,
+.panel,
+form {
+  background: linear-gradient(
+    145deg,
+    #202229 0%,
+    #15171c 55%,
+    #101115 100%
+  ) !important;
+
+  border: 1px solid rgba(212, 175, 55, 0.35) !important;
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+
+  color: #ffffff !important;
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4 {
+  color: var(--sf-light-gold) !important;
+}
+
+/* Labels and normal text */
+label {
+  color: #f5d76e !important;
+}
+
+p,
+li,
+td {
+  color: #eeeeee;
+}
+
+/* Inputs */
+input,
+select,
+textarea {
+  background: #101216 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(212, 175, 55, 0.45) !important;
+  border-radius: 8px !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--sf-gold) !important;
+}
+
+/* Normal action buttons */
+button,
+.btn,
+input[type="submit"] {
+  background: linear-gradient(135deg, #d4af37, #f5d76e) !important;
+  color: #101114 !important;
+  border: 1px solid #f5d76e !important;
+  font-weight: 700 !important;
+}
+
+/* Logout button - distinct and visible */
+#logout,
+#logout-btn,
+.logout,
+.logout-btn,
+button[id*="logout"],
+button[class*="logout"],
+a[id*="logout"],
+a[class*="logout"] {
+  background: #17191e !important;
+  color: #f5d76e !important;
+  border: 2px solid #d4af37 !important;
+  border-radius: 9px !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.18) !important;
+}
+
+#logout:hover,
+#logout-btn:hover,
+.logout:hover,
+.logout-btn:hover,
+button[id*="logout"]:hover,
+button[class*="logout"]:hover,
+a[id*="logout"]:hover {
+  background: #d4af37 !important;
+  color: #101114 !important;
+}
+
+/* Navigation */
+header,
+nav,
+.main-nav {
+  background: linear-gradient(135deg, #101216, #202229) !important;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.35);
+}
+
+/* Tables */
+th {
+  background: #252830 !important;
+  color: #f5d76e !important;
+}
+
+td {
+  border-bottom: 1px solid rgba(212, 175, 55, 0.16);
+}
+
+/* Footer */
+footer {
+  background: #101216 !important;
+  color: #cccccc !important;
+  border-top: 1px solid rgba(212, 175, 55, 0.35);
+}
+
+/* Mobile spacing */
+@media (max-width: 768px) {
+  body {
+    background:
+      radial-gradient(ellipse at top, #29251a 0%, transparent 45%),
+      linear-gradient(145deg, #08090b, #15171c, #08090b) !important;
+  }
+
+  .card,
+  .order-card,
+  .dashboard-card,
+  .panel,
+  form {
+    padding: 15px !important;
+  }
+}
