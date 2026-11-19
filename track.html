@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -13,23 +14,51 @@
 <body class="subpage">
   <header class="site-header">
     <a class="brand" href="index.html"><span class="brand-mark">S</span><span><strong>SEKIFLEX</strong><small>COLLECTIONS</small></span></a>
-    <nav class="main-nav"><a href="index.html">Home</a><a href="https://sekiflexcollections.com" target="_blank" rel="noopener">Shop online ↗</a></nav>
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="https://sekiflexcollections.com" target="_blank" rel="noopener">Shop online ↗</a>
+    </nav>
   </header>
+
   <main class="subpage-main">
     <p class="eyebrow">SEKIFLEX COLLECTIONS · ORDER SERVICES</p>
     <h1>Track your <em>order.</em></h1>
-    <p class="sublead">Enter the SC tracking reference provided by Sekiflex Collections to view your delivery progress.</p>
+    <p class="sublead">Enter your SC tracking reference and the last four digits of your registered phone number to view your delivery progress.</p>
+
     <form class="tracking-form" id="tracking-form">
       <label for="tracking-number">Your SC tracking number</label>
-      <div class="tracking-input-row"><input id="tracking-number" name="tracking-number" placeholder="e.g. SC-2026-000125" autocomplete="off" required><button class="btn btn-gold" type="submit">Track order →</button></div>
-      <small>Enter the full reference exactly as it appears in your order message.</small>
+      <div class="tracking-input-row">
+        <input id="tracking-number" name="tracking-number" placeholder="e.g. SC-2026-000125" autocomplete="off" required>
+      </div>
+
+      <label for="phone-last4">Last 4 digits of your registered phone number</label>
+      <input id="phone-last4" name="phone-last4" type="text"
+             inputmode="numeric" maxlength="4" pattern="[0-9]{4}"
+             placeholder="e.g. 1234" required>
+
+      <button class="btn btn-gold" type="submit">Track order →</button>
+
+      <small>Enter both details exactly as provided when you placed your order.</small>
       <p class="form-message" id="tracking-message" role="status"></p>
+      <div id="tracking-result" aria-live="polite"></div>
     </form>
-    <div class="tracking-help"><span class="help-icon">i</span><p><strong>Don't have your SC number?</strong><br>Contact the Sekiflex Collections team using the WhatsApp channel you used to place your order.</p></div>
+
+    <div class="tracking-help">
+      <span class="help-icon">i</span>
+      <p><strong>Don't have your SC number?</strong><br>
+      Contact the Sekiflex Collections team using the WhatsApp channel you used to place your order.</p>
+    </div>
+
     <a class="back-link" href="index.html">← Back to Sekiflex Collections</a>
-    <p class="small-note center-note">This tracking page is the first-stage interface. Live order lookup will be enabled after the secure company database is connected.</p>
+    <p class="small-note center-note">Your order details are protected. Both your SC tracking reference and phone verification are required.</p>
   </main>
-  <footer class="site-footer"><p>Powered by <strong>SEKIFLEX LIMITED</strong></p><small>© <span id="year"></span> Sekiflex Limited. All rights reserved.</small></footer>
+
+  <footer class="site-footer">
+    <p>Powered by <strong>SEKIFLEX LIMITED</strong></p>
+    <small>© <span id="year"></span> Sekiflex Limited. All rights reserved.</small>
+  </footer>
+
   <script src="app.js"></script>
 </body>
-</html>
+      </html>
+      
