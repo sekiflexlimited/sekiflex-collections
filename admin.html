@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,40 +12,211 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="admin-body">
-  <header class="admin-top"><a class="brand" href="index.html"><span class="brand-mark">S</span><span><strong>SEKIFLEX</strong><small>LIMITED · COMPANY WORKSPACE</small></span></a><a href="index.html" class="admin-home">View public website ↗</a></header>
-  <main class="admin-shell">
-    <div class="admin-heading"><div><p class="eyebrow">PRIVATE COMPANY AREA · DESIGN PREVIEW</p><h1>Operations <em>overview.</em></h1><p>Order registration, parcel management and delivery updates.</p></div><span class="preview-pill">SETUP PREVIEW</span></div>
-    <div class="notice"><strong>Security note:</strong> This is the dashboard layout preview, not a live secure admin system. We will connect Supabase authentication and database access before entering real customer information.</div>
+
+<header class="admin-top">
+  <a class="brand" href="index.html">
+    <span class="brand-mark">S</span>
+    <span><strong>SEKIFLEX</strong><small>LIMITED · COMPANY WORKSPACE</small></span>
+  </a>
+  <a href="index.html" class="admin-home">View public website ↗</a>
+</header>
+
+<main class="admin-shell">
+
+  <section class="admin-card" id="admin-login">
+    <p class="eyebrow">PRIVATE COMPANY AREA</p>
+    <h1>Staff <em>sign in.</em></h1>
+    <p>Sign in with your authorized Sekiflex staff account.</p>
+
+    <form id="admin-login-form" class="admin-form">
+      <label>Email address
+        <input id="admin-email" type="email" autocomplete="username" required placeholder="Company email">
+      </label>
+
+      <label>Password
+        <input id="admin-password" type="password" autocomplete="current-password" required placeholder="Your password">
+      </label>
+
+      <button class="btn btn-gold" type="submit">Sign in securely</button>
+      <p class="form-message" id="login-message" role="status"></p>
+    </form>
+  </section>
+
+  <section id="admin-dashboard" hidden>
+
+    <div class="admin-heading">
+      <div>
+        <p class="eyebrow">PRIVATE COMPANY AREA</p>
+        <h1>Operations <em>overview.</em></h1>
+        <p>Manage customer orders, parcels and delivery updates.</p>
+      </div>
+      <button class="btn btn-outline" id="admin-logout" type="button">Sign out</button>
+    </div>
+
+    <div class="notice">
+      <strong>SEKIFLEX LIMITED:</strong>
+      Staff workspace. Customer information is accessible only to authorized staff.
+    </div>
+
     <section class="stat-grid">
-      <article class="stat-card"><small>Total orders</small><strong>—</strong><span>Connect company database</span></article>
-      <article class="stat-card"><small>Awaiting payment</small><strong>—</strong><span>Live figures not connected</span></article>
-      <article class="stat-card"><small>In transit</small><strong>—</strong><span>Live figures not connected</span></article>
-      <article class="stat-card"><small>Delivered</small><strong>—</strong><span>Live figures not connected</span></article>
+      <article class="stat-card">
+        <small>Total orders</small>
+        <strong id="stat-total">0</strong>
+        <span>Registered orders</span>
+      </article>
+      <article class="stat-card">
+        <small>Awaiting payment</small>
+        <strong id="stat-payment">0</strong>
+        <span>Payment pending</span>
+      </article>
+      <article class="stat-card">
+        <small>In transit</small>
+        <strong id="stat-transit">0</strong>
+        <span>On the way</span>
+      </article>
+      <article class="stat-card">
+        <small>Delivered</small>
+        <strong id="stat-delivered">0</strong>
+        <span>Completed deliveries</span>
+      </article>
     </section>
+
     <section class="admin-card">
-      <div class="card-heading"><div><p class="eyebrow">ORDER MANAGEMENT</p><h2>Register a new order</h2></div><span class="sc-chip">SC REFERENCE</span></div>
-      <form id="order-preview-form" class="admin-form">
-        <div class="form-grid">
-          <label>Customer full name<input placeholder="Customer's full name" required></label>
-          <label>Customer phone<input placeholder="+234..." inputmode="tel" required></label>
-          <label>Customer email <span class="optional">(optional)</span><input type="email" placeholder="name@example.com"></label>
-          <label>Order source<select><option>WhatsApp</option><option>GOB online store</option><option>Other</option></select></label>
-          <label class="wide">Delivery destination<input placeholder="Country, state/city and full delivery address" required></label>
-          <label>Package description<input placeholder="Describe the parcel" required></label>
-          <label>External courier<select><option>To be selected</option><option>AKTC</option><option>DHL</option><option>FedEx</option><option>UPS</option><option>Other transport company</option></select></label>
-          <label>External courier waybill <span class="optional">(when available)</span><input placeholder="Carrier's official waybill number"></label>
-          <label>Payment status<select><option>Awaiting payment</option><option>Payment confirmed</option><option>Partially paid</option></select></label>
+      <div class="card-heading">
+        <div>
+          <p class="eyebrow">ORDER MANAGEMENT</p>
+          <h2>Register a new order</h2>
         </div>
-        <button class="btn btn-gold" type="submit">Preview order registration</button>
-        <p class="form-message" id="admin-message" role="status"></p>
+        <span class="sc-chip">SC REFERENCE</span>
+      </div>
+
+      <form id="order-form" class="admin-form">
+        <div class="form-grid">
+
+          <label>Customer full name
+            <input id="customer-name" required placeholder="Customer's full name">
+          </label>
+
+          <label>Customer phone
+            <input id="customer-phone" required inputmode="tel" placeholder="+234...">
+          </label>
+
+          <label>Customer email (optional)
+            <input id="customer-email" type="email" placeholder="name@example.com">
+          </label>
+
+          <label>Order source
+            <select id="order-source">
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="GOB">GOB online store</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+
+          <label class="wide">Delivery destination
+            <input id="destination" required placeholder="Country, state/city and delivery address">
+          </label>
+
+          <label>Package description
+            <input id="package-description" required placeholder="Describe the parcel">
+          </label>
+
+          <label>External courier
+            <select id="courier-name">
+              <option value="">To be selected</option>
+              <option>AKTC</option>
+              <option>DHL</option>
+              <option>FedEx</option>
+              <option>UPS</option>
+              <option>Other transport company</option>
+            </select>
+          </label>
+
+          <label>Courier waybill (optional)
+            <input id="courier-waybill" placeholder="Official carrier waybill">
+          </label>
+
+          <label>Payment status
+            <select id="payment-status">
+              <option>Awaiting payment</option>
+              <option>Payment confirmed</option>
+              <option>Partially paid</option>
+            </select>
+          </label>
+
+          <label>Order amount
+            <input id="order-amount" type="number" min="0" step="0.01" value="0">
+          </label>
+
+          <label>Delivery amount
+            <input id="delivery-amount" type="number" min="0" step="0.01" value="0">
+          </label>
+
+          <label>Estimated delivery date (optional)
+            <input id="estimated-delivery" type="date">
+          </label>
+
+          <label class="wide">Collection / delivery instructions
+            <input id="collection-instructions" placeholder="Instructions for the customer">
+          </label>
+
+        </div>
+
+        <button class="btn btn-gold" type="submit">Register order and generate SC number</button>
+        <p class="form-message" id="order-message" role="status"></p>
       </form>
     </section>
+
     <section class="admin-card">
-      <p class="eyebrow">DELIVERY STATUS WORKFLOW</p><h2>Order progress labels</h2>
-      <div class="status-list"><span>Awaiting payment</span><span>Payment confirmed</span><span>Order processing</span><span>Package being packed</span><span>Package packed and prepared</span><span>Awaiting dispatch</span><span>Dispatched / handed to courier</span><span>In transit</span><span>Arrived at destination facility</span><span>Ready for collection</span><span>Out for delivery</span><span>Delivered</span></div>
+      <div class="card-heading">
+        <div>
+          <p class="eyebrow">ORDER MANAGEMENT</p>
+          <h2>Registered orders</h2>
+        </div>
+        <button class="btn btn-outline" id="refresh-orders" type="button">Refresh</button>
+      </div>
+
+      <div class="form-grid">
+        <label class="wide">Search by SC number or customer name
+          <input id="order-search" placeholder="Search orders...">
+        </label>
+      </div>
+
+      <div id="orders-list" aria-live="polite">
+        <p>Orders will appear here after you sign in.</p>
+      </div>
     </section>
-  </main>
-  <footer class="site-footer"><p>SEKIFLEX COLLECTIONS · Powered by <strong>SEKIFLEX LIMITED</strong></p></footer>
-  <script src="app.js"></script>
+
+    <section class="admin-card">
+      <p class="eyebrow">DELIVERY STATUS WORKFLOW</p>
+      <h2>Order progress labels</h2>
+      <div class="status-list">
+        <span>Awaiting payment</span>
+        <span>Payment confirmed</span>
+        <span>Order processing</span>
+        <span>Package being packed</span>
+        <span>Package packed and prepared</span>
+        <span>Awaiting dispatch</span>
+        <span>Dispatched / handed to courier</span>
+        <span>In transit</span>
+        <span>Arrived at destination facility</span>
+        <span>Ready for collection</span>
+        <span>Out for delivery</span>
+        <span>Delivered</span>
+      </div>
+    </section>
+
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>SEKIFLEX COLLECTIONS · Powered by <strong>SEKIFLEX LIMITED</strong></p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="app.js"></script>
+
 </body>
-</html>
+            </html>
+            
