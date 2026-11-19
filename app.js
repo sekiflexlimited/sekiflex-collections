@@ -1,6 +1,6 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // SEKIFLEX COLLECTIONS - COMPLETE STAFF AND CUSTOMER SYSTEM
+  // SEKIFLEX COLLECTIONS - STAFF AND CUSTOMER SYSTEM
 
   const year = document.getElementById("year");
   if (year) year.textContent = new Date().getFullYear();
@@ -43,8 +43,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     element.style.fontWeight = "600";
   }
 
-  // STATUS COLOURS
-
   function getStatusColor(value) {
     const status = String(value || "").toLowerCase();
 
@@ -53,17 +51,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       status.includes("returned") ||
       status.includes("attempted") ||
       status.includes("awaiting payment")
-    ) {
-      return "#D93636";
-    }
+    ) return "#D93636";
 
     if (
       status.includes("delivered") ||
       status.includes("ready for collection") ||
       status.includes("payment confirmed")
-    ) {
-      return "#239B59";
-    }
+    ) return "#239B59";
 
     return "#D6A500";
   }
@@ -103,8 +97,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     ].filter(Boolean).join(" | ") || "Unknown database error";
   }
 
-  // ESTIMATED DELIVERY DATE
-
   function getEstimatedDeliveryDate(days) {
     const numberOfDays = Number(days);
 
@@ -121,11 +113,59 @@ document.addEventListener("DOMContentLoaded", async () => {
     const date = new Date();
     date.setDate(date.getDate() + numberOfDays);
 
-    const year = date.getFullYear();
+    const y = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
 
-    return `${year}-${month}-${day}`;
+    return `${y}-${month}-${day}`;
+  }
+
+  // INSTRUCTION COLOUR SAFETY
+
+  function safeColor(value, fallback) {
+    return /^#[0-9A-Fa-f]{6}$/.test(String(value || ""))
+      ? value
+      : fallback;
+  }
+
+  const defaultColors = {
+    collection_heading_color: "#D4AF37",
+    collection_text_color: "#FFFFFF",
+    collection_background_color: "#202226",
+    delivery_heading_color: "#D4AF37",
+    delivery_text_color: "#FFFFFF",
+    delivery_background_color: "#202226"
+  };
+
+  // CUSTOMER INSTRUCTION DISPLAY
+
+  function renderInstruction(result, title, message, headingColor, textColor, backgroundColor) {
+    if (!message || !String(message).trim()) return;
+
+    const box = document.createElement("section");
+    box.style.background = safeColor(backgroundColor, "#202226");
+    box.style.color = safeColor(textColor, "#FFFFFF");
+    box.style.padding = "14px";
+    box.style.margin = "14px 0";
+    box.style.borderRadius = "10px";
+    box.style.border = "1px solid #555";
+    box.style.overflowWrap = "anywhere";
+
+    const heading = document.createElement("h3");
+    heading.textContent = title;
+    heading.style.color = safeColor(headingColor, "#D4AF37");
+    heading.style.margin = "0 0 9px";
+    heading.style.fontSize = "16px";
+
+    const paragraph = document.createElement("p");
+    paragraph.textContent = message;
+    paragraph.style.color = safeColor(textColor, "#FFFFFF");
+    paragraph.style.whiteSpace = "pre-wrap";
+    paragraph.style.margin = "0";
+    paragraph.style.lineHeight = "1.6";
+
+    box.append(heading, paragraph);
+    result.appendChild(box);
   }
 
   // CUSTOMER TRACKING
@@ -152,11 +192,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       result.replaceChildren();
 
       if (!/^SC-\d{4}-\d{6}$/.test(number)) {
-        showMessage(
-          message,
-          "Please enter a valid SC tracking number.",
-          "error"
-        );
+        showMessage(message, "Please enter a valid SC tracking number.", "error");
         return;
       }
 
@@ -178,7 +214,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       showMessage(message, "Checking shipment...", "info");
 
       try {
-        const { data, error } = await db.rpc("track_sekiflex_order", {
+        const { data, error } = await db.rpc("track_sekiflex_order_v2", {
           p_tracking_number: number,
           p_phone_last4: phone
         });
@@ -196,11 +232,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           return;
         }
 
-        showMessage(
-          message,
-          "Shipment information found.",
-          "success"
-        );
+        showMessage(message, "Shipment information found.", "success");
 
         const heading = document.createElement("h2");
         heading.textContent = "Shipment details";
@@ -233,10 +265,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         addDetail(result, "Courier waybill", shipment.courier_waybill);
         addDetail(result, "Estimated delivery", shipment.estimated_delivery);
 
-        addDetail(
+        renderInstruction(
           result,
-          "Collection instructions",
-          shipment.collection_instructions
+          "Collection Instructions",
+          shipment.collection_instructions,
+          shipment.collection_heading_color,
+          shipment.collection_text_color,
+          shipment.collection_background_color
+        );
+
+        renderInstruction(
+          result,
+          "Delivery Instructions",
+          shipment.delivery_instructions,
+          shipment.delivery_heading_color,
+          shipment.delivery_text_color,
+          shipment.delivery_background_color
         );
 
         if (shipment.updated_at) {
@@ -352,11 +396,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       event.preventDefault();
 
       if (!db) {
-        showMessage(
-          loginMessage,
-          "Database connection unavailable.",
-          "error"
-        );
+        showMessage(loginMessage, "Database connection unavailable.", "error");
         return;
       }
 
@@ -379,7 +419,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       } catch (error) {
         console.error("Login error:", error);
-
         showMessage(
           loginMessage,
           "Sign-in failed. Check your email and password.",
@@ -392,7 +431,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // LOAD ORDERS AND DASHBOARD STATISTICS
+  // LOAD ORDERS AND STATISTICS
 
   async function loadOrders() {
     if (!db) return;
@@ -418,9 +457,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const transit = document.getElementById("stat-transit");
     const delivered = document.getElementById("stat-delivered");
 
-    if (total) {
-      total.textContent = currentOrders.length;
-    }
+    if (total) total.textContent = currentOrders.length;
 
     if (payment) {
       payment.textContent = currentOrders.filter(
@@ -443,7 +480,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderOrders();
   }
 
-  // DROPDOWN CREATOR
+  // FORM CONTROL HELPERS
 
   function makeSelect(options, selectedValue) {
     const select = document.createElement("select");
@@ -471,11 +508,78 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     select.value = selectedValue || options[0];
-
     return select;
   }
 
-  // COMPACT EXPANDABLE CUSTOMER ORDER LIST
+  function makeLabel(text) {
+    const label = document.createElement("label");
+    label.textContent = text;
+    label.style.display = "block";
+    label.style.marginTop = "12px";
+    label.style.fontSize = "13px";
+    label.style.fontWeight = "600";
+    return label;
+  }
+
+  function makeTextarea(value, placeholder) {
+    const textarea = document.createElement("textarea");
+    textarea.value = value || "";
+    textarea.placeholder = placeholder;
+    textarea.rows = 4;
+    textarea.style.display = "block";
+    textarea.style.width = "100%";
+    textarea.style.boxSizing = "border-box";
+    textarea.style.padding = "10px";
+    textarea.style.marginTop = "7px";
+    textarea.style.borderRadius = "8px";
+    textarea.style.minHeight = "90px";
+    textarea.style.resize = "vertical";
+    return textarea;
+  }
+
+  function makeColorControl(labelText, value, fallback) {
+    const wrapper = document.createElement("div");
+    wrapper.style.display = "flex";
+    wrapper.style.alignItems = "center";
+    wrapper.style.justifyContent = "space-between";
+    wrapper.style.gap = "10px";
+    wrapper.style.marginTop = "10px";
+
+    const label = document.createElement("label");
+    label.textContent = labelText;
+    label.style.fontSize = "13px";
+    label.style.flex = "1";
+
+    const input = document.createElement("input");
+    input.type = "color";
+    input.value = safeColor(value, fallback);
+    input.style.width = "55px";
+    input.style.height = "40px";
+    input.style.border = "none";
+    input.style.background = "transparent";
+    input.style.cursor = "pointer";
+
+    wrapper.append(label, input);
+    return { wrapper, input };
+  }
+
+  function makeSaveButton(text) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = text;
+    button.style.width = "100%";
+    button.style.marginTop = "15px";
+    button.style.padding = "13px";
+    button.style.border = "none";
+    button.style.borderRadius = "8px";
+    button.style.background = "#D4AF37";
+    button.style.color = "#17191D";
+    button.style.fontWeight = "700";
+    button.style.cursor = "pointer";
+    return button;
+  }
+
+  // EXPANDABLE ORDER CARDS
 
   function renderOrders() {
     ordersList.replaceChildren();
@@ -513,38 +617,22 @@ document.addEventListener("DOMContentLoaded", async () => {
       summary.style.cursor = "pointer";
       summary.style.padding = "12px";
 
-      const top = document.createElement("div");
-      top.style.display = "flex";
-      top.style.justifyContent = "space-between";
-      top.style.alignItems = "center";
-      top.style.gap = "8px";
-
       const name = document.createElement("strong");
       name.textContent = order.customer_name || "Customer";
       name.style.fontSize = "14px";
-      name.style.overflowWrap = "anywhere";
-
-      const arrow = document.createElement("span");
-      arrow.textContent = "＋";
-      arrow.style.color = "#D4AF37";
-      arrow.style.fontSize = "20px";
-      arrow.style.flexShrink = "0";
-
-      top.append(name, arrow);
 
       const tracking = document.createElement("div");
       tracking.textContent = order.tracking_number || "No tracking number";
       tracking.style.color = "#D4AF37";
       tracking.style.fontSize = "12px";
-      tracking.style.marginTop = "4px";
+      tracking.style.marginTop = "5px";
 
-      const statusesLine = document.createElement("div");
-      statusesLine.style.display = "flex";
-      statusesLine.style.justifyContent = "space-between";
-      statusesLine.style.alignItems = "center";
-      statusesLine.style.flexWrap = "wrap";
-      statusesLine.style.gap = "6px";
-      statusesLine.style.marginTop = "8px";
+      const statusLine = document.createElement("div");
+      statusLine.style.display = "flex";
+      statusLine.style.justifyContent = "space-between";
+      statusLine.style.flexWrap = "wrap";
+      statusLine.style.gap = "6px";
+      statusLine.style.marginTop = "8px";
 
       const shipmentStatus = document.createElement("span");
       shipmentStatus.textContent = order.status || "Awaiting payment";
@@ -558,8 +646,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       paymentStatus.style.fontSize = "12px";
       paymentStatus.style.fontWeight = "700";
 
-      statusesLine.append(shipmentStatus, paymentStatus);
-      summary.append(top, tracking, statusesLine);
+      statusLine.append(shipmentStatus, paymentStatus);
+      summary.append(name, tracking, statusLine);
 
       const detailsBox = document.createElement("div");
       detailsBox.style.padding = "12px";
@@ -589,69 +677,162 @@ document.addEventListener("DOMContentLoaded", async () => {
       addDetail(detailsBox, "Courier", order.courier_name);
       addDetail(detailsBox, "Courier waybill", order.courier_waybill);
       addDetail(detailsBox, "Estimated delivery", order.estimated_delivery);
-      addDetail(detailsBox, "Collection instructions", order.collection_instructions);
 
-      const paymentLabel = document.createElement("label");
-      paymentLabel.textContent = "Update payment status";
-      paymentLabel.style.display = "block";
-      paymentLabel.style.marginTop = "16px";
-      paymentLabel.style.fontSize = "13px";
-      paymentLabel.style.fontWeight = "600";
+      // ORDER STATUS EDITORS
+
+      detailsBox.appendChild(makeLabel("Update payment status"));
 
       const paymentSelect = makeSelect(
         paymentStatuses,
         order.payment_status || "Awaiting payment"
       );
 
-      const shipmentLabel = document.createElement("label");
-      shipmentLabel.textContent = "Update shipment status";
-      shipmentLabel.style.display = "block";
-      shipmentLabel.style.marginTop = "14px";
-      shipmentLabel.style.fontSize = "13px";
-      shipmentLabel.style.fontWeight = "600";
+      detailsBox.appendChild(paymentSelect);
+
+      detailsBox.appendChild(makeLabel("Update shipment status"));
 
       const shipmentSelect = makeSelect(
         statuses,
         order.status || "Awaiting payment"
       );
 
-      const updateButton = document.createElement("button");
-      updateButton.type = "button";
-      updateButton.textContent = "SAVE ORDER UPDATES";
-      updateButton.style.width = "100%";
-      updateButton.style.marginTop = "15px";
-      updateButton.style.padding = "13px";
-      updateButton.style.border = "none";
-      updateButton.style.borderRadius = "8px";
-      updateButton.style.background = "#D4AF37";
-      updateButton.style.color = "#17191D";
-      updateButton.style.fontWeight = "700";
-      updateButton.style.cursor = "pointer";
+      detailsBox.appendChild(shipmentSelect);
+
+      // COLLECTION INSTRUCTIONS EDITOR
+
+      const collectionHeading = document.createElement("h4");
+      collectionHeading.textContent = "COLLECTION INSTRUCTIONS";
+      collectionHeading.style.color = "#D4AF37";
+      collectionHeading.style.marginTop = "22px";
+      detailsBox.appendChild(collectionHeading);
+
+      const collectionTextarea = makeTextarea(
+        order.collection_instructions,
+        "Enter instructions for this customer's collection..."
+      );
+
+      detailsBox.appendChild(collectionTextarea);
+
+      const collectionHeadingColor = makeColorControl(
+        "Heading colour",
+        order.collection_heading_color,
+        defaultColors.collection_heading_color
+      );
+
+      const collectionTextColor = makeColorControl(
+        "Text colour",
+        order.collection_text_color,
+        defaultColors.collection_text_color
+      );
+
+      const collectionBackgroundColor = makeColorControl(
+        "Background colour",
+        order.collection_background_color,
+        defaultColors.collection_background_color
+      );
+
+      detailsBox.append(
+        collectionHeadingColor.wrapper,
+        collectionTextColor.wrapper,
+        collectionBackgroundColor.wrapper
+      );
+
+      // DELIVERY INSTRUCTIONS EDITOR
+
+      const deliveryHeading = document.createElement("h4");
+      deliveryHeading.textContent = "DELIVERY INSTRUCTIONS";
+      deliveryHeading.style.color = "#D4AF37";
+      deliveryHeading.style.marginTop = "24px";
+      detailsBox.appendChild(deliveryHeading);
+
+      const deliveryTextarea = makeTextarea(
+        order.delivery_instructions,
+        "Enter instructions for this customer's delivery..."
+      );
+
+      detailsBox.appendChild(deliveryTextarea);
+
+      const deliveryHeadingColor = makeColorControl(
+        "Heading colour",
+        order.delivery_heading_color,
+        defaultColors.delivery_heading_color
+      );
+
+      const deliveryTextColor = makeColorControl(
+        "Text colour",
+        order.delivery_text_color,
+        defaultColors.delivery_text_color
+      );
+
+      const deliveryBackgroundColor = makeColorControl(
+        "Background colour",
+        order.delivery_background_color,
+        defaultColors.delivery_background_color
+      );
+
+      detailsBox.append(
+        deliveryHeadingColor.wrapper,
+        deliveryTextColor.wrapper,
+        deliveryBackgroundColor.wrapper
+      );
 
       const feedback = document.createElement("p");
       feedback.setAttribute("role", "status");
       feedback.style.fontSize = "13px";
 
+      const updateButton = makeSaveButton("SAVE ALL ORDER UPDATES");
+
       updateButton.addEventListener("click", async () => {
         updateButton.disabled = true;
         updateButton.textContent = "SAVING...";
 
-        showMessage(feedback, "Saving updates...", "info");
+        showMessage(feedback, "Saving order and instruction changes...", "info");
 
         try {
+          const updates = {
+            payment_status: paymentSelect.value,
+            status: shipmentSelect.value,
+
+            collection_instructions: collectionTextarea.value.trim() || null,
+            delivery_instructions: deliveryTextarea.value.trim() || null,
+
+            collection_heading_color: safeColor(
+              collectionHeadingColor.input.value,
+              defaultColors.collection_heading_color
+            ),
+            collection_text_color: safeColor(
+              collectionTextColor.input.value,
+              defaultColors.collection_text_color
+            ),
+            collection_background_color: safeColor(
+              collectionBackgroundColor.input.value,
+              defaultColors.collection_background_color
+            ),
+
+            delivery_heading_color: safeColor(
+              deliveryHeadingColor.input.value,
+              defaultColors.delivery_heading_color
+            ),
+            delivery_text_color: safeColor(
+              deliveryTextColor.input.value,
+              defaultColors.delivery_text_color
+            ),
+            delivery_background_color: safeColor(
+              deliveryBackgroundColor.input.value,
+              defaultColors.delivery_background_color
+            )
+          };
+
           const { error } = await db
             .from("orders")
-            .update({
-              payment_status: paymentSelect.value,
-              status: shipmentSelect.value
-            })
+            .update(updates)
             .eq("id", order.id);
 
           if (error) throw error;
 
           showMessage(
             feedback,
-            "Order updates saved successfully.",
+            "All order updates and instructions saved successfully.",
             "success"
           );
 
@@ -668,24 +849,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } finally {
           updateButton.disabled = false;
-          updateButton.textContent = "SAVE ORDER UPDATES";
+          updateButton.textContent = "SAVE ALL ORDER UPDATES";
         }
       });
 
-      detailsBox.append(
-        paymentLabel,
-        paymentSelect,
-        shipmentLabel,
-        shipmentSelect,
-        updateButton,
-        feedback
-      );
-
+      detailsBox.append(updateButton, feedback);
       card.append(summary, detailsBox);
-
-      card.addEventListener("toggle", () => {
-        arrow.textContent = card.open ? "−" : "＋";
-      });
 
       ordersList.appendChild(card);
     });
@@ -740,9 +909,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           amount < 0 ||
           delivery < 0
         ) {
-          throw new Error(
-            "Please enter valid, non-negative amounts."
-          );
+          throw new Error("Please enter valid, non-negative amounts.");
         }
 
         const selectedDays =
