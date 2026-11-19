@@ -1,236 +1,682 @@
+document.addEventListener("DOMContentLoaded", async () => {
+  // SEKIFLEX COLLECTIONS - STAFF AND CUSTOMER SYSTEM
 
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#17191d">
-  <title>Staff Dashboard | SEKIFLEX COLLECTIONS</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body class="admin-body">
+  const year = document.getElementById("year");
+  if (year) year.textContent = new Date().getFullYear();
 
-<header class="admin-top">
-  <a class="brand" href="index.html">
-    <span class="brand-mark">S</span>
-    <span><strong>SEKIFLEX</strong><small>COLLECTIONS</small></span>
-  </a>
-  <a class="admin-home" href="index.html">Visit website ↗</a>
-</header>
+  const toggle = document.querySelector(".menu-toggle");
+  const nav = document.querySelector(".main-nav");
 
-<main class="admin-shell">
+  if (toggle && nav) {
+    toggle.addEventListener("click", () => {
+      const open = nav.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.textContent = open ? "×" : "☰";
+    });
+  }
 
-  <section id="admin-login">
-    <div class="admin-heading">
-      <div>
-        <p class="eyebrow">SEKIFLEX LIMITED · STAFF ACCESS</p>
-        <h1>Staff <em>login.</em></h1>
-        <p>Sign in to manage customer orders and deliveries.</p>
-      </div>
-    </div>
+  let db = null;
 
-    <div class="admin-card">
-      <h2>Secure sign in</h2>
-      <form id="admin-login-form" class="admin-form">
-        <div class="form-grid">
-          <label class="wide">Email address
-            <input id="admin-email" type="email" autocomplete="username" required>
-          </label>
-          <label class="wide">Password
-            <input id="admin-password" type="password" autocomplete="current-password" required>
-          </label>
-        </div>
-        <button class="btn btn-gold" type="submit">Sign in →</button>
-        <p id="login-message" class="form-message" role="status"></p>
-      </form>
-    </div>
-  </section>
+  if (
+    window.supabase &&
+    window.SEKIFLEX_SUPABASE_URL &&
+    window.SEKIFLEX_SUPABASE_KEY
+  ) {
+    db = window.supabase.createClient(
+      window.SEKIFLEX_SUPABASE_URL,
+      window.SEKIFLEX_SUPABASE_KEY
+    );
+  }
 
-  <section id="admin-dashboard" hidden>
-    <div class="admin-heading">
-      <div>
-        <p class="eyebrow">SEKIFLEX COLLECTIONS · MANAGEMENT</p>
-        <h1>Order <em>dashboard.</em></h1>
-        <p>Register orders, manage payments and update deliveries.</p>
-      </div>
-      <button id="admin-logout" class="btn btn-outline" type="button">Log out</button>
-    </div>
+  function showMessage(element, message, type = "info") {
+    if (!element) return;
 
-    <div class="notice">
-      Customer tracking references are automatically generated using the SC format.
-      Shipment and payment updates are managed by authorized staff.
-    </div>
+    const colors = {
+      success: "#16803c",
+      error: "#c62828",
+      info: "#1769aa"
+    };
 
-    <div class="stat-grid">
-      <div class="stat-card">
-        <small>Total orders</small>
-        <strong id="stat-total">0</strong>
-        <span>Registered orders</span>
-      </div>
-      <div class="stat-card">
-        <small>Awaiting payment</small>
-        <strong id="stat-payment">0</strong>
-        <span>Payment outstanding</span>
-      </div>
-      <div class="stat-card">
-        <small>In transit</small>
-        <strong id="stat-transit">0</strong>
-        <span>Orders being delivered</span>
-      </div>
-      <div class="stat-card">
-        <small>Delivered</small>
-        <strong id="stat-delivered">0</strong>
-        <span>Completed deliveries</span>
-      </div>
-    </div>
+    element.textContent = message;
+    element.style.color = colors[type] || colors.info;
+    element.style.fontWeight = "600";
+  }
 
-    <section class="admin-card">
-      <div class="card-heading">
-        <div>
-          <p class="eyebrow">NEW CUSTOMER ORDER</p>
-          <h2>Register an order</h2>
-        </div>
-        <span class="sc-chip">SC TRACKING</span>
-      </div>
+  function addDetail(container, label, value) {
+    if (value === null || value === undefined || value === "") return;
 
-      <form id="order-form" class="admin-form">
-        <div class="form-grid">
+    const p = document.createElement("p");
+    const strong = document.createElement("strong");
 
-          <label>Customer name
-            <input id="customer-name" type="text" required>
-          </label>
+    strong.textContent = label + ": ";
+    p.append(strong, document.createTextNode(String(value)));
+    container.appendChild(p);
+  }
 
-          <label>Customer phone
-            <input id="customer-phone" type="tel" required>
-          </label>
+  function getErrorDetails(error) {
+    return [
+      error?.message,
+      error?.details,
+      error?.hint,
+      error?.code
+    ].filter(Boolean).join(" | ") || "Unknown database error";
+  }
 
-          <label>Customer email <span class="optional">(optional)</span>
-            <input id="customer-email" type="email">
-          </label>
+  // Convert selected delivery days (1–7) into a calendar date.
+  // Supabase estimated_delivery column requires YYYY-MM-DD.
 
-          <label>Order source
-            <select id="order-source" required>
-              <option value="WhatsApp">WhatsApp</option>
-              <option value="Website">Website</option>
-              <option value="Instagram">Instagram</option>
-              <option value="Other">Other</option>
-            </select>
-          </label>
+  function getEstimatedDeliveryDate(days) {
+    const numberOfDays = Number(days);
 
-          <label>Destination country
-            <select id="country" required>
-              <option value="Nigeria">Nigeria</option>
-              <option value="United States">United States</option>
-              <option value="United Kingdom">United Kingdom</option>
-              <option value="Canada">Canada</option>
-              <option value="Ghana">Ghana</option>
-              <option value="South Africa">South Africa</option>
-              <option value="United Arab Emirates">United Arab Emirates</option>
-              <option value="Australia">Australia</option>
-              <option value="Germany">Germany</option>
-              <option value="France">France</option>
-              <option value="Other">Other</option>
-            </select>
-          </label>
+    if (
+      !Number.isInteger(numberOfDays) ||
+      numberOfDays < 1 ||
+      numberOfDays > 7
+    ) {
+      throw new Error("Please select an estimated delivery time from 1 to 7 days.");
+    }
 
-          <label>Currency
-            <select id="currency" required>
-              <option value="NGN">NGN — Nigerian Naira</option>
-              <option value="USD">USD — US Dollar</option>
-              <option value="GBP">GBP — British Pound</option>
-              <option value="CAD">CAD — Canadian Dollar</option>
-              <option value="EUR">EUR — Euro</option>
-              <option value="GHS">GHS — Ghanaian Cedi</option>
-              <option value="ZAR">ZAR — South African Rand</option>
-              <option value="AED">AED — UAE Dirham</option>
-              <option value="AUD">AUD — Australian Dollar</option>
-            </select>
-          </label>
+    const date = new Date();
+    date.setDate(date.getDate() + numberOfDays);
 
-          <label class="wide">Delivery destination / city
-            <input id="destination" type="text" placeholder="e.g. London, United Kingdom" required>
-          </label>
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
 
-          <label class="wide">Package description
-            <input id="package-description" type="text" placeholder="Clothing, shoes, accessories..." required>
-          </label>
+    return `${year}-${month}-${day}`;
+  }
 
-          <label>Order amount
-            <input id="order-amount" type="number" min="0" step="0.01" required>
-          </label>
+  // CUSTOMER TRACKING
 
-          <label>Delivery amount
-            <input id="delivery-amount" type="number" min="0" step="0.01" value="0" required>
-          </label>
+  const trackingForm = document.getElementById("tracking-form");
 
-          <label>Payment status
-            <select id="payment-status" required>
-              <option value="Awaiting payment">Awaiting payment</option>
-              <option value="Payment confirmed">Payment confirmed</option>
-            </select>
-          </label>
+  if (trackingForm) {
+    trackingForm.addEventListener("submit", async event => {
+      event.preventDefault();
 
-          <label>Courier name <span class="optional">(optional)</span>
-            <input id="courier-name" type="text" placeholder="Courier company">
-          </label>
+      const number = document
+        .getElementById("tracking-number")
+        .value.trim().toUpperCase();
 
-          <label>Courier waybill <span class="optional">(optional)</span>
-            <input id="courier-waybill" type="text">
-          </label>
+      const phone = document
+        .getElementById("phone-last4")
+        .value.trim();
 
-          <label>Estimated delivery
-            <select id="estimated-delivery" required>
-              <option value="">Select delivery time</option>
-              <option value="1">1 day</option>
-              <option value="2">2 days</option>
-              <option value="3">3 days</option>
-              <option value="4">4 days</option>
-              <option value="5">5 days</option>
-              <option value="6">6 days</option>
-              <option value="7">7 days</option>
-            </select>
-          </label>
+      const message = document.getElementById("tracking-message");
+      const result = document.getElementById("tracking-result");
+      const button = trackingForm.querySelector('button[type="submit"]');
 
-          <label class="wide">Collection instructions <span class="optional">(optional)</span>
-            <input id="collection-instructions" type="text" placeholder="Instructions for the customer">
-          </label>
-        </div>
+      result.replaceChildren();
 
-        <button class="btn btn-gold" type="submit">Register customer order →</button>
-        <p id="order-message" class="form-message" role="status"></p>
-      </form>
-    </section>
+      if (!/^SC-\d{4}-\d{6}$/.test(number)) {
+        showMessage(message, "Please enter a valid SC tracking number.", "error");
+        return;
+      }
 
-    <section class="admin-card">
-      <div class="card-heading">
-        <div>
-          <p class="eyebrow">ORDER MANAGEMENT</p>
-          <h2>Customer orders</h2>
-        </div>
-        <button id="refresh-orders" class="btn btn-outline" type="button">Refresh orders ↻</button>
-      </div>
+      if (!/^\d{4}$/.test(phone)) {
+        showMessage(
+          message,
+          "Please enter the last four digits of your registered phone number.",
+          "error"
+        );
+        return;
+      }
 
-      <label for="order-search">Search by tracking number, customer or destination</label>
-      <input id="order-search" type="search" placeholder="Search orders..." style="width:100%;height:48px;padding:0 13px;border:1px solid #dcd6ca;margin-top:8px;font:inherit;font-size:12px;">
+      if (!db) {
+        showMessage(message, "Tracking service is unavailable.", "error");
+        return;
+      }
 
-      <div id="orders-list" style="margin-top:22px;">
-        <p class="small-note">Your registered orders will appear here after login.</p>
-      </div>
-    </section>
-  </section>
-</main>
+      button.disabled = true;
+      showMessage(message, "Checking shipment...", "info");
 
-<footer class="site-footer">
-  <p>Powered by <strong>SEKIFLEX LIMITED</strong></p>
-  <small>© <span id="year"></span> Sekiflex Limited. All rights reserved.</small>
-</footer>
+      try {
+        const { data, error } = await db.rpc("track_sekiflex_order", {
+          p_tracking_number: number,
+          p_phone_last4: phone
+        });
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
-<script src="app.js"></script>
-</body>
-</html>
-  
+        if (error) throw error;
+
+        const shipment = Array.isArray(data) ? data[0] : data;
+
+        if (!shipment) {
+          showMessage(
+            message,
+            "No shipment found. Please check your details.",
+            "error"
+          );
+          return;
+        }
+
+        showMessage(message, "Shipment information found.", "success");
+
+        const heading = document.createElement("h2");
+        heading.textContent = "Shipment details";
+        result.appendChild(heading);
+
+        addDetail(result, "Tracking number", shipment.tracking_number);
+        addDetail(result, "Customer status", shipment.status);
+        addDetail(result, "Payment status", shipment.payment_status);
+        addDetail(result, "Country", shipment.country);
+        addDetail(result, "Destination", shipment.destination);
+        addDetail(result, "Currency", shipment.currency);
+
+        if (shipment.order_amount != null) {
+          addDetail(
+            result,
+            "Order amount",
+            `${shipment.currency || ""} ${shipment.order_amount}`
+          );
+        }
+
+        if (shipment.delivery_amount != null) {
+          addDetail(
+            result,
+            "Delivery amount",
+            `${shipment.currency || ""} ${shipment.delivery_amount}`
+          );
+        }
+
+        addDetail(result, "Courier", shipment.courier_name);
+        addDetail(result, "Courier waybill", shipment.courier_waybill);
+        addDetail(result, "Estimated delivery", shipment.estimated_delivery);
+        addDetail(
+          result,
+          "Collection instructions",
+          shipment.collection_instructions
+        );
+
+        if (shipment.updated_at) {
+          const updated = document.createElement("small");
+          updated.textContent =
+            "Last updated: " +
+            new Date(shipment.updated_at).toLocaleString();
+
+          result.appendChild(updated);
+        }
+      } catch (error) {
+        console.error("Tracking error:", error);
+        showMessage(
+          message,
+          "Tracking failed: " + getErrorDetails(error),
+          "error"
+        );
+      } finally {
+        button.disabled = false;
+      }
+    });
+  }
+
+  // STAFF DASHBOARD
+
+  const loginSection = document.getElementById("admin-login");
+  const dashboard = document.getElementById("admin-dashboard");
+
+  if (!loginSection || !dashboard) return;
+
+  const loginForm = document.getElementById("admin-login-form");
+  const loginMessage = document.getElementById("login-message");
+  const logoutButton = document.getElementById("admin-logout");
+  const orderForm = document.getElementById("order-form");
+  const orderMessage = document.getElementById("order-message");
+  const ordersList = document.getElementById("orders-list");
+  const searchInput = document.getElementById("order-search");
+
+  const statuses = [
+    "Awaiting payment",
+    "Payment confirmed",
+    "Order processing",
+    "Package being packed",
+    "Package packed and prepared",
+    "Awaiting dispatch",
+    "Dispatched / handed to courier",
+    "In transit",
+    "Arrived at destination facility",
+    "Ready for collection",
+    "Out for delivery",
+    "Delivered",
+    "Delivery delayed",
+    "Delivery attempted",
+    "Returned to sender"
+  ];
+
+  const paymentStatuses = [
+    "Awaiting payment",
+    "Payment confirmed"
+  ];
+
+  let currentOrders = [];
+
+  function setDashboardVisible(visible) {
+    loginSection.hidden = visible;
+    dashboard.hidden = !visible;
+  }
+
+  async function verifyStaff(user) {
+    const { data, error } = await db
+      .from("staff_members")
+      .select("role, active")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Staff verification error:", error);
+      return false;
+    }
+
+    return Boolean(data && data.active === true);
+  }
+
+  async function enterDashboard(user) {
+    const authorized = await verifyStaff(user);
+
+    if (!authorized) {
+      await db.auth.signOut();
+      setDashboardVisible(false);
+
+      showMessage(
+        loginMessage,
+        "This account is not authorized to access the staff dashboard.",
+        "error"
+      );
+
+      return;
+    }
+
+    setDashboardVisible(true);
+    await loadOrders();
+  }
+
+  // STAFF LOGIN
+
+  if (loginForm) {
+    loginForm.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      if (!db) {
+        showMessage(loginMessage, "Database connection unavailable.", "error");
+        return;
+      }
+
+      const email = document.getElementById("admin-email").value.trim();
+      const password = document.getElementById("admin-password").value;
+      const button = loginForm.querySelector('button[type="submit"]');
+
+      button.disabled = true;
+      showMessage(loginMessage, "Signing in securely...", "info");
+
+      try {
+        const { data, error } = await db.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (error) throw error;
+
+        await enterDashboard(data.user);
+      } catch (error) {
+        console.error("Login error:", error);
+
+        showMessage(
+          loginMessage,
+          "Sign-in failed. Check your email and password.",
+          "error"
+        );
+      } finally {
+        button.disabled = false;
+      }
+    });
+  }
+
+  // LOAD ORDERS AND STATISTICS
+
+  async function loadOrders() {
+    if (!db) return;
+
+    ordersList.textContent = "Loading orders...";
+
+    const { data, error } = await db
+      .from("orders")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(100);
+
+    if (error) {
+      console.error("Orders loading error:", error);
+      ordersList.textContent = "Could not load orders.";
+      return;
+    }
+
+    currentOrders = data || [];
+
+    document.getElementById("stat-total").textContent =
+      currentOrders.length;
+
+    document.getElementById("stat-payment").textContent =
+      currentOrders.filter(
+        order => order.payment_status === "Awaiting payment"
+      ).length;
+
+    document.getElementById("stat-transit").textContent =
+      currentOrders.filter(
+        order => order.status === "In transit"
+      ).length;
+
+    document.getElementById("stat-delivered").textContent =
+      currentOrders.filter(
+        order => order.status === "Delivered"
+      ).length;
+
+    renderOrders();
+  }
+
+  function makeSelect(options, selectedValue) {
+    const select = document.createElement("select");
+
+    select.style.display = "block";
+    select.style.width = "100%";
+    select.style.marginTop = "8px";
+    select.style.minHeight = "44px";
+    select.style.padding = "8px";
+
+    options.forEach(value => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      select.appendChild(option);
+    });
+
+    if (selectedValue && !options.includes(selectedValue)) {
+      const option = document.createElement("option");
+      option.value = selectedValue;
+      option.textContent = selectedValue;
+      select.appendChild(option);
+    }
+
+    select.value = selectedValue || options[0];
+
+    return select;
+  }
+
+  // DISPLAY AND UPDATE ORDERS
+
+  function renderOrders() {
+    ordersList.replaceChildren();
+
+    const search = (searchInput?.value || "").trim().toLowerCase();
+
+    const filtered = currentOrders.filter(order =>
+      [
+        order.tracking_number,
+        order.customer_name,
+        order.destination,
+        order.country
+      ].some(value =>
+        String(value || "").toLowerCase().includes(search)
+      )
+    );
+
+    if (!filtered.length) {
+      ordersList.textContent = "No matching orders found.";
+      return;
+    }
+
+    filtered.forEach(order => {
+      const card = document.createElement("article");
+      card.className = "stat-card";
+      card.style.marginTop = "16px";
+
+      const title = document.createElement("h3");
+      title.textContent = order.tracking_number || "Order";
+      card.appendChild(title);
+
+      addDetail(card, "Customer", order.customer_name);
+      addDetail(card, "Phone", order.customer_phone);
+      addDetail(card, "Country", order.country);
+      addDetail(card, "Destination", order.destination);
+      addDetail(card, "Currency", order.currency);
+      addDetail(card, "Order amount", order.order_amount);
+      addDetail(card, "Delivery amount", order.delivery_amount);
+
+      const paymentLabel = document.createElement("label");
+      paymentLabel.textContent = "Payment status";
+      paymentLabel.style.display = "block";
+      paymentLabel.style.marginTop = "14px";
+
+      const paymentSelect = makeSelect(
+        paymentStatuses,
+        order.payment_status || "Awaiting payment"
+      );
+
+      const shipmentLabel = document.createElement("label");
+      shipmentLabel.textContent = "Shipment status";
+      shipmentLabel.style.display = "block";
+      shipmentLabel.style.marginTop = "14px";
+
+      const shipmentSelect = makeSelect(
+        statuses,
+        order.status || "Awaiting payment"
+      );
+
+      const updateButton = document.createElement("button");
+      updateButton.type = "button";
+      updateButton.className = "btn btn-gold";
+      updateButton.style.marginTop = "14px";
+      updateButton.textContent = "Save payment and shipment updates";
+
+      const feedback = document.createElement("p");
+      feedback.setAttribute("role", "status");
+
+      updateButton.addEventListener("click", async () => {
+        updateButton.disabled = true;
+        showMessage(feedback, "Saving updates...", "info");
+
+        try {
+          const { error } = await db
+            .from("orders")
+            .update({
+              payment_status: paymentSelect.value,
+              status: shipmentSelect.value
+            })
+            .eq("id", order.id);
+
+          if (error) throw error;
+
+          showMessage(feedback, "Updates saved successfully.", "success");
+          await loadOrders();
+        } catch (error) {
+          console.error("Order update error:", error);
+
+          showMessage(
+            feedback,
+            "Update failed: " + getErrorDetails(error),
+            "error"
+          );
+        } finally {
+          updateButton.disabled = false;
+        }
+      });
+
+      card.append(
+        paymentLabel,
+        paymentSelect,
+        shipmentLabel,
+        shipmentSelect,
+        updateButton,
+        feedback
+      );
+
+      ordersList.appendChild(card);
+    });
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("input", renderOrders);
+  }
+
+  const refreshButton = document.getElementById("refresh-orders");
+
+  if (refreshButton) {
+    refreshButton.addEventListener("click", loadOrders);
+  }
+
+  // REGISTER A NEW ORDER
+
+  if (orderForm) {
+    orderForm.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      if (!db) {
+        showMessage(orderMessage, "Database connection unavailable.", "error");
+        return;
+      }
+
+      const button = orderForm.querySelector('button[type="submit"]');
+
+      button.disabled = true;
+      showMessage(orderMessage, "Registering your order...", "info");
+
+      try {
+        const amount = Number(
+          document.getElementById("order-amount").value
+        );
+
+        const delivery = Number(
+          document.getElementById("delivery-amount").value
+        );
+
+        if (
+          !Number.isFinite(amount) ||
+          !Number.isFinite(delivery) ||
+          amount < 0 ||
+          delivery < 0
+        ) {
+          throw new Error("Please enter valid, non-negative amounts.");
+        }
+
+        const selectedDays =
+          document.getElementById("estimated-delivery").value;
+
+        const estimatedDeliveryDate =
+          getEstimatedDeliveryDate(selectedDays);
+
+        const order = {
+          customer_name: document.getElementById("customer-name").value.trim(),
+          customer_phone: document.getElementById("customer-phone").value.trim(),
+          customer_email:
+            document.getElementById("customer-email").value.trim() || null,
+
+          order_source: document.getElementById("order-source").value,
+
+          country: document.getElementById("country").value,
+          currency: document.getElementById("currency").value,
+
+          destination: document.getElementById("destination").value.trim(),
+          package_description:
+            document.getElementById("package-description").value.trim(),
+
+          order_amount: amount,
+          delivery_amount: delivery,
+
+          payment_status: document.getElementById("payment-status").value,
+
+          status: "Awaiting payment",
+
+          courier_name:
+            document.getElementById("courier-name").value.trim() || null,
+
+          courier_waybill:
+            document.getElementById("courier-waybill").value.trim() || null,
+
+          estimated_delivery: estimatedDeliveryDate,
+
+          collection_instructions:
+            document.getElementById("collection-instructions").value.trim() || null
+        };
+
+        if (
+          !order.customer_name ||
+          !order.customer_phone ||
+          !order.destination ||
+          !order.package_description ||
+          !order.country ||
+          !order.currency
+        ) {
+          throw new Error("Please complete all required order details.");
+        }
+
+        const { data, error } = await db
+          .from("orders")
+          .insert(order)
+          .select("tracking_number")
+          .single();
+
+        if (error) throw error;
+
+        showMessage(
+          orderMessage,
+          "Order registered successfully! Your SC tracking number is: " +
+            data.tracking_number,
+          "success"
+        );
+
+        orderForm.reset();
+
+        document.getElementById("country").value = "Nigeria";
+        document.getElementById("currency").value = "NGN";
+        document.getElementById("delivery-amount").value = "0";
+
+        await loadOrders();
+
+      } catch (error) {
+        console.error("Order registration error:", error);
+
+        showMessage(
+          orderMessage,
+          "REGISTRATION FAILED: " + getErrorDetails(error),
+          "error"
+        );
+
+      } finally {
+        button.disabled = false;
+      }
+    });
+  }
+
+  // LOG OUT
+
+  if (logoutButton) {
+    logoutButton.addEventListener("click", async () => {
+      if (db) await db.auth.signOut();
+
+      setDashboardVisible(false);
+
+      showMessage(
+        loginMessage,
+        "You have signed out securely.",
+        "success"
+      );
+    });
+  }
+
+  // RESTORE STAFF SESSION
+
+  setDashboardVisible(false);
+
+  if (!db) {
+    showMessage(loginMessage, "Database connection unavailable.", "error");
+    return;
+  }
+
+  const { data: sessionData, error: sessionError } =
+    await db.auth.getSession();
+
+  if (sessionError) {
+    console.error("Session error:", sessionError);
+  }
+
+  if (sessionData?.session) {
+    await enterDashboard(sessionData.session.user);
+  }
+});
