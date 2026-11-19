@@ -13,233 +13,446 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
 <style>
-:root{
+:root {
   --black:#101114;
   --dark:#191b20;
   --gold:#d4af63;
   --white:#fff;
   --muted:#b9b9b9;
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;background:#f5f3ed;color:var(--black);
-  font-family:'DM Sans',sans-serif
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  margin:0;
+  background:#f5f3ed;
+  color:var(--black);
+  font-family:'DM Sans',sans-serif;
 }
-a{text-decoration:none}
-button{font:inherit}
+a { text-decoration:none; }
+button { font:inherit; }
 
-.announcement{
-  background:#080808;color:var(--gold);
-  text-align:center;padding:11px 15px;
-  font-size:11px;letter-spacing:2px
+.announcement {
+  background:#080808;
+  color:var(--gold);
+  text-align:center;
+  padding:11px 15px;
+  font-size:11px;
+  letter-spacing:2px;
 }
-.header{
-  background:#111;color:white;padding:14px 6%;
-  display:flex;justify-content:space-between;
-  align-items:center;position:relative;z-index:20;
-  border-bottom:1px solid #806638
+.header {
+  background:#111;
+  color:white;
+  padding:14px 6%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:relative;
+  z-index:20;
+  border-bottom:1px solid #806638;
 }
-.brand{display:flex;align-items:center;gap:12px;color:white}
-.brand img{
-  width:58px;height:58px;object-fit:contain;border-radius:50%
+.brand {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:white;
 }
-.brand strong{
-  display:block;font-family:'Playfair Display',serif;
-  font-size:21px;letter-spacing:2px
+.brand img {
+  width:58px;
+  height:58px;
+  object-fit:contain;
+  border-radius:50%;
 }
-.brand small{color:var(--gold);letter-spacing:3px;font-size:10px}
-.nav{display:flex;align-items:center;gap:20px}
-.nav a{color:white;font-size:12px}
-.nav a:hover{color:var(--gold)}
-.menu{
-  display:none;background:transparent;color:white;
-  border:1px solid var(--gold);padding:7px 12px;
-  border-radius:4px;font-size:21px
+.brand strong {
+  display:block;
+  font-family:'Playfair Display',serif;
+  font-size:21px;
+  letter-spacing:2px;
 }
-.gold-button{
-  display:inline-block;background:var(--gold);color:#111;
-  padding:15px 23px;border-radius:3px;font-size:12px;
-  font-weight:800;letter-spacing:1px;transition:.2s
+.brand small {
+  color:var(--gold);
+  letter-spacing:3px;
+  font-size:10px;
 }
-.gold-button:hover{transform:translateY(-3px);background:#e5c57d}
-.outline-button{
-  display:inline-block;border:1px solid var(--gold);
-  color:white;padding:14px 23px;border-radius:3px;
-  font-size:12px;font-weight:700
+.nav {
+  display:flex;
+  align-items:center;
+  gap:20px;
 }
-.shop-button{
-  display:inline-block;background:#fff;color:#111;
-  padding:14px 22px;border-radius:3px;
-  font-size:12px;font-weight:800
+.nav a {
+  color:white;
+  font-size:12px;
+}
+.nav a:hover { color:var(--gold); }
+.menu {
+  display:none;
+  background:transparent;
+  color:white;
+  border:1px solid var(--gold);
+  padding:7px 12px;
+  border-radius:4px;
+  font-size:21px;
+}
+.gold-button {
+  display:inline-block;
+  background:var(--gold);
+  color:#111;
+  padding:15px 23px;
+  border-radius:3px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:1px;
+  transition:.2s;
+}
+.gold-button:hover {
+  transform:translateY(-3px);
+  background:#e5c57d;
+}
+.outline-button {
+  display:inline-block;
+  border:1px solid var(--gold);
+  color:white;
+  padding:14px 23px;
+  border-radius:3px;
+  font-size:12px;
+  font-weight:700;
+}
+.shop-button {
+  display:inline-block;
+  background:#fff;
+  color:#111;
+  padding:14px 22px;
+  border-radius:3px;
+  font-size:12px;
+  font-weight:800;
 }
 
-.hero{
-  min-height:650px;display:flex;align-items:center;
-  padding:65px 7%;color:white;
+/* MAIN SHIPPING HERO IMAGE */
+.hero {
+  min-height:680px;
+  display:flex;
+  align-items:center;
+  padding:65px 7%;
+  color:white;
   background:
-  linear-gradient(90deg,rgba(0,0,0,.92),rgba(0,0,0,.68) 48%,rgba(0,0,0,.12)),
-  url('a_crisp_professional_promotional_photo_composite.png')
-  center 35%/cover no-repeat;
+    linear-gradient(90deg,rgba(0,0,0,.91),rgba(0,0,0,.72) 43%,rgba(0,0,0,.12)),
+    url('a_polished_cinematic_logistics_and_delivery_hub_c.png')
+    center center/cover no-repeat;
 }
-.hero-copy{max-width:650px}
-.eyebrow{
-  color:var(--gold);font-size:11px;
-  font-weight:800;letter-spacing:3px
+.hero-copy { max-width:650px; }
+.eyebrow {
+  color:var(--gold);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:3px;
 }
-.hero h1{
+.hero h1 {
   font-family:'Playfair Display',serif;
   font-size:clamp(42px,6vw,76px);
-  line-height:1.12;margin:20px 0
+  line-height:1.12;
+  margin:20px 0;
 }
-.hero h1 em,h2 em{color:var(--gold);font-style:normal}
-.hero p:not(.eyebrow){
-  color:#eee;line-height:1.9;font-size:15px;max-width:510px
+.hero h1 em,h2 em {
+  color:var(--gold);
+  font-style:normal;
 }
-.hero-actions{display:flex;flex-wrap:wrap;gap:13px;margin-top:30px}
-.hero-note{font-size:12px;color:#ccc;margin-top:25px}
+.hero p:not(.eyebrow) {
+  color:#eee;
+  line-height:1.9;
+  font-size:15px;
+  max-width:510px;
+}
+.hero-actions {
+  display:flex;
+  flex-wrap:wrap;
+  gap:13px;
+  margin-top:30px;
+}
+.hero-note {
+  font-size:12px;
+  color:#ddd;
+  margin-top:25px;
+}
 
-.services{
-  background:#171717;color:white;padding:30px 7%;
-  display:grid;grid-template-columns:repeat(3,1fr);gap:22px;
-  border-bottom:2px solid var(--gold)
+.services {
+  background:#171717;
+  color:white;
+  padding:30px 7%;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
+  border-bottom:2px solid var(--gold);
 }
-.service{display:flex;align-items:center;gap:13px}
-.service-icon{font-size:27px;color:var(--gold)}
-.service strong,.service small{display:block}
-.service small{color:#aaa;margin-top:5px;font-size:11px}
+.service {
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+.service-icon {
+  font-size:27px;
+  color:var(--gold);
+}
+.service strong,.service small { display:block; }
+.service small {
+  color:#aaa;
+  margin-top:5px;
+  font-size:11px;
+}
 
-.section{padding:80px 7%}
-.heading{text-align:center;margin-bottom:42px}
-.heading h2,.section h2{
+.section { padding:80px 7%; }
+.heading {
+  text-align:center;
+  margin-bottom:42px;
+}
+.heading h2,.section h2 {
   font-family:'Playfair Display',serif;
-  font-size:clamp(30px,4vw,45px);font-weight:600
+  font-size:clamp(30px,4vw,45px);
+  font-weight:600;
 }
-.heading p:not(.eyebrow){color:#777;line-height:1.8;font-size:14px}
+.heading p:not(.eyebrow) {
+  color:#777;
+  line-height:1.8;
+  font-size:14px;
+}
 
-.track-section{
-  background:#111;color:white;padding:75px 7%;
-  display:grid;grid-template-columns:1.2fr .8fr;
-  gap:35px;align-items:center
+.track-section {
+  background:#111;
+  color:white;
+  padding:75px 7%;
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:35px;
+  align-items:center;
 }
-.track-section p:not(.eyebrow){color:#ccc;line-height:1.9}
-.track-box{
-  padding:30px;background:#202226;
-  border:1px solid #806638;text-align:center
+.track-section p:not(.eyebrow) {
+  color:#ccc;
+  line-height:1.9;
 }
-.track-box h3{
+.track-box {
+  padding:30px;
+  background:#202226;
+  border:1px solid #806638;
+  text-align:center;
+}
+.track-box h3 {
   font-family:'Playfair Display',serif;
-  font-size:25px;margin-top:0
+  font-size:25px;
+  margin-top:0;
 }
-.track-box p{font-size:13px;color:#bbb;line-height:1.7}
-.track-box .gold-button{display:block;margin-top:20px}
+.track-box p {
+  font-size:13px;
+  color:#bbb;
+  line-height:1.7;
+}
+.track-box .gold-button {
+  display:block;
+  margin-top:20px;
+}
 
-.shipping-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:22px
+.shipping-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
 }
-.shipping-card{
-  background:white;border:1px solid #e3d8c2;
-  padding:30px 23px;text-align:center;
-  transition:.25s
+.shipping-card {
+  background:white;
+  border:1px solid #e3d8c2;
+  padding:30px 23px;
+  text-align:center;
+  transition:.25s;
 }
-.shipping-card:hover{transform:translateY(-5px);box-shadow:0 12px 30px #0001}
-.shipping-card .symbol{font-size:35px;color:#ad8847}
-.shipping-card h3{
-  font-family:'Playfair Display',serif;font-size:21px
+.shipping-card:hover {
+  transform:translateY(-5px);
+  box-shadow:0 12px 30px #0001;
 }
-.shipping-card p{font-size:13px;color:#777;line-height:1.9}
+.shipping-card .symbol {
+  font-size:35px;
+  color:#ad8847;
+}
+.shipping-card h3 {
+  font-family:'Playfair Display',serif;
+  font-size:21px;
+}
+.shipping-card p {
+  font-size:13px;
+  color:#777;
+  line-height:1.9;
+}
 
-.image-section{
-  min-height:360px;color:white;padding:65px 7%;
-  display:flex;align-items:center;
+/* SHIPPING AND DISPATCH RIDER VISUAL */
+.image-section {
+  min-height:420px;
+  color:white;
+  padding:65px 7%;
+  display:flex;
+  align-items:center;
   background:
-  linear-gradient(90deg,rgba(0,0,0,.9),rgba(0,0,0,.45)),
-  url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1800&q=85')
-  center/cover
+    linear-gradient(90deg,rgba(0,0,0,.91),rgba(0,0,0,.55) 48%,rgba(0,0,0,.12)),
+    url('a_polished_cinematic_logistics_and_delivery_hub_c.png')
+    center center/cover no-repeat;
 }
-.image-section div{max-width:580px}
-.image-section p:not(.eyebrow){color:#eee;line-height:1.9}
-
-.process{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:20px
-}
-.process-card{
-  background:#fff;padding:27px;text-align:center;
-  border:1px solid #e6ddcd
-}
-.process-card span{
-  color:#b18b47;font-size:30px;
-  font-family:'Playfair Display',serif
-}
-.process-card h3{font-family:'Playfair Display',serif}
-.process-card p{font-size:13px;color:#777;line-height:1.8}
-
-.shop-section{
-  margin:65px 7%;padding:50px 25px;
-  background:#e9e1d0;text-align:center;
-  border:1px solid #d2b879
-}
-.shop-section p{color:#666;line-height:1.8}
-
-.about{
-  background:#fff;padding:75px 7%;text-align:center
-}
-.about-inner{max-width:850px;margin:auto}
-.about p:not(.eyebrow){color:#666;line-height:2;font-size:14px}
-
-.support{
-  background:#171717;color:white;padding:65px 7%;
-  text-align:center
-}
-.support p:not(.eyebrow){color:#ccc;line-height:1.9}
-.support-actions{
-  display:flex;justify-content:center;
-  flex-wrap:wrap;gap:13px;margin-top:25px
+.image-section div { max-width:580px; }
+.image-section p:not(.eyebrow) {
+  color:#eee;
+  line-height:1.9;
 }
 
-.footer{
-  background:#080808;color:white;padding:45px 7%;
-  text-align:center
+.process {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
 }
-.footer .brand{justify-content:center;margin-bottom:20px}
-.footer p{color:#aaa;font-size:13px;line-height:1.8}
-.footer a{color:var(--gold);font-size:12px;margin:9px}
-.footer small{display:block;color:#777;margin-top:25px}
+.process-card {
+  background:#fff;
+  padding:27px;
+  text-align:center;
+  border:1px solid #e6ddcd;
+}
+.process-card span {
+  color:#b18b47;
+  font-size:30px;
+  font-family:'Playfair Display',serif;
+}
+.process-card h3 {
+  font-family:'Playfair Display',serif;
+}
+.process-card p {
+  font-size:13px;
+  color:#777;
+  line-height:1.8;
+}
 
-.whatsapp{
-  position:fixed;right:18px;bottom:18px;z-index:30;
-  background:#168b50;color:white;padding:14px 18px;
-  border-radius:30px;font-size:12px;font-weight:800;
-  box-shadow:0 5px 20px #0004
+.shop-section {
+  margin:65px 7%;
+  padding:50px 25px;
+  background:#e9e1d0;
+  text-align:center;
+  border:1px solid #d2b879;
+}
+.shop-section p {
+  color:#666;
+  line-height:1.8;
 }
 
-@media(max-width:900px){
-  .nav{gap:12px}
-  .nav a{font-size:11px}
-  .track-section{grid-template-columns:1fr}
+.about {
+  background:#fff;
+  padding:75px 7%;
+  text-align:center;
 }
-@media(max-width:760px){
-  .header{padding:12px 5%}
-  .brand img{width:48px;height:48px}
-  .brand strong{font-size:17px}
-  .menu{display:block}
-  .nav{
-    display:none;position:absolute;top:100%;left:0;right:0;
-    background:#111;padding:25px;
-    flex-direction:column;align-items:flex-start;gap:21px
+.about-inner {
+  max-width:850px;
+  margin:auto;
+}
+.about p:not(.eyebrow) {
+  color:#666;
+  line-height:2;
+  font-size:14px;
+}
+
+.support {
+  background:#171717;
+  color:white;
+  padding:65px 7%;
+  text-align:center;
+}
+.support p:not(.eyebrow) {
+  color:#ccc;
+  line-height:1.9;
+}
+.support-actions {
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:13px;
+  margin-top:25px;
+}
+
+.footer {
+  background:#080808;
+  color:white;
+  padding:45px 7%;
+  text-align:center;
+}
+.footer .brand {
+  justify-content:center;
+  margin-bottom:20px;
+}
+.footer p {
+  color:#aaa;
+  font-size:13px;
+  line-height:1.8;
+}
+.footer a {
+  color:var(--gold);
+  font-size:12px;
+  margin:9px;
+}
+.footer small {
+  display:block;
+  color:#777;
+  margin-top:25px;
+}
+
+.whatsapp {
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:30;
+  background:#168b50;
+  color:white;
+  padding:14px 18px;
+  border-radius:30px;
+  font-size:12px;
+  font-weight:800;
+  box-shadow:0 5px 20px #0004;
+}
+
+@media(max-width:900px) {
+  .nav { gap:12px; }
+  .nav a { font-size:11px; }
+  .track-section { grid-template-columns:1fr; }
+}
+@media(max-width:760px) {
+  .header { padding:12px 5%; }
+  .brand img { width:48px;height:48px; }
+  .brand strong { font-size:17px; }
+  .menu { display:block; }
+  .nav {
+    display:none;
+    position:absolute;
+    top:100%;
+    left:0;
+    right:0;
+    background:#111;
+    padding:25px;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:21px;
   }
-  .nav.open{display:flex}
-  .hero{min-height:590px;padding:55px 6%;background-position:58% center}
-  .services{grid-template-columns:1fr}
-  .shipping-grid,.process{grid-template-columns:1fr}
+  .nav.open { display:flex; }
+  .hero {
+    min-height:590px;
+    padding:55px 6%;
+    background-position:58% center;
+  }
+  .services { grid-template-columns:1fr; }
+  .shipping-grid,.process { grid-template-columns:1fr; }
+  .image-section { background-position:58% center; }
 }
-@media(max-width:480px){
-  .announcement{font-size:9px;letter-spacing:1px}
-  .hero h1{font-size:43px}
-  .section{padding:60px 6%}
-  .shop-section{margin:40px 5%;padding:35px 20px}
-  .image-section{padding:50px 6%}
+@media(max-width:480px) {
+  .announcement {
+    font-size:9px;
+    letter-spacing:1px;
+  }
+  .hero h1 { font-size:43px; }
+  .section { padding:60px 6%; }
+  .shop-section {
+    margin:40px 5%;
+    padding:35px 20px;
+  }
+  .image-section {
+    padding:50px 6%;
+    min-height:380px;
+  }
 }
 </style>
 </head>
@@ -284,7 +497,7 @@ Welcome to SEKIFLEX COLLECTIONS. Discover a professional way to shop, follow you
 <a class="gold-button" href="track.html">TRACK PACKAGE →</a>
 <a class="shop-button" href="https://sekiflexcollections.com" target="_blank" rel="noopener">SHOP NOW ↗</a>
 </div>
-<div class="hero-note">International shipping · Parcel handling · Customer support</div>
+<div class="hero-note">International shipping · Parcel handling · Dispatch assistance · Customer support</div>
 </div>
 </section>
 
@@ -348,9 +561,9 @@ Have an SC tracking number? Visit our tracking portal to view the order and deli
 <section class="image-section">
 <div>
 <p class="eyebrow">SEKIFLEX COLLECTIONS</p>
-<h2>Every package deserves <em>care.</em></h2>
+<h2>From dispatch <em>to delivery.</em></h2>
 <p>
-We are committed to clear communication and keeping customers informed throughout their order experience.
+Explore your order information, follow available delivery updates and contact our customer-care team whenever you need assistance.
 </p>
 <a class="gold-button" href="track.html">TRACK YOUR ORDER →</a>
 </div>
@@ -455,5 +668,4 @@ nav.querySelectorAll("a").forEach(link => {
 </script>
 
 </body>
-  </html>
-  
+</html>
