@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", async () => {
   // SEKIFLEX COLLECTIONS - STAFF AND CUSTOMER SYSTEM
 
@@ -42,6 +43,31 @@ document.addEventListener("DOMContentLoaded", async () => {
     element.style.fontWeight = "600";
   }
 
+  // RED, YELLOW AND GREEN ORDER STATUS COLOURS
+
+  function getStatusColor(value) {
+    const status = String(value || "").toLowerCase();
+
+    if (
+      status.includes("delayed") ||
+      status.includes("returned") ||
+      status.includes("attempted") ||
+      status.includes("awaiting payment")
+    ) {
+      return "#D93636";
+    }
+
+    if (
+      status.includes("delivered") ||
+      status.includes("ready for collection") ||
+      status.includes("payment confirmed")
+    ) {
+      return "#239B59";
+    }
+
+    return "#D6A500";
+  }
+
   function addDetail(container, label, value) {
     if (value === null || value === undefined || value === "") return;
 
@@ -49,7 +75,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     const strong = document.createElement("strong");
 
     strong.textContent = label + ": ";
-    p.append(strong, document.createTextNode(String(value)));
+
+    const text = document.createElement("span");
+    text.textContent = String(value);
+
+    if (label === "Customer status" || label === "Shipment status") {
+      text.style.color = getStatusColor(value);
+      text.style.fontWeight = "700";
+    }
+
+    p.append(strong, text);
     container.appendChild(p);
   }
 
@@ -62,8 +97,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     ].filter(Boolean).join(" | ") || "Unknown database error";
   }
 
-  // Convert selected delivery days (1–7) into a calendar date.
-  // Supabase estimated_delivery column requires YYYY-MM-DD.
+  // CONVERT SELECTED DELIVERY DAYS INTO A CALENDAR DATE
 
   function getEstimatedDeliveryDate(days) {
     const numberOfDays = Number(days);
@@ -73,7 +107,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       numberOfDays < 1 ||
       numberOfDays > 7
     ) {
-      throw new Error("Please select an estimated delivery time from 1 to 7 days.");
+      throw new Error(
+        "Please select an estimated delivery time from 1 to 7 days."
+      );
     }
 
     const date = new Date();
@@ -96,7 +132,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const number = document
         .getElementById("tracking-number")
-        .value.trim().toUpperCase();
+        .value.trim()
+        .toUpperCase();
 
       const phone = document
         .getElementById("phone-last4")
@@ -109,7 +146,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       result.replaceChildren();
 
       if (!/^SC-\d{4}-\d{6}$/.test(number)) {
-        showMessage(message, "Please enter a valid SC tracking number.", "error");
+        showMessage(
+          message,
+          "Please enter a valid SC tracking number.",
+          "error"
+        );
         return;
       }
 
@@ -149,7 +190,11 @@ document.addEventListener("DOMContentLoaded", async () => {
           return;
         }
 
-        showMessage(message, "Shipment information found.", "success");
+        showMessage(
+          message,
+          "Shipment information found.",
+          "success"
+        );
 
         const heading = document.createElement("h2");
         heading.textContent = "Shipment details";
@@ -181,6 +226,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         addDetail(result, "Courier", shipment.courier_name);
         addDetail(result, "Courier waybill", shipment.courier_waybill);
         addDetail(result, "Estimated delivery", shipment.estimated_delivery);
+
         addDetail(
           result,
           "Collection instructions",
@@ -197,6 +243,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       } catch (error) {
         console.error("Tracking error:", error);
+
         showMessage(
           message,
           "Tracking failed: " + getErrorDetails(error),
@@ -295,7 +342,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       event.preventDefault();
 
       if (!db) {
-        showMessage(loginMessage, "Database connection unavailable.", "error");
+        showMessage(
+          loginMessage,
+          "Database connection unavailable.",
+          "error"
+        );
         return;
       }
 
@@ -438,6 +489,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       addDetail(card, "Currency", order.currency);
       addDetail(card, "Order amount", order.order_amount);
       addDetail(card, "Delivery amount", order.delivery_amount);
+      addDetail(card, "Shipment status", order.status);
 
       const paymentLabel = document.createElement("label");
       paymentLabel.textContent = "Payment status";
@@ -483,7 +535,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           if (error) throw error;
 
-          showMessage(feedback, "Updates saved successfully.", "success");
+          showMessage(
+            feedback,
+            "Updates saved successfully.",
+            "success"
+          );
+
           await loadOrders();
         } catch (error) {
           console.error("Order update error:", error);
@@ -528,7 +585,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       event.preventDefault();
 
       if (!db) {
-        showMessage(orderMessage, "Database connection unavailable.", "error");
+        showMessage(
+          orderMessage,
+          "Database connection unavailable.",
+          "error"
+        );
         return;
       }
 
@@ -552,7 +613,9 @@ document.addEventListener("DOMContentLoaded", async () => {
           amount < 0 ||
           delivery < 0
         ) {
-          throw new Error("Please enter valid, non-negative amounts.");
+          throw new Error(
+            "Please enter valid, non-negative amounts."
+          );
         }
 
         const selectedDays =
@@ -562,24 +625,35 @@ document.addEventListener("DOMContentLoaded", async () => {
           getEstimatedDeliveryDate(selectedDays);
 
         const order = {
-          customer_name: document.getElementById("customer-name").value.trim(),
-          customer_phone: document.getElementById("customer-phone").value.trim(),
+          customer_name:
+            document.getElementById("customer-name").value.trim(),
+
+          customer_phone:
+            document.getElementById("customer-phone").value.trim(),
+
           customer_email:
             document.getElementById("customer-email").value.trim() || null,
 
-          order_source: document.getElementById("order-source").value,
+          order_source:
+            document.getElementById("order-source").value,
 
-          country: document.getElementById("country").value,
-          currency: document.getElementById("currency").value,
+          country:
+            document.getElementById("country").value,
 
-          destination: document.getElementById("destination").value.trim(),
+          currency:
+            document.getElementById("currency").value,
+
+          destination:
+            document.getElementById("destination").value.trim(),
+
           package_description:
             document.getElementById("package-description").value.trim(),
 
           order_amount: amount,
           delivery_amount: delivery,
 
-          payment_status: document.getElementById("payment-status").value,
+          payment_status:
+            document.getElementById("payment-status").value,
 
           status: "Awaiting payment",
 
@@ -603,7 +677,9 @@ document.addEventListener("DOMContentLoaded", async () => {
           !order.country ||
           !order.currency
         ) {
-          throw new Error("Please complete all required order details.");
+          throw new Error(
+            "Please complete all required order details."
+          );
         }
 
         const { data, error } = await db
@@ -665,7 +741,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   setDashboardVisible(false);
 
   if (!db) {
-    showMessage(loginMessage, "Database connection unavailable.", "error");
+    showMessage(
+      loginMessage,
+      "Database connection unavailable.",
+      "error"
+    );
     return;
   }
 
