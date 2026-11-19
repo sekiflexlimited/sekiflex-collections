@@ -388,3 +388,87 @@ footer {
     padding: 15px !important;
   }
 }
+
+/* SEKIFLEX - FINAL ADMIN DARK LUXURY THEME */
+
+html body.admin-body {
+  background:
+    radial-gradient(ellipse at top, #29251b 0%, transparent 55%),
+    linear-gradient(135deg, #08090c, #17191f, #090a0d) !important;
+  color: #ffffff !important;
+}
+
+.admin-body .admin-shell {
+  background: transparent !important;
+}
+
+.admin-body .admin-heading h1,
+.admin-body .admin-card h2 {
+  color: #f5d76e !important;
+}
+
+.admin-body .admin-heading p:not(.eyebrow) {
+  color: #d0d0d0 !important;
+}
+
+.admin-body .stat-card,
+.admin-body .admin-card {
+  background: linear-gradient(145deg, #24262d, #121419) !important;
+  color: #ffffff !important;
+  border: 1px solid #806b36 !important;
+  box-shadow: 0 8px 25px #0008 !important;
+}
+
+.admin-body .stat-card small,
+.admin-body .stat-card span {
+  color: #d1c9b6 !important;
+}
+
+.admin-body .stat-card strong {
+  color: #f5d76e !important;
+}
+
+.admin-body .notice {
+  background: #242019 !important;
+  color: #f5e8c7 !important;
+  border: 1px solid #b18c3b !important;
+}
+
+.admin-body #admin-logout {
+  background: #17191d !important;
+  color: #f5d76e !important;
+  border: 2px solid #d4af37 !important;
+  min-height: 48px;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-weight: 800;
+}
+
+.admin-body #admin-logout:hover {
+  background: #d4af37 !important;
+  color: #101114 !important;
+}
+
+.admin-body .admin-top {
+  background: #101216 !important;
+  border-bottom: 1px solid #d4af37;
+}
+
+.admin-body .admin-card .btn-outline,
+.admin-body #refresh-orders {
+  background: #17191d !important;
+  color: #f5d76e !important;
+  border: 1px solid #d4af37 !important;
+}
+
+.admin-body input,
+.admin-body select,
+.admin-body textarea {
+  background: #101216 !important;
+  color: #ffffff !important;
+  border-color: #806b36 !important;
+}
+
+.admin-body label {
+  color: #f5d76e !important;
+}
