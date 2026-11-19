@@ -1,6 +1,6 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // SEKIFLEX COLLECTIONS - website, customer tracking and staff dashboard
+  // SEKIFLEX COLLECTIONS
 
   const year = document.getElementById("year");
   if (year) year.textContent = new Date().getFullYear();
@@ -16,14 +16,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Shared Supabase connection
   let db = null;
 
-  if (
-    window.supabase &&
-    window.SEKIFLEX_SUPABASE_URL &&
-    window.SEKIFLEX_SUPABASE_KEY
-  ) {
+  if (window.supabase && window.SEKIFLEX_SUPABASE_URL && window.SEKIFLEX_SUPABASE_KEY) {
     db = window.supabase.createClient(
       window.SEKIFLEX_SUPABASE_URL,
       window.SEKIFLEX_SUPABASE_KEY
@@ -32,31 +27,34 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function showMessage(element, message, type = "info") {
     if (!element) return;
-
     const colors = {
       success: "#16803c",
       error: "#c62828",
       info: "#1769aa"
     };
-
     element.textContent = message;
     element.style.color = colors[type] || colors.info;
     element.style.fontWeight = "600";
+  }
+
+  function addDetail(container, label, value) {
+    if (value === null || value === undefined || value === "") return;
+    const p = document.createElement("p");
+    const strong = document.createElement("strong");
+    strong.textContent = label + ": ";
+    p.append(strong, document.createTextNode(String(value)));
+    container.appendChild(p);
   }
 
   // CUSTOMER TRACKING
   const trackingForm = document.getElementById("tracking-form");
 
   if (trackingForm) {
-    trackingForm.addEventListener("submit", async (event) => {
+    trackingForm.addEventListener("submit", async event => {
       event.preventDefault();
 
-      const number = document.getElementById("tracking-number")
-        .value.trim().toUpperCase();
-
-      const phone = document.getElementById("phone-last4")
-        .value.trim();
-
+      const number = document.getElementById("tracking-number").value.trim().toUpperCase();
+      const phone = document.getElementById("phone-last4").value.trim();
       const message = document.getElementById("tracking-message");
       const result = document.getElementById("tracking-result");
       const button = trackingForm.querySelector('button[type="submit"]');
@@ -102,37 +100,30 @@ document.addEventListener("DOMContentLoaded", async () => {
         heading.textContent = "Shipment details";
         result.appendChild(heading);
 
-        const details = [
-          ["Tracking number", shipment.tracking_number],
-          ["Current status", shipment.status],
-          ["Destination", shipment.destination],
-          ["Courier", shipment.courier_name],
-          ["Courier waybill", shipment.courier_waybill],
-          ["Estimated delivery", shipment.estimated_delivery],
-          ["Collection instructions", shipment.collection_instructions]
-        ];
+        addDetail(result, "Tracking number", shipment.tracking_number);
+        addDetail(result, "Current status", shipment.status);
+        addDetail(result, "Payment status", shipment.payment_status);
+        addDetail(result, "Country", shipment.country);
+        addDetail(result, "Destination", shipment.destination);
+        addDetail(result, "Currency", shipment.currency);
 
-        details.forEach(([label, value]) => {
-          if (value !== null && value !== undefined && value !== "") {
-            const paragraph = document.createElement("p");
-            const strong = document.createElement("strong");
+        if (shipment.order_amount !== null && shipment.order_amount !== undefined) {
+          addDetail(result, "Order amount", `${shipment.currency || ""} ${shipment.order_amount}`);
+        }
+        if (shipment.delivery_amount !== null && shipment.delivery_amount !== undefined) {
+          addDetail(result, "Delivery amount", `${shipment.currency || ""} ${shipment.delivery_amount}`);
+        }
 
-            strong.textContent = label + ": ";
-            paragraph.appendChild(strong);
-            paragraph.appendChild(document.createTextNode(String(value)));
-            result.appendChild(paragraph);
-          }
-        });
+        addDetail(result, "Courier", shipment.courier_name);
+        addDetail(result, "Courier waybill", shipment.courier_waybill);
+        addDetail(result, "Estimated delivery", shipment.estimated_delivery);
+        addDetail(result, "Collection instructions", shipment.collection_instructions);
 
         if (shipment.updated_at) {
           const updated = document.createElement("small");
-          updated.textContent =
-            "Last updated: " +
-            new Date(shipment.updated_at).toLocaleString();
-
+          updated.textContent = "Last updated: " + new Date(shipment.updated_at).toLocaleString();
           result.appendChild(updated);
         }
-
       } catch (error) {
         console.error("Tracking error:", error);
         showMessage(message, "We couldn't complete your tracking request. Please try again.", "error");
@@ -174,6 +165,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     "Returned to sender"
   ];
 
+  const paymentStatuses = ["Awaiting payment", "Payment confirmed"];
   let currentOrders = [];
 
   function setDashboardVisible(visible) {
@@ -181,7 +173,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     dashboard.hidden = !visible;
   }
 
-  // Confirm the signed-in account belongs to an active staff member
   async function verifyStaff(user) {
     const { data, error } = await db
       .from("staff_members")
@@ -213,7 +204,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // STAFF LOGIN
   if (loginForm) {
-    loginForm.addEventListener("submit", async (event) => {
+    loginForm.addEventListener("submit", async event => {
       event.preventDefault();
 
       if (!db) {
@@ -229,15 +220,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       showMessage(loginMessage, "Signing in securely...", "info");
 
       try {
-        const { data, error } = await db.auth.signInWithPassword({
-          email,
-          password
-        });
-
+        const { data, error } = await db.auth.signInWithPassword({ email, password });
         if (error) throw error;
-
         await enterDashboard(data.user);
-
       } catch (error) {
         console.error("Login error:", error);
         showMessage(loginMessage, "Sign-in failed. Check your email and password.", "error");
@@ -247,7 +232,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // LOAD ORDERS AND DASHBOARD STATISTICS
+  // LOAD ORDERS AND STATISTICS
   async function loadOrders() {
     if (!db) return;
 
@@ -267,30 +252,56 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     currentOrders = data || [];
 
-    document.getElementById("stat-total").textContent =
-      currentOrders.length;
-
+    document.getElementById("stat-total").textContent = currentOrders.length;
     document.getElementById("stat-payment").textContent =
-      currentOrders.filter(order => order.status === "Awaiting payment").length;
-
+      currentOrders.filter(order => order.payment_status === "Awaiting payment").length;
     document.getElementById("stat-transit").textContent =
       currentOrders.filter(order => order.status === "In transit").length;
-
     document.getElementById("stat-delivered").textContent =
       currentOrders.filter(order => order.status === "Delivered").length;
 
     renderOrders();
   }
 
-  // DISPLAY ORDERS
+  function makeSelect(options, selectedValue) {
+    const select = document.createElement("select");
+    select.style.display = "block";
+    select.style.width = "100%";
+    select.style.marginTop = "8px";
+    select.style.minHeight = "44px";
+    select.style.padding = "8px";
+
+    options.forEach(value => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      select.appendChild(option);
+    });
+
+    if (selectedValue && !options.includes(selectedValue)) {
+      const option = document.createElement("option");
+      option.value = selectedValue;
+      option.textContent = selectedValue;
+      select.appendChild(option);
+    }
+
+    select.value = selectedValue || options[0];
+    return select;
+  }
+
+  // DISPLAY AND UPDATE ORDERS
   function renderOrders() {
     ordersList.replaceChildren();
 
-    const search = searchInput.value.trim().toLowerCase();
+    const search = (searchInput?.value || "").trim().toLowerCase();
 
     const filtered = currentOrders.filter(order =>
-      String(order.tracking_number || "").toLowerCase().includes(search) ||
-      String(order.customer_name || "").toLowerCase().includes(search)
+      [
+        order.tracking_number,
+        order.customer_name,
+        order.destination,
+        order.country
+      ].some(value => String(value || "").toLowerCase().includes(search))
     );
 
     if (!filtered.length) {
@@ -307,72 +318,75 @@ document.addEventListener("DOMContentLoaded", async () => {
       title.textContent = order.tracking_number || "Order";
       card.appendChild(title);
 
-      const customer = document.createElement("p");
-      customer.textContent = "Customer: " + order.customer_name;
-      card.appendChild(customer);
+      addDetail(card, "Customer", order.customer_name);
+      addDetail(card, "Phone", order.customer_phone);
+      addDetail(card, "Country", order.country);
+      addDetail(card, "Destination", order.destination);
+      addDetail(card, "Currency", order.currency);
 
-      const destination = document.createElement("p");
-      destination.textContent = "Destination: " + order.destination;
-      card.appendChild(destination);
-
-      const statusLabel = document.createElement("label");
-      statusLabel.textContent = "Shipment status";
-
-      const select = document.createElement("select");
-      select.style.display = "block";
-      select.style.width = "100%";
-      select.style.marginTop = "8px";
-
-      statuses.forEach(status => {
-        const option = document.createElement("option");
-        option.value = status;
-        option.textContent = status;
-        select.appendChild(option);
-      });
-
-      if (!statuses.includes(order.status)) {
-        const option = document.createElement("option");
-        option.value = order.status;
-        option.textContent = order.status;
-        select.appendChild(option);
+      if (order.order_amount !== null && order.order_amount !== undefined) {
+        addDetail(card, "Order amount", `${order.currency || ""} ${order.order_amount}`);
+      }
+      if (order.delivery_amount !== null && order.delivery_amount !== undefined) {
+        addDetail(card, "Delivery amount", `${order.currency || ""} ${order.delivery_amount}`);
       }
 
-      select.value = order.status;
+      const paymentLabel = document.createElement("label");
+      paymentLabel.textContent = "Payment status";
+      paymentLabel.style.display = "block";
+      paymentLabel.style.marginTop = "14px";
+
+      const paymentSelect = makeSelect(paymentStatuses, order.payment_status || "Awaiting payment");
+
+      const shipmentLabel = document.createElement("label");
+      shipmentLabel.textContent = "Shipment status";
+      shipmentLabel.style.display = "block";
+      shipmentLabel.style.marginTop = "14px";
+
+      const shipmentSelect = makeSelect(statuses, order.status || "Awaiting payment");
 
       const updateButton = document.createElement("button");
       updateButton.type = "button";
       updateButton.className = "btn btn-gold";
-      updateButton.style.marginTop = "12px";
-      updateButton.textContent = "Save status update";
+      updateButton.style.marginTop = "14px";
+      updateButton.textContent = "Save payment and shipment updates";
 
       const feedback = document.createElement("p");
       feedback.setAttribute("role", "status");
 
       updateButton.addEventListener("click", async () => {
         updateButton.disabled = true;
-        showMessage(feedback, "Saving status...", "info");
+        showMessage(feedback, "Saving updates...", "info");
 
-        const { error } = await db
-          .from("orders")
-          .update({ status: select.value })
-          .eq("id", order.id);
+        try {
+          const { error } = await db
+            .from("orders")
+            .update({
+              payment_status: paymentSelect.value,
+              status: shipmentSelect.value
+            })
+            .eq("id", order.id);
 
-        updateButton.disabled = false;
+          if (error) throw error;
 
-        if (error) {
-          console.error("Status update error:", error);
-          showMessage(feedback, "Could not update status. Please try again.", "error");
-          return;
+          showMessage(feedback, "Payment and shipment updates saved.", "success");
+          await loadOrders();
+        } catch (error) {
+          console.error("Order update error:", error);
+          showMessage(feedback, "Could not save updates. Please try again.", "error");
+        } finally {
+          updateButton.disabled = false;
         }
-
-        showMessage(feedback, "Shipment status updated successfully.", "success");
-        await loadOrders();
       });
 
-      card.appendChild(statusLabel);
-      card.appendChild(select);
-      card.appendChild(updateButton);
-      card.appendChild(feedback);
+      card.append(
+        paymentLabel,
+        paymentSelect,
+        shipmentLabel,
+        shipmentSelect,
+        updateButton,
+        feedback
+      );
 
       ordersList.appendChild(card);
     });
@@ -383,14 +397,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   const refreshButton = document.getElementById("refresh-orders");
-
-  if (refreshButton) {
-    refreshButton.addEventListener("click", loadOrders);
-  }
+  if (refreshButton) refreshButton.addEventListener("click", loadOrders);
 
   // REGISTER A NEW ORDER
   if (orderForm) {
-    orderForm.addEventListener("submit", async (event) => {
+    orderForm.addEventListener("submit", async event => {
       event.preventDefault();
 
       if (!db) {
@@ -400,14 +411,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const button = orderForm.querySelector('button[type="submit"]');
       button.disabled = true;
-
       showMessage(orderMessage, "Registering your order...", "info");
 
       const amount = Number(document.getElementById("order-amount").value);
       const delivery = Number(document.getElementById("delivery-amount").value);
 
-      if (amount < 0 || delivery < 0) {
-        showMessage(orderMessage, "Amounts cannot be negative.", "error");
+      if (!Number.isFinite(amount) || !Number.isFinite(delivery) || amount < 0 || delivery < 0) {
+        showMessage(orderMessage, "Please enter valid amounts. Amounts cannot be negative.", "error");
         button.disabled = false;
         return;
       }
@@ -417,14 +427,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         customer_phone: document.getElementById("customer-phone").value.trim(),
         customer_email: document.getElementById("customer-email").value.trim() || null,
         order_source: document.getElementById("order-source").value,
+        country: document.getElementById("country").value,
+        currency: document.getElementById("currency").value,
         destination: document.getElementById("destination").value.trim(),
         package_description: document.getElementById("package-description").value.trim(),
-        courier_name: document.getElementById("courier-name").value || null,
+        courier_name: document.getElementById("courier-name").value.trim() || null,
         courier_waybill: document.getElementById("courier-waybill").value.trim() || null,
         payment_status: document.getElementById("payment-status").value,
         order_amount: amount,
         delivery_amount: delivery,
-        estimated_delivery: document.getElementById("estimated-delivery").value || null,
+        estimated_delivery: document.getElementById("estimated-delivery").value.trim() || null,
         collection_instructions: document.getElementById("collection-instructions").value.trim() || null
       };
 
@@ -444,11 +456,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
 
         orderForm.reset();
-        document.getElementById("order-amount").value = "0";
+        document.getElementById("country").value = "Nigeria";
+        document.getElementById("currency").value = "NGN";
         document.getElementById("delivery-amount").value = "0";
 
         await loadOrders();
-
       } catch (error) {
         console.error("Order registration error:", error);
         showMessage(orderMessage, "Order could not be registered. Please check the details and try again.", "error");
@@ -458,7 +470,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // STAFF LOGOUT
+  // LOG OUT
   if (logoutButton) {
     logoutButton.addEventListener("click", async () => {
       if (db) await db.auth.signOut();
@@ -467,7 +479,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Restore an existing staff session
+  // RESTORE STAFF SESSION
   setDashboardVisible(false);
 
   if (!db) {
@@ -477,8 +489,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const { data: sessionData } = await db.auth.getSession();
 
-  if (sessionData && sessionData.session) {
+  if (sessionData?.session) {
     await enterDashboard(sessionData.session.user);
   }
 });
-      
