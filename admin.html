@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17191d">
+  <title>Company workspace | SEKIFLEX LIMITED</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="admin-body">
+  <header class="admin-top"><a class="brand" href="index.html"><span class="brand-mark">S</span><span><strong>SEKIFLEX</strong><small>LIMITED · COMPANY WORKSPACE</small></span></a><a href="index.html" class="admin-home">View public website ↗</a></header>
+  <main class="admin-shell">
+    <div class="admin-heading"><div><p class="eyebrow">PRIVATE COMPANY AREA · DESIGN PREVIEW</p><h1>Operations <em>overview.</em></h1><p>Order registration, parcel management and delivery updates.</p></div><span class="preview-pill">SETUP PREVIEW</span></div>
+    <div class="notice"><strong>Security note:</strong> This is the dashboard layout preview, not a live secure admin system. We will connect Supabase authentication and database access before entering real customer information.</div>
+    <section class="stat-grid">
+      <article class="stat-card"><small>Total orders</small><strong>—</strong><span>Connect company database</span></article>
+      <article class="stat-card"><small>Awaiting payment</small><strong>—</strong><span>Live figures not connected</span></article>
+      <article class="stat-card"><small>In transit</small><strong>—</strong><span>Live figures not connected</span></article>
+      <article class="stat-card"><small>Delivered</small><strong>—</strong><span>Live figures not connected</span></article>
+    </section>
+    <section class="admin-card">
+      <div class="card-heading"><div><p class="eyebrow">ORDER MANAGEMENT</p><h2>Register a new order</h2></div><span class="sc-chip">SC REFERENCE</span></div>
+      <form id="order-preview-form" class="admin-form">
+        <div class="form-grid">
+          <label>Customer full name<input placeholder="Customer's full name" required></label>
+          <label>Customer phone<input placeholder="+234..." inputmode="tel" required></label>
+          <label>Customer email <span class="optional">(optional)</span><input type="email" placeholder="name@example.com"></label>
+          <label>Order source<select><option>WhatsApp</option><option>GOB online store</option><option>Other</option></select></label>
+          <label class="wide">Delivery destination<input placeholder="Country, state/city and full delivery address" required></label>
+          <label>Package description<input placeholder="Describe the parcel" required></label>
+          <label>External courier<select><option>To be selected</option><option>AKTC</option><option>DHL</option><option>FedEx</option><option>UPS</option><option>Other transport company</option></select></label>
+          <label>External courier waybill <span class="optional">(when available)</span><input placeholder="Carrier's official waybill number"></label>
+          <label>Payment status<select><option>Awaiting payment</option><option>Payment confirmed</option><option>Partially paid</option></select></label>
+        </div>
+        <button class="btn btn-gold" type="submit">Preview order registration</button>
+        <p class="form-message" id="admin-message" role="status"></p>
+      </form>
+    </section>
+    <section class="admin-card">
+      <p class="eyebrow">DELIVERY STATUS WORKFLOW</p><h2>Order progress labels</h2>
+      <div class="status-list"><span>Awaiting payment</span><span>Payment confirmed</span><span>Order processing</span><span>Package being packed</span><span>Package packed and prepared</span><span>Awaiting dispatch</span><span>Dispatched / handed to courier</span><span>In transit</span><span>Arrived at destination facility</span><span>Ready for collection</span><span>Out for delivery</span><span>Delivered</span></div>
+    </section>
+  </main>
+  <footer class="site-footer"><p>SEKIFLEX COLLECTIONS · Powered by <strong>SEKIFLEX LIMITED</strong></p></footer>
+  <script src="app.js"></script>
+</body>
+</html>

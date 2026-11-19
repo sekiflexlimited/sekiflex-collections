@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17191d">
+  <title>Track your order | SEKIFLEX COLLECTIONS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="subpage">
+  <header class="site-header">
+    <a class="brand" href="index.html"><span class="brand-mark">S</span><span><strong>SEKIFLEX</strong><small>COLLECTIONS</small></span></a>
+    <nav class="main-nav"><a href="index.html">Home</a><a href="https://sekiflexcollections.com" target="_blank" rel="noopener">Shop online ↗</a></nav>
+  </header>
+  <main class="subpage-main">
+    <p class="eyebrow">SEKIFLEX COLLECTIONS · ORDER SERVICES</p>
+    <h1>Track your <em>order.</em></h1>
+    <p class="sublead">Enter the SC tracking reference provided by Sekiflex Collections to view your delivery progress.</p>
+    <form class="tracking-form" id="tracking-form">
+      <label for="tracking-number">Your SC tracking number</label>
+      <div class="tracking-input-row"><input id="tracking-number" name="tracking-number" placeholder="e.g. SC-2026-000125" autocomplete="off" required><button class="btn btn-gold" type="submit">Track order →</button></div>
+      <small>Enter the full reference exactly as it appears in your order message.</small>
+      <p class="form-message" id="tracking-message" role="status"></p>
+    </form>
+    <div class="tracking-help"><span class="help-icon">i</span><p><strong>Don't have your SC number?</strong><br>Contact the Sekiflex Collections team using the WhatsApp channel you used to place your order.</p></div>
+    <a class="back-link" href="index.html">← Back to Sekiflex Collections</a>
+    <p class="small-note center-note">This tracking page is the first-stage interface. Live order lookup will be enabled after the secure company database is connected.</p>
+  </main>
+  <footer class="site-footer"><p>Powered by <strong>SEKIFLEX LIMITED</strong></p><small>© <span id="year"></span> Sekiflex Limited. All rights reserved.</small></footer>
+  <script src="app.js"></script>
+</body>
+</html>
