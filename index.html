@@ -4,425 +4,332 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#17191d">
-  <meta name="description" content="Discover premium fashion at SEKIFLEX COLLECTIONS. Powered by SEKIFLEX LIMITED.">
-  <title>SEKIFLEX COLLECTIONS | Luxury Fashion</title>
+  <meta name="theme-color" content="#111111">
+  <meta name="description" content="Discover elegant women's gowns and men's fashion at SEKIFLEX COLLECTIONS. Powered by SEKIFLEX LIMITED.">
+  <title>SEKIFLEX COLLECTIONS | Style for Every You</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="styles.css">
 
   <style>
     :root {
-      --black: #111111;
-      --gold: #c6a15b;
-      --ivory: #f7f4ec;
-      --white: #ffffff;
+      --black:#111111;
+      --gold:#c6a15b;
+      --ivory:#f7f4ec;
+      --white:#fff;
     }
 
-    * { box-sizing: border-box; }
-
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
     body {
-      margin: 0;
-      background: var(--ivory);
-      color: var(--black);
-      font-family: 'DM Sans', sans-serif;
+      margin:0;
+      background:var(--ivory);
+      color:var(--black);
+      font-family:'DM Sans',sans-serif;
     }
-
-    a { text-decoration: none; }
+    a { text-decoration:none; }
 
     .announcement {
-      background: #080808;
-      color: var(--gold);
-      text-align: center;
-      padding: 11px;
-      font-size: 12px;
-      letter-spacing: 2px;
+      background:#080808;
+      color:var(--gold);
+      text-align:center;
+      padding:11px;
+      font-size:11px;
+      letter-spacing:2px;
     }
 
     .site-header {
-      background: #111;
-      color: white;
-      padding: 17px 6%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: relative;
-      z-index: 10;
-      border-bottom: 1px solid #806638;
+      background:#111;
+      color:white;
+      padding:13px 6%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      position:relative;
+      z-index:10;
+      border-bottom:1px solid #806638;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: white;
+    .brand { display:flex; align-items:center; gap:12px; }
+    .brand img {
+      width:65px;
+      height:65px;
+      object-fit:contain;
+      border-radius:50%;
     }
 
-    .brand-mark {
-      color: var(--gold);
-      font-family: 'Playfair Display', serif;
-      font-size: 48px;
-      line-height: 1;
+    .brand-name strong {
+      display:block;
+      color:white;
+      font-family:'Playfair Display',serif;
+      font-size:22px;
+      letter-spacing:2px;
     }
-
-    .brand strong {
-      display: block;
-      font-family: 'Playfair Display', serif;
-      font-size: 24px;
-      letter-spacing: 2px;
-    }
-
-    .brand small {
-      display: block;
-      color: var(--gold);
-      letter-spacing: 5px;
-      font-size: 10px;
+    .brand-name small {
+      color:var(--gold);
+      letter-spacing:4px;
+      font-size:10px;
     }
 
     .main-nav {
-      display: flex;
-      align-items: center;
-      gap: 30px;
+      display:flex;
+      align-items:center;
+      gap:27px;
     }
-
-    .main-nav a {
-      color: white;
-      font-size: 13px;
-    }
-
-    .main-nav a:hover { color: var(--gold); }
-
+    .main-nav a { color:white; font-size:13px; }
+    .main-nav a:hover { color:var(--gold); }
     .main-nav .nav-shop {
-      background: var(--gold);
-      color: #111;
-      padding: 13px 22px;
-      border-radius: 30px;
-      font-weight: 700;
+      background:var(--gold);
+      color:#111;
+      padding:13px 22px;
+      border-radius:3px;
+      font-weight:700;
     }
 
     .menu-toggle {
-      display: none;
-      color: white;
-      background: transparent;
-      border: 1px solid var(--gold);
-      border-radius: 6px;
-      font-size: 24px;
-      padding: 5px 11px;
+      display:none;
+      color:white;
+      background:transparent;
+      border:1px solid var(--gold);
+      border-radius:5px;
+      font-size:23px;
+      padding:5px 11px;
     }
 
+    /* Hero keeps the original background photograph */
     .hero {
-      min-height: 650px;
-      display: flex;
-      align-items: center;
-      padding: 75px 7%;
-      color: white;
+      min-height:660px;
+      display:flex;
+      align-items:center;
+      padding:75px 7%;
+      color:white;
       background:
-        linear-gradient(90deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.73) 48%, rgba(0,0,0,.15) 100%),
-        url('https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2000&q=90') center 35%/cover;
+        linear-gradient(90deg,rgba(0,0,0,.90),rgba(0,0,0,.63) 52%,rgba(0,0,0,.12)),
+        url('https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2000&q=90')
+        center 35%/cover;
     }
 
-    .hero-copy {
-      max-width: 650px;
-    }
-
+    .hero-copy { max-width:650px; }
     .eyebrow {
-      color: var(--gold);
-      letter-spacing: 4px;
-      font-size: 11px;
-      font-weight: 700;
+      color:var(--gold);
+      letter-spacing:4px;
+      font-size:11px;
+      font-weight:700;
     }
-
     .hero h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(48px, 7vw, 88px);
-      line-height: 1.08;
-      margin: 22px 0;
+      font-family:'Playfair Display',serif;
+      font-size:clamp(48px,7vw,86px);
+      line-height:1.08;
+      margin:20px 0;
     }
-
-    .hero h1 em, h2 em {
-      color: var(--gold);
-      font-weight: 500;
-    }
-
+    .hero h1 em,h2 em { color:var(--gold); font-weight:500; }
     .hero-intro {
-      max-width: 520px;
-      line-height: 1.9;
-      color: #e1e1e1;
-      font-size: 15px;
+      max-width:510px;
+      line-height:1.9;
+      color:#eee;
+      font-size:15px;
     }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-top: 30px;
-    }
+    .hero-actions { display:flex; flex-wrap:wrap; gap:14px; margin-top:30px; }
 
     .btn {
-      display: inline-block;
-      padding: 16px 25px;
-      border-radius: 4px;
-      font-size: 13px;
-      font-weight: 700;
-      transition: .2s;
+      display:inline-block;
+      padding:15px 25px;
+      border-radius:3px;
+      font-size:13px;
+      font-weight:700;
+      transition:.2s;
     }
-
-    .btn:hover { transform: translateY(-3px); }
-
-    .btn-gold {
-      background: var(--gold);
-      color: #111;
-    }
-
-    .btn-outline {
-      border: 1px solid var(--gold);
-      color: white;
-    }
-
-    .hero-note {
-      margin-top: 30px;
-      color: #ddd;
-      font-size: 12px;
-    }
+    .btn:hover { transform:translateY(-3px); }
+    .btn-gold { background:var(--gold); color:#111; }
+    .btn-outline { border:1px solid var(--gold); color:white; }
+    .hero-note { margin-top:28px; color:#ddd; font-size:12px; }
 
     .service-strip {
-      background: #171717;
-      color: white;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      padding: 27px 7%;
-      gap: 20px;
-      border-bottom: 2px solid var(--gold);
+      background:#171717;
+      color:white;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      padding:27px 7%;
+      gap:20px;
+      border-bottom:2px solid var(--gold);
     }
-
     .service-strip div {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      justify-content: center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:14px;
     }
-
     .service-icon {
-      color: var(--gold);
-      font-family: 'Playfair Display', serif;
-      font-size: 30px;
+      color:var(--gold);
+      font-family:'Playfair Display',serif;
+      font-size:28px;
     }
+    .service-strip b,.service-strip small { display:block; }
+    .service-strip small { color:#aaa; margin-top:5px; font-size:11px; }
 
-    .service-strip b, .service-strip small {
-      display: block;
-    }
-
-    .service-strip small {
-      color: #aaa;
-      margin-top: 5px;
-      font-size: 11px;
-    }
-
-    .section {
-      padding: 85px 7%;
-    }
-
-    .section-heading {
-      text-align: center;
-      margin-bottom: 42px;
-    }
-
+    .section { padding:85px 7%; }
+    .section-heading { text-align:center; margin-bottom:42px; }
     h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(32px, 5vw, 48px);
-      font-weight: 500;
-      margin: 12px 0;
+      font-family:'Playfair Display',serif;
+      font-size:clamp(32px,5vw,48px);
+      font-weight:500;
+      margin:12px 0;
+    }
+    .section-heading p:not(.eyebrow) { color:#777; font-size:14px; }
+
+    .product-grid {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:22px;
+    }
+    .product-card {
+      display:block;
+      background:white;
+      color:#111;
+      overflow:hidden;
+      border:1px solid #e8e0d2;
+      transition:transform .3s, box-shadow .3s;
+    }
+    .product-card:hover {
+      transform:translateY(-6px);
+      box-shadow:0 15px 35px rgba(0,0,0,.12);
+    }
+    .product-card img {
+      display:block;
+      width:100%;
+      height:390px;
+      object-fit:cover;
+      object-position:center;
+      background:#eee;
+    }
+    .product-info {
+      padding:20px;
+      text-align:center;
+    }
+    .product-info h3 {
+      font-family:'Playfair Display',serif;
+      font-size:20px;
+      font-weight:500;
+      margin:0 0 13px;
+    }
+    .shop-link {
+      display:inline-block;
+      color:#8c682e;
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:2px;
+      border-bottom:1px solid var(--gold);
+      padding-bottom:5px;
     }
 
-    .section-heading p {
-      color: #777;
-      font-size: 14px;
+    .men-feature {
+      background:#171717;
+      color:white;
+      padding:80px 7%;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:55px;
+      align-items:center;
+    }
+    .men-feature img {
+      width:100%;
+      height:520px;
+      object-fit:cover;
+      object-position:center 35%;
+      border:1px solid #806638;
+    }
+    .men-feature p:not(.eyebrow) {
+      color:#ccc;
+      line-height:1.9;
+      font-size:14px;
     }
 
-    .collection-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
+    .collection-banner {
+      margin:75px 7%;
+      padding:55px;
+      text-align:center;
+      background:#e9e1d0;
+      border:1px solid #d0b77e;
     }
-
-    .collection-card {
-      position: relative;
-      min-height: 330px;
-      overflow: hidden;
-      background: #222;
-      border-radius: 5px;
-    }
-
-    .collection-card img {
-      width: 100%;
-      height: 330px;
-      object-fit: cover;
-      display: block;
-      transition: transform .5s;
-    }
-
-    .collection-card:hover img { transform: scale(1.07); }
-
-    .collection-card::after {
-      content: "";
-      position: absolute;
-      inset: 40% 0 0;
-      background: linear-gradient(transparent, rgba(0,0,0,.85));
-    }
-
-    .collection-card h3 {
-      position: absolute;
-      z-index: 2;
-      bottom: 18px;
-      left: 18px;
-      color: white;
-      font-family: 'Playfair Display', serif;
-      font-size: 23px;
-      font-weight: 500;
-    }
-
-    .about-panel {
-      background: #171717;
-      color: white;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 50px;
-      align-items: center;
-      padding: 80px 8%;
-    }
-
-    .about-panel img {
-      width: 100%;
-      height: 420px;
-      object-fit: cover;
-      border-radius: 4px;
-    }
-
-    .about-panel p:not(.eyebrow) {
-      color: #ccc;
-      line-height: 1.9;
-      font-size: 14px;
-    }
+    .collection-banner p { color:#666; line-height:1.8; }
 
     .track-banner {
-      margin: 75px 7%;
-      padding: 55px;
-      background: #e9e1d0;
-      border: 1px solid #d0b77e;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 25px;
+      margin:75px 7%;
+      padding:45px;
+      background:#171717;
+      color:white;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:25px;
     }
-
-    .track-banner p { color: #666; }
-
-    .contact-note {
-      text-align: center;
-      padding: 70px 20px;
-    }
-
-    .contact-note p {
-      color: #666;
-      line-height: 1.8;
-    }
+    .track-banner p:not(.eyebrow) { color:#ccc; }
 
     .site-footer {
-      background: #080808;
-      color: white;
-      padding: 45px 7%;
-      text-align: center;
+      background:#080808;
+      color:white;
+      padding:45px 7%;
+      text-align:center;
     }
-
     .footer-brand {
-      justify-content: center;
-      margin-bottom: 20px;
+      justify-content:center;
+      margin-bottom:18px;
     }
-
-    .site-footer p { color: #ccc; }
-
+    .footer-brand img { width:75px; height:75px; }
+    .site-footer p { color:#ccc; }
     .site-footer a:not(.brand) {
-      color: var(--gold);
-      margin: 10px;
-      font-size: 13px;
+      color:var(--gold);
+      margin:10px;
+      font-size:13px;
     }
-
     .site-footer small {
-      display: block;
-      margin-top: 25px;
-      color: #888;
+      display:block;
+      margin-top:25px;
+      color:#888;
     }
 
-    @media (max-width: 800px) {
-      .site-header { padding: 14px 5%; }
-
-      .brand strong { font-size: 19px; }
-      .brand-mark { font-size: 40px; }
-
-      .menu-toggle { display: block; }
-
+    @media(max-width:800px) {
+      .site-header { padding:12px 5%; }
+      .brand img { width:52px; height:52px; }
+      .brand-name strong { font-size:18px; }
+      .menu-toggle { display:block; }
       .main-nav {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: #111;
-        padding: 25px;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 22px;
+        display:none;
+        position:absolute;
+        top:100%;
+        left:0;
+        right:0;
+        background:#111;
+        padding:25px;
+        flex-direction:column;
+        align-items:flex-start;
+        gap:22px;
       }
-
-      .main-nav.open { display: flex; }
-
-      .hero {
-        min-height: 600px;
-        padding: 65px 7%;
-        background-position: 58% center;
-      }
-
-      .service-strip {
-        grid-template-columns: 1fr;
-        gap: 25px;
-      }
-
-      .service-strip div { justify-content: flex-start; }
-
-      .collection-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .collection-card, .collection-card img {
-        min-height: 250px;
-        height: 250px;
-      }
-
-      .about-panel {
-        grid-template-columns: 1fr;
-        gap: 25px;
-      }
-
-      .about-panel img { height: 300px; }
-
-      .track-banner {
-        margin: 40px 5%;
-        padding: 35px 25px;
-        flex-direction: column;
-        align-items: flex-start;
-      }
+      .main-nav.open { display:flex; }
+      .hero { min-height:590px; padding:60px 7%; background-position:58% center; }
+      .service-strip { grid-template-columns:1fr; gap:22px; }
+      .service-strip div { justify-content:flex-start; }
+      .product-grid { grid-template-columns:repeat(2,1fr); gap:13px; }
+      .product-card img { height:300px; }
+      .product-info { padding:15px 8px; }
+      .product-info h3 { font-size:17px; }
+      .men-feature { grid-template-columns:1fr; gap:25px; }
+      .men-feature img { height:430px; }
+      .track-banner { flex-direction:column; align-items:flex-start; }
     }
 
-    @media (max-width: 420px) {
-      .collection-grid { grid-template-columns: 1fr; }
-      .collection-card, .collection-card img {
-        height: 300px;
-      }
-
-      .hero h1 { font-size: 49px; }
+    @media(max-width:480px) {
+      .announcement { font-size:9px; letter-spacing:1px; }
+      .hero h1 { font-size:48px; }
+      .product-grid { grid-template-columns:1fr 1fr; }
+      .product-card img { height:245px; }
+      .product-info h3 { font-size:15px; }
+      .section { padding:65px 5%; }
+      .collection-banner,.track-banner { margin:40px 5%; padding:30px 22px; }
+      .men-feature { padding:60px 6%; }
+      .men-feature img { height:350px; }
     }
   </style>
 </head>
@@ -435,8 +342,8 @@
 
   <header class="site-header">
     <a class="brand" href="index.html">
-      <span class="brand-mark">S</span>
-      <span>
+      <img src="https://pub-3c350dd029da4fbfadf0d95139a54e3e.r2.dev/gob/stores/logos/1794687519-3d5befmp.jpg" alt="Sekiflex Collections logo">
+      <span class="brand-name">
         <strong>SEKIFLEX</strong>
         <small>COLLECTIONS</small>
       </span>
@@ -447,7 +354,7 @@
     <nav class="main-nav">
       <a href="#home">Home</a>
       <a href="#collections">Collections</a>
-      <a href="#about">About us</a>
+      <a href="#men">Men's Style</a>
       <a href="track.html">Track order</a>
       <a class="nav-shop" href="https://sekiflexcollections.com" target="_blank" rel="noopener">Shop Now ↗</a>
     </nav>
@@ -458,18 +365,15 @@
     <section class="hero" id="home">
       <div class="hero-copy">
         <p class="eyebrow">THE SEKIFLEX EXPERIENCE</p>
-        <h1>Style is an<br><em>expression.</em></h1>
+        <h1>Elegance is<br><em>your signature.</em></h1>
         <p class="hero-intro">
-          Welcome to SEKIFLEX COLLECTIONS, where style meets elegance.
-          Discover beautiful finds and enjoy a shopping experience
-          designed around you.
+          Discover beautiful fashion, carefully selected to help you
+          express your style with confidence. Welcome to SEKIFLEX COLLECTIONS.
         </p>
-
         <div class="hero-actions">
           <a class="btn btn-gold" href="https://sekiflexcollections.com" target="_blank" rel="noopener">Explore the store ↗</a>
-          <a class="btn btn-outline" href="#contact">Contact our team</a>
+          <a class="btn btn-outline" href="#collections">Discover our style</a>
         </div>
-
         <div class="hero-note">✦ Powered by SEKIFLEX LIMITED</div>
       </div>
     </section>
@@ -477,7 +381,7 @@
     <section class="service-strip">
       <div>
         <span class="service-icon">01</span>
-        <span><b>Premium experience</b><small>Style and quality</small></span>
+        <span><b>Beautiful fashion</b><small>Find your signature style</small></span>
       </div>
       <div>
         <span class="service-icon">02</span>
@@ -485,56 +389,72 @@
       </div>
       <div>
         <span class="service-icon">03</span>
-        <span><b>Order tracking</b><small>Your SC reference</small></span>
+        <span><b>Order tracking</b><small>Your own SC reference</small></span>
       </div>
     </section>
 
     <section class="section" id="collections">
       <div class="section-heading">
-        <p class="eyebrow">DISCOVER YOUR STYLE</p>
-        <h2>Explore our <em>collections.</em></h2>
-        <p>Find something that speaks your style.</p>
+        <p class="eyebrow">SELECTED FROM OUR STORE</p>
+        <h2>Discover the <em>collection.</em></h2>
+        <p>Beautiful pieces. Effortless confidence. Your style.</p>
       </div>
 
-      <div class="collection-grid">
-        <a class="collection-card" href="https://sekiflexcollections.com">
-          <img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=800&q=85" alt="Men's fashion">
-          <h3>Men's Fashion</h3>
+      <div class="product-grid">
+
+        <a class="product-card" href="https://sekiflexcollections.com/product/sky-blue-coral-reef-print-crisscross-overlay-long-sleeve-maxi-dress">
+          <img src="https://pub-3c350dd029da4fbfadf0d95139a54e3e.r2.dev/gob/products/1794815424-vpbzaokw.jpg" alt="Sky blue and coral long-sleeve maxi gown">
+          <div class="product-info">
+            <h3>Elegant Women's Gowns</h3>
+            <span class="shop-link">VIEW & SHOP ↗</span>
+          </div>
         </a>
 
-        <a class="collection-card" href="https://sekiflexcollections.com">
-          <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=800&q=85" alt="Women's fashion">
-          <h3>Women's Fashion</h3>
+        <a class="product-card" href="https://sekiflexcollections.com/product/crisp-white-black-striped-pointelle-knit-ruffle-sleeve-fluted-hem-maxi-dress">
+          <img src="https://pub-3c350dd029da4fbfadf0d95139a54e3e.r2.dev/gob/products/1794817280-uwcanlal.jpg" alt="White and black striped women's maxi dress">
+          <div class="product-info">
+            <h3>Chic Women's Dresses</h3>
+            <span class="shop-link">VIEW & SHOP ↗</span>
+          </div>
         </a>
 
-        <a class="collection-card" href="https://sekiflexcollections.com">
-          <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=85" alt="Fashion accessories">
-          <h3>Accessories</h3>
+        <a class="product-card" href="https://sekiflexcollections.com/category/womens-fashion-apparel">
+          <img src="https://pub-3c350dd029da4fbfadf0d95139a54e3e.r2.dev/gob/products/1794815424-vpbzaokw.jpg" alt="Sekiflex women's fashion collection">
+          <div class="product-info">
+            <h3>More Women's Fashion</h3>
+            <span class="shop-link">VIEW COLLECTION ↗</span>
+          </div>
         </a>
 
-        <a class="collection-card" href="https://sekiflexcollections.com">
-          <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=800&q=85" alt="Fashion footwear">
-          <h3>Footwear</h3>
-        </a>
       </div>
     </section>
 
-    <section class="about-panel" id="about">
+    <section class="men-feature" id="men">
       <div>
-        <p class="eyebrow">MORE THAN SHOPPING</p>
-        <h2>Elegance in every <em>detail.</em></h2>
+        <p class="eyebrow">THE MEN'S EDIT</p>
+        <h2>Confidence in<br><em>every detail.</em></h2>
         <p>
-          SEKIFLEX COLLECTIONS brings you a carefully presented shopping
-          experience, supported by SEKIFLEX LIMITED.
+          Explore stylish men's outfits, from statement tops to
+          coordinated looks. Discover pieces that make an impression.
         </p>
+        <a class="btn btn-gold" href="https://sekiflexcollections.com/product/mens-white-cross-graphic-round-neck-polo-rhinestone-alo-baggy-black-denim-trouser-2-piece-set">
+          Shop this outfit ↗
+        </a>
         <p>
-          From discovering products to following your delivery,
-          we're working to make every step clearer and more convenient.
+          <a href="https://sekiflexcollections.com/category/mens-fashion-apparel" style="color:#d7b879;text-decoration:underline;">
+            Explore all men's fashion
+          </a>
         </p>
-        <a class="btn btn-gold" href="https://sekiflexcollections.com" target="_blank" rel="noopener">Shop our store ↗</a>
       </div>
 
-      <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1100&q=85" alt="Elegant fashion boutique interior">
+      <img src="https://pub-3c350dd029da4fbfadf0d95139a54e3e.r2.dev/gob/products/1794762393-hh8twmjm.jpg" alt="Men's white graphic top and black long trousers two-piece outfit">
+    </section>
+
+    <section class="collection-banner">
+      <p class="eyebrow">YOUR STYLE, YOUR CHOICE</p>
+      <h2>Find something <em>beautiful.</em></h2>
+      <p>Explore our full collection and discover your next favourite look.</p>
+      <a class="btn btn-gold" href="https://sekiflexcollections.com" target="_blank" rel="noopener">Shop the full collection ↗</a>
     </section>
 
     <section class="track-banner">
@@ -546,33 +466,22 @@
       <a class="btn btn-gold" href="track.html">Track my order →</a>
     </section>
 
-    <section class="contact-note" id="contact">
-      <p class="eyebrow">PERSONAL SERVICE</p>
-      <h2>We're here <em>for you.</em></h2>
-      <p>For product enquiries and new orders, contact the SEKIFLEX COLLECTIONS team through our existing business WhatsApp channel.</p>
-      <p>Powered by <strong>SEKIFLEX LIMITED</strong></p>
-    </section>
-
   </main>
 
   <footer class="site-footer">
     <a class="brand footer-brand" href="index.html">
-      <span class="brand-mark">S</span>
-      <span><strong>SEKIFLEX</strong><small>COLLECTIONS</small></span>
+      <img src="https://pub-3c350dd029da4fbfadf0d95139a54e3e.r2.dev/gob/stores/logos/1794687519-3d5befmp.jpg" alt="Sekiflex Collections logo">
     </a>
-
     <p>Style for Every You.</p>
     <p>Powered by <strong>SEKIFLEX LIMITED</strong></p>
-
     <div>
       <a href="https://sekiflexcollections.com" target="_blank" rel="noopener">Shop online ↗</a>
       <a href="track.html">Track an order</a>
     </div>
-
     <small>© <span id="year"></span> SEKIFLEX LIMITED. All rights reserved.</small>
   </footer>
 
   <script src="app.js"></script>
 </body>
-  </html>
-  
+      </html>
+      
