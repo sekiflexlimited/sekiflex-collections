@@ -13,204 +13,199 @@
 </head>
 <body class="admin-body">
 
-  <header class="admin-top">
-    <a class="brand" href="index.html">
-      <span class="brand-mark">S</span>
-      <span>
-        <strong>SEKIFLEX</strong>
-        <small>COLLECTIONS</small>
-      </span>
-    </a>
-    <a class="admin-home" href="index.html">Visit website ↗</a>
-  </header>
+<header class="admin-top">
+  <a class="brand" href="index.html">
+    <span class="brand-mark">S</span>
+    <span><strong>SEKIFLEX</strong><small>COLLECTIONS</small></span>
+  </a>
+  <a class="admin-home" href="index.html">Visit website ↗</a>
+</header>
 
-  <main class="admin-shell">
+<main class="admin-shell">
 
-    <section id="admin-login">
-      <div class="admin-heading">
-        <div>
-          <p class="eyebrow">SEKIFLEX LIMITED · STAFF ACCESS</p>
-          <h1>Staff <em>login.</em></h1>
-          <p>Sign in to manage customer orders and deliveries.</p>
+  <section id="admin-login">
+    <div class="admin-heading">
+      <div>
+        <p class="eyebrow">SEKIFLEX LIMITED · STAFF ACCESS</p>
+        <h1>Staff <em>login.</em></h1>
+        <p>Sign in to manage customer orders and deliveries.</p>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <h2>Secure sign in</h2>
+      <form id="admin-login-form" class="admin-form">
+        <div class="form-grid">
+          <label class="wide">Email address
+            <input id="admin-email" type="email" autocomplete="username" required>
+          </label>
+          <label class="wide">Password
+            <input id="admin-password" type="password" autocomplete="current-password" required>
+          </label>
         </div>
+        <button class="btn btn-gold" type="submit">Sign in →</button>
+        <p id="login-message" class="form-message" role="status"></p>
+      </form>
+    </div>
+  </section>
+
+  <section id="admin-dashboard" hidden>
+    <div class="admin-heading">
+      <div>
+        <p class="eyebrow">SEKIFLEX COLLECTIONS · MANAGEMENT</p>
+        <h1>Order <em>dashboard.</em></h1>
+        <p>Register orders, manage payments and update deliveries.</p>
+      </div>
+      <button id="admin-logout" class="btn btn-outline" type="button">Log out</button>
+    </div>
+
+    <div class="notice">
+      Customer tracking references are automatically generated using the SC format.
+      Shipment and payment updates are managed by authorized staff.
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card"><small>Total orders</small><strong id="stat-total">0</strong><span>Registered orders</span></div>
+      <div class="stat-card"><small>Awaiting payment</small><strong id="stat-payment">0</strong><span>Payment outstanding</span></div>
+      <div class="stat-card"><small>In transit</small><strong id="stat-transit">0</strong><span>Orders being delivered</span></div>
+      <div class="stat-card"><small>Delivered</small><strong id="stat-delivered">0</strong><span>Completed deliveries</span></div>
+    </div>
+
+    <section class="admin-card">
+      <div class="card-heading">
+        <div>
+          <p class="eyebrow">NEW CUSTOMER ORDER</p>
+          <h2>Register an order</h2>
+        </div>
+        <span class="sc-chip">SC TRACKING</span>
       </div>
 
-      <div class="admin-card">
-        <h2>Secure sign in</h2>
-        <form id="admin-login-form" class="admin-form">
-          <div class="form-grid">
-            <label class="wide">
-              Email address
-              <input id="admin-email" type="email" autocomplete="username" required>
-            </label>
-            <label class="wide">
-              Password
-              <input id="admin-password" type="password" autocomplete="current-password" required>
-            </label>
-          </div>
-          <button class="btn btn-gold" type="submit">Sign in →</button>
-          <p id="login-message" class="form-message" role="status"></p>
-        </form>
-      </div>
+      <form id="order-form" class="admin-form">
+        <div class="form-grid">
+
+          <label>Customer name
+            <input id="customer-name" type="text" required>
+          </label>
+
+          <label>Customer phone
+            <input id="customer-phone" type="tel" required>
+          </label>
+
+          <label>Customer email <span class="optional">(optional)</span>
+            <input id="customer-email" type="email">
+          </label>
+
+          <label>Order source
+            <select id="order-source" required>
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="Website">Website</option>
+              <option value="Instagram">Instagram</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+
+          <label>Destination country
+            <select id="country" required>
+              <option value="Nigeria">Nigeria</option>
+              <option value="United States">United States</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="Canada">Canada</option>
+              <option value="Ghana">Ghana</option>
+              <option value="South Africa">South Africa</option>
+              <option value="United Arab Emirates">United Arab Emirates</option>
+              <option value="Australia">Australia</option>
+              <option value="Germany">Germany</option>
+              <option value="France">France</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+
+          <label>Currency
+            <select id="currency" required>
+              <option value="NGN">NGN — Nigerian Naira</option>
+              <option value="USD">USD — US Dollar</option>
+              <option value="GBP">GBP — British Pound</option>
+              <option value="CAD">CAD — Canadian Dollar</option>
+              <option value="EUR">EUR — Euro</option>
+              <option value="GHS">GHS — Ghanaian Cedi</option>
+              <option value="ZAR">ZAR — South African Rand</option>
+              <option value="AED">AED — UAE Dirham</option>
+              <option value="AUD">AUD — Australian Dollar</option>
+            </select>
+          </label>
+
+          <label class="wide">Delivery destination / city
+            <input id="destination" type="text" placeholder="e.g. London, United Kingdom" required>
+          </label>
+
+          <label class="wide">Package description
+            <input id="package-description" type="text" placeholder="Clothing, shoes, accessories..." required>
+          </label>
+
+          <label>Order amount
+            <input id="order-amount" type="number" min="0" step="0.01" required>
+          </label>
+
+          <label>Delivery amount
+            <input id="delivery-amount" type="number" min="0" step="0.01" value="0" required>
+          </label>
+
+          <label>Payment status
+            <select id="payment-status" required>
+              <option value="Awaiting payment">Awaiting payment</option>
+              <option value="Payment confirmed">Payment confirmed</option>
+            </select>
+          </label>
+
+          <label>Courier name <span class="optional">(optional)</span>
+            <input id="courier-name" type="text" placeholder="Courier company">
+          </label>
+
+          <label>Courier waybill <span class="optional">(optional)</span>
+            <input id="courier-waybill" type="text">
+          </label>
+
+          <label>Estimated delivery <span class="optional">(optional)</span>
+            <input id="estimated-delivery" type="text" placeholder="e.g. 5–7 days">
+          </label>
+
+          <label class="wide">Collection instructions <span class="optional">(optional)</span>
+            <input id="collection-instructions" type="text" placeholder="Instructions for the customer">
+          </label>
+        </div>
+
+        <button class="btn btn-gold" type="submit">Register customer order →</button>
+        <p id="order-message" class="form-message" role="status"></p>
+      </form>
     </section>
 
-    <section id="admin-dashboard" hidden>
-      <div class="admin-heading">
+    <section class="admin-card">
+      <div class="card-heading">
         <div>
-          <p class="eyebrow">SEKIFLEX COLLECTIONS · MANAGEMENT</p>
-          <h1>Order <em>dashboard.</em></h1>
-          <p>Register orders, manage payments and update deliveries.</p>
+          <p class="eyebrow">ORDER MANAGEMENT</p>
+          <h2>Customer orders</h2>
         </div>
-        <button id="admin-logout" class="btn btn-outline" type="button">Log out</button>
+        <button id="refresh-orders" class="btn btn-outline" type="button">Refresh orders ↻</button>
       </div>
 
-      <div class="notice">
-        Customer tracking references are automatically generated using the SC format.
-        Update shipment information manually as your orders progress.
+      <label for="order-search">Search by tracking number, customer or destination</label>
+      <input id="order-search" type="search" placeholder="Search orders..." style="width:100%;height:48px;padding:0 13px;border:1px solid #dcd6ca;margin-top:8px;font:inherit;font-size:12px;">
+
+      <div id="orders-list" style="margin-top:22px;">
+        <p class="small-note">Your registered orders will appear here after login.</p>
       </div>
-
-      <div class="stat-grid">
-        <div class="stat-card">
-          <small>Total orders</small>
-          <strong id="stat-total">0</strong>
-          <span>Registered orders</span>
-        </div>
-        <div class="stat-card">
-          <small>Awaiting payment</small>
-          <strong id="stat-payment">0</strong>
-          <span>Payment outstanding</span>
-        </div>
-        <div class="stat-card">
-          <small>In transit</small>
-          <strong id="stat-transit">0</strong>
-          <span>Orders being delivered</span>
-        </div>
-        <div class="stat-card">
-          <small>Delivered</small>
-          <strong id="stat-delivered">0</strong>
-          <span>Completed deliveries</span>
-        </div>
-      </div>
-
-      <section class="admin-card">
-        <div class="card-heading">
-          <div>
-            <p class="eyebrow">NEW CUSTOMER ORDER</p>
-            <h2>Register an order</h2>
-          </div>
-          <span class="sc-chip">SC TRACKING</span>
-        </div>
-
-        <form id="order-form" class="admin-form">
-          <div class="form-grid">
-
-            <label>
-              Customer name
-              <input id="customer-name" type="text" required>
-            </label>
-
-            <label>
-              Customer phone
-              <input id="customer-phone" type="tel" required>
-            </label>
-
-            <label>
-              Customer email <span class="optional">(optional)</span>
-              <input id="customer-email" type="email">
-            </label>
-
-            <label>
-              Order source
-              <select id="order-source" required>
-                <option value="WhatsApp">WhatsApp</option>
-                <option value="Website">Website</option>
-                <option value="Instagram">Instagram</option>
-                <option value="Other">Other</option>
-              </select>
-            </label>
-
-            <label>
-              Delivery destination
-              <input id="destination" type="text" placeholder="City, country" required>
-            </label>
-
-            <label>
-              Package description
-              <input id="package-description" type="text" placeholder="Clothing, shoes, accessories..." required>
-            </label>
-
-            <label>
-              Order amount
-              <input id="order-amount" type="number" min="0" step="0.01" required>
-            </label>
-
-            <label>
-              Delivery amount
-              <input id="delivery-amount" type="number" min="0" step="0.01" value="0">
-            </label>
-
-            <label>
-              Payment status
-              <select id="payment-status" required>
-                <option value="Awaiting payment">Awaiting payment</option>
-                <option value="Payment confirmed">Payment confirmed</option>
-              </select>
-            </label>
-
-            <label>
-              Courier name <span class="optional">(optional)</span>
-              <input id="courier-name" type="text" placeholder="Courier company">
-            </label>
-
-            <label>
-              Courier waybill <span class="optional">(optional)</span>
-              <input id="courier-waybill" type="text">
-            </label>
-
-            <label>
-              Estimated delivery <span class="optional">(optional)</span>
-              <input id="estimated-delivery" type="text" placeholder="e.g. 5–7 days">
-            </label>
-
-            <label class="wide">
-              Collection instructions <span class="optional">(optional)</span>
-              <input id="collection-instructions" type="text" placeholder="Instructions for the customer">
-            </label>
-
-          </div>
-
-          <button class="btn btn-gold" type="submit">Register customer order →</button>
-          <p id="order-message" class="form-message" role="status"></p>
-        </form>
-      </section>
-
-      <section class="admin-card">
-        <div class="card-heading">
-          <div>
-            <p class="eyebrow">ORDER MANAGEMENT</p>
-            <h2>Customer orders</h2>
-          </div>
-          <button id="refresh-orders" class="btn btn-outline" type="button">Refresh orders ↻</button>
-        </div>
-
-        <label for="order-search">Search by tracking number or customer</label>
-        <input id="order-search" type="search" placeholder="Search orders..." style="width:100%;height:48px;padding:0 13px;border:1px solid #dcd6ca;margin-top:8px;font:inherit;font-size:12px;">
-
-        <div id="orders-list" style="margin-top:22px;">
-          <p class="small-note">Your registered orders will appear here after login.</p>
-        </div>
-      </section>
-
     </section>
-  </main>
+  </section>
+</main>
 
-  <footer class="site-footer">
-    <p>Powered by <strong>SEKIFLEX LIMITED</strong></p>
-    <small>© <span id="year"></span> Sekiflex Limited. All rights reserved.</small>
-  </footer>
+<footer class="site-footer">
+  <p>Powered by <strong>SEKIFLEX LIMITED</strong></p>
+  <small>© <span id="year"></span> Sekiflex Limited. All rights reserved.</small>
+</footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase-config.js"></script>
-  <script src="app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="app.js"></script>
 </body>
-</html>
+  </html>
+  
