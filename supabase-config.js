@@ -1,0 +1,4 @@
+
+export const SUPABASE_URL = "https://kiflrunevhlhkgeopnlp.supabase.co";
+
+export const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_34B9s6-v5wqQXbdGTPN1Xg_AdA6hOim";
