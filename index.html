@@ -2,486 +2,239 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#111111">
-  <meta name="description" content="Discover elegant women's gowns and men's fashion at SEKIFLEX COLLECTIONS. Powered by SEKIFLEX LIMITED.">
-  <title>SEKIFLEX COLLECTIONS | Style for Every You</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#17191d">
+<meta name="description" content="Discover premium fashion at SEKIFLEX COLLECTIONS. Powered by SEKIFLEX LIMITED.">
+<title>SEKIFLEX COLLECTIONS | Luxury Fashion</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 
-  <style>
-    :root {
-      --black:#111111;
-      --gold:#c6a15b;
-      --ivory:#f7f4ec;
-      --white:#fff;
-    }
-
-    * { box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
-    body {
-      margin:0;
-      background:var(--ivory);
-      color:var(--black);
-      font-family:'DM Sans',sans-serif;
-    }
-    a { text-decoration:none; }
-
-    .announcement {
-      background:#080808;
-      color:var(--gold);
-      text-align:center;
-      padding:11px;
-      font-size:11px;
-      letter-spacing:2px;
-    }
-
-    .site-header {
-      background:#111;
-      color:white;
-      padding:13px 6%;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      position:relative;
-      z-index:10;
-      border-bottom:1px solid #806638;
-    }
-
-    .brand { display:flex; align-items:center; gap:12px; }
-    .brand img {
-      width:65px;
-      height:65px;
-      object-fit:contain;
-      border-radius:50%;
-    }
-
-    .brand-name strong {
-      display:block;
-      color:white;
-      font-family:'Playfair Display',serif;
-      font-size:22px;
-      letter-spacing:2px;
-    }
-    .brand-name small {
-      color:var(--gold);
-      letter-spacing:4px;
-      font-size:10px;
-    }
-
-    .main-nav {
-      display:flex;
-      align-items:center;
-      gap:27px;
-    }
-    .main-nav a { color:white; font-size:13px; }
-    .main-nav a:hover { color:var(--gold); }
-    .main-nav .nav-shop {
-      background:var(--gold);
-      color:#111;
-      padding:13px 22px;
-      border-radius:3px;
-      font-weight:700;
-    }
-
-    .menu-toggle {
-      display:none;
-      color:white;
-      background:transparent;
-      border:1px solid var(--gold);
-      border-radius:5px;
-      font-size:23px;
-      padding:5px 11px;
-    }
-
-    /* Hero keeps the original background photograph */
-    .hero {
-      min-height:660px;
-      display:flex;
-      align-items:center;
-      padding:75px 7%;
-      color:white;
-      background:
-        linear-gradient(90deg,rgba(0,0,0,.90),rgba(0,0,0,.63) 52%,rgba(0,0,0,.12)),
-        url('https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2000&q=90')
-        center 35%/cover;
-    }
-
-    .hero-copy { max-width:650px; }
-    .eyebrow {
-      color:var(--gold);
-      letter-spacing:4px;
-      font-size:11px;
-      font-weight:700;
-    }
-    .hero h1 {
-      font-family:'Playfair Display',serif;
-      font-size:clamp(48px,7vw,86px);
-      line-height:1.08;
-      margin:20px 0;
-    }
-    .hero h1 em,h2 em { color:var(--gold); font-weight:500; }
-    .hero-intro {
-      max-width:510px;
-      line-height:1.9;
-      color:#eee;
-      font-size:15px;
-    }
-    .hero-actions { display:flex; flex-wrap:wrap; gap:14px; margin-top:30px; }
-
-    .btn {
-      display:inline-block;
-      padding:15px 25px;
-      border-radius:3px;
-      font-size:13px;
-      font-weight:700;
-      transition:.2s;
-    }
-    .btn:hover { transform:translateY(-3px); }
-    .btn-gold { background:var(--gold); color:#111; }
-    .btn-outline { border:1px solid var(--gold); color:white; }
-    .hero-note { margin-top:28px; color:#ddd; font-size:12px; }
-
-    .service-strip {
-      background:#171717;
-      color:white;
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      padding:27px 7%;
-      gap:20px;
-      border-bottom:2px solid var(--gold);
-    }
-    .service-strip div {
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:14px;
-    }
-    .service-icon {
-      color:var(--gold);
-      font-family:'Playfair Display',serif;
-      font-size:28px;
-    }
-    .service-strip b,.service-strip small { display:block; }
-    .service-strip small { color:#aaa; margin-top:5px; font-size:11px; }
-
-    .section { padding:85px 7%; }
-    .section-heading { text-align:center; margin-bottom:42px; }
-    h2 {
-      font-family:'Playfair Display',serif;
-      font-size:clamp(32px,5vw,48px);
-      font-weight:500;
-      margin:12px 0;
-    }
-    .section-heading p:not(.eyebrow) { color:#777; font-size:14px; }
-
-    .product-grid {
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:22px;
-    }
-    .product-card {
-      display:block;
-      background:white;
-      color:#111;
-      overflow:hidden;
-      border:1px solid #e8e0d2;
-      transition:transform .3s, box-shadow .3s;
-    }
-    .product-card:hover {
-      transform:translateY(-6px);
-      box-shadow:0 15px 35px rgba(0,0,0,.12);
-    }
-    .product-card img {
-      display:block;
-      width:100%;
-      height:390px;
-      object-fit:cover;
-      object-position:center;
-      background:#eee;
-    }
-    .product-info {
-      padding:20px;
-      text-align:center;
-    }
-    .product-info h3 {
-      font-family:'Playfair Display',serif;
-      font-size:20px;
-      font-weight:500;
-      margin:0 0 13px;
-    }
-    .shop-link {
-      display:inline-block;
-      color:#8c682e;
-      font-size:11px;
-      font-weight:700;
-      letter-spacing:2px;
-      border-bottom:1px solid var(--gold);
-      padding-bottom:5px;
-    }
-
-    .men-feature {
-      background:#171717;
-      color:white;
-      padding:80px 7%;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:55px;
-      align-items:center;
-    }
-    .men-feature img {
-      width:100%;
-      height:520px;
-      object-fit:cover;
-      object-position:center 35%;
-      border:1px solid #806638;
-    }
-    .men-feature p:not(.eyebrow) {
-      color:#ccc;
-      line-height:1.9;
-      font-size:14px;
-    }
-
-    .collection-banner {
-      margin:75px 7%;
-      padding:55px;
-      text-align:center;
-      background:#e9e1d0;
-      border:1px solid #d0b77e;
-    }
-    .collection-banner p { color:#666; line-height:1.8; }
-
-    .track-banner {
-      margin:75px 7%;
-      padding:45px;
-      background:#171717;
-      color:white;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:25px;
-    }
-    .track-banner p:not(.eyebrow) { color:#ccc; }
-
-    .site-footer {
-      background:#080808;
-      color:white;
-      padding:45px 7%;
-      text-align:center;
-    }
-    .footer-brand {
-      justify-content:center;
-      margin-bottom:18px;
-    }
-    .footer-brand img { width:75px; height:75px; }
-    .site-footer p { color:#ccc; }
-    .site-footer a:not(.brand) {
-      color:var(--gold);
-      margin:10px;
-      font-size:13px;
-    }
-    .site-footer small {
-      display:block;
-      margin-top:25px;
-      color:#888;
-    }
-
-    @media(max-width:800px) {
-      .site-header { padding:12px 5%; }
-      .brand img { width:52px; height:52px; }
-      .brand-name strong { font-size:18px; }
-      .menu-toggle { display:block; }
-      .main-nav {
-        display:none;
-        position:absolute;
-        top:100%;
-        left:0;
-        right:0;
-        background:#111;
-        padding:25px;
-        flex-direction:column;
-        align-items:flex-start;
-        gap:22px;
-      }
-      .main-nav.open { display:flex; }
-      .hero { min-height:590px; padding:60px 7%; background-position:58% center; }
-      .service-strip { grid-template-columns:1fr; gap:22px; }
-      .service-strip div { justify-content:flex-start; }
-      .product-grid { grid-template-columns:repeat(2,1fr); gap:13px; }
-      .product-card img { height:300px; }
-      .product-info { padding:15px 8px; }
-      .product-info h3 { font-size:17px; }
-      .men-feature { grid-template-columns:1fr; gap:25px; }
-      .men-feature img { height:430px; }
-      .track-banner { flex-direction:column; align-items:flex-start; }
-    }
-
-    @media(max-width:480px) {
-      .announcement { font-size:9px; letter-spacing:1px; }
-      .hero h1 { font-size:48px; }
-      .product-grid { grid-template-columns:1fr 1fr; }
-      .product-card img { height:245px; }
-      .product-info h3 { font-size:15px; }
-      .section { padding:65px 5%; }
-      .collection-banner,.track-banner { margin:40px 5%; padding:30px 22px; }
-      .men-feature { padding:60px 6%; }
-      .men-feature img { height:350px; }
-    }
-  </style>
+<style>
+:root {
+--black:#17191d;
+--gold:#c6a15b;
+--ivory:#f7f4ec;
+--white:#fff;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ivory);color:var(--black);font-family:'DM Sans',sans-serif}
+a{text-decoration:none}
+.announcement{background:#080808;color:var(--gold);text-align:center;padding:12px;font-size:11px;letter-spacing:2px}
+.site-header{background:#17191d;color:white;padding:13px 6%;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:10;border-bottom:1px solid #806638}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{width:65px;height:65px;object-fit:contain;border-radius:50%}
+.brand-name strong{display:block;color:white;font-family:'Playfair Display',serif;font-size:22px;letter-spacing:2px}
+.brand-name small{color:var(--gold);letter-spacing:4px;font-size:10px}
+.main-nav{display:flex;align-items:center;gap:25px}
+.main-nav a{color:white;font-size:13px}
+.main-nav a:hover{color:var(--gold)}
+.main-nav .nav-shop{background:var(--gold);color:#111;padding:13px 20px;font-weight:700}
+.menu-toggle{display:none;color:white;background:transparent;border:1px solid var(--gold);border-radius:5px;font-size:23px;padding:5px 11px}
+.hero{min-height:660px;display:flex;align-items:center;padding:75px 7%;color:white;background:linear-gradient(90deg,rgba(0,0,0,.90),rgba(0,0,0,.63) 52%,rgba(0,0,0,.12)),url('https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2000&q=90') center 35%/cover}
+.hero-copy{max-width:650px}
+.eyebrow{color:var(--gold);letter-spacing:4px;font-size:11px;font-weight:700}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(48px,7vw,86px);line-height:1.08;margin:20px 0}
+h2{font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,48px);font-weight:500;margin:12px 0}
+h2 em,.hero h1 em{color:var(--gold);font-weight:500}
+.hero-intro{max-width:510px;line-height:1.9;color:#eee;font-size:15px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px}
+.btn{display:inline-block;padding:15px 25px;border-radius:3px;font-size:13px;font-weight:700;transition:.2s}
+.btn:hover{transform:translateY(-3px)}
+.btn-gold{background:var(--gold);color:#111}
+.btn-outline{border:1px solid var(--gold);color:white}
+.hero-note{margin-top:28px;color:#ddd;font-size:12px}
+.service-strip{background:#171717;color:white;display:grid;grid-template-columns:repeat(3,1fr);padding:27px 7%;gap:20px;border-bottom:2px solid var(--gold)}
+.service-strip div{display:flex;align-items:center;justify-content:center;gap:14px}
+.service-icon{color:var(--gold);font-family:'Playfair Display',serif;font-size:28px}
+.service-strip b,.service-strip small{display:block}
+.service-strip small{color:#aaa;margin-top:5px;font-size:11px}
+.section{padding:85px 7%}
+.section-heading{text-align:center;margin-bottom:42px}
+.section-heading p:not(.eyebrow){color:#777;font-size:14px}
+.product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.product-card{display:block;background:white;color:#111;overflow:hidden;border:1px solid #e8e0d2;transition:.3s}
+.product-card:hover{transform:translateY(-6px);box-shadow:0 15px 35px #0002}
+.product-card img{display:block;width:100%;height:390px;object-fit:cover}
+.product-info{padding:20px;text-align:center}
+.product-info h3{font-family:'Playfair Display',serif;font-size:20px;font-weight:500;margin:0 0 13px}
+.shop-link{display:inline-block;color:#8c682e;font-size:11px;font-weight:700;letter-spacing:2px;border-bottom:1px solid var(--gold);padding-bottom:5px}
+.men-feature{background:#171717;color:white;padding:80px 7%;display:grid;grid-template-columns:1fr 1fr;gap:55px;align-items:center}
+.men-feature img{width:100%;height:520px;object-fit:cover;object-position:center 35%;border:1px solid #806638}
+.men-feature p:not(.eyebrow){color:#ccc;line-height:1.9;font-size:14px}
+.collection-banner{margin:75px 7%;padding:55px;text-align:center;background:#e9e1d0;border:1px solid #d0b77e}
+.collection-banner p{color:#666;line-height:1.8}
+.track-banner{margin:75px 7%;padding:45px;background:#171717;color:white;display:flex;align-items:center;justify-content:space-between;gap:25px}
+.track-banner p:not(.eyebrow){color:#ccc}
+.customer-care{margin:75px 7%;padding:65px 30px;text-align:center;background:#fff;border:1px solid #d8c49b}
+.customer-care p{color:#666;line-height:1.8}
+.care-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:15px;margin-top:25px}
+.site-footer{background:#080808;color:white;padding:45px 7%;text-align:center}
+.footer-brand{justify-content:center;margin-bottom:18px}
+.footer-brand img{width:75px;height:75px}
+.site-footer p{color:#ccc}
+.site-footer a:not(.brand){color:var(--gold);margin:10px;font-size:13px}
+.site-footer small{display:block;margin-top:25px;color:#888}
+.whatsapp-float{position:fixed;right:20px;bottom:20px;z-index:99;background:#168b50;color:white;padding:15px 20px;border-radius:40px;font-size:13px;font-weight:700;box-shadow:0 5px 20px #0004}
+@media(max-width:800px){
+.site-header{padding:12px 5%}
+.brand img{width:52px;height:52px}
+.brand-name strong{font-size:18px}
+.menu-toggle{display:block}
+.main-nav{display:none;position:absolute;top:100%;left:0;right:0;background:#111;padding:25px;flex-direction:column;align-items:flex-start;gap:22px}
+.main-nav.open{display:flex}
+.hero{min-height:590px;padding:60px 7%;background-position:58% center}
+.service-strip{grid-template-columns:1fr;gap:22px}
+.service-strip div{justify-content:flex-start}
+.product-grid{grid-template-columns:repeat(2,1fr);gap:13px}
+.product-card img{height:300px}
+.product-info{padding:15px 8px}
+.product-info h3{font-size:17px}
+.men-feature{grid-template-columns:1fr;gap:25px}
+.men-feature img{height:430px}
+.track-banner{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:480px){
+.announcement{font-size:9px;letter-spacing:1px}
+.hero h1{font-size:48px}
+.product-card img{height:245px}
+.product-info h3{font-size:15px}
+.section{padding:65px 5%}
+.collection-banner,.track-banner,.customer-care{margin:40px 5%;padding:30px 22px}
+.men-feature{padding:60px 6%}
+.men-feature img{height:350px}
+}
+</style>
 </head>
 
 <body>
+<div class="announcement">ELEGANCE · QUALITY · CONFIDENCE · WELCOME TO SEKIFLEX COLLECTIONS</div>
 
-  <div class="announcement">
-    STYLE FOR EVERY YOU · WELCOME TO SEKIFLEX COLLECTIONS
-  </div>
+<header class="site-header">
+<a class="brand" href="index.html">
+<img src="https://pub-3c350dd029da4fbfadf0d95139a54e3e.r2.dev/gob/stores/logos/1794687519-3d5befmp.jpg" alt="Sekiflex Collections logo">
+<span class="brand-name"><strong>SEKIFLEX</strong><small>COLLECTIONS</small></span>
+</a>
+<button class="menu-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+<nav class="main-nav">
+<a href="#home">Home</a>
+<a href="#collections">Collections</a>
+<a href="#men">Men's Style</a>
+<a href="track.html">Track Order</a>
+<a href="#customer-care">Customer Care</a>
+<a class="nav-shop" href="https://sekiflexcollections.com" target="_blank" rel="noopener">Visit Our Store ↗</a>
+</nav>
+</header>
 
-  <header class="site-header">
-    <a class="brand" href="index.html">
-      <img src="https://pub-3c350dd029da4fbfadf0d95139a54e3e.r2.dev/gob/stores/logos/1794687519-3d5befmp.jpg" alt="Sekiflex Collections logo">
-      <span class="brand-name">
-        <strong>SEKIFLEX</strong>
-        <small>COLLECTIONS</small>
-      </span>
-    </a>
+<main>
+<section class="hero" id="home">
+<div class="hero-copy">
+<p class="eyebrow">THE SEKIFLEX EXPERIENCE</p>
+<h1>Elegance is<br><em>your signature.</em></h1>
+<p class="hero-intro">Discover beautiful fashion, carefully selected to help you express your style with confidence. Welcome to SEKIFLEX COLLECTIONS.</p>
+<div class="hero-actions">
+<a class="btn btn-gold" href="https://sekiflexcollections.com" target="_blank" rel="noopener">Visit Our Store ↗</a>
+<a class="btn btn-outline" href="#collections">Discover Our Style</a>
+</div>
+<div class="hero-note">✦ Powered by SEKIFLEX LIMITED</div>
+</div>
+</section>
 
-    <button class="menu-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+<section class="service-strip">
+<div><span class="service-icon">01</span><span><b>Beautiful Fashion</b><small>Find your signature style</small></span></div>
+<div><span class="service-icon">02</span><span><b>Personal Service</b><small>We're here to help</small></span></div>
+<div><span class="service-icon">03</span><span><b>Order Tracking</b><small>Your own SC reference</small></span></div>
+</section>
 
-    <nav class="main-nav">
-      <a href="#home">Home</a>
-      <a href="#collections">Collections</a>
-      <a href="#men">Men's Style</a>
-      <a href="track.html">Track order</a>
-      <a class="nav-shop" href="https://sekiflexcollections.com" target="_blank" rel="noopener">Shop Now ↗</a>
-    </nav>
-  </header>
+<section class="section" id="collections">
+<div class="section-heading">
+<p class="eyebrow">OUR FASHION SELECTION</p>
+<h2>Discover the <em>collection.</em></h2>
+<p>Beautiful pieces. Effortless confidence. Your style.</p>
+</div>
+<div class="product-grid">
+<a class="product-card" href="https://sekiflexcollections.com/category/womens-fashion-apparel">
+<img src="https://images.unsplash.com/photo-1746025241442-64f9ad664905?auto=format&fit=crop&w=900&q=85" alt="Women's elegant fashion model">
+<div class="product-info"><h3>Elegant Women's Gowns</h3><span class="shop-link">VIEW COLLECTION ↗</span></div>
+</a>
+<a class="product-card" href="https://sekiflexcollections.com/category/womens-fashion-apparel">
+<img src="https://images.unsplash.com/photo-1741816219257-d6c70be73f66?auto=format&fit=crop&w=900&q=85" alt="Women's chic fashion model">
+<div class="product-info"><h3>Chic Women's Dresses</h3><span class="shop-link">VIEW COLLECTION ↗</span></div>
+</a>
+<a class="product-card" href="https://sekiflexcollections.com/category/womens-fashion-apparel">
+<img src="https://images.unsplash.com/photo-1741985979908-5f3b6d7060fa?auto=format&fit=crop&w=900&q=85" alt="Women's luxury fashion">
+<div class="product-info"><h3>More Women's Fashion</h3><span class="shop-link">VIEW COLLECTION ↗</span></div>
+</a>
+</div>
+</section>
 
-  <main>
+<section class="men-feature" id="men">
+<div>
+<p class="eyebrow">THE MEN'S EDIT</p>
+<h2>Confidence in<br><em>every detail.</em></h2>
+<p>Explore stylish men's outfits, from statement tops to coordinated looks. Discover pieces that make an impression.</p>
+<a class="btn btn-gold" href="https://sekiflexcollections.com/category/mens-fashion-apparel">Shop Men's Fashion ↗</a>
+</div>
+<img src="https://pub-3c350dd029da4fbfadf0d95139a54e3e.r2.dev/gob/products/1794762393-hh8twmjm.jpg" alt="Men's white graphic top and black long trousers outfit">
+</section>
 
-    <section class="hero" id="home">
-      <div class="hero-copy">
-        <p class="eyebrow">THE SEKIFLEX EXPERIENCE</p>
-        <h1>Elegance is<br><em>your signature.</em></h1>
-        <p class="hero-intro">
-          Discover beautiful fashion, carefully selected to help you
-          express your style with confidence. Welcome to SEKIFLEX COLLECTIONS.
-        </p>
-        <div class="hero-actions">
-          <a class="btn btn-gold" href="https://sekiflexcollections.com" target="_blank" rel="noopener">Explore the store ↗</a>
-          <a class="btn btn-outline" href="#collections">Discover our style</a>
-        </div>
-        <div class="hero-note">✦ Powered by SEKIFLEX LIMITED</div>
-      </div>
-    </section>
+<section class="collection-banner">
+<p class="eyebrow">YOUR STYLE, YOUR CHOICE</p>
+<h2>Find something <em>beautiful.</em></h2>
+<p>Explore our full collection and discover your next favourite look.</p>
+<a class="btn btn-gold" href="https://sekiflexcollections.com" target="_blank" rel="noopener">Visit Our Store ↗</a>
+</section>
 
-    <section class="service-strip">
-      <div>
-        <span class="service-icon">01</span>
-        <span><b>Beautiful fashion</b><small>Find your signature style</small></span>
-      </div>
-      <div>
-        <span class="service-icon">02</span>
-        <span><b>Personal service</b><small>We're here to help</small></span>
-      </div>
-      <div>
-        <span class="service-icon">03</span>
-        <span><b>Order tracking</b><small>Your own SC reference</small></span>
-      </div>
-    </section>
+<section class="track-banner">
+<div>
+<p class="eyebrow">YOUR ORDER, YOUR PEACE OF MIND</p>
+<h2>Already placed an order?</h2>
+<p>Use your Sekiflex SC tracking number to follow your delivery.</p>
+</div>
+<a class="btn btn-gold" href="track.html">Track My Order →</a>
+</section>
 
-    <section class="section" id="collections">
-      <div class="section-heading">
-        <p class="eyebrow">SELECTED FROM OUR STORE</p>
-        <h2>Discover the <em>collection.</em></h2>
-        <p>Beautiful pieces. Effortless confidence. Your style.</p>
-      </div>
+<section class="customer-care" id="customer-care">
+<p class="eyebrow">WE ARE HERE FOR YOU</p>
+<h2>How can we <em>help you?</em></h2>
+<p>Questions about an order, delivery or our collections? Our customer-care team is ready to assist you.</p>
+<div class="care-actions">
+<a class="btn btn-gold" href="https://wa.me/message/RSDQ7M7PCTAYN1" target="_blank" rel="noopener">Contact Customer Care ↗</a>
+<a class="btn btn-outline" style="background:#17191d" href="https://wa.me/message/RSDQ7M7PCTAYN1" target="_blank" rel="noopener">WhatsApp Us ↗</a>
+</div>
+</section>
+</main>
 
-      <div class="product-grid">
+<footer class="site-footer">
+<a class="brand footer-brand" href="index.html">
+<img src="https://pub-3c350dd029da4fbfadf0d95139a54e3e.r2.dev/gob/stores/logos/1794687519-3d5befmp.jpg" alt="Sekiflex Collections logo">
+</a>
+<p>Style for Every You.</p>
+<p>Powered by <strong>SEKIFLEX LIMITED</strong></p>
+<div>
+<a href="https://sekiflexcollections.com" target="_blank" rel="noopener">Visit Our Store ↗</a>
+<a href="track.html">Track an Order</a>
+<a href="https://wa.me/message/RSDQ7M7PCTAYN1" target="_blank" rel="noopener">Customer Care</a>
+</div>
+<small>© <span id="year"></span> SEKIFLEX LIMITED. All rights reserved.</small>
+</footer>
 
-        <a class="product-card" href="https://sekiflexcollections.com/product/sky-blue-coral-reef-print-crisscross-overlay-long-sleeve-maxi-dress">
-          <img src="https://pub-3c350dd029da4fbfadf0d95139a54e3e.r2.dev/gob/products/1794815424-vpbzaokw.jpg" alt="Sky blue and coral long-sleeve maxi gown">
-          <div class="product-info">
-            <h3>Elegant Women's Gowns</h3>
-            <span class="shop-link">VIEW & SHOP ↗</span>
-          </div>
-        </a>
+<a class="whatsapp-float" href="https://wa.me/message/RSDQ7M7PCTAYN1" target="_blank" rel="noopener">WhatsApp Us</a>
 
-        <a class="product-card" href="https://sekiflexcollections.com/product/crisp-white-black-striped-pointelle-knit-ruffle-sleeve-fluted-hem-maxi-dress">
-          <img src="https://pub-3c350dd029da4fbfadf0d95139a54e3e.r2.dev/gob/products/1794817280-uwcanlal.jpg" alt="White and black striped women's maxi dress">
-          <div class="product-info">
-            <h3>Chic Women's Dresses</h3>
-            <span class="shop-link">VIEW & SHOP ↗</span>
-          </div>
-        </a>
-
-        <a class="product-card" href="https://sekiflexcollections.com/category/womens-fashion-apparel">
-          <img src="https://pub-3c350dd029da4fbfadf0d95139a54e3e.r2.dev/gob/products/1794815424-vpbzaokw.jpg" alt="Sekiflex women's fashion collection">
-          <div class="product-info">
-            <h3>More Women's Fashion</h3>
-            <span class="shop-link">VIEW COLLECTION ↗</span>
-          </div>
-        </a>
-
-      </div>
-    </section>
-
-    <section class="men-feature" id="men">
-      <div>
-        <p class="eyebrow">THE MEN'S EDIT</p>
-        <h2>Confidence in<br><em>every detail.</em></h2>
-        <p>
-          Explore stylish men's outfits, from statement tops to
-          coordinated looks. Discover pieces that make an impression.
-        </p>
-        <a class="btn btn-gold" href="https://sekiflexcollections.com/product/mens-white-cross-graphic-round-neck-polo-rhinestone-alo-baggy-black-denim-trouser-2-piece-set">
-          Shop this outfit ↗
-        </a>
-        <p>
-          <a href="https://sekiflexcollections.com/category/mens-fashion-apparel" style="color:#d7b879;text-decoration:underline;">
-            Explore all men's fashion
-          </a>
-        </p>
-      </div>
-
-      <img src="https://pub-3c350dd029da4fbfadf0d95139a54e3e.r2.dev/gob/products/1794762393-hh8twmjm.jpg" alt="Men's white graphic top and black long trousers two-piece outfit">
-    </section>
-
-    <section class="collection-banner">
-      <p class="eyebrow">YOUR STYLE, YOUR CHOICE</p>
-      <h2>Find something <em>beautiful.</em></h2>
-      <p>Explore our full collection and discover your next favourite look.</p>
-      <a class="btn btn-gold" href="https://sekiflexcollections.com" target="_blank" rel="noopener">Shop the full collection ↗</a>
-    </section>
-
-    <section class="track-banner">
-      <div>
-        <p class="eyebrow">YOUR ORDER, YOUR PEACE OF MIND</p>
-        <h2>Already placed an order?</h2>
-        <p>Use your Sekiflex SC tracking number to follow your delivery.</p>
-      </div>
-      <a class="btn btn-gold" href="track.html">Track my order →</a>
-    </section>
-
-  </main>
-
-  <footer class="site-footer">
-    <a class="brand footer-brand" href="index.html">
-      <img src="https://pub-3c350dd029da4fbfadf0d95139a54e3e.r2.dev/gob/stores/logos/1794687519-3d5befmp.jpg" alt="Sekiflex Collections logo">
-    </a>
-    <p>Style for Every You.</p>
-    <p>Powered by <strong>SEKIFLEX LIMITED</strong></p>
-    <div>
-      <a href="https://sekiflexcollections.com" target="_blank" rel="noopener">Shop online ↗</a>
-      <a href="track.html">Track an order</a>
-    </div>
-    <small>© <span id="year"></span> SEKIFLEX LIMITED. All rights reserved.</small>
-  </footer>
-
-  <script src="app.js"></script>
+<script>
+document.getElementById("year").textContent=new Date().getFullYear();
+const menu=document.querySelector(".menu-toggle");
+const nav=document.querySelector(".main-nav");
+menu.addEventListener("click",()=>{
+nav.classList.toggle("open");
+menu.setAttribute("aria-expanded",nav.classList.contains("open"));
+});
+nav.querySelectorAll("a").forEach(link=>{
+link.addEventListener("click",()=>nav.classList.remove("open"));
+});
+</script>
 </body>
-      </html>
-      
+</html>
