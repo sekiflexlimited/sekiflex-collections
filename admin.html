@@ -4,628 +4,213 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#111111">
-  <meta name="description" content="Discover elegant fashion at SEKIFLEX COLLECTIONS. Powered by SEKIFLEX LIMITED.">
-  <title>SEKIFLEX COLLECTIONS | Luxury Fashion</title>
-
+  <meta name="theme-color" content="#17191d">
+  <title>Staff Dashboard | SEKIFLEX COLLECTIONS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --black:#111111;
-      --gold:#c6a15b;
-      --ivory:#f7f4ec;
-      --white:#ffffff;
-    }
-
-    * { box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
-
-    body {
-      margin:0;
-      background:var(--ivory);
-      color:var(--black);
-      font-family:'DM Sans',sans-serif;
-    }
-
-    a { text-decoration:none; }
-
-    .announcement {
-      background:#080808;
-      color:var(--gold);
-      text-align:center;
-      padding:11px;
-      font-size:11px;
-      letter-spacing:2px;
-    }
-
-    .site-header {
-      background:#111;
-      color:white;
-      padding:13px 6%;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      position:relative;
-      z-index:10;
-      border-bottom:1px solid #806638;
-    }
-
-    .brand {
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-
-    .brand img {
-      width:65px;
-      height:65px;
-      object-fit:contain;
-      border-radius:50%;
-    }
-
-    .brand-name strong {
-      display:block;
-      color:white;
-      font-family:'Playfair Display',serif;
-      font-size:22px;
-      letter-spacing:2px;
-    }
-
-    .brand-name small {
-      color:var(--gold);
-      letter-spacing:4px;
-      font-size:10px;
-    }
-
-    .main-nav {
-      display:flex;
-      align-items:center;
-      gap:23px;
-    }
-
-    .main-nav a {
-      color:white;
-      font-size:12px;
-    }
-
-    .main-nav a:hover { color:var(--gold); }
-
-    .main-nav .nav-shop {
-      background:var(--gold);
-      color:#111;
-      padding:13px 20px;
-      border-radius:3px;
-      font-weight:700;
-    }
-
-    .menu-toggle {
-      display:none;
-      color:white;
-      background:transparent;
-      border:1px solid var(--gold);
-      border-radius:5px;
-      font-size:23px;
-      padding:5px 11px;
-    }
-
-    .hero {
-      min-height:660px;
-      display:flex;
-      align-items:center;
-      padding:75px 7%;
-      color:white;
-      background:
-        linear-gradient(90deg,rgba(0,0,0,.90),rgba(0,0,0,.63) 52%,rgba(0,0,0,.12)),
-        url('https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2000&q=90')
-        center 35%/cover;
-    }
-
-    .hero-copy { max-width:650px; }
-
-    .eyebrow {
-      color:var(--gold);
-      letter-spacing:4px;
-      font-size:11px;
-      font-weight:700;
-    }
-
-    .hero h1 {
-      font-family:'Playfair Display',serif;
-      font-size:clamp(48px,7vw,86px);
-      line-height:1.08;
-      margin:20px 0;
-    }
-
-    .hero h1 em,h2 em {
-      color:var(--gold);
-      font-weight:500;
-    }
-
-    .hero-intro {
-      max-width:510px;
-      line-height:1.9;
-      color:#eee;
-      font-size:15px;
-    }
-
-    .hero-actions {
-      display:flex;
-      flex-wrap:wrap;
-      gap:14px;
-      margin-top:30px;
-    }
-
-    .btn {
-      display:inline-block;
-      padding:15px 25px;
-      border-radius:3px;
-      font-size:13px;
-      font-weight:700;
-      transition:.2s;
-    }
-
-    .btn:hover { transform:translateY(-3px); }
-    .btn-gold { background:var(--gold); color:#111; }
-    .btn-outline { border:1px solid var(--gold); color:white; }
-
-    .hero-note {
-      margin-top:28px;
-      color:#ddd;
-      font-size:12px;
-    }
-
-    .service-strip {
-      background:#171717;
-      color:white;
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      padding:27px 7%;
-      gap:20px;
-      border-bottom:2px solid var(--gold);
-    }
-
-    .service-strip div {
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:14px;
-    }
-
-    .service-icon {
-      color:var(--gold);
-      font-family:'Playfair Display',serif;
-      font-size:28px;
-    }
-
-    .service-strip b,.service-strip small { display:block; }
-    .service-strip small {
-      color:#aaa;
-      margin-top:5px;
-      font-size:11px;
-    }
-
-    .section { padding:85px 7%; }
-    .section-heading { text-align:center; margin-bottom:42px; }
-
-    h2 {
-      font-family:'Playfair Display',serif;
-      font-size:clamp(32px,5vw,48px);
-      font-weight:500;
-      margin:12px 0;
-    }
-
-    .section-heading p:not(.eyebrow) {
-      color:#777;
-      font-size:14px;
-    }
-
-    .product-grid {
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:22px;
-    }
-
-    .product-card {
-      display:block;
-      background:white;
-      color:#111;
-      overflow:hidden;
-      border:1px solid #e8e0d2;
-      transition:transform .3s,box-shadow .3s;
-    }
-
-    .product-card:hover {
-      transform:translateY(-6px);
-      box-shadow:0 15px 35px rgba(0,0,0,.12);
-    }
-
-    .product-card img {
-      display:block;
-      width:100%;
-      height:390px;
-      object-fit:cover;
-      background:#eee;
-    }
-
-    .product-info {
-      padding:20px;
-      text-align:center;
-    }
-
-    .product-info h3 {
-      font-family:'Playfair Display',serif;
-      font-size:20px;
-      font-weight:500;
-      margin:0 0 13px;
-    }
-
-    .shop-link {
-      display:inline-block;
-      color:#8c682e;
-      font-size:11px;
-      font-weight:700;
-      letter-spacing:2px;
-      border-bottom:1px solid var(--gold);
-      padding-bottom:5px;
-    }
-
-    .men-feature {
-      background:#171717;
-      color:white;
-      padding:80px 7%;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:55px;
-      align-items:center;
-    }
-
-    .men-feature img {
-      width:100%;
-      height:520px;
-      object-fit:cover;
-      object-position:center 35%;
-      border:1px solid #806638;
-    }
-
-    .men-feature p:not(.eyebrow) {
-      color:#ccc;
-      line-height:1.9;
-      font-size:14px;
-    }
-
-    .collection-banner {
-      margin:75px 7%;
-      padding:55px;
-      text-align:center;
-      background:#e9e1d0;
-      border:1px solid #d0b77e;
-    }
-
-    .collection-banner p { color:#666; line-height:1.8; }
-
-    .track-banner {
-      margin:75px 7%;
-      padding:45px;
-      background:#171717;
-      color:white;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:25px;
-    }
-
-    .track-banner p:not(.eyebrow) { color:#ccc; }
-
-    .contact-section {
-      background:#f0e9dc;
-      padding:75px 7%;
-      text-align:center;
-    }
-
-    .contact-section p:not(.eyebrow) {
-      color:#666;
-      line-height:1.8;
-      max-width:600px;
-      margin:15px auto 25px;
-    }
-
-    .contact-buttons {
-      display:flex;
-      justify-content:center;
-      flex-wrap:wrap;
-      gap:14px;
-    }
-
-    .whatsapp-button {
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:9px;
-      background:#168b4b;
-      color:white;
-      padding:15px 24px;
-      border-radius:4px;
-      font-weight:700;
-      font-size:13px;
-    }
-
-    .site-footer {
-      background:#080808;
-      color:white;
-      padding:45px 7%;
-      text-align:center;
-    }
-
-    .footer-brand {
-      justify-content:center;
-      margin-bottom:18px;
-    }
-
-    .footer-brand img { width:75px; height:75px; }
-    .site-footer p { color:#ccc; }
-
-    .site-footer a:not(.brand) {
-      color:var(--gold);
-      margin:10px;
-      font-size:13px;
-    }
-
-    .site-footer small {
-      display:block;
-      margin-top:25px;
-      color:#888;
-    }
-
-    .floating-whatsapp {
-      position:fixed;
-      right:20px;
-      bottom:22px;
-      z-index:99;
-      background:#168b4b;
-      color:white;
-      display:flex;
-      align-items:center;
-      gap:9px;
-      padding:14px 18px;
-      border-radius:40px;
-      box-shadow:0 5px 20px rgba(0,0,0,.25);
-      font-size:13px;
-      font-weight:700;
-    }
-
-    .floating-whatsapp:hover { background:#116d3b; }
-
-    @media(max-width:900px) {
-      .main-nav { gap:13px; }
-      .main-nav a { font-size:11px; }
-    }
-
-    @media(max-width:800px) {
-      .site-header { padding:12px 5%; }
-      .brand img { width:52px; height:52px; }
-      .brand-name strong { font-size:18px; }
-      .menu-toggle { display:block; }
-
-      .main-nav {
-        display:none;
-        position:absolute;
-        top:100%;
-        left:0;
-        right:0;
-        background:#111;
-        padding:25px;
-        flex-direction:column;
-        align-items:flex-start;
-        gap:22px;
-      }
-
-      .main-nav.open { display:flex; }
-      .hero { min-height:590px; padding:60px 7%; background-position:58% center; }
-
-      .service-strip {
-        grid-template-columns:1fr;
-        gap:22px;
-      }
-
-      .service-strip div { justify-content:flex-start; }
-      .product-grid { grid-template-columns:repeat(2,1fr); gap:13px; }
-      .product-card img { height:300px; }
-      .product-info { padding:15px 8px; }
-      .product-info h3 { font-size:17px; }
-      .men-feature { grid-template-columns:1fr; gap:25px; }
-      .men-feature img { height:430px; }
-      .track-banner { flex-direction:column; align-items:flex-start; }
-    }
-
-    @media(max-width:480px) {
-      .announcement { font-size:9px; letter-spacing:1px; }
-      .hero h1 { font-size:48px; }
-      .product-grid { grid-template-columns:1fr 1fr; }
-      .product-card img { height:245px; }
-      .product-info h3 { font-size:15px; }
-      .section { padding:65px 5%; }
-      .collection-banner,.track-banner { margin:40px 5%; padding:30px 22px; }
-      .men-feature { padding:60px 6%; }
-      .men-feature img { height:350px; }
-      .floating-whatsapp { right:12px; bottom:14px; padding:12px 15px; }
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
+<body class="admin-body">
 
-<body>
-
-  <div class="announcement">
-    STYLE FOR EVERY YOU · WELCOME TO SEKIFLEX COLLECTIONS
-  </div>
-
-  <header class="site-header">
+  <header class="admin-top">
     <a class="brand" href="index.html">
-      <img src="https://pub-3c350dd029da4fbfadf0d95139a54e3e.r2.dev/gob/stores/logos/1794687519-3d5befmp.jpg" alt="Sekiflex Collections logo">
-      <span class="brand-name">
+      <span class="brand-mark">S</span>
+      <span>
         <strong>SEKIFLEX</strong>
         <small>COLLECTIONS</small>
       </span>
     </a>
-
-    <button class="menu-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
-
-    <nav class="main-nav">
-      <a href="#home">Home</a>
-      <a href="#collections">Collections</a>
-      <a href="#men">Men's Style</a>
-      <a href="#customer-care">Customer Care</a>
-      <a href="track.html">Track Order</a>
-      <a class="nav-shop" href="https://sekiflexcollections.com" target="_blank" rel="noopener">Visit Our Store ↗</a>
-    </nav>
+    <a class="admin-home" href="index.html">Visit website ↗</a>
   </header>
 
-  <main>
+  <main class="admin-shell">
 
-    <section class="hero" id="home">
-      <div class="hero-copy">
-        <p class="eyebrow">THE SEKIFLEX EXPERIENCE</p>
-        <h1>Elegance is<br><em>your signature.</em></h1>
-        <p class="hero-intro">
-          Discover beautiful fashion, carefully selected to help you
-          express your style with confidence. Welcome to SEKIFLEX COLLECTIONS.
-        </p>
-        <div class="hero-actions">
-          <a class="btn btn-gold" href="https://sekiflexcollections.com" target="_blank" rel="noopener">Visit Our Store ↗</a>
-          <a class="btn btn-outline" href="#collections">Discover Our Style</a>
+    <section id="admin-login">
+      <div class="admin-heading">
+        <div>
+          <p class="eyebrow">SEKIFLEX LIMITED · STAFF ACCESS</p>
+          <h1>Staff <em>login.</em></h1>
+          <p>Sign in to manage customer orders and deliveries.</p>
         </div>
-        <div class="hero-note">✦ Powered by SEKIFLEX LIMITED</div>
-      </div>
-    </section>
-
-    <section class="service-strip">
-      <div>
-        <span class="service-icon">01</span>
-        <span><b>Beautiful fashion</b><small>Find your signature style</small></span>
-      </div>
-      <div>
-        <span class="service-icon">02</span>
-        <span><b>Personal service</b><small>We're here to help</small></span>
-      </div>
-      <div>
-        <span class="service-icon">03</span>
-        <span><b>Order tracking</b><small>Your own SC reference</small></span>
-      </div>
-    </section>
-
-    <section class="section" id="collections">
-      <div class="section-heading">
-        <p class="eyebrow">SELECTED FASHION</p>
-        <h2>Discover the <em>collection.</em></h2>
-        <p>Beautiful pieces. Effortless confidence. Your style.</p>
       </div>
 
-      <div class="product-grid">
-
-        <a class="product-card" href="https://sekiflexcollections.com/category/womens-fashion-apparel">
-          <img src="https://images.unsplash.com/photo-1746025241442-64f9ad664905?auto=format&fit=crop&w=900&q=85" alt="Elegant women's evening gown">
-          <div class="product-info">
-            <h3>Elegant Women's Gowns</h3>
-            <span class="shop-link">VIEW & SHOP ↗</span>
+      <div class="admin-card">
+        <h2>Secure sign in</h2>
+        <form id="admin-login-form" class="admin-form">
+          <div class="form-grid">
+            <label class="wide">
+              Email address
+              <input id="admin-email" type="email" autocomplete="username" required>
+            </label>
+            <label class="wide">
+              Password
+              <input id="admin-password" type="password" autocomplete="current-password" required>
+            </label>
           </div>
-        </a>
+          <button class="btn btn-gold" type="submit">Sign in →</button>
+          <p id="login-message" class="form-message" role="status"></p>
+        </form>
+      </div>
+    </section>
 
-        <a class="product-card" href="https://sekiflexcollections.com/category/womens-fashion-apparel">
-          <img src="https://images.unsplash.com/photo-1741816219257-d6c70be73f66?auto=format&fit=crop&w=900&q=85" alt="Beautiful women's black gown">
-          <div class="product-info">
-            <h3>Chic Women's Dresses</h3>
-            <span class="shop-link">VIEW & SHOP ↗</span>
+    <section id="admin-dashboard" hidden>
+      <div class="admin-heading">
+        <div>
+          <p class="eyebrow">SEKIFLEX COLLECTIONS · MANAGEMENT</p>
+          <h1>Order <em>dashboard.</em></h1>
+          <p>Register orders, manage payments and update deliveries.</p>
+        </div>
+        <button id="admin-logout" class="btn btn-outline" type="button">Log out</button>
+      </div>
+
+      <div class="notice">
+        Customer tracking references are automatically generated using the SC format.
+        Update shipment information manually as your orders progress.
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <small>Total orders</small>
+          <strong id="stat-total">0</strong>
+          <span>Registered orders</span>
+        </div>
+        <div class="stat-card">
+          <small>Awaiting payment</small>
+          <strong id="stat-payment">0</strong>
+          <span>Payment outstanding</span>
+        </div>
+        <div class="stat-card">
+          <small>In transit</small>
+          <strong id="stat-transit">0</strong>
+          <span>Orders being delivered</span>
+        </div>
+        <div class="stat-card">
+          <small>Delivered</small>
+          <strong id="stat-delivered">0</strong>
+          <span>Completed deliveries</span>
+        </div>
+      </div>
+
+      <section class="admin-card">
+        <div class="card-heading">
+          <div>
+            <p class="eyebrow">NEW CUSTOMER ORDER</p>
+            <h2>Register an order</h2>
           </div>
-        </a>
+          <span class="sc-chip">SC TRACKING</span>
+        </div>
 
-        <a class="product-card" href="https://sekiflexcollections.com/category/womens-fashion-apparel">
-          <img src="https://images.unsplash.com/photo-1741985979908-5f3b6d7060fa?auto=format&fit=crop&w=900&q=85" alt="Beautiful embellished women's fashion">
-          <div class="product-info">
-            <h3>More Women's Fashion</h3>
-            <span class="shop-link">VIEW COLLECTION ↗</span>
+        <form id="order-form" class="admin-form">
+          <div class="form-grid">
+
+            <label>
+              Customer name
+              <input id="customer-name" type="text" required>
+            </label>
+
+            <label>
+              Customer phone
+              <input id="customer-phone" type="tel" required>
+            </label>
+
+            <label>
+              Customer email <span class="optional">(optional)</span>
+              <input id="customer-email" type="email">
+            </label>
+
+            <label>
+              Order source
+              <select id="order-source" required>
+                <option value="WhatsApp">WhatsApp</option>
+                <option value="Website">Website</option>
+                <option value="Instagram">Instagram</option>
+                <option value="Other">Other</option>
+              </select>
+            </label>
+
+            <label>
+              Delivery destination
+              <input id="destination" type="text" placeholder="City, country" required>
+            </label>
+
+            <label>
+              Package description
+              <input id="package-description" type="text" placeholder="Clothing, shoes, accessories..." required>
+            </label>
+
+            <label>
+              Order amount
+              <input id="order-amount" type="number" min="0" step="0.01" required>
+            </label>
+
+            <label>
+              Delivery amount
+              <input id="delivery-amount" type="number" min="0" step="0.01" value="0">
+            </label>
+
+            <label>
+              Payment status
+              <select id="payment-status" required>
+                <option value="Awaiting payment">Awaiting payment</option>
+                <option value="Payment confirmed">Payment confirmed</option>
+              </select>
+            </label>
+
+            <label>
+              Courier name <span class="optional">(optional)</span>
+              <input id="courier-name" type="text" placeholder="Courier company">
+            </label>
+
+            <label>
+              Courier waybill <span class="optional">(optional)</span>
+              <input id="courier-waybill" type="text">
+            </label>
+
+            <label>
+              Estimated delivery <span class="optional">(optional)</span>
+              <input id="estimated-delivery" type="text" placeholder="e.g. 5–7 days">
+            </label>
+
+            <label class="wide">
+              Collection instructions <span class="optional">(optional)</span>
+              <input id="collection-instructions" type="text" placeholder="Instructions for the customer">
+            </label>
+
           </div>
-        </a>
 
-      </div>
+          <button class="btn btn-gold" type="submit">Register customer order →</button>
+          <p id="order-message" class="form-message" role="status"></p>
+        </form>
+      </section>
+
+      <section class="admin-card">
+        <div class="card-heading">
+          <div>
+            <p class="eyebrow">ORDER MANAGEMENT</p>
+            <h2>Customer orders</h2>
+          </div>
+          <button id="refresh-orders" class="btn btn-outline" type="button">Refresh orders ↻</button>
+        </div>
+
+        <label for="order-search">Search by tracking number or customer</label>
+        <input id="order-search" type="search" placeholder="Search orders..." style="width:100%;height:48px;padding:0 13px;border:1px solid #dcd6ca;margin-top:8px;font:inherit;font-size:12px;">
+
+        <div id="orders-list" style="margin-top:22px;">
+          <p class="small-note">Your registered orders will appear here after login.</p>
+        </div>
+      </section>
+
     </section>
-
-    <section class="men-feature" id="men">
-      <div>
-        <p class="eyebrow">THE MEN'S EDIT</p>
-        <h2>Confidence in<br><em>every detail.</em></h2>
-        <p>
-          Explore stylish men's outfits, from statement tops to
-          coordinated looks. Discover pieces that make an impression.
-        </p>
-        <a class="btn btn-gold" href="https://sekiflexcollections.com/category/mens-fashion-apparel">
-          Shop Men's Fashion ↗
-        </a>
-        <p>
-          <a href="https://sekiflexcollections.com/category/mens-fashion-apparel" style="color:#d7b879;text-decoration:underline;">
-            Explore all men's fashion
-          </a>
-        </p>
-      </div>
-
-      <img src="https://pub-3c350dd029da4fbfadf0d95139a54e3e.r2.dev/gob/products/1794762393-hh8twmjm.jpg" alt="Men's white graphic top and black long trousers outfit">
-    </section>
-
-    <section class="collection-banner">
-      <p class="eyebrow">YOUR STYLE, YOUR CHOICE</p>
-      <h2>Find something <em>beautiful.</em></h2>
-      <p>Explore our full collection and discover your next favourite look.</p>
-      <a class="btn btn-gold" href="https://sekiflexcollections.com" target="_blank" rel="noopener">Visit Our Store ↗</a>
-    </section>
-
-    <section class="track-banner">
-      <div>
-        <p class="eyebrow">YOUR ORDER, YOUR PEACE OF MIND</p>
-        <h2>Already placed an order?</h2>
-        <p>Use your Sekiflex SC tracking number to follow your delivery.</p>
-      </div>
-      <a class="btn btn-gold" href="track.html">Track My Order →</a>
-    </section>
-
-    <section class="contact-section" id="customer-care">
-      <p class="eyebrow">WE ARE HERE TO HELP</p>
-      <h2>How can we <em>help you?</em></h2>
-      <p>
-        Have a question about a product, an order or your delivery?
-        Our customer care team is ready to assist you.
-        Send us a message on WhatsApp.
-      </p>
-      <div class="contact-buttons">
-        <a class="whatsapp-button" href="https://wa.me/message/RSDQ7M7PCTAYN1" target="_blank" rel="noopener">
-          ☎ Contact Customer Care
-        </a>
-        <a class="btn btn-gold" href="https://wa.me/message/RSDQ7M7PCTAYN1" target="_blank" rel="noopener">
-          WhatsApp Us ↗
-        </a>
-      </div>
-    </section>
-
   </main>
 
   <footer class="site-footer">
-    <a class="brand footer-brand" href="index.html">
-      <img src="https://pub-3c350dd029da4fbfadf0d95139a54e3e.r2.dev/gob/stores/logos/1794687519-3d5befmp.jpg" alt="Sekiflex Collections logo">
-    </a>
-    <p>Style for Every You.</p>
     <p>Powered by <strong>SEKIFLEX LIMITED</strong></p>
-    <div>
-      <a href="https://sekiflexcollections.com" target="_blank" rel="noopener">Visit Our Store ↗</a>
-      <a href="track.html">Track an Order</a>
-      <a href="https://wa.me/message/RSDQ7M7PCTAYN1" target="_blank" rel="noopener">Customer Care</a>
-    </div>
-    <small>© <span id="year"></span> SEKIFLEX LIMITED. All rights reserved.</small>
+    <small>© <span id="year"></span> Sekiflex Limited. All rights reserved.</small>
   </footer>
 
-  <a class="floating-whatsapp" href="https://wa.me/message/RSDQ7M7PCTAYN1" target="_blank" rel="noopener" aria-label="Contact Sekiflex on WhatsApp">
-    ☎ WhatsApp Us
-  </a>
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
