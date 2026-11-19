@@ -137,7 +137,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     delivery_background_color: "#202226"
   };
 
-  // CUSTOMER INSTRUCTION DISPLAY
+  
+function renderInstruction(result, title, message, headingColor, textColor) {
+  if (!message || !String(message).trim()) return;
+
+  const box = document.createElement("section");
+  box.style.background = "transparent";
+  box.style.color = safeColor(textColor, "#FFFFFF");
+  box.style.padding = "14px";
+  box.style.margin = "14px 0";
+  box.style.borderRadius = "10px";
+  box.style.border = "1px solid rgba(212, 175, 55, 0.25)";
+  box.style.overflowWrap = "anywhere";
+
+  const heading = document.createElement("h3");
+  heading.textContent = title;
+  heading.style.color = safeColor(headingColor, "#D4AF37");
+  heading.style.margin = "0 0 9px";
+  heading.style.fontSize = "16px";
+
+  const paragraph = document.createElement("p");
+  paragraph.textContent = message;
+  paragraph.style.color = safeColor(textColor, "#FFFFFF");
+  paragraph.style.whiteSpace = "pre-wrap";
+  paragraph.style.margin = "0";
+  paragraph.style.lineHeight = "1.6";
+
+  box.append(heading, paragraph);
+  result.appendChild(box);
+}
+  
 
   function renderInstruction(result, title, message, headingColor, textColor, backgroundColor) {
     if (!message || !String(message).trim()) return;
