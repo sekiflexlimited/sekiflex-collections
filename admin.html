@@ -65,10 +65,26 @@
     </div>
 
     <div class="stat-grid">
-      <div class="stat-card"><small>Total orders</small><strong id="stat-total">0</strong><span>Registered orders</span></div>
-      <div class="stat-card"><small>Awaiting payment</small><strong id="stat-payment">0</strong><span>Payment outstanding</span></div>
-      <div class="stat-card"><small>In transit</small><strong id="stat-transit">0</strong><span>Orders being delivered</span></div>
-      <div class="stat-card"><small>Delivered</small><strong id="stat-delivered">0</strong><span>Completed deliveries</span></div>
+      <div class="stat-card">
+        <small>Total orders</small>
+        <strong id="stat-total">0</strong>
+        <span>Registered orders</span>
+      </div>
+      <div class="stat-card">
+        <small>Awaiting payment</small>
+        <strong id="stat-payment">0</strong>
+        <span>Payment outstanding</span>
+      </div>
+      <div class="stat-card">
+        <small>In transit</small>
+        <strong id="stat-transit">0</strong>
+        <span>Orders being delivered</span>
+      </div>
+      <div class="stat-card">
+        <small>Delivered</small>
+        <strong id="stat-delivered">0</strong>
+        <span>Completed deliveries</span>
+      </div>
     </div>
 
     <section class="admin-card">
@@ -165,8 +181,17 @@
             <input id="courier-waybill" type="text">
           </label>
 
-          <label>Estimated delivery <span class="optional">(optional)</span>
-            <input id="estimated-delivery" type="text" placeholder="e.g. 5–7 days">
+          <label>Estimated delivery
+            <select id="estimated-delivery" required>
+              <option value="">Select delivery time</option>
+              <option value="1">1 day</option>
+              <option value="2">2 days</option>
+              <option value="3">3 days</option>
+              <option value="4">4 days</option>
+              <option value="5">5 days</option>
+              <option value="6">6 days</option>
+              <option value="7">7 days</option>
+            </select>
           </label>
 
           <label class="wide">Collection instructions <span class="optional">(optional)</span>
@@ -207,5 +232,4 @@
 <script src="supabase-config.js"></script>
 <script src="app.js"></script>
 </body>
-  </html>
-  
+</html>
