@@ -1,6 +1,6 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // SEKIFLEX COLLECTIONS - STAFF AND CUSTOMER SYSTEM
+  // SEKIFLEX COLLECTIONS - COMPLETE STAFF AND CUSTOMER SYSTEM
 
   const year = document.getElementById("year");
   if (year) year.textContent = new Date().getFullYear();
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     element.style.fontWeight = "600";
   }
 
-  // RED, YELLOW AND GREEN ORDER STATUS COLOURS
+  // STATUS COLOURS
 
   function getStatusColor(value) {
     const status = String(value || "").toLowerCase();
@@ -72,14 +72,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (value === null || value === undefined || value === "") return;
 
     const p = document.createElement("p");
-    const strong = document.createElement("strong");
+    p.style.margin = "7px 0";
+    p.style.fontSize = "14px";
+    p.style.overflowWrap = "anywhere";
 
+    const strong = document.createElement("strong");
     strong.textContent = label + ": ";
 
     const text = document.createElement("span");
     text.textContent = String(value);
 
-    if (label === "Customer status" || label === "Shipment status") {
+    if (
+      label === "Customer status" ||
+      label === "Shipment status"
+    ) {
       text.style.color = getStatusColor(value);
       text.style.fontWeight = "700";
     }
@@ -97,7 +103,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     ].filter(Boolean).join(" | ") || "Unknown database error";
   }
 
-  // CONVERT SELECTED DELIVERY DAYS INTO A CALENDAR DATE
+  // ESTIMATED DELIVERY DATE
 
   function getEstimatedDeliveryDate(days) {
     const numberOfDays = Number(days);
@@ -241,6 +247,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           result.appendChild(updated);
         }
+
       } catch (error) {
         console.error("Tracking error:", error);
 
@@ -249,6 +256,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           "Tracking failed: " + getErrorDetails(error),
           "error"
         );
+
       } finally {
         button.disabled = false;
       }
@@ -299,6 +307,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     loginSection.hidden = visible;
     dashboard.hidden = !visible;
   }
+
+  // VERIFY STAFF ACCESS
 
   async function verifyStaff(user) {
     const { data, error } = await db
@@ -366,6 +376,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (error) throw error;
 
         await enterDashboard(data.user);
+
       } catch (error) {
         console.error("Login error:", error);
 
@@ -374,13 +385,14 @@ document.addEventListener("DOMContentLoaded", async () => {
           "Sign-in failed. Check your email and password.",
           "error"
         );
+
       } finally {
         button.disabled = false;
       }
     });
   }
 
-  // LOAD ORDERS AND STATISTICS
+  // LOAD ORDERS AND DASHBOARD STATISTICS
 
   async function loadOrders() {
     if (!db) return;
@@ -401,26 +413,37 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     currentOrders = data || [];
 
-    document.getElementById("stat-total").textContent =
-      currentOrders.length;
+    const total = document.getElementById("stat-total");
+    const payment = document.getElementById("stat-payment");
+    const transit = document.getElementById("stat-transit");
+    const delivered = document.getElementById("stat-delivered");
 
-    document.getElementById("stat-payment").textContent =
-      currentOrders.filter(
+    if (total) {
+      total.textContent = currentOrders.length;
+    }
+
+    if (payment) {
+      payment.textContent = currentOrders.filter(
         order => order.payment_status === "Awaiting payment"
       ).length;
+    }
 
-    document.getElementById("stat-transit").textContent =
-      currentOrders.filter(
+    if (transit) {
+      transit.textContent = currentOrders.filter(
         order => order.status === "In transit"
       ).length;
+    }
 
-    document.getElementById("stat-delivered").textContent =
-      currentOrders.filter(
+    if (delivered) {
+      delivered.textContent = currentOrders.filter(
         order => order.status === "Delivered"
       ).length;
+    }
 
     renderOrders();
   }
+
+  // DROPDOWN CREATOR
 
   function makeSelect(options, selectedValue) {
     const select = document.createElement("select");
@@ -430,6 +453,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     select.style.marginTop = "8px";
     select.style.minHeight = "44px";
     select.style.padding = "8px";
+    select.style.borderRadius = "8px";
+    select.style.boxSizing = "border-box";
 
     options.forEach(value => {
       const option = document.createElement("option");
@@ -450,7 +475,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return select;
   }
 
-  // DISPLAY AND UPDATE ORDERS
+  // COMPACT EXPANDABLE CUSTOMER ORDER LIST
 
   function renderOrders() {
     ordersList.replaceChildren();
@@ -474,27 +499,104 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     filtered.forEach(order => {
-      const card = document.createElement("article");
-      card.className = "stat-card";
-      card.style.marginTop = "16px";
+      const card = document.createElement("details");
 
-      const title = document.createElement("h3");
-      title.textContent = order.tracking_number || "Order";
-      card.appendChild(title);
+      card.style.background = "#17191D";
+      card.style.color = "#FFFFFF";
+      card.style.border = "1px solid #444";
+      card.style.borderRadius = "10px";
+      card.style.margin = "8px 0";
+      card.style.overflow = "hidden";
 
-      addDetail(card, "Customer", order.customer_name);
-      addDetail(card, "Phone", order.customer_phone);
-      addDetail(card, "Country", order.country);
-      addDetail(card, "Destination", order.destination);
-      addDetail(card, "Currency", order.currency);
-      addDetail(card, "Order amount", order.order_amount);
-      addDetail(card, "Delivery amount", order.delivery_amount);
-      addDetail(card, "Shipment status", order.status);
+      const summary = document.createElement("summary");
+      summary.style.listStyle = "none";
+      summary.style.cursor = "pointer";
+      summary.style.padding = "12px";
+
+      const top = document.createElement("div");
+      top.style.display = "flex";
+      top.style.justifyContent = "space-between";
+      top.style.alignItems = "center";
+      top.style.gap = "8px";
+
+      const name = document.createElement("strong");
+      name.textContent = order.customer_name || "Customer";
+      name.style.fontSize = "14px";
+      name.style.overflowWrap = "anywhere";
+
+      const arrow = document.createElement("span");
+      arrow.textContent = "＋";
+      arrow.style.color = "#D4AF37";
+      arrow.style.fontSize = "20px";
+      arrow.style.flexShrink = "0";
+
+      top.append(name, arrow);
+
+      const tracking = document.createElement("div");
+      tracking.textContent = order.tracking_number || "No tracking number";
+      tracking.style.color = "#D4AF37";
+      tracking.style.fontSize = "12px";
+      tracking.style.marginTop = "4px";
+
+      const statusesLine = document.createElement("div");
+      statusesLine.style.display = "flex";
+      statusesLine.style.justifyContent = "space-between";
+      statusesLine.style.alignItems = "center";
+      statusesLine.style.flexWrap = "wrap";
+      statusesLine.style.gap = "6px";
+      statusesLine.style.marginTop = "8px";
+
+      const shipmentStatus = document.createElement("span");
+      shipmentStatus.textContent = order.status || "Awaiting payment";
+      shipmentStatus.style.color = getStatusColor(order.status);
+      shipmentStatus.style.fontSize = "12px";
+      shipmentStatus.style.fontWeight = "700";
+
+      const paymentStatus = document.createElement("span");
+      paymentStatus.textContent = order.payment_status || "Awaiting payment";
+      paymentStatus.style.color = getStatusColor(order.payment_status);
+      paymentStatus.style.fontSize = "12px";
+      paymentStatus.style.fontWeight = "700";
+
+      statusesLine.append(shipmentStatus, paymentStatus);
+      summary.append(top, tracking, statusesLine);
+
+      const detailsBox = document.createElement("div");
+      detailsBox.style.padding = "12px";
+      detailsBox.style.borderTop = "1px solid #444";
+      detailsBox.style.background = "#202226";
+
+      const heading = document.createElement("h4");
+      heading.textContent = "ORDER DETAILS";
+      heading.style.color = "#D4AF37";
+      heading.style.fontSize = "13px";
+      heading.style.margin = "2px 0 12px";
+
+      detailsBox.appendChild(heading);
+
+      addDetail(detailsBox, "Customer", order.customer_name);
+      addDetail(detailsBox, "Phone", order.customer_phone);
+      addDetail(detailsBox, "Email", order.customer_email);
+      addDetail(detailsBox, "Tracking number", order.tracking_number);
+      addDetail(detailsBox, "Country", order.country);
+      addDetail(detailsBox, "Destination", order.destination);
+      addDetail(detailsBox, "Package", order.package_description);
+      addDetail(detailsBox, "Currency", order.currency);
+      addDetail(detailsBox, "Order amount", order.order_amount);
+      addDetail(detailsBox, "Delivery amount", order.delivery_amount);
+      addDetail(detailsBox, "Shipment status", order.status);
+      addDetail(detailsBox, "Payment status", order.payment_status);
+      addDetail(detailsBox, "Courier", order.courier_name);
+      addDetail(detailsBox, "Courier waybill", order.courier_waybill);
+      addDetail(detailsBox, "Estimated delivery", order.estimated_delivery);
+      addDetail(detailsBox, "Collection instructions", order.collection_instructions);
 
       const paymentLabel = document.createElement("label");
-      paymentLabel.textContent = "Payment status";
+      paymentLabel.textContent = "Update payment status";
       paymentLabel.style.display = "block";
-      paymentLabel.style.marginTop = "14px";
+      paymentLabel.style.marginTop = "16px";
+      paymentLabel.style.fontSize = "13px";
+      paymentLabel.style.fontWeight = "600";
 
       const paymentSelect = makeSelect(
         paymentStatuses,
@@ -502,9 +604,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
 
       const shipmentLabel = document.createElement("label");
-      shipmentLabel.textContent = "Shipment status";
+      shipmentLabel.textContent = "Update shipment status";
       shipmentLabel.style.display = "block";
       shipmentLabel.style.marginTop = "14px";
+      shipmentLabel.style.fontSize = "13px";
+      shipmentLabel.style.fontWeight = "600";
 
       const shipmentSelect = makeSelect(
         statuses,
@@ -513,15 +617,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const updateButton = document.createElement("button");
       updateButton.type = "button";
-      updateButton.className = "btn btn-gold";
-      updateButton.style.marginTop = "14px";
-      updateButton.textContent = "Save payment and shipment updates";
+      updateButton.textContent = "SAVE ORDER UPDATES";
+      updateButton.style.width = "100%";
+      updateButton.style.marginTop = "15px";
+      updateButton.style.padding = "13px";
+      updateButton.style.border = "none";
+      updateButton.style.borderRadius = "8px";
+      updateButton.style.background = "#D4AF37";
+      updateButton.style.color = "#17191D";
+      updateButton.style.fontWeight = "700";
+      updateButton.style.cursor = "pointer";
 
       const feedback = document.createElement("p");
       feedback.setAttribute("role", "status");
+      feedback.style.fontSize = "13px";
 
       updateButton.addEventListener("click", async () => {
         updateButton.disabled = true;
+        updateButton.textContent = "SAVING...";
+
         showMessage(feedback, "Saving updates...", "info");
 
         try {
@@ -537,11 +651,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           showMessage(
             feedback,
-            "Updates saved successfully.",
+            "Order updates saved successfully.",
             "success"
           );
 
           await loadOrders();
+
         } catch (error) {
           console.error("Order update error:", error);
 
@@ -550,12 +665,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             "Update failed: " + getErrorDetails(error),
             "error"
           );
+
         } finally {
           updateButton.disabled = false;
+          updateButton.textContent = "SAVE ORDER UPDATES";
         }
       });
 
-      card.append(
+      detailsBox.append(
         paymentLabel,
         paymentSelect,
         shipmentLabel,
@@ -564,13 +681,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         feedback
       );
 
+      card.append(summary, detailsBox);
+
+      card.addEventListener("toggle", () => {
+        arrow.textContent = card.open ? "−" : "＋";
+      });
+
       ordersList.appendChild(card);
     });
   }
 
+  // SEARCH ORDERS
+
   if (searchInput) {
     searchInput.addEventListener("input", renderOrders);
   }
+
+  // REFRESH ORDERS
 
   const refreshButton = document.getElementById("refresh-orders");
 
