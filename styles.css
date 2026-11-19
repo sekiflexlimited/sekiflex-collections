@@ -472,3 +472,50 @@ html body.admin-body {
 .admin-body label {
   color: #f5d76e !important;
 }
+
+/* SEKIFLEX COLLECTIONS - ADMIN DARK LUXURY THEME */
+
+body.admin-body {
+  background: linear-gradient(135deg, #08090b, #17191f, #090a0d) !important;
+  background-attachment: fixed !important;
+  color: #ffffff !important;
+}
+
+.admin-body .admin-shell {
+  background: transparent !important;
+}
+
+.admin-body .admin-top,
+.admin-body .admin-card,
+.admin-body .stat-card {
+  background: linear-gradient(145deg, #24262d, #121419) !important;
+  color: #ffffff !important;
+  border: 1px solid #806b36 !important;
+  box-shadow: 0 8px 25px rgba(0,0,0,.55) !important;
+}
+
+.admin-body h1,
+.admin-body h2,
+.admin-body h3,
+.admin-body .stat-card strong {
+  color: #f5d76e !important;
+}
+
+.admin-body p,
+.admin-body small {
+  color: #eeeeee !important;
+}
+
+.admin-body #admin-logout {
+  background: #17191d !important;
+  color: #f5d76e !important;
+  border: 2px solid #d4af37 !important;
+  border-radius: 9px !important;
+  padding: 12px 22px !important;
+  font-weight: 800 !important;
+}
+
+.admin-body #admin-logout:hover {
+  background: #d4af37 !important;
+  color: #101114 !important;
+}
