@@ -883,24 +883,27 @@ orderForm.addEventListener("submit", async event => {
       document.getElementById("estimated-delivery").value
     );
 
-    const order = {
-      customer_name: document.getElementById("customer-name").value.trim(),
-      customer_phone: document.getElementById("customer-phone").value.trim(),
-      customer_email: document.getElementById("customer-email").value.trim() || null,
-      order_source: document.getElementById("order-source").value,
-      country: document.getElementById("country").value,
-      currency: document.getElementById("currency").value,
-      destination: document.getElementById("destination").value.trim(),
-      package_description: document.getElementById("package-description").value.trim(),
-      order_amount: Number(document.getElementById("order-amount").value),
-      delivery_amount: Number(document.getElementById("delivery-amount").value),
-      payment_status: document.getElementById("payment-status").value,
-      courier_name: document.getElementById("courier-name").value.trim() || null,
-      courier_waybill: document.getElementById("courier-waybill").value.trim() || null,
-      estimated_delivery: estimatedDelivery,
-      collection_instructions:
-        document.getElementById("collection-instructions").value.trim() || null
-    };
+
+const order = {
+  customer_name: document.getElementById("customer-name").value.trim(),
+  customer_phone: document.getElementById("customer-phone").value.trim(),
+  customer_email: document.getElementById("customer-email").value.trim() || null,
+  order_source: document.getElementById("order-source").value,
+  country: document.getElementById("country").value,
+  currency: document.getElementById("currency").value,
+  destination: document.getElementById("destination").value.trim(),
+  package_description: document.getElementById("package-description").value.trim(),
+  order_amount: Number(document.getElementById("order-amount").value),
+  delivery_amount: Number(document.getElementById("delivery-amount").value),
+  status: "Order processing",
+  payment_status: document.getElementById("payment-status").value,
+  courier_name: document.getElementById("courier-name").value.trim() || null,
+  courier_waybill: document.getElementById("courier-waybill").value.trim() || null,
+  estimated_delivery: estimatedDelivery,
+  collection_instructions:
+    document.getElementById("collection-instructions").value.trim() || null
+};
+    
 
     const { data, error } = await db
       .from("orders")
