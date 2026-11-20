@@ -778,7 +778,7 @@ async function saveOrderChanges(order, changes, button, message) {
       const statusLabel = makeLabel("Shipment status");
       const statusSelect = makeSelect(
         statuses,
-        order.status || "Awaiting payment"
+        order.status || "Order processing"
       );
 
       detailsBox.append(statusLabel, statusSelect);
