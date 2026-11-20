@@ -917,6 +917,7 @@ orderForm.addEventListener("submit", async event => {
       "Order registered successfully. Tracking number: " +
         (data?.tracking_number || "Generated"),
       "success"
+      });
     );
 
     // SEND AUTOMATIC NEW ORDER CONFIRMATION EMAIL
