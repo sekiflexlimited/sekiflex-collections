@@ -926,10 +926,14 @@ orderForm.addEventListener("submit", async event => {
         const { data: notification, error: notificationError } =
           await db.functions.invoke("sekiflex-order-notifications", {
             body: {
-              order_id: data.id,
-              event_type: "order_created"
-            }
-          });
+  order_id: data.id,
+  event_type: "order_created"
+},
+headers: {
+  Authorization: `Bearer ${(await db.auth.getSession()).data.session?.access_token}`
+}
+}); 
+    
 
         if (notificationError || notification?.error) {
           console.error(
