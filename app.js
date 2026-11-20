@@ -1,6 +1,6 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // SEKIFLEX COLLECTIONS - STAFF AND CUSTOMER SYSTEM
+  // SEKIFLEX COLLECTIONS — STAFF AND CUSTOMER SYSTEM
 
   const year = document.getElementById("year");
   if (year) year.textContent = new Date().getFullYear();
@@ -15,6 +15,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       toggle.textContent = open ? "×" : "☰";
     });
   }
+
+  // SUPABASE CONNECTION
 
   let db = null;
 
@@ -120,81 +122,53 @@ document.addEventListener("DOMContentLoaded", async () => {
     return `${y}-${month}-${day}`;
   }
 
-  // INSTRUCTION COLOUR SAFETY
+  // INSTRUCTION TEXT COLOURS
 
-  function safeColor(value, fallback) {
-    return /^#[0-9A-Fa-f]{6}$/.test(String(value || ""))
-      ? value
-      : fallback;
-  }
-
-  const defaultColors = {
-    collection_heading_color: "#D4AF37",
-    collection_text_color: "#FFFFFF",
-    collection_background_color: "#202226",
-    delivery_heading_color: "#D4AF37",
-    delivery_text_color: "#FFFFFF",
-    delivery_background_color: "#202226"
+  const instructionColors = {
+    Yellow: "#FFD700",
+    Red: "#FF0000",
+    Green: "#008000"
   };
 
-  
-function renderInstruction(result, title, message, headingColor, textColor) {
-  if (!message || !String(message).trim()) return;
+  function safeInstructionColor(value) {
+    const selected = String(value || "").trim().toLowerCase();
 
-  const box = document.createElement("section");
-  box.style.background = "transparent";
-  box.style.color = safeColor(textColor, "#FFFFFF");
-  box.style.padding = "14px";
-  box.style.margin = "14px 0";
-  box.style.borderRadius = "10px";
-  box.style.border = "1px solid rgba(212, 175, 55, 0.25)";
-  box.style.overflowWrap = "anywhere";
+    for (const [name, hex] of Object.entries(instructionColors)) {
+      if (
+        selected === name.toLowerCase() ||
+        selected === hex.toLowerCase()
+      ) {
+        return hex;
+      }
+    }
 
-  const heading = document.createElement("h3");
-  heading.textContent = title;
-  heading.style.color = safeColor(headingColor, "#D4AF37");
-  heading.style.margin = "0 0 9px";
-  heading.style.fontSize = "16px";
+    return instructionColors.Yellow;
+  }
 
-  const paragraph = document.createElement("p");
-  paragraph.textContent = message;
-  paragraph.style.color = safeColor(textColor, "#FFFFFF");
-  paragraph.style.whiteSpace = "pre-wrap";
-  paragraph.style.margin = "0";
-  paragraph.style.lineHeight = "1.6";
+  function getInstructionColorName(value) {
+    const color = safeInstructionColor(value);
 
-  box.append(heading, paragraph);
-  result.appendChild(box);
-}
-  
+    return Object.keys(instructionColors).find(
+      name => instructionColors[name] === color
+    ) || "Yellow";
+  }
 
-  function renderInstruction(result, title, message, headingColor, textColor, backgroundColor) {
+  // CUSTOMER TRACKING INSTRUCTIONS
+  // Plain text only: no boxes, backgrounds or extra headings.
+
+  function renderInstruction(result, message, color) {
     if (!message || !String(message).trim()) return;
-
-    const box = document.createElement("section");
-    box.style.background = safeColor(backgroundColor, "#202226");
-    box.style.color = safeColor(textColor, "#FFFFFF");
-    box.style.padding = "14px";
-    box.style.margin = "14px 0";
-    box.style.borderRadius = "10px";
-    box.style.border = "1px solid #555";
-    box.style.overflowWrap = "anywhere";
-
-    const heading = document.createElement("h3");
-    heading.textContent = title;
-    heading.style.color = safeColor(headingColor, "#D4AF37");
-    heading.style.margin = "0 0 9px";
-    heading.style.fontSize = "16px";
 
     const paragraph = document.createElement("p");
     paragraph.textContent = message;
-    paragraph.style.color = safeColor(textColor, "#FFFFFF");
+    paragraph.style.color = safeInstructionColor(color);
     paragraph.style.whiteSpace = "pre-wrap";
-    paragraph.style.margin = "0";
+    paragraph.style.overflowWrap = "anywhere";
+    paragraph.style.margin = "7px 0";
+    paragraph.style.fontSize = "14px";
     paragraph.style.lineHeight = "1.6";
 
-    box.append(heading, paragraph);
-    result.appendChild(box);
+    result.appendChild(paragraph);
   }
 
   // CUSTOMER TRACKING
@@ -221,7 +195,11 @@ function renderInstruction(result, title, message, headingColor, textColor) {
       result.replaceChildren();
 
       if (!/^SC-\d{4}-\d{6}$/.test(number)) {
-        showMessage(message, "Please enter a valid SC tracking number.", "error");
+        showMessage(
+          message,
+          "Please enter a valid SC tracking number.",
+          "error"
+        );
         return;
       }
 
@@ -243,10 +221,13 @@ function renderInstruction(result, title, message, headingColor, textColor) {
       showMessage(message, "Checking shipment...", "info");
 
       try {
-        const { data, error } = await db.rpc("track_sekiflex_order_v2", {
-          p_tracking_number: number,
-          p_phone_last4: phone
-        });
+        const { data, error } = await db.rpc(
+          "track_sekiflex_order_v2",
+          {
+            p_tracking_number: number,
+            p_phone_last4: phone
+          }
+        );
 
         if (error) throw error;
 
@@ -261,7 +242,11 @@ function renderInstruction(result, title, message, headingColor, textColor) {
           return;
         }
 
-        showMessage(message, "Shipment information found.", "success");
+        showMessage(
+          message,
+          "Shipment information found.",
+          "success"
+        );
 
         const heading = document.createElement("h2");
         heading.textContent = "Shipment details";
@@ -296,20 +281,14 @@ function renderInstruction(result, title, message, headingColor, textColor) {
 
         renderInstruction(
           result,
-          "Collection Instructions",
           shipment.collection_instructions,
-          shipment.collection_heading_color,
-          shipment.collection_text_color,
-          shipment.collection_background_color
+          shipment.collection_text_color
         );
 
         renderInstruction(
           result,
-          "Delivery Instructions",
           shipment.delivery_instructions,
-          shipment.delivery_heading_color,
-          shipment.delivery_text_color,
-          shipment.delivery_background_color
+          shipment.delivery_text_color
         );
 
         if (shipment.updated_at) {
@@ -350,6 +329,7 @@ function renderInstruction(result, title, message, headingColor, textColor) {
   const orderMessage = document.getElementById("order-message");
   const ordersList = document.getElementById("orders-list");
   const searchInput = document.getElementById("order-search");
+  const refreshButton = document.getElementById("refresh-orders");
 
   const statuses = [
     "Awaiting payment",
@@ -425,7 +405,11 @@ function renderInstruction(result, title, message, headingColor, textColor) {
       event.preventDefault();
 
       if (!db) {
-        showMessage(loginMessage, "Database connection unavailable.", "error");
+        showMessage(
+          loginMessage,
+          "Database connection unavailable.",
+          "error"
+        );
         return;
       }
 
@@ -448,6 +432,7 @@ function renderInstruction(result, title, message, headingColor, textColor) {
 
       } catch (error) {
         console.error("Login error:", error);
+
         showMessage(
           loginMessage,
           "Sign-in failed. Check your email and password.",
@@ -566,32 +551,6 @@ function renderInstruction(result, title, message, headingColor, textColor) {
     return textarea;
   }
 
-  function makeColorControl(labelText, value, fallback) {
-    const wrapper = document.createElement("div");
-    wrapper.style.display = "flex";
-    wrapper.style.alignItems = "center";
-    wrapper.style.justifyContent = "space-between";
-    wrapper.style.gap = "10px";
-    wrapper.style.marginTop = "10px";
-
-    const label = document.createElement("label");
-    label.textContent = labelText;
-    label.style.fontSize = "13px";
-    label.style.flex = "1";
-
-    const input = document.createElement("input");
-    input.type = "color";
-    input.value = safeColor(value, fallback);
-    input.style.width = "55px";
-    input.style.height = "40px";
-    input.style.border = "none";
-    input.style.background = "transparent";
-    input.style.cursor = "pointer";
-
-    wrapper.append(label, input);
-    return { wrapper, input };
-  }
-
   function makeSaveButton(text) {
     const button = document.createElement("button");
     button.type = "button";
@@ -606,6 +565,46 @@ function renderInstruction(result, title, message, headingColor, textColor) {
     button.style.fontWeight = "700";
     button.style.cursor = "pointer";
     return button;
+  }
+
+  function makeInstructionColorSelect(value) {
+    const select = makeSelect(
+      ["Yellow", "Red", "Green"],
+      getInstructionColorName(value)
+    );
+
+    return select;
+  }
+
+  // SAVE ORDER STATUS, PAYMENT AND INSTRUCTIONS
+
+  async function saveOrderChanges(order, changes, button, message) {
+    button.disabled = true;
+    button.textContent = "Saving...";
+
+    try {
+      const { error } = await db
+        .from("orders")
+        .update(changes)
+        .eq("id", order.id);
+
+      if (error) throw error;
+
+      showMessage(message, "Changes saved successfully.", "success");
+      await loadOrders();
+
+    } catch (error) {
+      console.error("Order update error:", error);
+
+      showMessage(
+        message,
+        "Could not save changes: " + getErrorDetails(error),
+        "error"
+      );
+
+      button.disabled = false;
+      button.textContent = "Save changes";
+    }
   }
 
   // EXPANDABLE ORDER CARDS
@@ -694,216 +693,117 @@ function renderInstruction(result, title, message, headingColor, textColor) {
       addDetail(detailsBox, "Customer", order.customer_name);
       addDetail(detailsBox, "Phone", order.customer_phone);
       addDetail(detailsBox, "Email", order.customer_email);
-      addDetail(detailsBox, "Tracking number", order.tracking_number);
+      addDetail(detailsBox, "Order source", order.order_source);
       addDetail(detailsBox, "Country", order.country);
       addDetail(detailsBox, "Destination", order.destination);
       addDetail(detailsBox, "Package", order.package_description);
       addDetail(detailsBox, "Currency", order.currency);
-      addDetail(detailsBox, "Order amount", order.order_amount);
-      addDetail(detailsBox, "Delivery amount", order.delivery_amount);
-      addDetail(detailsBox, "Shipment status", order.status);
-      addDetail(detailsBox, "Payment status", order.payment_status);
+
+      if (order.order_amount != null) {
+        addDetail(
+          detailsBox,
+          "Order amount",
+          `${order.currency || ""} ${order.order_amount}`
+        );
+      }
+
+      if (order.delivery_amount != null) {
+        addDetail(
+          detailsBox,
+          "Delivery amount",
+          `${order.currency || ""} ${order.delivery_amount}`
+        );
+      }
+
       addDetail(detailsBox, "Courier", order.courier_name);
       addDetail(detailsBox, "Courier waybill", order.courier_waybill);
       addDetail(detailsBox, "Estimated delivery", order.estimated_delivery);
 
-      // ORDER STATUS EDITORS
+      // STATUS EDITOR
 
-      detailsBox.appendChild(makeLabel("Update payment status"));
+      const statusLabel = makeLabel("Shipment status");
+      const statusSelect = makeSelect(
+        statuses,
+        order.status || "Awaiting payment"
+      );
 
+      detailsBox.append(statusLabel, statusSelect);
+
+      const paymentLabel = makeLabel("Payment status");
       const paymentSelect = makeSelect(
         paymentStatuses,
         order.payment_status || "Awaiting payment"
       );
 
-      detailsBox.appendChild(paymentSelect);
+      detailsBox.append(paymentLabel, paymentSelect);
 
-      detailsBox.appendChild(makeLabel("Update shipment status"));
+      // INSTRUCTION DESCRIPTION EDITOR
+      // Only descriptions and three text colours are editable here.
 
-      const shipmentSelect = makeSelect(
-        statuses,
-        order.status || "Awaiting payment"
-      );
-
-      detailsBox.appendChild(shipmentSelect);
-
-      // COLLECTION INSTRUCTIONS EDITOR
-
-      const collectionHeading = document.createElement("h4");
-      collectionHeading.textContent = "COLLECTION INSTRUCTIONS";
-      collectionHeading.style.color = "#D4AF37";
-      collectionHeading.style.marginTop = "22px";
-      detailsBox.appendChild(collectionHeading);
-
+      const collectionLabel = makeLabel("Collection description");
       const collectionTextarea = makeTextarea(
         order.collection_instructions,
-        "Enter instructions for this customer's collection..."
+        "Enter collection instructions for the customer"
       );
 
-      detailsBox.appendChild(collectionTextarea);
+      detailsBox.append(collectionLabel, collectionTextarea);
 
-      const collectionHeadingColor = makeColorControl(
-        "Heading colour",
-        order.collection_heading_color,
-        defaultColors.collection_heading_color
+      const collectionColorLabel = makeLabel("Collection text colour");
+      const collectionColor = makeInstructionColorSelect(
+        order.collection_text_color
       );
 
-      const collectionTextColor = makeColorControl(
-        "Text colour",
-        order.collection_text_color,
-        defaultColors.collection_text_color
-      );
+      detailsBox.append(collectionColorLabel, collectionColor);
 
-      const collectionBackgroundColor = makeColorControl(
-        "Background colour",
-        order.collection_background_color,
-        defaultColors.collection_background_color
-      );
-
-      detailsBox.append(
-        collectionHeadingColor.wrapper,
-        collectionTextColor.wrapper,
-        collectionBackgroundColor.wrapper
-      );
-
-      // DELIVERY INSTRUCTIONS EDITOR
-
-      const deliveryHeading = document.createElement("h4");
-      deliveryHeading.textContent = "DELIVERY INSTRUCTIONS";
-      deliveryHeading.style.color = "#D4AF37";
-      deliveryHeading.style.marginTop = "24px";
-      detailsBox.appendChild(deliveryHeading);
-
+      const deliveryLabel = makeLabel("Delivery description");
       const deliveryTextarea = makeTextarea(
         order.delivery_instructions,
-        "Enter instructions for this customer's delivery..."
+        "Enter delivery instructions for the customer"
       );
 
-      detailsBox.appendChild(deliveryTextarea);
+      detailsBox.append(deliveryLabel, deliveryTextarea);
 
-      const deliveryHeadingColor = makeColorControl(
-        "Heading colour",
-        order.delivery_heading_color,
-        defaultColors.delivery_heading_color
+      const deliveryColorLabel = makeLabel("Delivery text colour");
+      const deliveryColor = makeInstructionColorSelect(
+        order.delivery_text_color
       );
 
-      const deliveryTextColor = makeColorControl(
-        "Text colour",
-        order.delivery_text_color,
-        defaultColors.delivery_text_color
-      );
+      detailsBox.append(deliveryColorLabel, deliveryColor);
 
-      const deliveryBackgroundColor = makeColorControl(
-        "Background colour",
-        order.delivery_background_color,
-        defaultColors.delivery_background_color
-      );
+      const saveMessage = document.createElement("p");
+      saveMessage.setAttribute("role", "status");
+      saveMessage.style.fontSize = "13px";
+      saveMessage.style.fontWeight = "600";
 
-      detailsBox.append(
-        deliveryHeadingColor.wrapper,
-        deliveryTextColor.wrapper,
-        deliveryBackgroundColor.wrapper
-      );
+      const saveButton = makeSaveButton("Save changes");
 
-      const feedback = document.createElement("p");
-      feedback.setAttribute("role", "status");
-      feedback.style.fontSize = "13px";
+      saveButton.addEventListener("click", async () => {
+        const changes = {
+          status: statusSelect.value,
+          payment_status: paymentSelect.value,
+          collection_instructions: collectionTextarea.value.trim(),
+          collection_text_color:
+            instructionColors[collectionColor.value],
+          delivery_instructions: deliveryTextarea.value.trim(),
+          delivery_text_color:
+            instructionColors[deliveryColor.value]
+        };
 
-      const updateButton = makeSaveButton("SAVE ALL ORDER UPDATES");
-
-      updateButton.addEventListener("click", async () => {
-        updateButton.disabled = true;
-        updateButton.textContent = "SAVING...";
-
-        showMessage(feedback, "Saving order and instruction changes...", "info");
-
-        try {
-          const updates = {
-            payment_status: paymentSelect.value,
-            status: shipmentSelect.value,
-
-            collection_instructions: collectionTextarea.value.trim() || null,
-            delivery_instructions: deliveryTextarea.value.trim() || null,
-
-            collection_heading_color: safeColor(
-              collectionHeadingColor.input.value,
-              defaultColors.collection_heading_color
-            ),
-            collection_text_color: safeColor(
-              collectionTextColor.input.value,
-              defaultColors.collection_text_color
-            ),
-            collection_background_color: safeColor(
-              collectionBackgroundColor.input.value,
-              defaultColors.collection_background_color
-            ),
-
-            delivery_heading_color: safeColor(
-              deliveryHeadingColor.input.value,
-              defaultColors.delivery_heading_color
-            ),
-            delivery_text_color: safeColor(
-              deliveryTextColor.input.value,
-              defaultColors.delivery_text_color
-            ),
-            delivery_background_color: safeColor(
-              deliveryBackgroundColor.input.value,
-              defaultColors.delivery_background_color
-            )
-          };
-
-          const { error } = await db
-            .from("orders")
-            .update(updates)
-            .eq("id", order.id);
-
-          if (error) throw error;
-
-          showMessage(
-            feedback,
-            "All order updates and instructions saved successfully.",
-            "success"
-          );
-
-          await loadOrders();
-
-        } catch (error) {
-          console.error("Order update error:", error);
-
-          showMessage(
-            feedback,
-            "Update failed: " + getErrorDetails(error),
-            "error"
-          );
-
-        } finally {
-          updateButton.disabled = false;
-          updateButton.textContent = "SAVE ALL ORDER UPDATES";
-        }
+        await saveOrderChanges(
+          order,
+          changes,
+          saveButton,
+          saveMessage
+        );
       });
 
-      detailsBox.append(updateButton, feedback);
+      detailsBox.append(saveButton, saveMessage);
       card.append(summary, detailsBox);
-
       ordersList.appendChild(card);
     });
   }
 
-  // SEARCH ORDERS
-
-  if (searchInput) {
-    searchInput.addEventListener("input", renderOrders);
-  }
-
-  // REFRESH ORDERS
-
-  const refreshButton = document.getElementById("refresh-orders");
-
-  if (refreshButton) {
-    refreshButton.addEventListener("click", loadOrders);
-  }
-
-  // REGISTER A NEW ORDER
+  // REGISTER NEW CUSTOMER ORDER
 
   if (orderForm) {
     orderForm.addEventListener("submit", async event => {
@@ -921,89 +821,31 @@ function renderInstruction(result, title, message, headingColor, textColor) {
       const button = orderForm.querySelector('button[type="submit"]');
 
       button.disabled = true;
-      showMessage(orderMessage, "Registering your order...", "info");
+      showMessage(orderMessage, "Registering customer order...", "info");
 
       try {
-        const amount = Number(
-          document.getElementById("order-amount").value
+        const estimatedDelivery = getEstimatedDeliveryDate(
+          document.getElementById("estimated-delivery").value
         );
-
-        const delivery = Number(
-          document.getElementById("delivery-amount").value
-        );
-
-        if (
-          !Number.isFinite(amount) ||
-          !Number.isFinite(delivery) ||
-          amount < 0 ||
-          delivery < 0
-        ) {
-          throw new Error("Please enter valid, non-negative amounts.");
-        }
-
-        const selectedDays =
-          document.getElementById("estimated-delivery").value;
-
-        const estimatedDeliveryDate =
-          getEstimatedDeliveryDate(selectedDays);
 
         const order = {
-          customer_name:
-            document.getElementById("customer-name").value.trim(),
-
-          customer_phone:
-            document.getElementById("customer-phone").value.trim(),
-
-          customer_email:
-            document.getElementById("customer-email").value.trim() || null,
-
-          order_source:
-            document.getElementById("order-source").value,
-
-          country:
-            document.getElementById("country").value,
-
-          currency:
-            document.getElementById("currency").value,
-
-          destination:
-            document.getElementById("destination").value.trim(),
-
-          package_description:
-            document.getElementById("package-description").value.trim(),
-
-          order_amount: amount,
-          delivery_amount: delivery,
-
-          payment_status:
-            document.getElementById("payment-status").value,
-
-          status: "Awaiting payment",
-
-          courier_name:
-            document.getElementById("courier-name").value.trim() || null,
-
-          courier_waybill:
-            document.getElementById("courier-waybill").value.trim() || null,
-
-          estimated_delivery: estimatedDeliveryDate,
-
+          customer_name: document.getElementById("customer-name").value.trim(),
+          customer_phone: document.getElementById("customer-phone").value.trim(),
+          customer_email: document.getElementById("customer-email").value.trim() || null,
+          order_source: document.getElementById("order-source").value,
+          country: document.getElementById("country").value,
+          currency: document.getElementById("currency").value,
+          destination: document.getElementById("destination").value.trim(),
+          package_description: document.getElementById("package-description").value.trim(),
+          order_amount: Number(document.getElementById("order-amount").value),
+          delivery_amount: Number(document.getElementById("delivery-amount").value),
+          payment_status: document.getElementById("payment-status").value,
+          courier_name: document.getElementById("courier-name").value.trim() || null,
+          courier_waybill: document.getElementById("courier-waybill").value.trim() || null,
+          estimated_delivery: estimatedDelivery,
           collection_instructions:
             document.getElementById("collection-instructions").value.trim() || null
         };
-
-        if (
-          !order.customer_name ||
-          !order.customer_phone ||
-          !order.destination ||
-          !order.package_description ||
-          !order.country ||
-          !order.currency
-        ) {
-          throw new Error(
-            "Please complete all required order details."
-          );
-        }
 
         const { data, error } = await db
           .from("orders")
@@ -1013,18 +855,14 @@ function renderInstruction(result, title, message, headingColor, textColor) {
 
         if (error) throw error;
 
-        showMessage(
-          orderMessage,
-          "Order registered successfully! Your SC tracking number is: " +
-            data.tracking_number,
-          "success"
-        );
-
         orderForm.reset();
 
-        document.getElementById("country").value = "Nigeria";
-        document.getElementById("currency").value = "NGN";
-        document.getElementById("delivery-amount").value = "0";
+        showMessage(
+          orderMessage,
+          "Order registered successfully. Tracking number: " +
+            (data?.tracking_number || "Generated"),
+          "success"
+        );
 
         await loadOrders();
 
@@ -1033,7 +871,7 @@ function renderInstruction(result, title, message, headingColor, textColor) {
 
         showMessage(
           orderMessage,
-          "REGISTRATION FAILED: " + getErrorDetails(error),
+          "Could not register order: " + getErrorDetails(error),
           "error"
         );
 
@@ -1043,43 +881,66 @@ function renderInstruction(result, title, message, headingColor, textColor) {
     });
   }
 
-  // LOG OUT
+  // SEARCH ORDERS
+
+  if (searchInput) {
+    searchInput.addEventListener("input", renderOrders);
+  }
+
+  // REFRESH ORDERS
+
+  if (refreshButton) {
+    refreshButton.addEventListener("click", loadOrders);
+  }
+
+  // STAFF LOGOUT
 
   if (logoutButton) {
     logoutButton.addEventListener("click", async () => {
-      if (db) await db.auth.signOut();
+      if (!db) return;
 
+      const { error } = await db.auth.signOut();
+
+      if (error) {
+        console.error("Logout error:", error);
+        return;
+      }
+
+      currentOrders = [];
+      ordersList.replaceChildren();
       setDashboardVisible(false);
 
-      showMessage(
-        loginMessage,
-        "You have signed out securely.",
-        "success"
-      );
+      showMessage(loginMessage, "You have signed out.", "success");
     });
   }
 
-  // RESTORE STAFF SESSION
-
-  setDashboardVisible(false);
+  // RESTORE EXISTING STAFF SESSION
 
   if (!db) {
+    setDashboardVisible(false);
+
     showMessage(
       loginMessage,
-      "Database connection unavailable.",
+      "Database connection unavailable. Please check your configuration.",
       "error"
     );
+
     return;
   }
 
-  const { data: sessionData, error: sessionError } =
-    await db.auth.getSession();
+  try {
+    const { data, error } = await db.auth.getSession();
 
-  if (sessionError) {
-    console.error("Session error:", sessionError);
-  }
+    if (error) throw error;
 
-  if (sessionData?.session) {
-    await enterDashboard(sessionData.session.user);
+    if (data?.session?.user) {
+      await enterDashboard(data.session.user);
+    } else {
+      setDashboardVisible(false);
+    }
+
+  } catch (error) {
+    console.error("Session error:", error);
+    setDashboardVisible(false);
   }
 });
