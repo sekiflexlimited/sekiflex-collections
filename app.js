@@ -605,7 +605,7 @@ async function saveOrderChanges(order, changes, button, message) {
           await db.functions.invoke("sekiflex-order-notifications", {
             body: {
               order_id: order.id,
-              status: changes.status
+              event_type: "status_updated",
             }
           });
 
