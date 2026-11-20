@@ -916,9 +916,9 @@ orderForm.addEventListener("submit", async event => {
       orderMessage,
       "Order registered successfully. Tracking number: " +
         (data?.tracking_number || "Generated"),
-      "success"
-      });
+            "success"
     );
+    
 
     // SEND AUTOMATIC NEW ORDER CONFIRMATION EMAIL
     if (data?.id) {
@@ -975,7 +975,7 @@ orderForm.addEventListener("submit", async event => {
     button.disabled = false;
   }
 });
-      
+  }    
 
   // SEARCH ORDERS
 
