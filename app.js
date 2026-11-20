@@ -858,80 +858,123 @@ async function saveOrderChanges(order, changes, button, message) {
   // REGISTER NEW CUSTOMER ORDER
 
   if (orderForm) {
-    orderForm.addEventListener("submit", async event => {
-      event.preventDefault();
+    
+orderForm.addEventListener("submit", async event => {
+  event.preventDefault();
 
-      if (!db) {
-        showMessage(
-          orderMessage,
-          "Database connection unavailable.",
-          "error"
-        );
-        return;
-      }
-
-      const button = orderForm.querySelector('button[type="submit"]');
-
-      button.disabled = true;
-      showMessage(orderMessage, "Registering customer order...", "info");
-
-      try {
-        const estimatedDelivery = getEstimatedDeliveryDate(
-          document.getElementById("estimated-delivery").value
-        );
-
-        const order = {
-          customer_name: document.getElementById("customer-name").value.trim(),
-          customer_phone: document.getElementById("customer-phone").value.trim(),
-          customer_email: document.getElementById("customer-email").value.trim() || null,
-          order_source: document.getElementById("order-source").value,
-          country: document.getElementById("country").value,
-          currency: document.getElementById("currency").value,
-          destination: document.getElementById("destination").value.trim(),
-          package_description: document.getElementById("package-description").value.trim(),
-          order_amount: Number(document.getElementById("order-amount").value),
-          delivery_amount: Number(document.getElementById("delivery-amount").value),
-          payment_status: document.getElementById("payment-status").value,
-          courier_name: document.getElementById("courier-name").value.trim() || null,
-          courier_waybill: document.getElementById("courier-waybill").value.trim() || null,
-          estimated_delivery: estimatedDelivery,
-          collection_instructions:
-            document.getElementById("collection-instructions").value.trim() || null
-        };
-
-        const { data, error } = await db
-          .from("orders")
-          .insert(order)
-          .select("tracking_number")
-          .single();
-
-        if (error) throw error;
-
-        orderForm.reset();
-
-        showMessage(
-          orderMessage,
-          "Order registered successfully. Tracking number: " +
-            (data?.tracking_number || "Generated"),
-          "success"
-        );
-
-        await loadOrders();
-
-      } catch (error) {
-        console.error("Order registration error:", error);
-
-        showMessage(
-          orderMessage,
-          "Could not register order: " + getErrorDetails(error),
-          "error"
-        );
-
-      } finally {
-        button.disabled = false;
-      }
-    });
+  if (!db) {
+    showMessage(
+      orderMessage,
+      "Database connection unavailable.",
+      "error"
+    );
+    return;
   }
+
+  const button = orderForm.querySelector('button[type="submit"]');
+
+  button.disabled = true;
+  showMessage(orderMessage, "Registering customer order...", "info");
+
+  try {
+    const estimatedDelivery = getEstimatedDeliveryDate(
+      document.getElementById("estimated-delivery").value
+    );
+
+    const order = {
+      customer_name: document.getElementById("customer-name").value.trim(),
+      customer_phone: document.getElementById("customer-phone").value.trim(),
+      customer_email: document.getElementById("customer-email").value.trim() || null,
+      order_source: document.getElementById("order-source").value,
+      country: document.getElementById("country").value,
+      currency: document.getElementById("currency").value,
+      destination: document.getElementById("destination").value.trim(),
+      package_description: document.getElementById("package-description").value.trim(),
+      order_amount: Number(document.getElementById("order-amount").value),
+      delivery_amount: Number(document.getElementById("delivery-amount").value),
+      payment_status: document.getElementById("payment-status").value,
+      courier_name: document.getElementById("courier-name").value.trim() || null,
+      courier_waybill: document.getElementById("courier-waybill").value.trim() || null,
+      estimated_delivery: estimatedDelivery,
+      collection_instructions:
+        document.getElementById("collection-instructions").value.trim() || null
+    };
+
+    const { data, error } = await db
+      .from("orders")
+      .insert(order)
+      .select("id, tracking_number")
+      .single();
+
+    if (error) throw error;
+
+    orderForm.reset();
+
+    await loadOrders();
+
+    showMessage(
+      orderMessage,
+      "Order registered successfully. Tracking number: " +
+        (data?.tracking_number || "Generated"),
+      "success"
+    );
+
+    // SEND AUTOMATIC NEW ORDER CONFIRMATION EMAIL
+    if (data?.id) {
+      try {
+        const { data: notification, error: notificationError } =
+          await db.functions.invoke("sekiflex-order-notifications", {
+            body: {
+              order_id: data.id,
+              event_type: "order_created"
+            }
+          });
+
+        if (notificationError || notification?.error) {
+          console.error(
+            "Order confirmation email error:",
+            notificationError || notification.error
+          );
+
+          showMessage(
+            orderMessage,
+            "Order registered successfully, but confirmation email could not be sent.",
+            "error"
+          );
+        } else {
+          showMessage(
+            orderMessage,
+            "Order registered successfully! Tracking number: " +
+              data.tracking_number +
+              ". Customer confirmation email sent.",
+            "success"
+          );
+        }
+      } catch (notificationError) {
+        console.error("Email notification error:", notificationError);
+
+        showMessage(
+          orderMessage,
+          "Order registered successfully, but email notification failed.",
+          "error"
+        );
+      }
+    }
+
+  } catch (error) {
+    console.error("Order registration error:", error);
+
+    showMessage(
+      orderMessage,
+      "Could not register order: " + getErrorDetails(error),
+      "error"
+    );
+
+  } finally {
+    button.disabled = false;
+  }
+});
+      
 
   // SEARCH ORDERS
 
