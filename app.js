@@ -332,8 +332,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const refreshButton = document.getElementById("refresh-orders");
 
   const statuses = [
-    "Awaiting payment",
-    "Payment confirmed",
     "Order processing",
     "Package being packed",
     "Package packed and prepared",
