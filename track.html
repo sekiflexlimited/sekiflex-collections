@@ -6,14 +6,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#17191d">
   <title>Track your order | SEKIFLEX COLLECTIONS</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* Improved Back to Sekiflex Collections button */
+    .subpage-main .back-link {
+      display: flex;
+      width: fit-content;
+      align-items: center;
+      justify-content: center;
+      margin: 24px 0 0 auto;
+      padding: 14px 22px;
+      background: linear-gradient(135deg, #f5c451, #d99a20);
+      color: #17191d;
+      border: 1px solid #d99a20;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: all 0.25s ease;
+    }
+
+    .subpage-main .back-link:hover {
+      background: #17191d;
+      color: #f5c451;
+      border-color: #17191d;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .subpage-main .back-link:focus-visible {
+      outline: 3px solid #d99a20;
+      outline-offset: 4px;
+    }
+  </style>
 </head>
+
 <body class="subpage">
+
   <header class="site-header">
-    <a class="brand" href="index.html"><span class="brand-mark">S</span><span><strong>SEKIFLEX</strong><small>COLLECTIONS</small></span></a>
+    <a class="brand" href="index.html">
+      <span class="brand-mark">S</span>
+      <span>
+        <strong>SEKIFLEX</strong>
+        <small>COLLECTIONS</small>
+      </span>
+    </a>
+
     <nav class="main-nav">
       <a href="index.html">Home</a>
       <a href="https://sekiflexcollections.com" target="_blank" rel="noopener">Shop online ↗</a>
@@ -21,46 +67,84 @@
   </header>
 
   <main class="subpage-main">
+
     <p class="eyebrow">SEKIFLEX COLLECTIONS · ORDER SERVICES</p>
+
     <h1>Track your <em>order.</em></h1>
-    <p class="sublead">Enter your SC tracking reference and the last four digits of your registered phone number to view your delivery progress.</p>
+
+    <p class="sublead">
+      Enter your SC tracking reference and the last four digits of your registered phone number to view your delivery progress.
+    </p>
 
     <form class="tracking-form" id="tracking-form">
+
       <label for="tracking-number">Your SC tracking number</label>
+
       <div class="tracking-input-row">
-        <input id="tracking-number" name="tracking-number" placeholder="e.g. SC-2026-000125" autocomplete="off" required>
+        <input
+          id="tracking-number"
+          name="tracking-number"
+          placeholder="e.g. SC-2026-000125"
+          autocomplete="off"
+          required
+        >
       </div>
 
       <label for="phone-last4">Last 4 digits of your registered phone number</label>
-      <input id="phone-last4" name="phone-last4" type="text"
-             inputmode="numeric" maxlength="4" pattern="[0-9]{4}"
-             placeholder="e.g. 1234" required>
 
-      <button class="btn btn-gold" type="submit">Track order →</button>
+      <input
+        id="phone-last4"
+        name="phone-last4"
+        type="text"
+        inputmode="numeric"
+        maxlength="4"
+        pattern="[0-9]{4}"
+        placeholder="e.g. 1234"
+        required
+      >
 
-      <small>Enter both details exactly as provided when you placed your order.</small>
+      <button class="btn btn-gold" type="submit">
+        Track order →
+      </button>
+
+      <small>
+        Enter both details exactly as provided when you placed your order.
+      </small>
+
       <p class="form-message" id="tracking-message" role="status"></p>
+
       <div id="tracking-result" aria-live="polite"></div>
+
     </form>
 
     <div class="tracking-help">
       <span class="help-icon">i</span>
-      <p><strong>Don't have your SC number?</strong><br>
-      Contact the Sekiflex Collections team using the WhatsApp channel you used to place your order.</p>
+      <p>
+        <strong>Don't have your SC number?</strong><br>
+        Contact the Sekiflex Collections team using the WhatsApp channel you used to place your order.
+      </p>
     </div>
 
-    <a class="back-link" href="index.html">← Back to Sekiflex Collections</a>
-    <p class="small-note center-note">Your order details are protected. Both your SC tracking reference and phone verification are required.</p>
+    <a class="back-link" href="index.html">
+      ← Back to Sekiflex Collections
+    </a>
+
+    <p class="small-note center-note">
+      Your order details are protected. Both your SC tracking reference and phone verification are required.
+    </p>
+
   </main>
 
   <footer class="site-footer">
     <p>Powered by <strong>SEKIFLEX LIMITED</strong></p>
-    <small>© <span id="year"></span> Sekiflex Limited. All rights reserved.</small>
+    <small>
+      © <span id="year"></span> Sekiflex Limited. All rights reserved.
+    </small>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
-<script src="app.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="app.js"></script>
+
 </body>
-      </html>
-      
+</html>
