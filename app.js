@@ -578,34 +578,86 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // SAVE ORDER STATUS, PAYMENT AND INSTRUCTIONS
 
-  async function saveOrderChanges(order, changes, button, message) {
-    button.disabled = true;
-    button.textContent = "Saving...";
 
-    try {
-      const { error } = await db
-        .from("orders")
-        .update(changes)
-        .eq("id", order.id);
+async function saveOrderChanges(order, changes, button, message) {
+  button.disabled = true;
+  button.textContent = "Saving...";
 
-      if (error) throw error;
+  const statusChanged =
+    Object.prototype.hasOwnProperty.call(changes, "status") &&
+    changes.status !== order.status;
 
-      showMessage(message, "Changes saved successfully.", "success");
-      await loadOrders();
+  try {
+    const { error } = await db
+      .from("orders")
+      .update(changes)
+      .eq("id", order.id);
 
-    } catch (error) {
-      console.error("Order update error:", error);
+    if (error) throw error;
 
-      showMessage(
-        message,
-        "Could not save changes: " + getErrorDetails(error),
-        "error"
-      );
+    await loadOrders();
 
-      button.disabled = false;
-      button.textContent = "Save changes";
+    showMessage(message, "Changes saved successfully.", "success");
+
+    if (statusChanged) {
+      try {
+        const { data, error: notificationError } =
+          await db.functions.invoke("sekiflex-order-notifications", {
+            body: {
+              order_id: order.id,
+              status: changes.status
+            }
+          });
+
+        if (notificationError || data?.error) {
+          console.error(
+            "Customer notification error:",
+            notificationError || data.error
+          );
+
+          showMessage(
+            message,
+            "Order saved, but the customer email could not be sent. Please check the notification setup.",
+            "error"
+          );
+        } else if (data?.message?.includes("no email address")) {
+          showMessage(
+            message,
+            "Order saved, but this customer has no email address.",
+            "success"
+          );
+        } else {
+          showMessage(
+            message,
+            "Changes saved successfully. Customer email notification sent.",
+            "success"
+          );
+        }
+      } catch (notificationError) {
+        console.error("Notification error:", notificationError);
+
+        showMessage(
+          message,
+          "Order saved, but customer email notification failed.",
+          "error"
+        );
+      }
     }
+
+  } catch (error) {
+    console.error("Order update error:", error);
+
+    showMessage(
+      message,
+      "Could not save changes: " + getErrorDetails(error),
+      "error"
+    );
+
+    button.disabled = false;
+    button.textContent = "Save changes";
   }
+}
+  
 
   // EXPANDABLE ORDER CARDS
 
