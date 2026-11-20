@@ -606,8 +606,12 @@ async function saveOrderChanges(order, changes, button, message) {
             body: {
               order_id: order.id,
               event_type: "status_updated",
+                        },
+            headers: {
+              Authorization: `Bearer ${(await db.auth.getSession()).data.session?.access_token}`
             }
           });
+          
 
         if (notificationError || data?.error) {
           console.error(
