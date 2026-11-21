@@ -64,14 +64,19 @@
           <input required id="custPhone" type="tel" placeholder="Phone / WhatsApp Number" class="w-full border rounded-lg px-3 py-2 text-sm" />
 
           <div class="grid grid-cols-2 gap-2">
-            <select required id="custCountry" onchange="updateShippingFee()" class="w-full border rounded-lg px-3 py-2 text-sm">
+            <select required id="custCountry" onchange="handleCountryChange()" class="w-full border rounded-lg px-3 py-2 text-sm bg-white">
               <option value="Nigeria">Nigeria</option>
               <option value="United Kingdom">United Kingdom</option>
               <option value="United States">United States</option>
               <option value="Canada">Canada</option>
               <option value="Ghana">Ghana</option>
             </select>
-            <input required id="custState" oninput="updateShippingFee()" type="text" placeholder="State (e.g. Lagos, Rivers)" class="w-full border rounded-lg px-3 py-2 text-sm" />
+
+            <select required id="custStateSelect" onchange="updateShippingFee()" class="w-full border rounded-lg px-3 py-2 text-sm bg-white">
+              <option value="">Select State...</option>
+            </select>
+
+            <input id="custStateText" oninput="updateShippingFee()" type="text" placeholder="State / Province" class="hidden w-full border rounded-lg px-3 py-2 text-sm" />
           </div>
 
           <input required id="custCity" type="text" placeholder="City" class="w-full border rounded-lg px-3 py-2 text-sm" />
@@ -81,7 +86,7 @@
           <!-- Totals -->
           <div class="bg-stone-100 rounded-xl p-3 text-sm space-y-1">
             <div class="flex justify-between"><span>Items Subtotal:</span><span id="subTotalText">₦0</span></div>
-            <div class="flex justify-between"><span>Delivery (<span id="estDaysText">2-4 days</span>):</span><span id="shipFeeText">₦5,000</span></div>
+            <div class="flex justify-between"><span>Delivery (<span id="estDaysText">select state</span>):</span><span id="shipFeeText">₦0</span></div>
             <div class="flex justify-between font-bold text-base border-t border-stone-300 pt-1"><span>Total:</span><span id="grandTotalText">₦0</span></div>
           </div>
 
@@ -109,13 +114,56 @@
 
   <script>
     const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
+    const NIGERIA_STATES = [
+      'Abia', 'Abuja (FCT)', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa',
+      'Benue', 'Borno', 'Cross River', 'Delta', 'Ebonyi', 'Edo', 'Ekiti', 'Enugu',
+      'Gombe', 'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Kogi',
+      'Kwara', 'Lagos', 'Nasarawa', 'Niger', 'Ogun', 'Ondo', 'Osun', 'Oyo',
+      'Plateau', 'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara'
+    ];
+
     let allProducts = [];
     let shippingZones = [];
     let cart = JSON.parse(localStorage.getItem('sekiflex_cart') || '[]');
-    let currentShippingFee = 5000;
-    let currentEstDays = '2-4 business days';
+    let currentShippingFee = 0;
+    let currentEstDays = 'select state';
+
+    function populateNigeriaStates() {
+      const sel = document.getElementById('custStateSelect');
+      sel.innerHTML = '<option value="">Select State...</option>' +
+        NIGERIA_STATES.map(st => `<option value="${st}">${st}</option>`).join('');
+    }
+
+    function handleCountryChange() {
+      const country = document.getElementById('custCountry').value;
+      const sel = document.getElementById('custStateSelect');
+      const txt = document.getElementById('custStateText');
+
+      if (country === 'Nigeria') {
+        sel.classList.remove('hidden');
+        sel.required = true;
+        txt.classList.add('hidden');
+        txt.required = false;
+        txt.value = '';
+      } else {
+        sel.classList.add('hidden');
+        sel.required = false;
+        sel.value = '';
+        txt.classList.remove('hidden');
+        txt.required = true;
+      }
+      updateShippingFee();
+    }
+
+    function getSelectedState() {
+      const country = document.getElementById('custCountry').value;
+      return country === 'Nigeria'
+        ? document.getElementById('custStateSelect').value.trim()
+        : document.getElementById('custStateText').value.trim();
+    }
 
     async function init() {
+      populateNigeriaStates();
       const [{ data: products }, { data: zones }, { data: cats }] = await Promise.all([
         sb.from('products').select('*').eq('is_active', true).order('created_at', { ascending: false }),
         sb.from('shipping_zones').select('*').eq('is_active', true),
@@ -201,10 +249,19 @@
 
     function updateShippingFee() {
       const country = (document.getElementById('custCountry').value || '').trim().toLowerCase();
-      const state = (document.getElementById('custState').value || '').trim().toLowerCase();
+      const state = getSelectedState().toLowerCase();
+
+      if (country === 'nigeria' && !state) {
+        currentShippingFee = 0;
+        currentEstDays = 'select state';
+        renderCart();
+        return;
+      }
+
       const match = shippingZones.find(z => z.country_name.toLowerCase() === country && z.state_name && z.state_name.toLowerCase() === state)
                  || shippingZones.find(z => z.country_name.toLowerCase() === country && !z.state_name);
-      currentShippingFee = match ? Number(match.delivery_fee_ngn) : (country === 'nigeria' ? 5000 : 35000);
+
+      currentShippingFee = match ? Number(match.delivery_fee_ngn) : (country === 'nigeria' ? 5500 : 60000);
       currentEstDays = match ? match.estimated_days : (country === 'nigeria' ? '2-4 business days' : '5-10 business days');
       renderCart();
     }
@@ -214,7 +271,7 @@
       const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
       document.getElementById('cartCount').textContent = count;
       document.getElementById('subTotalText').textContent = '₦' + sub.toLocaleString();
-      document.getElementById('shipFeeText').textContent = '₦' + currentShippingFee.toLocaleString();
+      document.getElementById('shipFeeText').textContent = currentShippingFee > 0 ? '₦' + currentShippingFee.toLocaleString() : '—';
       document.getElementById('estDaysText').textContent = currentEstDays;
       document.getElementById('grandTotalText').textContent = '₦' + (sub + currentShippingFee).toLocaleString();
 
@@ -244,6 +301,12 @@
     async function placeOrder(e) {
       e.preventDefault();
       if (!cart.length) return alert('Add at least one item to your bag first.');
+      const country = document.getElementById('custCountry').value.trim();
+      const state = getSelectedState();
+      if (country === 'Nigeria' && !state) {
+        return alert('Please select your delivery state first.');
+      }
+
       const btn = document.getElementById('submitBtn');
       btn.disabled = true;
       btn.textContent = 'Registering Order...';
@@ -251,8 +314,6 @@
       const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
       const tracking = 'SC-2026-' + Math.random().toString(36).substring(2, 8).toUpperCase();
       const summary = cart.map(i => `${i.qty}x ${i.name}`).join('; ');
-      const country = document.getElementById('custCountry').value.trim();
-      const state = document.getElementById('custState').value.trim();
       const city = document.getElementById('custCity').value.trim();
       const address = document.getElementById('custAddress').value.trim();
       const destination = `${address}, ${city}, ${state}, ${country}`;
@@ -313,5 +374,5 @@
     init();
   </script>
 </body>
-            </html>
-            
+  </html>
+  
