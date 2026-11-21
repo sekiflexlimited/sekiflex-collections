@@ -190,19 +190,19 @@
 
     function getStatusClass(text) {
       const val = String(text || '').toLowerCase();
-      if (val.includes('return') || val.includes('cancel') || val.includes('fail') || val.includes('reject')) {
+      if (val.includes('return') || val.includes('cancel') || val.includes('delay') || val.includes('attempt')) {
         return 'pill-red';
       }
-      if (val.includes('confirm') || val.includes('arrive') || val.includes('deliver') || val.includes('received') || val.includes('paid')) {
+      if (val.includes('confirm') || val.includes('arrive') || val.includes('deliver') || val.includes('received') || val.includes('ready for collection')) {
         return 'pill-green';
       }
       return 'pill-yellow';
     }
 
-    function getNoteClass(color) {
-      const c = String(color || 'yellow').toLowerCase();
-      if (c === 'red') return 'note-red';
-      if (c === 'green') return 'note-green';
+    function mapColorClass(hexOrName) {
+      const v = String(hexOrName || '').toLowerCase();
+      if (v === '#ff0000' || v === 'red') return 'note-red';
+      if (v === '#008000' || v === 'green') return 'note-green';
       return 'note-yellow';
     }
 
@@ -254,10 +254,11 @@
         return;
       }
 
-      const orderStatus = data.status || 'Processing';
-      const paymentStatus = data.payment_status || 'Awaiting Payment';
+      const orderStatus = data.status || 'Order processing';
+      const paymentStatus = data.payment_status || 'Awaiting payment';
       const totalPaid = Number(data.order_amount || 0) + Number(data.delivery_amount || 0);
-      const noteText = (data.tracking_note || '').trim();
+      const delNote = (data.delivery_instructions || '').trim();
+      const colNote = (data.collection_instructions || '').trim();
 
       resEl.innerHTML = `
         <div class="order-card">
@@ -267,10 +268,16 @@
           </div>
           <div style="font-weight:700; font-size:16px; color:#f5c451;">${data.tracking_number}</div>
 
-          ${noteText ? `
-          <div class="note-box ${getNoteClass(data.tracking_note_color)}">
-            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;opacity:0.8;margin-bottom:2px;">Latest Delivery / Dispatch Update</div>
-            ${noteText}
+          ${delNote ? `
+          <div class="note-box ${mapColorClass(data.delivery_text_color)}">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;opacity:0.85;margin-bottom:2px;">Delivery Update</div>
+            ${delNote}
+          </div>` : ''}
+
+          ${colNote ? `
+          <div class="note-box ${mapColorClass(data.collection_text_color)}">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;opacity:0.85;margin-bottom:2px;">Collection Note</div>
+            ${colNote}
           </div>` : ''}
 
           <div class="order-row">
@@ -287,7 +294,7 @@
           </div>
           <div class="order-row">
             <span class="order-label">Courier &amp; Estimate</span>
-            ${data.courier_name || 'Sekiflex Dispatch'} (${data.estimate_delivery || 'Confirmed'})
+            ${data.courier_name || 'Sekiflex Dispatch'} (${data.estimated_delivery || data.estimate_delivery || 'Confirmed'})
           </div>
           ${totalPaid > 0 ? `
           <div class="order-row">
