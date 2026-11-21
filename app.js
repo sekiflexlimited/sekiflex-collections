@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", async () => {
   // SEKIFLEX COLLECTIONS — STAFF AND CUSTOMER SYSTEM
 
@@ -17,7 +16,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // SUPABASE CONNECTION
-
   let db = null;
 
   if (
@@ -52,16 +50,19 @@ document.addEventListener("DOMContentLoaded", async () => {
       status.includes("delayed") ||
       status.includes("returned") ||
       status.includes("attempted") ||
-      status.includes("awaiting payment")
-    ) return "#D93636";
+      status.includes("cancel")
+    ) return "#D93636"; // Red
 
     if (
       status.includes("delivered") ||
+      status.includes("arrived") ||
+      status.includes("confirmed") ||
       status.includes("ready for collection") ||
-      status.includes("payment confirmed")
-    ) return "#239B59";
+      status.includes("payment confirmed") ||
+      status.includes("payment received")
+    ) return "#239B59"; // Green
 
-    return "#D6A500";
+    return "#D6A500"; // Yellow (Processing / Awaiting payment)
   }
 
   function addDetail(container, label, value) {
@@ -80,7 +81,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (
       label === "Customer status" ||
-      label === "Shipment status"
+      label === "Shipment status" ||
+      label === "Payment status"
     ) {
       text.style.color = getStatusColor(value);
       text.style.fontWeight = "700";
@@ -123,7 +125,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // INSTRUCTION TEXT COLOURS
-
   const instructionColors = {
     Yellow: "#FFD700",
     Red: "#FF0000",
@@ -154,28 +155,32 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // CUSTOMER TRACKING INSTRUCTIONS
-  // Plain text only: no boxes, backgrounds or extra headings.
-
   function renderInstruction(result, message, color) {
     if (!message || !String(message).trim()) return;
 
     const paragraph = document.createElement("p");
     paragraph.textContent = message;
     paragraph.style.color = safeInstructionColor(color);
+    paragraph.style.fontWeight = "600";
     paragraph.style.whiteSpace = "pre-wrap";
     paragraph.style.overflowWrap = "anywhere";
-    paragraph.style.margin = "7px 0";
+    paragraph.style.margin = "10px 0";
     paragraph.style.fontSize = "14px";
     paragraph.style.lineHeight = "1.6";
 
     result.appendChild(paragraph);
   }
 
-  // CUSTOMER TRACKING
-
+  // CUSTOMER TRACKING (if app.js is used on tracking page)
   const trackingForm = document.getElementById("tracking-form");
 
   if (trackingForm) {
+    const urlTracking = new URLSearchParams(window.location.search).get("tracking");
+    if (urlTracking) {
+      const inputEl = document.getElementById("tracking-number");
+      if (inputEl) inputEl.value = urlTracking.trim().toUpperCase();
+    }
+
     trackingForm.addEventListener("submit", async event => {
       event.preventDefault();
 
@@ -194,10 +199,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       result.replaceChildren();
 
-      if (!/^SC-\d{4}-\d{6}$/.test(number)) {
+      if (!/^SC-[A-Z0-9-]+$/i.test(number)) {
         showMessage(
           message,
-          "Please enter a valid SC tracking number.",
+          "Please enter a valid SC tracking number (e.g. SC-2026-3PRS40).",
           "error"
         );
         return;
@@ -221,7 +226,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       showMessage(message, "Checking shipment...", "info");
 
       try {
-        const { data, error } = await db.rpc(
+        let shipment = null;
+
+        const { data: rpcData, error: rpcError } = await db.rpc(
           "track_sekiflex_order_v2",
           {
             p_tracking_number: number,
@@ -229,14 +236,27 @@ document.addEventListener("DOMContentLoaded", async () => {
           }
         );
 
-        if (error) throw error;
+        if (!rpcError && rpcData) {
+          shipment = Array.isArray(rpcData) ? rpcData[0] : rpcData;
+        } else {
+          const { data: row } = await db
+            .from("orders")
+            .select("*")
+            .ilike("tracking_number", number)
+            .maybeSingle();
 
-        const shipment = Array.isArray(data) ? data[0] : data;
+          if (row) {
+            const cleanDigits = String(row.customer_phone || "").replace(/\D/g, "");
+            if (cleanDigits.endsWith(phone)) {
+              shipment = row;
+            }
+          }
+        }
 
         if (!shipment) {
           showMessage(
             message,
-            "No shipment found. Please check your details.",
+            "No shipment found. Please check your tracking number and last 4 phone digits.",
             "error"
           );
           return;
@@ -277,7 +297,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         addDetail(result, "Courier", shipment.courier_name);
         addDetail(result, "Courier waybill", shipment.courier_waybill);
-        addDetail(result, "Estimated delivery", shipment.estimated_delivery);
+        addDetail(result, "Estimated delivery", shipment.estimated_delivery || shipment.estimate_delivery);
 
         renderInstruction(
           result,
@@ -316,7 +336,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // STAFF DASHBOARD
-
   const loginSection = document.getElementById("admin-login");
   const dashboard = document.getElementById("admin-dashboard");
 
@@ -360,7 +379,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // VERIFY STAFF ACCESS
-
   async function verifyStaff(user) {
     const { data, error } = await db
       .from("staff_members")
@@ -397,7 +415,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // STAFF LOGIN
-
   if (loginForm) {
     loginForm.addEventListener("submit", async event => {
       event.preventDefault();
@@ -444,7 +461,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // LOAD ORDERS AND STATISTICS
-
   async function loadOrders() {
     if (!db) return;
 
@@ -473,7 +489,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (payment) {
       payment.textContent = currentOrders.filter(
-        order => order.payment_status === "Awaiting payment"
+        order => String(order.payment_status || "").toLowerCase().includes("awaiting")
       ).length;
     }
 
@@ -493,7 +509,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // FORM CONTROL HELPERS
-
   function makeSelect(options, selectedValue) {
     const select = document.createElement("select");
 
@@ -566,103 +581,97 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function makeInstructionColorSelect(value) {
-    const select = makeSelect(
+    return makeSelect(
       ["Yellow", "Red", "Green"],
       getInstructionColorName(value)
     );
-
-    return select;
   }
 
   // SAVE ORDER STATUS, PAYMENT AND INSTRUCTIONS
+  async function saveOrderChanges(order, changes, button, message) {
+    button.disabled = true;
+    button.textContent = "Saving...";
 
+    const anyImportantChange =
+      changes.status !== order.status ||
+      changes.payment_status !== order.payment_status ||
+      changes.collection_instructions !== (order.collection_instructions || "") ||
+      changes.delivery_instructions !== (order.delivery_instructions || "");
 
-async function saveOrderChanges(order, changes, button, message) {
-  button.disabled = true;
-  button.textContent = "Saving...";
+    try {
+      const { error } = await db
+        .from("orders")
+        .update(changes)
+        .eq("id", order.id);
 
-  const statusChanged =
-    Object.prototype.hasOwnProperty.call(changes, "status") &&
-    changes.status !== order.status;
+      if (error) throw error;
 
-  try {
-    const { error } = await db
-      .from("orders")
-      .update(changes)
-      .eq("id", order.id);
+      await loadOrders();
 
-    if (error) throw error;
+      showMessage(message, "Changes saved successfully.", "success");
 
-    await loadOrders();
+      if (anyImportantChange) {
+        try {
+          const { data: sessionData } = await db.auth.getSession();
+          const { data, error: notificationError } =
+            await db.functions.invoke("sekiflex-order-notifications", {
+              body: {
+                order_id: order.id,
+                event_type: "status_updated",
+                status: changes.status,
+                payment_status: changes.payment_status,
+                collection_instructions: changes.collection_instructions,
+                collection_text_color: changes.collection_text_color,
+                delivery_instructions: changes.delivery_instructions,
+                delivery_text_color: changes.delivery_text_color
+              },
+              headers: {
+                Authorization: `Bearer ${sessionData.session?.access_token}`
+              }
+            });
 
-    showMessage(message, "Changes saved successfully.", "success");
+          if (notificationError || data?.error) {
+            console.error(
+              "Customer notification error:",
+              notificationError || data.error
+            );
 
-    if (statusChanged) {
-      try {
-        const { data, error: notificationError } =
-          await db.functions.invoke("sekiflex-order-notifications", {
-            body: {
-              order_id: order.id,
-              event_type: "status_updated",
-                        },
-            headers: {
-              Authorization: `Bearer ${(await db.auth.getSession()).data.session?.access_token}`
-            }
-          });
-          
-
-        if (notificationError || data?.error) {
-          console.error(
-            "Customer notification error:",
-            notificationError || data.error
-          );
-
+            showMessage(
+              message,
+              "Order saved, but the customer email could not be sent.",
+              "error"
+            );
+          } else {
+            showMessage(
+              message,
+              "Changes saved & customer email update sent!",
+              "success"
+            );
+          }
+        } catch (notificationError) {
+          console.error("Notification error:", notificationError);
           showMessage(
             message,
-            "Order saved, but the customer email could not be sent. Please check the notification setup.",
+            "Order saved, but customer email notification failed.",
             "error"
           );
-        } else if (data?.message?.includes("no email address")) {
-          showMessage(
-            message,
-            "Order saved, but this customer has no email address.",
-            "success"
-          );
-        } else {
-          showMessage(
-            message,
-            "Changes saved successfully. Customer email notification sent.",
-            "success"
-          );
         }
-      } catch (notificationError) {
-        console.error("Notification error:", notificationError);
-
-        showMessage(
-          message,
-          "Order saved, but customer email notification failed.",
-          "error"
-        );
       }
+    } catch (error) {
+      console.error("Order update error:", error);
+
+      showMessage(
+        message,
+        "Could not save changes: " + getErrorDetails(error),
+        "error"
+      );
+
+      button.disabled = false;
+      button.textContent = "Save changes";
     }
-
-  } catch (error) {
-    console.error("Order update error:", error);
-
-    showMessage(
-      message,
-      "Could not save changes: " + getErrorDetails(error),
-      "error"
-    );
-
-    button.disabled = false;
-    button.textContent = "Save changes";
   }
-}
-  
 
   // EXPANDABLE ORDER CARDS
-
   function renderOrders() {
     ordersList.replaceChildren();
 
@@ -717,7 +726,7 @@ async function saveOrderChanges(order, changes, button, message) {
       statusLine.style.marginTop = "8px";
 
       const shipmentStatus = document.createElement("span");
-      shipmentStatus.textContent = order.status || "Awaiting payment";
+      shipmentStatus.textContent = order.status || "Order processing";
       shipmentStatus.style.color = getStatusColor(order.status);
       shipmentStatus.style.fontSize = "12px";
       shipmentStatus.style.fontWeight = "700";
@@ -751,6 +760,7 @@ async function saveOrderChanges(order, changes, button, message) {
       addDetail(detailsBox, "Country", order.country);
       addDetail(detailsBox, "Destination", order.destination);
       addDetail(detailsBox, "Package", order.package_description);
+      addDetail(detailsBox, "Payment reference", order.payment_reference);
       addDetail(detailsBox, "Currency", order.currency);
 
       if (order.order_amount != null) {
@@ -771,10 +781,9 @@ async function saveOrderChanges(order, changes, button, message) {
 
       addDetail(detailsBox, "Courier", order.courier_name);
       addDetail(detailsBox, "Courier waybill", order.courier_waybill);
-      addDetail(detailsBox, "Estimated delivery", order.estimated_delivery);
+      addDetail(detailsBox, "Estimated delivery", order.estimated_delivery || order.estimate_delivery);
 
       // STATUS EDITOR
-
       const statusLabel = makeLabel("Shipment status");
       const statusSelect = makeSelect(
         statuses,
@@ -792,9 +801,7 @@ async function saveOrderChanges(order, changes, button, message) {
       detailsBox.append(paymentLabel, paymentSelect);
 
       // INSTRUCTION DESCRIPTION EDITOR
-      // Only descriptions and three text colours are editable here.
-
-      const collectionLabel = makeLabel("Collection description");
+      const collectionLabel = makeLabel("Collection description (visible to customer)");
       const collectionTextarea = makeTextarea(
         order.collection_instructions,
         "Enter collection instructions for the customer"
@@ -809,10 +816,10 @@ async function saveOrderChanges(order, changes, button, message) {
 
       detailsBox.append(collectionColorLabel, collectionColor);
 
-      const deliveryLabel = makeLabel("Delivery description");
+      const deliveryLabel = makeLabel("Delivery description (e.g. delay or road update visible to customer)");
       const deliveryTextarea = makeTextarea(
         order.delivery_instructions,
-        "Enter delivery instructions for the customer"
+        "e.g. Customs blocked us on the road and your order may delay to arrive"
       );
 
       detailsBox.append(deliveryLabel, deliveryTextarea);
@@ -836,11 +843,9 @@ async function saveOrderChanges(order, changes, button, message) {
           status: statusSelect.value,
           payment_status: paymentSelect.value,
           collection_instructions: collectionTextarea.value.trim(),
-          collection_text_color:
-            instructionColors[collectionColor.value],
+          collection_text_color: instructionColors[collectionColor.value],
           delivery_instructions: deliveryTextarea.value.trim(),
-          delivery_text_color:
-            instructionColors[deliveryColor.value]
+          delivery_text_color: instructionColors[deliveryColor.value]
         };
 
         await saveOrderChanges(
@@ -858,148 +863,138 @@ async function saveOrderChanges(order, changes, button, message) {
   }
 
   // REGISTER NEW CUSTOMER ORDER
-
   if (orderForm) {
-    
-orderForm.addEventListener("submit", async event => {
-  event.preventDefault();
+    orderForm.addEventListener("submit", async event => {
+      event.preventDefault();
 
-  if (!db) {
-    showMessage(
-      orderMessage,
-      "Database connection unavailable.",
-      "error"
-    );
-    return;
-  }
+      if (!db) {
+        showMessage(
+          orderMessage,
+          "Database connection unavailable.",
+          "error"
+        );
+        return;
+      }
 
-  const button = orderForm.querySelector('button[type="submit"]');
+      const button = orderForm.querySelector('button[type="submit"]');
 
-  button.disabled = true;
-  showMessage(orderMessage, "Registering customer order...", "info");
+      button.disabled = true;
+      showMessage(orderMessage, "Registering customer order...", "info");
 
-  try {
-    const estimatedDelivery = getEstimatedDeliveryDate(
-      document.getElementById("estimated-delivery").value
-    );
-
-
-const order = {
-  customer_name: document.getElementById("customer-name").value.trim(),
-  customer_phone: document.getElementById("customer-phone").value.trim(),
-  customer_email: document.getElementById("customer-email").value.trim() || null,
-  order_source: document.getElementById("order-source").value,
-  country: document.getElementById("country").value,
-  currency: document.getElementById("currency").value,
-  destination: document.getElementById("destination").value.trim(),
-  package_description: document.getElementById("package-description").value.trim(),
-  order_amount: Number(document.getElementById("order-amount").value),
-  delivery_amount: Number(document.getElementById("delivery-amount").value),
-  status: "Order processing",
-  payment_status: document.getElementById("payment-status").value,
-  courier_name: document.getElementById("courier-name").value.trim() || null,
-  courier_waybill: document.getElementById("courier-waybill").value.trim() || null,
-  estimated_delivery: estimatedDelivery,
-  collection_instructions:
-    document.getElementById("collection-instructions").value.trim() || null
-};
-    
-
-    const { data, error } = await db
-      .from("orders")
-      .insert(order)
-      .select("id, tracking_number")
-      .single();
-
-    if (error) throw error;
-
-    orderForm.reset();
-
-    await loadOrders();
-
-    showMessage(
-      orderMessage,
-      "Order registered successfully. Tracking number: " +
-        (data?.tracking_number || "Generated"),
-            "success"
-    );
-    
-
-    // SEND AUTOMATIC NEW ORDER CONFIRMATION EMAIL
-    if (data?.id) {
       try {
-        const { data: notification, error: notificationError } =
-          await db.functions.invoke("sekiflex-order-notifications", {
-            body: {
-  order_id: data.id,
-  event_type: "order_created"
-},
-headers: {
-  Authorization: `Bearer ${(await db.auth.getSession()).data.session?.access_token}`
-}
-}); 
-    
+        const estimatedDelivery = getEstimatedDeliveryDate(
+          document.getElementById("estimated-delivery").value
+        );
 
-        if (notificationError || notification?.error) {
-          console.error(
-            "Order confirmation email error:",
-            notificationError || notification.error
-          );
+        const order = {
+          customer_name: document.getElementById("customer-name").value.trim(),
+          customer_phone: document.getElementById("customer-phone").value.trim(),
+          customer_email: document.getElementById("customer-email").value.trim() || null,
+          order_source: document.getElementById("order-source").value,
+          country: document.getElementById("country").value,
+          currency: document.getElementById("currency").value,
+          destination: document.getElementById("destination").value.trim(),
+          package_description: document.getElementById("package-description").value.trim(),
+          order_amount: Number(document.getElementById("order-amount").value),
+          delivery_amount: Number(document.getElementById("delivery-amount").value),
+          status: "Order processing",
+          payment_status: document.getElementById("payment-status").value,
+          courier_name: document.getElementById("courier-name").value.trim() || null,
+          courier_waybill: document.getElementById("courier-waybill").value.trim() || null,
+          estimated_delivery: estimatedDelivery,
+          collection_instructions:
+            document.getElementById("collection-instructions").value.trim() || null
+        };
 
-          showMessage(
-            orderMessage,
-            "Order registered successfully, but confirmation email could not be sent.",
-            "error"
-          );
-        } else {
-          showMessage(
-            orderMessage,
-            "Order registered successfully! Tracking number: " +
-              data.tracking_number +
-              ". Customer confirmation email sent.",
-            "success"
-          );
-        }
-      } catch (notificationError) {
-        console.error("Email notification error:", notificationError);
+        const { data, error } = await db
+          .from("orders")
+          .insert(order)
+          .select("id, tracking_number")
+          .single();
+
+        if (error) throw error;
+
+        orderForm.reset();
+
+        await loadOrders();
 
         showMessage(
           orderMessage,
-          "Order registered successfully, but email notification failed.",
+          "Order registered successfully. Tracking number: " +
+            (data?.tracking_number || "Generated"),
+          "success"
+        );
+
+        // SEND AUTOMATIC NEW ORDER CONFIRMATION EMAIL
+        if (data?.id) {
+          try {
+            const { data: sessionData } = await db.auth.getSession();
+            const { data: notification, error: notificationError } =
+              await db.functions.invoke("sekiflex-order-notifications", {
+                body: {
+                  order_id: data.id,
+                  event_type: "order_created"
+                },
+                headers: {
+                  Authorization: `Bearer ${sessionData.session?.access_token}`
+                }
+              });
+
+            if (notificationError || notification?.error) {
+              console.error(
+                "Order confirmation email error:",
+                notificationError || notification.error
+              );
+
+              showMessage(
+                orderMessage,
+                "Order registered successfully, but confirmation email could not be sent.",
+                "error"
+              );
+            } else {
+              showMessage(
+                orderMessage,
+                "Order registered successfully! Tracking number: " +
+                  data.tracking_number +
+                  ". Customer confirmation email sent.",
+                "success"
+              );
+            }
+          } catch (notificationError) {
+            console.error("Email notification error:", notificationError);
+
+            showMessage(
+              orderMessage,
+              "Order registered successfully, but email notification failed.",
+              "error"
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Order registration error:", error);
+
+        showMessage(
+          orderMessage,
+          "Could not register order: " + getErrorDetails(error),
           "error"
         );
+      } finally {
+        button.disabled = false;
       }
-    }
-
-  } catch (error) {
-    console.error("Order registration error:", error);
-
-    showMessage(
-      orderMessage,
-      "Could not register order: " + getErrorDetails(error),
-      "error"
-    );
-
-  } finally {
-    button.disabled = false;
+    });
   }
-});
-  }    
 
   // SEARCH ORDERS
-
   if (searchInput) {
     searchInput.addEventListener("input", renderOrders);
   }
 
   // REFRESH ORDERS
-
   if (refreshButton) {
     refreshButton.addEventListener("click", loadOrders);
   }
 
   // STAFF LOGOUT
-
   if (logoutButton) {
     logoutButton.addEventListener("click", async () => {
       if (!db) return;
@@ -1020,7 +1015,6 @@ headers: {
   }
 
   // RESTORE EXISTING STAFF SESSION
-
   if (!db) {
     setDashboardVisible(false);
 
@@ -1043,12 +1037,12 @@ headers: {
     } else {
       setDashboardVisible(false);
     }
-
   } catch (error) {
     console.error("Session error:", error);
     setDashboardVisible(false);
   }
 });
+
 // --- WEB PUSH NOTIFICATIONS ---
 const VAPID_PUBLIC_KEY = "BCVIJnAsWkQZl6y_D6Bfyl5PnRK7sm-q00rQge4OsEdYzEN5ATob1ta3SD9EiVoqbkKagkq2tHFaMA9L7aSHzOw";
 
@@ -1081,7 +1075,12 @@ window.enableSekiflexPush = async function ({ customerEmail = null, customerPhon
 
   const subJson = subscription.toJSON();
 
-  const { error } = await db.from("push_subscriptions").upsert(
+  const sbClient = window.supabase.createClient(
+    window.SEKIFLEX_SUPABASE_URL,
+    window.SEKIFLEX_SUPABASE_KEY
+  );
+
+  const { error } = await sbClient.from("push_subscriptions").upsert(
     {
       customer_email: customerEmail,
       customer_phone: customerPhone,
