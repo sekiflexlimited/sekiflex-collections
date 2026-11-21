@@ -23,7 +23,7 @@
 </head>
 <body class="bg-[#FAF8F5] text-stone-900 antialiased selection:bg-amber-200">
 
-  <!-- CUSTOMER SIGN UP / SIGN IN GATE (JUMIA / TEMU STYLE) -->
+  <!-- CUSTOMER SIGN UP / SIGN IN GATE -->
   <div id="customerAuthGate" class="fixed inset-0 z-50 bg-stone-950/95 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl space-y-5 my-auto">
       <div class="text-center space-y-1.5">
@@ -87,10 +87,10 @@
     </div>
   </div>
 
-  <!-- MAIN STORE CONTENT (Revealed after Customer Login) -->
+  <!-- MAIN STORE CONTENT -->
   <div id="storeMainWrapper" class="hidden">
 
-    <!-- LIVE PROMO / ANNOUNCEMENT BANNER (Controlled from Store Admin) -->
+    <!-- LIVE PROMO / ANNOUNCEMENT BANNER -->
     <div id="livePromoBanner" class="hidden bg-amber-500 text-stone-950 text-xs font-bold py-2.5 px-4 text-center tracking-wide shadow-sm">
       <span id="livePromoText"></span>
     </div>
@@ -693,7 +693,6 @@
       populateNigeriaStates();
       renderCart();
 
-      // Check existing customer session first
       const { data: { session } } = await sb.auth.getSession();
       if (session?.user) {
         const { data: profile } = await sb
@@ -935,11 +934,11 @@
         destination,
         package_description: summary,
         order_source: 'Sekiflex Store',
-        payment_status: 'Awaiting Payment',
+        payment_status: 'Awaiting payment',
         payment_reference: paymentNote,
         order_amount: sub,
         delivery_amount: currentShippingFee,
-        status: 'Processing',
+        status: 'Order processing',
         courier_name: fulfillmentMode === 'pickup' ? 'Walk-In Store Pickup (Uyo HQ)' : 'Sekiflex Dispatch',
         estimate_delivery: currentEstDays,
         country,
@@ -976,7 +975,7 @@
             items: summary,
             total_amount: total,
             payment_method: paymentNote,
-            status: 'Processing'
+            status: 'Order processing'
           }
         });
       } catch (notifyErr) {
