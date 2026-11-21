@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sekiflex Collections | Shop Luxury Apparel & Accessories</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+</head>
+<body class="bg-stone-50 text-stone-900 font-sans">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-stone-200">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="font-bold text-lg tracking-tight text-stone-900">
+        SEKIFLEX <span class="text-amber-600">COLLECTIONS</span>
+      </a>
+      <div class="flex items-center gap-3">
+        <a href="track.html" class="text-xs font-medium px-3 py-2 rounded-lg border border-stone-300 hover:bg-stone-100">
+          Track Order
+        </a>
+        <button onclick="toggleCart(true)" class="relative bg-stone-900 text-white text-xs font-semibold px-4 py-2 rounded-lg hover:bg-stone-800">
+          Cart (<span id="cartCount">0</span>)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="bg-stone-900 text-white py-10 px-4 text-center">
+    <h1 class="text-2xl md:text-4xl font-bold mb-2">Shop Sekiflex Collections</h1>
+    <p class="text-stone-300 text-sm max-w-md mx-auto">Order directly online, calculate instant delivery to your state/country, and get your live tracking code immediately.</p>
+  </section>
+
+  <!-- Category Filter -->
+  <div class="max-w-6xl mx-auto px-4 pt-6 flex gap-2 overflow-x-auto" id="categoryBar">
+    <button onclick="filterCategory('ALL', this)" class="cat-btn bg-stone-900 text-white text-xs font-semibold px-4 py-2 rounded-full">All Items</button>
+  </div>
+
+  <!-- Products Grid -->
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <div id="productsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <p class="col-span-full text-center text-stone-500 py-12">Loading collections...</p>
+    </div>
+  </main>
+
+  <!-- Cart & Checkout Drawer -->
+  <div id="cartDrawer" class="fixed inset-0 z-50 hidden bg-black/50 flex justify-end">
+    <div class="bg-white w-full max-w-md h-full overflow-y-auto p-5 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between border-b pb-3 mb-4">
+          <h2 class="font-bold text-lg">Your Bag & Checkout</h2>
+          <button onclick="toggleCart(false)" class="text-stone-500 text-xl font-bold">&times;</button>
+        </div>
+
+        <div id="cartItems" class="space-y-3 mb-5"></div>
+
+        <!-- Customer Shipping Form -->
+        <form id="checkoutForm" onsubmit="placeOrder(event)" class="space-y-3 border-t pt-4">
+          <h3 class="font-semibold text-sm text-stone-700">Delivery Details</h3>
+          <input required id="custName" type="text" placeholder="Full Name" class="w-full border rounded-lg px-3 py-2 text-sm" />
+          <input required id="custEmail" type="email" placeholder="Email Address (for tracking receipt)" class="w-full border rounded-lg px-3 py-2 text-sm" />
+          <input required id="custPhone" type="tel" placeholder="Phone / WhatsApp Number" class="w-full border rounded-lg px-3 py-2 text-sm" />
+
+          <div class="grid grid-cols-2 gap-2">
+            <select required id="custCountry" onchange="updateShippingFee()" class="w-full border rounded-lg px-3 py-2 text-sm">
+              <option value="Nigeria">Nigeria</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="United States">United States</option>
+              <option value="Canada">Canada</option>
+              <option value="Ghana">Ghana</option>
+            </select>
+            <input required id="custState" oninput="updateShippingFee()" type="text" placeholder="State (e.g. Lagos, Rivers)" class="w-full border rounded-lg px-3 py-2 text-sm" />
+          </div>
+
+          <input required id="custCity" type="text" placeholder="City" class="w-full border rounded-lg px-3 py-2 text-sm" />
+          <input required id="custAddress" type="text" placeholder="Full Street Delivery Address" class="w-full border rounded-lg px-3 py-2 text-sm" />
+          <input id="custNotes" type="text" placeholder="Delivery note / size preference (optional)" class="w-full border rounded-lg px-3 py-2 text-sm" />
+
+          <!-- Totals -->
+          <div class="bg-stone-100 rounded-xl p-3 text-sm space-y-1">
+            <div class="flex justify-between"><span>Items Subtotal:</span><span id="subTotalText">₦0</span></div>
+            <div class="flex justify-between"><span>Delivery (<span id="estDaysText">2-4 days</span>):</span><span id="shipFeeText">₦5,000</span></div>
+            <div class="flex justify-between font-bold text-base border-t border-stone-300 pt-1"><span>Total:</span><span id="grandTotalText">₦0</span></div>
+          </div>
+
+          <button type="submit" id="submitBtn" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 rounded-xl text-sm">
+            Confirm Order & Get Tracking Number
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div id="successModal" class="fixed inset-0 z-50 hidden bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center space-y-4">
+      <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto text-2xl font-bold">&#10003;</div>
+      <h2 class="text-xl font-bold">Order Registered!</h2>
+      <p class="text-xs text-stone-600">Save your tracking number below to monitor your dispatch live:</p>
+      <div class="bg-stone-100 border border-dashed border-stone-400 rounded-xl py-3 px-4 font-mono text-lg font-bold text-amber-700" id="newTrackingCode"></div>
+      <div class="flex gap-2">
+        <button onclick="copyTracking()" class="flex-1 border border-stone-300 py-2.5 rounded-xl text-xs font-semibold">Copy Code</button>
+        <a id="trackNowLink" href="track.html" class="flex-1 bg-stone-900 text-white py-2.5 rounded-xl text-xs font-semibold">Track Now</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
+    let allProducts = [];
+    let shippingZones = [];
+    let cart = JSON.parse(localStorage.getItem('sekiflex_cart') || '[]');
+    let currentShippingFee = 5000;
+    let currentEstDays = '2-4 business days';
+
+    async function init() {
+      const [{ data: products }, { data: zones }, { data: cats }] = await Promise.all([
+        sb.from('products').select('*').eq('is_active', true).order('created_at', { ascending: false }),
+        sb.from('shipping_zones').select('*').eq('is_active', true),
+        sb.from('categories').select('*').order('name')
+      ]);
+
+      allProducts = products || [];
+      shippingZones = zones || [];
+
+      if (cats && cats.length) {
+        const bar = document.getElementById('categoryBar');
+        cats.forEach(c => {
+          const btn = document.createElement('button');
+          btn.className = 'cat-btn bg-white border border-stone-300 text-stone-700 text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap';
+          btn.textContent = c.name;
+          btn.onclick = () => filterCategory(c.id, btn);
+          bar.appendChild(btn);
+        });
+      }
+
+      renderProducts(allProducts);
+      renderCart();
+      updateShippingFee();
+    }
+
+    function filterCategory(catId, activeBtn) {
+      document.querySelectorAll('.cat-btn').forEach(b => {
+        b.className = 'cat-btn bg-white border border-stone-300 text-stone-700 text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap';
+      });
+      if (activeBtn) activeBtn.className = 'cat-btn bg-stone-900 text-white text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap';
+      renderProducts(catId === 'ALL' ? allProducts : allProducts.filter(p => p.category_id === catId));
+    }
+
+    function renderProducts(list) {
+      const grid = document.getElementById('productsGrid');
+      if (!list.length) {
+        grid.innerHTML = '<p class="col-span-full text-center text-stone-500 py-12">No products listed yet. Check back shortly!</p>';
+        return;
+      }
+      grid.innerHTML = list.map(p => {
+        const img = (p.images && p.images[0]) || p.image_url || 'https://placehold.co/400x500?text=Sekiflex';
+        const out = (p.stock_quantity !== null && p.stock_quantity <= 0);
+        return `
+          <div class="bg-white rounded-2xl border border-stone-200 overflow-hidden flex flex-col justify-between shadow-sm">
+            <img src="${img}" alt="${p.name}" class="w-full h-48 object-cover bg-stone-100" />
+            <div class="p-3 flex-1 flex flex-col justify-between">
+              <div>
+                <h3 class="font-semibold text-sm line-clamp-1">${p.name}</h3>
+                <p class="text-xs text-stone-500 line-clamp-2 mt-0.5">${p.description || ''}</p>
+              </div>
+              <div class="mt-3">
+                <p class="font-bold text-amber-700 text-sm">₦${Number(p.base_price).toLocaleString()}</p>
+                <button ${out ? 'disabled' : ''} onclick="addToCart('${p.id}')"
+                  class="mt-2 w-full ${out ? 'bg-stone-300 text-stone-500' : 'bg-stone-900 hover:bg-stone-800 text-white'} text-xs font-semibold py-2 rounded-lg">
+                  ${out ? 'Sold Out' : 'Add to Bag'}
+                </button>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function addToCart(productId) {
+      const prod = allProducts.find(p => p.id === productId);
+      if (!prod) return;
+      const existing = cart.find(i => i.id === productId);
+      if (existing) existing.qty += 1;
+      else cart.push({ id: prod.id, name: prod.name, price: Number(prod.base_price), qty: 1 });
+      saveCart();
+      toggleCart(true);
+    }
+
+    function changeQty(idx, delta) {
+      cart[idx].qty += delta;
+      if (cart[idx].qty <= 0) cart.splice(idx, 1);
+      saveCart();
+    }
+
+    function saveCart() {
+      localStorage.setItem('sekiflex_cart', JSON.stringify(cart));
+      renderCart();
+    }
+
+    function updateShippingFee() {
+      const country = (document.getElementById('custCountry').value || '').trim().toLowerCase();
+      const state = (document.getElementById('custState').value || '').trim().toLowerCase();
+      const match = shippingZones.find(z => z.country_name.toLowerCase() === country && z.state_name && z.state_name.toLowerCase() === state)
+                 || shippingZones.find(z => z.country_name.toLowerCase() === country && !z.state_name);
+      currentShippingFee = match ? Number(match.delivery_fee_ngn) : (country === 'nigeria' ? 5000 : 35000);
+      currentEstDays = match ? match.estimated_days : (country === 'nigeria' ? '2-4 business days' : '5-10 business days');
+      renderCart();
+    }
+
+    function renderCart() {
+      const count = cart.reduce((s, i) => s + i.qty, 0);
+      const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      document.getElementById('cartCount').textContent = count;
+      document.getElementById('subTotalText').textContent = '₦' + sub.toLocaleString();
+      document.getElementById('shipFeeText').textContent = '₦' + currentShippingFee.toLocaleString();
+      document.getElementById('estDaysText').textContent = currentEstDays;
+      document.getElementById('grandTotalText').textContent = '₦' + (sub + currentShippingFee).toLocaleString();
+
+      const box = document.getElementById('cartItems');
+      if (!cart.length) {
+        box.innerHTML = '<p class="text-xs text-stone-500 text-center py-4">Your bag is empty.</p>';
+        return;
+      }
+      box.innerHTML = cart.map((item, i) => `
+        <div class="flex items-center justify-between bg-stone-50 p-2.5 rounded-lg border">
+          <div>
+            <p class="text-xs font-semibold">${item.name}</p>
+            <p class="text-xs text-amber-700 font-bold">₦${(item.price * item.qty).toLocaleString()}</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="changeQty(${i}, -1)" class="w-6 h-6 bg-stone-200 rounded font-bold">-</button>
+            <span class="text-xs font-bold">${item.qty}</span>
+            <button type="button" onclick="changeQty(${i}, 1)" class="w-6 h-6 bg-stone-200 rounded font-bold">+</button>
+          </div>
+        </div>`).join('');
+    }
+
+    function toggleCart(show) {
+      document.getElementById('cartDrawer').classList.toggle('hidden', !show);
+    }
+
+    async function placeOrder(e) {
+      e.preventDefault();
+      if (!cart.length) return alert('Add at least one item to your bag first.');
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Registering Order...';
+
+      const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      const tracking = 'SC-2026-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      const summary = cart.map(i => `${i.qty}x ${i.name}`).join('; ');
+      const country = document.getElementById('custCountry').value.trim();
+      const state = document.getElementById('custState').value.trim();
+      const city = document.getElementById('custCity').value.trim();
+      const address = document.getElementById('custAddress').value.trim();
+      const destination = `${address}, ${city}, ${state}, ${country}`;
+
+      const { data: order, error } = await sb.from('orders').insert({
+        tracking_number: tracking,
+        customer_name: document.getElementById('custName').value.trim(),
+        customer_email: document.getElementById('custEmail').value.trim(),
+        customer_phone: document.getElementById('custPhone').value.trim(),
+        destination,
+        package_description: summary,
+        order_source: 'Sekiflex Store',
+        payment_status: 'pending',
+        order_amount: sub,
+        delivery_amount: currentShippingFee,
+        status: 'Order Placed',
+        courier_name: 'Sekiflex Dispatch',
+        estimate_delivery: currentEstDays,
+        country,
+        currency: 'NGN',
+        delivery_instructions: document.getElementById('custNotes').value.trim()
+      }).select().single();
+
+      if (error) {
+        btn.disabled = false;
+        btn.textContent = 'Confirm Order & Get Tracking Number';
+        return alert('Error placing order: ' + error.message);
+      }
+
+      await sb.from('store_order_items').insert(
+        cart.map(i => ({
+          order_id: order.id,
+          product_id: i.id,
+          product_name: i.name,
+          quantity: i.qty,
+          unit_price: i.price,
+          subtotal: i.price * i.qty
+        }))
+      );
+
+      cart = [];
+      saveCart();
+      toggleCart(false);
+      btn.disabled = false;
+      btn.textContent = 'Confirm Order & Get Tracking Number';
+
+      document.getElementById('newTrackingCode').textContent = tracking;
+      document.getElementById('trackNowLink').href = `track.html?tracking=${tracking}`;
+      document.getElementById('successModal').classList.remove('hidden');
+    }
+
+    function copyTracking() {
+      const code = document.getElementById('newTrackingCode').textContent;
+      navigator.clipboard.writeText(code);
+      alert('Tracking code copied: ' + code);
+    }
+
+    init();
+  </script>
+</body>
+            </html>
+            
