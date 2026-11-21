@@ -206,9 +206,9 @@
 
         <div id="cartItems" class="space-y-3 mb-5"></div>
 
-        <!-- Customer Shipping / Pickup Form -->
+        <!-- Customer Shipping / Pickup & Payment Form -->
         <form id="checkoutForm" onsubmit="placeOrder(event)" class="space-y-3 border-t border-stone-200 pt-4">
-          <h3 class="font-semibold text-xs uppercase tracking-wider text-stone-500">How Would You Like to Receive Your Order?</h3>
+          <h3 class="font-semibold text-xs uppercase tracking-wider text-stone-500">1. How Would You Like to Receive Your Order?</h3>
 
           <!-- Fulfillment Method Toggle -->
           <div class="grid grid-cols-2 gap-2 bg-stone-100 p-1 rounded-xl">
@@ -272,11 +272,58 @@
           <div class="bg-stone-100 rounded-xl p-3.5 text-sm space-y-1.5">
             <div class="flex justify-between text-stone-600"><span>Items Subtotal:</span><span id="subTotalText" class="font-medium text-stone-900">₦0</span></div>
             <div class="flex justify-between text-stone-600"><span>Delivery (<span id="estDaysText">select state</span>):</span><span id="shipFeeText" class="font-medium text-stone-900">—</span></div>
-            <div class="flex justify-between font-bold text-base border-t border-stone-300 pt-2"><span>Total:</span><span id="grandTotalText" class="text-amber-800">₦0</span></div>
+            <div class="flex justify-between font-bold text-base border-t border-stone-300 pt-2"><span>Total to Pay:</span><span id="grandTotalText" class="text-amber-800">₦0</span></div>
+          </div>
+
+          <!-- Step 2: Payment Before Order Confirmation -->
+          <div class="border border-amber-300 bg-amber-50/70 rounded-2xl p-3.5 space-y-3">
+            <div>
+              <h3 class="font-bold text-xs uppercase tracking-wider text-amber-950">2. Complete Payment to Confirm Order</h3>
+              <p class="text-[11px] text-stone-600 mt-0.5">Transfer the exact <span class="font-bold text-stone-900" id="payBoxAmountText">₦0</span> to either official account below (applies to both delivery &amp; store pickup):</p>
+            </div>
+
+            <!-- Bank Option 1: Stanbic IBTC -->
+            <div class="bg-white border border-stone-200 rounded-xl p-2.5 flex items-center justify-between gap-2">
+              <div class="text-xs">
+                <p class="font-bold text-stone-900">Stanbic IBTC</p>
+                <p class="font-mono font-bold text-sm text-amber-800">0084620625</p>
+                <p class="text-[11px] text-stone-500">Sekiflex Collections</p>
+              </div>
+              <button type="button" onclick="copyAcct('0084620625', 'Stanbic IBTC', this)"
+                class="bg-stone-900 hover:bg-amber-800 text-white text-[11px] font-semibold px-3 py-1.5 rounded-lg shrink-0 transition">
+                Copy
+              </button>
+            </div>
+
+            <!-- Bank Option 2: OPay -->
+            <div class="bg-white border border-stone-200 rounded-xl p-2.5 flex items-center justify-between gap-2">
+              <div class="text-xs">
+                <p class="font-bold text-stone-900">OPay</p>
+                <p class="font-mono font-bold text-sm text-amber-800">9163755234</p>
+                <p class="text-[11px] text-stone-500">Sekiflex Collections</p>
+              </div>
+              <button type="button" onclick="copyAcct('9163755234', 'OPay', this)"
+                class="bg-stone-900 hover:bg-amber-800 text-white text-[11px] font-semibold px-3 py-1.5 rounded-lg shrink-0 transition">
+                Copy
+              </button>
+            </div>
+
+            <select required id="paidBankSelect" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-xs bg-white focus:outline-none focus:border-amber-600">
+              <option value="">Select Account You Transferred To...</option>
+              <option value="Stanbic IBTC (0084620625)">Paid to Stanbic IBTC — 0084620625</option>
+              <option value="OPay (9163755234)">Paid to OPay — 9163755234</option>
+            </select>
+
+            <input required id="senderRefInput" type="text" placeholder="Sender Account Name or Transfer Reference" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-xs bg-white focus:outline-none focus:border-amber-600" />
+
+            <label class="flex items-start gap-2 text-[11px] text-stone-700 cursor-pointer">
+              <input required id="paymentConfirmCheck" type="checkbox" class="mt-0.5 accent-amber-700" />
+              <span>I have completed the bank transfer for the exact order total above.</span>
+            </label>
           </div>
 
           <button type="submit" id="submitBtn" class="w-full bg-stone-900 hover:bg-amber-800 text-white font-bold py-3.5 rounded-xl text-sm transition shadow-md">
-            Confirm Order &amp; Get Tracking Number
+            I Have Paid — Confirm Order &amp; Get Tracking Code
           </button>
         </form>
       </div>
@@ -287,12 +334,12 @@
   <div id="successModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
       <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto text-2xl font-bold">&#10003;</div>
-      <h2 class="font-editorial text-2xl font-bold">Order Registered!</h2>
+      <h2 class="font-editorial text-2xl font-bold">Order &amp; Payment Submitted!</h2>
       <p class="text-xs text-stone-600">Save your tracking number below to monitor your dispatch or present at our Uyo HQ counter:</p>
       <div class="bg-stone-100 border border-dashed border-stone-400 rounded-xl py-3 px-4 font-mono text-lg font-bold text-amber-700" id="newTrackingCode"></div>
       <a id="orderWhatsappConfirmBtn" href="https://wa.me/2349069037617" target="_blank" rel="noopener"
          class="block w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl text-xs font-bold transition">
-        Send Order &amp; Tracking Code on WhatsApp
+        Send Payment Receipt &amp; Tracking Code on WhatsApp
       </a>
       <div class="flex gap-2">
         <button onclick="copyTracking()" class="flex-1 border border-stone-300 py-2.5 rounded-xl text-xs font-semibold hover:bg-stone-50">Copy Code</button>
@@ -322,6 +369,19 @@
     let currentShippingFee = 0;
     let currentEstDays = 'select state';
     let toastTimer = null;
+
+    function copyAcct(acctNum, bankName, btnEl) {
+      navigator.clipboard.writeText(acctNum);
+      if (btnEl) {
+        const orig = btnEl.textContent;
+        btnEl.textContent = 'Copied!';
+        btnEl.classList.add('bg-emerald-600');
+        setTimeout(() => {
+          btnEl.textContent = orig;
+          btnEl.classList.remove('bg-emerald-600');
+        }, 1400);
+      }
+    }
 
     function setupContactLinks() {
       const generalMsg = encodeURIComponent('Hello Sekiflex Collections! I am browsing your online store and would like to make an inquiry.');
@@ -575,6 +635,7 @@
     function renderCart() {
       const count = cart.reduce((s, i) => s + i.qty, 0);
       const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      const grandTotal = sub + currentShippingFee;
       document.getElementById('cartCount').textContent = count;
       document.getElementById('subTotalText').textContent = '₦' + sub.toLocaleString();
 
@@ -585,7 +646,8 @@
       }
 
       document.getElementById('estDaysText').textContent = currentEstDays;
-      document.getElementById('grandTotalText').textContent = '₦' + (sub + currentShippingFee).toLocaleString();
+      document.getElementById('grandTotalText').textContent = '₦' + grandTotal.toLocaleString();
+      document.getElementById('payBoxAmountText').textContent = '₦' + grandTotal.toLocaleString();
 
       const box = document.getElementById('cartItems');
       if (!cart.length) {
@@ -628,15 +690,22 @@
         destination = `${address}, ${city}, ${state}, ${country}`;
       }
 
+      const paidBank = document.getElementById('paidBankSelect').value.trim();
+      const senderRef = document.getElementById('senderRefInput').value.trim();
+      if (!paidBank || !senderRef) {
+        return alert('Please select the Sekiflex bank account you transferred to and enter the sender name/reference.');
+      }
+
       const btn = document.getElementById('submitBtn');
       btn.disabled = true;
-      btn.textContent = 'Registering Order...';
+      btn.textContent = 'Verifying & Registering Order...';
 
       const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
       const total = sub + currentShippingFee;
       const tracking = 'SC-2026-' + Math.random().toString(36).substring(2, 8).toUpperCase();
       const summary = cart.map(i => `${i.qty}x ${i.name}`).join('; ');
       const custName = document.getElementById('custName').value.trim();
+      const paymentNote = `${paidBank} | Sender/Ref: ${senderRef}`;
 
       const { data: order, error } = await sb.from('orders').insert({
         tracking_number: tracking,
@@ -646,7 +715,8 @@
         destination,
         package_description: summary,
         order_source: 'Sekiflex Store',
-        payment_status: 'pending',
+        payment_status: 'pending_verification',
+        payment_reference: paymentNote,
         order_amount: sub,
         delivery_amount: currentShippingFee,
         status: 'Order Placed',
@@ -659,7 +729,7 @@
 
       if (error) {
         btn.disabled = false;
-        btn.textContent = 'Confirm Order & Get Tracking Number';
+        btn.textContent = 'I Have Paid — Confirm Order & Get Tracking Code';
         return alert('Error placing order: ' + error.message);
       }
 
@@ -675,20 +745,24 @@
       );
 
       const waOrderText = encodeURIComponent(
-        `Hello Sekiflex Collections! I just placed an order.\n` +
+        `Hello Sekiflex Collections! I have completed payment for my order.\n` +
         `Tracking Code: ${tracking}\n` +
         `Name: ${custName}\n` +
         `Items: ${summary}\n` +
         `Method: ${fulfillmentMode === 'pickup' ? 'Walk-In Store Pickup (Urua Ekpa, Uyo)' : destination}\n` +
-        `Total: ₦${total.toLocaleString()}`
+        `Amount Paid: ₦${total.toLocaleString()}\n` +
+        `Paid To: ${paidBank}\n` +
+        `Sender/Ref: ${senderRef}`
       );
       document.getElementById('orderWhatsappConfirmBtn').href = `https://wa.me/${STORE_WHATSAPP_NUMBER}?text=${waOrderText}`;
 
       cart = [];
       saveCart();
+      document.getElementById('checkoutForm').reset();
+      setFulfillmentMode('delivery');
       toggleCart(false);
       btn.disabled = false;
-      btn.textContent = 'Confirm Order & Get Tracking Number';
+      btn.textContent = 'I Have Paid — Confirm Order & Get Tracking Code';
 
       document.getElementById('newTrackingCode').textContent = tracking;
       document.getElementById('trackNowLink').href = `track.html?tracking=${tracking}`;
