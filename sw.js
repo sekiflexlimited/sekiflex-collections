@@ -1,16 +1,17 @@
-self.addEventListener("push", (event) => {
-  const data = event.data ? event.data.json() : {};
-  event.waitUntil(
-    self.registration.showNotification(data.title || "SEKIFLEX COLLECTIONS", {
-      body: data.body || "You have a new order update.",
-      icon: "/logo.png",
-      badge: "/logo.png",
-      data: { url: data.url || "/" },
-    })
-  );
+self.addEventListener('install', () => {
+  self.skipWaiting();
 });
 
-self.addEventListener("notificationclick", (event) => {
-  event.notification.close();
-  event.waitUntil(clients.openWindow(event.notification.data.url));
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => caches.delete(cacheName))
+      );
+    }).then(() => self.registration.unregister())
+      .then(() => self.clients.matchAll())
+      .then((clients) => {
+        clients.forEach((client) => client.navigate(client.url));
+      })
+  );
 });
