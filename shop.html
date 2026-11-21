@@ -32,7 +32,7 @@
         <a href="track.html" class="text-xs font-semibold px-3.5 py-2 rounded-full border border-stone-300 text-stone-700 hover:bg-stone-100 transition">
           Track Order
         </a>
-        <button onclick="toggleCart(true)" class="relative bg-stone-900 text-white text-xs font-semibold px-4 py-2 rounded-full hover:bg-amber-800 transition shadow-sm">
+        <button id="headerBagBtn" onclick="toggleCart(true)" class="relative bg-stone-900 text-white text-xs font-semibold px-4 py-2 rounded-full hover:bg-amber-800 transition shadow-sm">
           Bag (<span id="cartCount">0</span>)
         </button>
       </div>
@@ -179,6 +179,15 @@
     </div>
   </footer>
 
+  <!-- Added-to-Bag Toast Notification -->
+  <div id="bagToast" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-40 hidden bg-stone-900 text-white px-4 py-2.5 rounded-full shadow-2xl border border-stone-700 flex items-center gap-3 text-xs whitespace-nowrap">
+    <span class="text-emerald-400 font-bold">&#10003;</span>
+    <span id="bagToastText">Added to bag</span>
+    <button type="button" onclick="hideBagToast(); toggleCart(true);" class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-3 py-1 rounded-full text-[11px] transition">
+      View Bag
+    </button>
+  </div>
+
   <!-- Floating WhatsApp Concierge Button -->
   <a id="floatingWhatsappBtn" href="https://wa.me/2349069037617" target="_blank" rel="noopener" aria-label="Chat with Sekiflex on WhatsApp"
      class="fixed bottom-5 right-5 z-40 bg-emerald-600 hover:bg-emerald-500 text-white shadow-xl rounded-full px-4 py-3 flex items-center gap-2 text-xs font-bold transition transform hover:scale-105">
@@ -312,6 +321,7 @@
     let fulfillmentMode = 'delivery';
     let currentShippingFee = 0;
     let currentEstDays = 'select state';
+    let toastTimer = null;
 
     function setupContactLinks() {
       const generalMsg = encodeURIComponent('Hello Sekiflex Collections! I am browsing your online store and would like to make an inquiry.');
@@ -479,7 +489,7 @@
               </div>
               <div class="mt-3.5">
                 <p class="font-bold text-amber-800 text-base">₦${Number(p.base_price).toLocaleString()}</p>
-                <button ${out ? 'disabled' : ''} onclick="addToCart('${p.id}')"
+                <button ${out ? 'disabled' : ''} onclick="addToCart('${p.id}', this)"
                   class="mt-2.5 w-full ${out ? 'bg-stone-200 text-stone-500' : 'bg-stone-900 hover:bg-amber-800 text-white'} text-xs font-semibold py-2.5 rounded-xl transition">
                   ${out ? 'Sold Out' : 'Add to Bag'}
                 </button>
@@ -489,14 +499,40 @@
       }).join('');
     }
 
-    function addToCart(productId) {
+    function showBagToast(itemName) {
+      const toast = document.getElementById('bagToast');
+      const totalItems = cart.reduce((s, i) => s + i.qty, 0);
+      document.getElementById('bagToastText').textContent = `${itemName} added (${totalItems} in bag)`;
+      toast.classList.remove('hidden');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(hideBagToast, 3200);
+    }
+
+    function hideBagToast() {
+      document.getElementById('bagToast').classList.add('hidden');
+    }
+
+    function addToCart(productId, btnEl) {
       const prod = allProducts.find(p => p.id === productId);
       if (!prod) return;
       const existing = cart.find(i => i.id === productId);
       if (existing) existing.qty += 1;
       else cart.push({ id: prod.id, name: prod.name, price: Number(prod.base_price), qty: 1 });
       saveCart();
-      toggleCart(true);
+
+      if (btnEl) {
+        const originalText = btnEl.textContent;
+        btnEl.textContent = '✓ Added to Bag';
+        btnEl.classList.remove('bg-stone-900', 'hover:bg-amber-800');
+        btnEl.classList.add('bg-emerald-700');
+        setTimeout(() => {
+          btnEl.textContent = originalText;
+          btnEl.classList.remove('bg-emerald-700');
+          btnEl.classList.add('bg-stone-900', 'hover:bg-amber-800');
+        }, 1100);
+      }
+
+      showBagToast(prod.name);
     }
 
     function changeQty(idx, delta) {
