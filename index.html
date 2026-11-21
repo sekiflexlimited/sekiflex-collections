@@ -717,13 +717,15 @@
       const tracking = 'SC-2026-' + Math.random().toString(36).substring(2, 8).toUpperCase();
       const summary = cart.map(i => `${i.qty}x ${i.name}`).join('; ');
       const custName = document.getElementById('custName').value.trim();
+      const custEmail = document.getElementById('custEmail').value.trim();
+      const custPhone = document.getElementById('custPhone').value.trim();
       const paymentNote = `${paidBank} | Sender/Ref: ${senderRef}`;
 
       const { data: order, error } = await sb.from('orders').insert({
         tracking_number: tracking,
         customer_name: custName,
-        customer_email: document.getElementById('custEmail').value.trim(),
-        customer_phone: document.getElementById('custPhone').value.trim(),
+        customer_email: custEmail,
+        customer_phone: custPhone,
         destination,
         package_description: summary,
         order_source: 'Sekiflex Store',
@@ -731,7 +733,7 @@
         payment_reference: paymentNote,
         order_amount: sub,
         delivery_amount: currentShippingFee,
-        status: 'Order Placed',
+        status: 'Processing',
         courier_name: fulfillmentMode === 'pickup' ? 'Walk-In Store Pickup (Uyo HQ)' : 'Sekiflex Dispatch',
         estimate_delivery: currentEstDays,
         country,
@@ -755,6 +757,26 @@
           subtotal: i.price * i.qty
         }))
       );
+
+      // Trigger automatic email alert to Admin & Customer via Supabase Edge Function
+      try {
+        await sb.functions.invoke('sekiflex-order-notifications', {
+          body: {
+            event_type: 'new_order',
+            tracking_number: tracking,
+            customer_name: custName,
+            customer_email: custEmail,
+            customer_phone: custPhone,
+            destination,
+            items: summary,
+            total_amount: total,
+            payment_method: paymentNote,
+            status: 'Processing'
+          }
+        });
+      } catch (notifyErr) {
+        console.warn('Notification trigger skipped:', notifyErr);
+      }
 
       const waOrderText = encodeURIComponent(
         `Hello Sekiflex Collections! I have completed payment for my order.\n` +
