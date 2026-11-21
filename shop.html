@@ -1217,4 +1217,39 @@
         console.warn('Notification trigger skipped:', notifyErr);
       }
 
-      const waOrderText = encodeUR
+      const waOrderText = encodeURIComponent(
+        `Hello Sekiflex Collections! I have completed payment for my order.\n` +
+        `Tracking Code: ${tracking}\n` +
+        `Name: ${custName}\n` +
+        `Items: ${summary}\n` +
+        `Method: ${fulfillmentMode === 'pickup' ? 'Walk-In Store Pickup (Urua Ekpa, Uyo)' : destination}\n` +
+        `Amount Paid: ₦${total.toLocaleString()}\n` +
+        `Paid To: ${paidBank}\n` +
+        `Sender/Ref: ${senderRef}`
+      );
+      document.getElementById('orderWhatsappConfirmBtn').href = `https://wa.me/${STORE_WHATSAPP_NUMBER}?text=${waOrderText}`;
+
+      cart = [];
+      saveCart();
+      document.getElementById('checkoutForm').reset();
+      prefillCustomerCheckout();
+      setFulfillmentMode('delivery');
+      toggleCart(false);
+      btn.disabled = false;
+      btn.textContent = 'I Have Paid — Confirm Order & Get Tracking Code';
+
+      document.getElementById('newTrackingCode').textContent = tracking;
+      document.getElementById('trackNowLink').href = `track.html?tracking=${tracking}`;
+      document.getElementById('successModal').classList.remove('hidden');
+    }
+
+    function copyTracking() {
+      const code = document.getElementById('newTrackingCode').textContent;
+      navigator.clipboard.writeText(code);
+      alert('Tracking code copied: ' + code);
+    }
+
+    init();
+  </script>
+</body>
+</html>
