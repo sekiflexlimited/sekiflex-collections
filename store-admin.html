@@ -14,7 +14,7 @@
   <div id="loginBox" class="min-h-screen flex items-center justify-center p-4">
     <form onsubmit="adminLogin(event)" class="bg-white p-6 rounded-2xl shadow max-w-sm w-full space-y-4">
       <h1 class="text-xl font-bold text-center">Sekiflex Store Manager</h1>
-      <p class="text-xs text-stone-500 text-center">Sign in with your Supabase Admin email & password</p>
+      <p class="text-xs text-stone-500 text-center">Sign in with your Supabase Admin email &amp; password</p>
       <input required id="adminEmail" type="email" placeholder="Admin Email" class="w-full border rounded-lg px-3 py-2 text-sm" />
       <input required id="adminPass" type="password" placeholder="Password" class="w-full border rounded-lg px-3 py-2 text-sm" />
       <button type="submit" class="w-full bg-stone-900 text-white py-2.5 rounded-xl text-sm font-semibold">Sign In</button>
@@ -26,7 +26,7 @@
     <header class="bg-white p-4 rounded-2xl shadow-sm flex flex-wrap items-center justify-between gap-2">
       <div>
         <h1 class="font-bold text-lg">Sekiflex Store Manager</h1>
-        <p class="text-xs text-stone-500">Add clothing/bags, manage stock, & view store orders</p>
+        <p class="text-xs text-stone-500">Manage promo banner, clothing/bags, stock, &amp; shipping rates</p>
       </div>
       <div class="flex gap-2">
         <a href="admin.html" class="text-xs px-3 py-2 rounded-lg border font-medium">Dispatch Admin</a>
@@ -34,6 +34,30 @@
         <button onclick="logout()" class="text-xs px-3 py-2 rounded-lg bg-stone-200 font-medium">Logout</button>
       </div>
     </header>
+
+    <!-- Store Promo / Announcement Banner Card -->
+    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-amber-500">
+      <div class="flex items-center justify-between">
+        <h2 class="font-bold text-base">Store Promo / Announcement Banner</h2>
+        <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer">
+          <input id="bannerActive" type="checkbox" checked class="accent-amber-600 w-4 h-4" />
+          <span>Show Banner on Store</span>
+        </label>
+      </div>
+      <form onsubmit="saveBanner(event)" class="grid grid-cols-1 md:grid-cols-4 gap-2.5">
+        <input required id="bannerText" type="text" placeholder="e.g. Weekend Promo: 10% off all luxury handbags & watches!"
+          class="md:col-span-2 border rounded-lg px-3 py-2 text-sm" />
+        <select id="bannerColor" class="border rounded-lg px-3 py-2 text-sm bg-white">
+          <option value="gold">Gold Banner (Promo)</option>
+          <option value="green">Green Banner (Good News)</option>
+          <option value="red">Red Banner (Urgent Notice)</option>
+          <option value="dark">Luxury Black &amp; Gold</option>
+        </select>
+        <button type="submit" id="saveBannerBtn" class="bg-stone-900 hover:bg-amber-700 text-white rounded-lg text-xs font-bold py-2.5 transition">
+          Update Banner
+        </button>
+      </form>
+    </section>
 
     <!-- Add Product Card -->
     <section class="bg-white p-5 rounded-2xl shadow-sm space-y-4">
@@ -97,6 +121,26 @@
       location.reload();
     }
 
+    async function saveBanner(e) {
+      e.preventDefault();
+      const btn = document.getElementById('saveBannerBtn');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      const { error } = await sb.from('store_settings').upsert({
+        id: 'main',
+        banner_active: document.getElementById('bannerActive').checked,
+        banner_text: document.getElementById('bannerText').value.trim(),
+        banner_color: document.getElementById('bannerColor').value,
+        updated_at: new Date().toISOString()
+      });
+
+      btn.disabled = false;
+      btn.textContent = 'Update Banner';
+      if (error) return alert('Error saving banner: ' + error.message);
+      alert('Store banner updated! Customers will see it immediately.');
+    }
+
     async function addProduct(e) {
       e.preventDefault();
       const btn = document.getElementById('saveProdBtn');
@@ -112,7 +156,7 @@
         if (upErr) {
           btn.disabled = false;
           btn.textContent = 'Publish Product to Store';
-          return alert('Image upload failed (create public bucket "product-images" in Supabase Storage or paste an image URL): ' + upErr.message);
+          return alert('Image upload failed: ' + upErr.message);
         }
         const { data: pub } = sb.storage.from('product-images').getPublicUrl(fileName);
         imageUrl = pub.publicUrl;
@@ -155,10 +199,17 @@
     }
 
     async function loadData() {
-      const [{ data: prods }, { data: zones }] = await Promise.all([
+      const [{ data: prods }, { data: zones }, { data: banner }] = await Promise.all([
         sb.from('products').select('*').order('created_at', { ascending: false }),
-        sb.from('shipping_zones').select('*').order('country_name')
+        sb.from('shipping_zones').select('*').order('country_name'),
+        sb.from('store_settings').select('*').eq('id', 'main').maybeSingle()
       ]);
+
+      if (banner) {
+        document.getElementById('bannerActive').checked = !!banner.banner_active;
+        document.getElementById('bannerText').value = banner.banner_text || '';
+        document.getElementById('bannerColor').value = banner.banner_color || 'gold';
+      }
 
       document.getElementById('adminProducts').innerHTML = (prods || []).map(p => `
         <div class="flex items-center justify-between border p-3 rounded-xl">
@@ -182,5 +233,4 @@
     checkSession();
   </script>
 </body>
-        </html>
-  
+</html>
