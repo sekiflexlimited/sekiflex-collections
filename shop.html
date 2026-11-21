@@ -13,6 +13,22 @@
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     .font-editorial { font-family: 'Playfair Display', serif; }
+    @keyframes trackZoomPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.45);
+      }
+      50% {
+        transform: scale(1.07);
+        box-shadow: 0 0 0 6px rgba(217, 119, 6, 0);
+      }
+    }
+    .track-zoom-btn {
+      animation: trackZoomPulse 2s ease-in-out infinite;
+    }
+    .track-zoom-btn:hover {
+      animation-play-state: paused;
+    }
   </style>
 </head>
 <body class="bg-[#FAF8F5] text-stone-900 antialiased selection:bg-amber-200">
@@ -24,15 +40,16 @@
 
   <!-- Header -->
   <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200/80">
-    <div class="max-w-6xl mx-auto px-3.5 py-3 flex items-center justify-between gap-2">
-      <a href="index.html" class="font-editorial font-bold text-base sm:text-xl tracking-tight text-stone-900 whitespace-nowrap">
+    <div class="max-w-6xl mx-auto px-3 py-3 flex items-center justify-between gap-1.5">
+      <a href="index.html" class="font-editorial font-bold text-sm sm:text-xl tracking-tight text-stone-900 whitespace-nowrap">
         SEKIFLEX <span class="text-amber-700">COLLECTIONS</span>
       </a>
-      <div class="flex items-center gap-2 shrink-0">
-        <a href="track.html" class="text-[11px] sm:text-xs font-semibold px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full border border-stone-300 text-stone-700 hover:bg-stone-100 transition whitespace-nowrap">
-          Track Order
+      <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+        <a href="track.html" class="track-zoom-btn inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-bold px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-full border border-amber-500/80 bg-amber-50 text-amber-950 hover:bg-amber-100 transition whitespace-nowrap">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-600 animate-ping"></span>
+          <span>Track Order</span>
         </a>
-        <button id="headerBagBtn" onclick="toggleCart(true)" class="relative bg-stone-900 text-white text-[11px] sm:text-xs font-semibold px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full hover:bg-amber-800 transition shadow-sm whitespace-nowrap">
+        <button id="headerBagBtn" onclick="toggleCart(true)" class="relative bg-stone-900 text-white text-[11px] sm:text-xs font-semibold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full hover:bg-amber-800 transition shadow-sm whitespace-nowrap">
           Bag (<span id="cartCount">0</span>)
         </button>
       </div>
@@ -55,13 +72,9 @@
       <p class="text-stone-300 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
         Discover premium clothing, footwear, wristwatches, fine jewelry, bangles, designer bags, and signature fashion pieces for men and women—with instant delivery rates across all 36 states &amp; abroad, or free pickup at our Uyo HQ.
       </p>
-      <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
-        <a href="#catalogSection" class="bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-full transition shadow-lg">
+      <div class="pt-3 flex items-center justify-center">
+        <a href="#catalogSection" class="bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold uppercase tracking-widest px-8 py-3.5 rounded-full transition shadow-lg">
           Explore Collection
-        </a>
-        <a id="heroWhatsappBtn" href="https://wa.me/2349069037617" target="_blank" rel="noopener"
-           class="bg-white/10 hover:bg-white/20 backdrop-blur border border-white/25 text-white text-xs font-semibold px-5 py-3 rounded-full transition flex items-center gap-2">
-          <span>Chat on WhatsApp</span>
         </a>
       </div>
     </div>
@@ -69,22 +82,22 @@
 
   <!-- Store Highlights Strip -->
   <section class="bg-white border-b border-stone-200/80">
-    <div class="max-w-6xl mx-auto px-4 py-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-center sm:text-left">
-      <div class="flex items-center justify-center sm:justify-start gap-3">
+    <div class="max-w-6xl mx-auto px-4 py-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
+      <div class="flex items-center gap-3">
         <span class="w-8 h-8 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center font-bold text-sm border border-amber-200 shrink-0">01</span>
         <div>
           <p class="text-xs font-bold text-stone-900">Walk-In Store Pickup (Free)</p>
           <p class="text-[11px] text-stone-500">Urua Ekpa, Uyo &bull; Mon–Sat 7:30am–9pm</p>
         </div>
       </div>
-      <div class="flex items-center justify-center sm:justify-start gap-3">
+      <div class="flex items-center gap-3">
         <span class="w-8 h-8 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center font-bold text-sm border border-amber-200 shrink-0">02</span>
         <div>
           <p class="text-xs font-bold text-stone-900">36 States &amp; Global Shipping</p>
           <p class="text-[11px] text-stone-500">Nigeria, UK, USA, Canada &amp; Ghana</p>
         </div>
       </div>
-      <div class="flex items-center justify-center sm:justify-start gap-3">
+      <div class="flex items-center gap-3">
         <span class="w-8 h-8 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center font-bold text-sm border border-amber-200 shrink-0">03</span>
         <div>
           <p class="text-xs font-bold text-stone-900">Instant Live Tracking</p>
@@ -145,7 +158,7 @@
   </main>
 
   <!-- Store Location & Customer Care Footer -->
-  <footer class="bg-stone-950 text-stone-300 mt-14 border-t border-stone-800 pb-16 md:pb-4">
+  <footer class="bg-stone-950 text-stone-300 mt-14 border-t border-stone-800 pb-20 md:pb-6">
     <div class="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
       <div class="space-y-2.5">
         <h3 class="font-editorial text-xl font-bold text-white">SEKIFLEX <span class="text-amber-500">COLLECTIONS</span></h3>
@@ -165,7 +178,7 @@
         <div class="flex flex-wrap gap-2 pt-1">
           <a id="footerWhatsappBtn" href="https://wa.me/2349069037617" target="_blank" rel="noopener"
              class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-2 rounded-full transition">
-            WhatsApp Store
+            Contact Support
           </a>
           <a id="footerCallBtn" href="tel:+2349163755234"
              class="border border-stone-700 hover:bg-stone-800 text-white text-xs font-semibold px-4 py-2 rounded-full transition">
@@ -188,11 +201,11 @@
     </button>
   </div>
 
-  <!-- Floating WhatsApp Concierge Button -->
-  <a id="floatingWhatsappBtn" href="https://wa.me/2349069037617" target="_blank" rel="noopener" aria-label="Chat with Sekiflex on WhatsApp"
+  <!-- Floating Contact Support Button -->
+  <a id="floatingWhatsappBtn" href="https://wa.me/2349069037617" target="_blank" rel="noopener" aria-label="Contact Sekiflex Support on WhatsApp"
      class="fixed bottom-5 right-5 z-40 bg-emerald-600 hover:bg-emerald-500 text-white shadow-xl rounded-full px-4 py-3 flex items-center gap-2 text-xs font-bold transition transform hover:scale-105">
     <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.5 0 .16 5.34.16 11.9c0 2.1.55 4.14 1.6 5.95L0 24l6.33-1.66a11.86 11.86 0 0 0 5.73 1.46h.01c6.56 0 11.9-5.34 11.9-11.9 0-3.18-1.24-6.17-3.45-8.42zM12.07 21.8h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.76.98 1-3.66-.24-.38a9.84 9.84 0 0 1-1.51-5.25c0-5.45 4.44-9.89 9.9-9.89 2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 0 1 2.9 7c0 5.45-4.44 9.89-9.88 9.89zm5.43-7.41c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/></svg>
-    <span>Chat / Directions</span>
+    <span>Contact Support</span>
   </a>
 
   <!-- Cart & Checkout Drawer -->
@@ -257,7 +270,7 @@
             <div class="pt-1 flex flex-wrap gap-2">
               <a id="pickupWhatsappBtn" href="https://wa.me/2349069037617" target="_blank" rel="noopener"
                  class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-3 py-1.5 rounded-lg text-[11px]">
-                WhatsApp 09069037617
+                Contact Support
               </a>
               <a id="pickupCallBtn" href="tel:+2349163755234"
                  class="bg-white border border-amber-300 text-amber-900 font-semibold px-3 py-1.5 rounded-lg text-[11px]">
@@ -384,12 +397,11 @@
     }
 
     function setupContactLinks() {
-      const generalMsg = encodeURIComponent('Hello Sekiflex Collections! I am browsing your online store and would like to make an inquiry.');
-      const directionsMsg = encodeURIComponent('Hello Sekiflex Collections! Please share directions to your walk-in store at Urua Ekpa, Uyo.');
+      const generalMsg = encodeURIComponent('Hello Sekiflex Collections Support! I am browsing your online store and need assistance.');
+      const directionsMsg = encodeURIComponent('Hello Sekiflex Collections Support! Please share directions to your walk-in store at Urua Ekpa, Uyo.');
       const generalWa = `https://wa.me/${STORE_WHATSAPP_NUMBER}?text=${generalMsg}`;
       const directionsWa = `https://wa.me/${STORE_WHATSAPP_NUMBER}?text=${directionsMsg}`;
 
-      document.getElementById('heroWhatsappBtn').href = generalWa;
       document.getElementById('footerWhatsappBtn').href = directionsWa;
       document.getElementById('floatingWhatsappBtn').href = generalWa;
       document.getElementById('pickupWhatsappBtn').href = directionsWa;
