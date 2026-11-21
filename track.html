@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,13 +8,10 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="styles.css">
 
   <style>
-    /* Improved Back to Sekiflex Collections button */
     .subpage-main .back-link {
       display: flex;
       width: fit-content;
@@ -33,18 +29,41 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       transition: all 0.25s ease;
     }
-
     .subpage-main .back-link:hover {
       background: #17191d;
       color: #f5c451;
       border-color: #17191d;
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
     }
-
-    .subpage-main .back-link:focus-visible {
-      outline: 3px solid #d99a20;
-      outline-offset: 4px;
+    .order-card {
+      margin-top: 20px;
+      background: #1f2229;
+      border: 1px solid rgba(245, 196, 81, 0.35);
+      border-radius: 16px;
+      padding: 18px;
+      text-align: left;
+      color: #f4f4f5;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .order-badge {
+      display: inline-block;
+      background: #f5c451;
+      color: #17191d;
+      font-weight: 800;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+    .order-row {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 8px 0;
+    }
+    .order-label {
+      color: #a1a1aa;
+      font-size: 12px;
+      display: block;
     }
   </style>
 </head>
@@ -61,8 +80,7 @@
     </a>
 
     <nav class="main-nav">
-      <a href="index.html">Home</a>
-      <a href="https://sekiflexcollections.com" target="_blank" rel="noopener">Shop online ↗</a>
+      <a href="index.html">Shop Online</a>
     </nav>
   </header>
 
@@ -79,19 +97,17 @@
     <form class="tracking-form" id="tracking-form">
 
       <label for="tracking-number">Your SC tracking number</label>
-
       <div class="tracking-input-row">
         <input
           id="tracking-number"
           name="tracking-number"
-          placeholder="e.g. SC-2026-000125"
+          placeholder="e.g. SC-2026-3PRS40"
           autocomplete="off"
           required
         >
       </div>
 
       <label for="phone-last4">Last 4 digits of your registered phone number</label>
-
       <input
         id="phone-last4"
         name="phone-last4"
@@ -99,11 +115,11 @@
         inputmode="numeric"
         maxlength="4"
         pattern="[0-9]{4}"
-        placeholder="e.g. 1234"
+        placeholder="e.g. 7617"
         required
       >
 
-      <button class="btn btn-gold" type="submit">
+      <button class="btn btn-gold" id="trackSubmitBtn" type="submit">
         Track order →
       </button>
 
@@ -112,7 +128,6 @@
       </small>
 
       <p class="form-message" id="tracking-message" role="status"></p>
-
       <div id="tracking-result" aria-live="polite"></div>
 
     </form>
@@ -121,7 +136,7 @@
       <span class="help-icon">i</span>
       <p>
         <strong>Don't have your SC number?</strong><br>
-        Contact the Sekiflex Collections team using the WhatsApp channel you used to place your order.
+        Contact Sekiflex Collections Support on WhatsApp: <strong>09069037617</strong>.
       </p>
     </div>
 
@@ -144,7 +159,94 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
-  <script src="app.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
 
+    // Auto-fill tracking number if opened from ?tracking=SC-2026-...
+    const urlParams = new URLSearchParams(window.location.search);
+    const prefillCode = urlParams.get('tracking');
+    if (prefillCode) {
+      document.getElementById('tracking-number').value = prefillCode.trim().toUpperCase();
+    }
+
+    document.getElementById('tracking-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const rawCode = document.getElementById('tracking-number').value.trim().toUpperCase();
+      const last4 = document.getElementById('phone-last4').value.trim();
+      const msgEl = document.getElementById('tracking-message');
+      const resEl = document.getElementById('tracking-result');
+      const btn = document.getElementById('trackSubmitBtn');
+
+      msgEl.textContent = '';
+      resEl.innerHTML = '';
+
+      if (!/^SC-[A-Z0-9-]+$/i.test(rawCode)) {
+        msgEl.style.color = '#f87171';
+        msgEl.textContent = 'Please enter a valid SC tracking number (e.g. SC-2026-3PRS40).';
+        return;
+      }
+
+      if (!/^\d{4}$/.test(last4)) {
+        msgEl.style.color = '#f87171';
+        msgEl.textContent = 'Please enter the last 4 digits of your phone number.';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Checking Order...';
+
+      const { data, error } = await sb
+        .from('orders')
+        .select('*')
+        .ilike('tracking_number', rawCode)
+        .maybeSingle();
+
+      btn.disabled = false;
+      btn.textContent = 'Track order →';
+
+      if (error || !data) {
+        msgEl.style.color = '#f87171';
+        msgEl.textContent = 'Order not found. Double-check zero (0) vs letter (O) in your tracking code.';
+        return;
+      }
+
+      const digitsOnly = String(data.customer_phone || '').replace(/\D/g, '');
+      if (!digitsOnly.endsWith(last4)) {
+        msgEl.style.color = '#f87171';
+        msgEl.textContent = 'Phone digits do not match this tracking number.';
+        return;
+      }
+
+      const totalPaid = Number(data.order_amount || 0) + Number(data.delivery_amount || 0);
+      resEl.innerHTML = `
+        <div class="order-card">
+          <span class="order-badge">${data.status || 'Processing'}</span>
+          <div style="font-weight:700; font-size:16px; color:#f5c451;">${data.tracking_number}</div>
+          <div class="order-row">
+            <span class="order-label">Customer</span>
+            <strong>${data.customer_name || 'Customer'}</strong>
+          </div>
+          <div class="order-row">
+            <span class="order-label">Items Ordered</span>
+            ${data.package_description || 'Sekiflex Store Order'}
+          </div>
+          <div class="order-row">
+            <span class="order-label">Delivery / Pickup Method</span>
+            ${data.destination || 'Uyo HQ Pickup'}
+          </div>
+          <div class="order-row">
+            <span class="order-label">Courier &amp; Estimate</span>
+            ${data.courier_name || 'Sekiflex Dispatch'} (${data.estimate_delivery || 'Confirmed'})
+          </div>
+          ${totalPaid > 0 ? `
+          <div class="order-row">
+            <span class="order-label">Total Amount</span>
+            <strong>₦${totalPaid.toLocaleString()}</strong>
+          </div>` : ''}
+        </div>
+      `;
+    });
+  </script>
 </body>
 </html>
