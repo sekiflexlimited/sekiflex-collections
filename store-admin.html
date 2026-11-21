@@ -37,23 +37,44 @@
 
     <!-- Store Promo / Announcement Banner Card -->
     <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-amber-500">
-      <div class="flex items-center justify-between">
+      <div class="flex items-center justify-between gap-2">
         <h2 class="font-bold text-base">Store Promo / Announcement Banner</h2>
-        <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer">
+        <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer shrink-0">
           <input id="bannerActive" type="checkbox" checked class="accent-amber-600 w-4 h-4" />
-          <span>Show Banner on Store</span>
+          <span>Show Banner</span>
         </label>
       </div>
-      <form onsubmit="saveBanner(event)" class="grid grid-cols-1 md:grid-cols-4 gap-2.5">
+      <form onsubmit="saveBanner(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <input required id="bannerText" type="text" placeholder="e.g. Weekend Promo: 10% off all luxury handbags & watches!"
-          class="md:col-span-2 border rounded-lg px-3 py-2 text-sm" />
+          class="border rounded-lg px-3 py-2 text-sm" />
         <select id="bannerColor" class="border rounded-lg px-3 py-2 text-sm bg-white">
           <option value="gold">Gold Banner (Promo)</option>
           <option value="green">Green Banner (Good News)</option>
           <option value="red">Red Banner (Urgent Notice)</option>
           <option value="dark">Luxury Black &amp; Gold</option>
         </select>
-        <button type="submit" id="saveBannerBtn" class="bg-stone-900 hover:bg-amber-700 text-white rounded-lg text-xs font-bold py-2.5 transition">
+
+        <!-- Optional Banner Image Upload or URL -->
+        <div class="space-y-1">
+          <label class="block text-[11px] font-semibold text-stone-500">Optional Banner Picture (Upload)</label>
+          <input id="bannerImgFile" type="file" accept="image/*" class="w-full border rounded-lg px-3 py-1.5 text-xs bg-stone-50" />
+        </div>
+        <div class="space-y-1">
+          <label class="block text-[11px] font-semibold text-stone-500">Or Paste Banner Image URL (Optional)</label>
+          <input id="bannerImgUrl" type="url" placeholder="https://... (leave empty for text-only banner)" class="w-full border rounded-lg px-3 py-2 text-sm" />
+        </div>
+
+        <div id="bannerPreviewWrap" class="hidden md:col-span-2 flex items-center justify-between bg-stone-50 border rounded-xl p-2.5">
+          <div class="flex items-center gap-2.5">
+            <img id="bannerPreviewImg" src="" alt="Banner preview" class="w-12 h-12 object-cover rounded-lg border" />
+            <span class="text-xs text-stone-600 font-medium">Current Banner Picture</span>
+          </div>
+          <button type="button" onclick="clearBannerImage()" class="text-xs text-red-600 font-semibold px-2.5 py-1 rounded-lg border border-red-200 hover:bg-red-50">
+            Remove Picture
+          </button>
+        </div>
+
+        <button type="submit" id="saveBannerBtn" class="md:col-span-2 bg-stone-900 hover:bg-amber-700 text-white rounded-xl text-xs font-bold py-3 transition">
           Update Banner
         </button>
       </form>
@@ -121,23 +142,48 @@
       location.reload();
     }
 
+    function clearBannerImage() {
+      document.getElementById('bannerImgUrl').value = '';
+      document.getElementById('bannerImgFile').value = '';
+      document.getElementById('bannerPreviewWrap').classList.add('hidden');
+    }
+
     async function saveBanner(e) {
       e.preventDefault();
       const btn = document.getElementById('saveBannerBtn');
       btn.disabled = true;
-      btn.textContent = 'Saving...';
+      btn.textContent = 'Saving Banner...';
+
+      let bannerImgUrl = document.getElementById('bannerImgUrl').value.trim() || null;
+      const file = document.getElementById('bannerImgFile').files[0];
+
+      if (file) {
+        const fileName = `banner-${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
+        const { error: upErr } = await sb.storage.from('product-images').upload(fileName, file);
+        if (upErr) {
+          btn.disabled = false;
+          btn.textContent = 'Update Banner';
+          return alert('Banner image upload failed: ' + upErr.message);
+        }
+        const { data: pub } = sb.storage.from('product-images').getPublicUrl(fileName);
+        bannerImgUrl = pub.publicUrl;
+      }
 
       const { error } = await sb.from('store_settings').upsert({
         id: 'main',
         banner_active: document.getElementById('bannerActive').checked,
         banner_text: document.getElementById('bannerText').value.trim(),
         banner_color: document.getElementById('bannerColor').value,
+        banner_image_url: bannerImgUrl,
         updated_at: new Date().toISOString()
       });
 
       btn.disabled = false;
       btn.textContent = 'Update Banner';
       if (error) return alert('Error saving banner: ' + error.message);
+
+      document.getElementById('bannerImgFile').value = '';
+      loadData();
       alert('Store banner updated! Customers will see it immediately.');
     }
 
@@ -209,6 +255,14 @@
         document.getElementById('bannerActive').checked = !!banner.banner_active;
         document.getElementById('bannerText').value = banner.banner_text || '';
         document.getElementById('bannerColor').value = banner.banner_color || 'gold';
+        document.getElementById('bannerImgUrl').value = banner.banner_image_url || '';
+
+        if (banner.banner_image_url) {
+          document.getElementById('bannerPreviewImg').src = banner.banner_image_url;
+          document.getElementById('bannerPreviewWrap').classList.remove('hidden');
+        } else {
+          document.getElementById('bannerPreviewWrap').classList.add('hidden');
+        }
       }
 
       document.getElementById('adminProducts').innerHTML = (prods || []).map(p => `
