@@ -30,7 +30,7 @@
   <!-- Hero -->
   <section class="bg-stone-900 text-white py-10 px-4 text-center">
     <h1 class="text-2xl md:text-4xl font-bold mb-2">Shop Sekiflex Collections</h1>
-    <p class="text-stone-300 text-sm max-w-md mx-auto">Order directly online, calculate instant delivery to your state/country, and get your live tracking code immediately.</p>
+    <p class="text-stone-300 text-sm max-w-md mx-auto">Order directly online for nationwide/worldwide delivery or free walk-in pickup at our Uyo HQ, and get your live tracking code immediately.</p>
   </section>
 
   <!-- Category Filter -->
@@ -92,32 +92,58 @@
 
         <div id="cartItems" class="space-y-3 mb-5"></div>
 
-        <!-- Customer Shipping Form -->
+        <!-- Customer Shipping / Pickup Form -->
         <form id="checkoutForm" onsubmit="placeOrder(event)" class="space-y-3 border-t pt-4">
-          <h3 class="font-semibold text-sm text-stone-700">Delivery Details</h3>
+          <h3 class="font-semibold text-sm text-stone-700">How Would You Like to Receive Your Order?</h3>
+
+          <!-- Fulfillment Method Toggle -->
+          <div class="grid grid-cols-2 gap-2 bg-stone-100 p-1 rounded-xl">
+            <button type="button" id="btnDeliveryMode" onclick="setFulfillmentMode('delivery')"
+              class="py-2 px-3 rounded-lg text-xs font-bold bg-stone-900 text-white transition">
+              Courier Delivery
+            </button>
+            <button type="button" id="btnPickupMode" onclick="setFulfillmentMode('pickup')"
+              class="py-2 px-3 rounded-lg text-xs font-bold text-stone-700 hover:bg-stone-200 transition">
+              Store Pickup (Free)
+            </button>
+          </div>
+
           <input required id="custName" type="text" placeholder="Full Name" class="w-full border rounded-lg px-3 py-2 text-sm" />
           <input required id="custEmail" type="email" placeholder="Email Address (for tracking receipt)" class="w-full border rounded-lg px-3 py-2 text-sm" />
           <input required id="custPhone" type="tel" placeholder="Phone / WhatsApp Number" class="w-full border rounded-lg px-3 py-2 text-sm" />
 
-          <div class="grid grid-cols-2 gap-2">
-            <select required id="custCountry" onchange="handleCountryChange()" class="w-full border rounded-lg px-3 py-2 text-sm bg-white">
-              <option value="Nigeria">Nigeria</option>
-              <option value="United Kingdom">United Kingdom</option>
-              <option value="United States">United States</option>
-              <option value="Canada">Canada</option>
-              <option value="Ghana">Ghana</option>
-            </select>
+          <!-- Courier Delivery Fields -->
+          <div id="deliveryFields" class="space-y-3">
+            <div class="grid grid-cols-2 gap-2">
+              <select required id="custCountry" onchange="handleCountryChange()" class="w-full border rounded-lg px-3 py-2 text-sm bg-white">
+                <option value="Nigeria">Nigeria</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="United States">United States</option>
+                <option value="Canada">Canada</option>
+                <option value="Ghana">Ghana</option>
+              </select>
 
-            <select required id="custStateSelect" onchange="updateShippingFee()" class="w-full border rounded-lg px-3 py-2 text-sm bg-white">
-              <option value="">Select State...</option>
-            </select>
+              <select required id="custStateSelect" onchange="updateShippingFee()" class="w-full border rounded-lg px-3 py-2 text-sm bg-white">
+                <option value="">Select State...</option>
+              </select>
 
-            <input id="custStateText" oninput="updateShippingFee()" type="text" placeholder="State / Province" class="hidden w-full border rounded-lg px-3 py-2 text-sm" />
+              <input id="custStateText" oninput="updateShippingFee()" type="text" placeholder="State / Province" class="hidden w-full border rounded-lg px-3 py-2 text-sm" />
+            </div>
+
+            <input required id="custCity" type="text" placeholder="City" class="w-full border rounded-lg px-3 py-2 text-sm" />
+            <input required id="custAddress" type="text" placeholder="Full Street Delivery Address" class="w-full border rounded-lg px-3 py-2 text-sm" />
           </div>
 
-          <input required id="custCity" type="text" placeholder="City" class="w-full border rounded-lg px-3 py-2 text-sm" />
-          <input required id="custAddress" type="text" placeholder="Full Street Delivery Address" class="w-full border rounded-lg px-3 py-2 text-sm" />
-          <input id="custNotes" type="text" placeholder="Delivery note / size preference (optional)" class="w-full border rounded-lg px-3 py-2 text-sm" />
+          <!-- Walk-In Store Pickup Info Box -->
+          <div id="pickupInfoBox" class="hidden bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-xs space-y-1.5">
+            <p class="font-bold text-amber-900 text-sm">Walk-In Store Pickup — Uyo HQ (FREE)</p>
+            <p class="text-stone-700"><span class="font-semibold">Location:</span> Urua Ekpa, Uyo, Akwa Ibom State</p>
+            <p class="text-stone-700"><span class="font-semibold">Mon – Sat:</span> 7:30 AM – 9:00 PM</p>
+            <p class="text-stone-700"><span class="font-semibold">Sunday:</span> 2:00 PM – 9:00 PM</p>
+            <p class="text-amber-800 pt-1">Show your order tracking number at the counter when picking up.</p>
+          </div>
+
+          <input id="custNotes" type="text" placeholder="Delivery/pickup note or size preference (optional)" class="w-full border rounded-lg px-3 py-2 text-sm" />
 
           <!-- Totals -->
           <div class="bg-stone-100 rounded-xl p-3 text-sm space-y-1">
@@ -139,7 +165,7 @@
     <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center space-y-4">
       <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto text-2xl font-bold">&#10003;</div>
       <h2 class="text-xl font-bold">Order Registered!</h2>
-      <p class="text-xs text-stone-600">Save your tracking number below to monitor your dispatch live:</p>
+      <p class="text-xs text-stone-600">Save your tracking number below to monitor your dispatch or present at our Uyo HQ counter:</p>
       <div class="bg-stone-100 border border-dashed border-stone-400 rounded-xl py-3 px-4 font-mono text-lg font-bold text-amber-700" id="newTrackingCode"></div>
       <div class="flex gap-2">
         <button onclick="copyTracking()" class="flex-1 border border-stone-300 py-2.5 rounded-xl text-xs font-semibold">Copy Code</button>
@@ -162,6 +188,7 @@
     let shippingZones = JSON.parse(localStorage.getItem('sekiflex_zones_cache') || '[]');
     let cart = JSON.parse(localStorage.getItem('sekiflex_cart') || '[]');
     let activeCategory = 'ALL';
+    let fulfillmentMode = 'delivery'; // 'delivery' or 'pickup'
     let currentShippingFee = 0;
     let currentEstDays = 'select state';
 
@@ -171,6 +198,42 @@
         NIGERIA_STATES.map(st => `<option value="${st}">${st}</option>`).join('');
     }
 
+    function setFulfillmentMode(mode) {
+      fulfillmentMode = mode;
+      const btnDel = document.getElementById('btnDeliveryMode');
+      const btnPick = document.getElementById('btnPickupMode');
+      const delFields = document.getElementById('deliveryFields');
+      const pickBox = document.getElementById('pickupInfoBox');
+      const cityEl = document.getElementById('custCity');
+      const addrEl = document.getElementById('custAddress');
+      const countryEl = document.getElementById('custCountry');
+
+      if (mode === 'pickup') {
+        btnPick.className = 'py-2 px-3 rounded-lg text-xs font-bold bg-stone-900 text-white transition';
+        btnDel.className = 'py-2 px-3 rounded-lg text-xs font-bold text-stone-700 hover:bg-stone-200 transition';
+        delFields.classList.add('hidden');
+        pickBox.classList.remove('hidden');
+
+        countryEl.required = false;
+        document.getElementById('custStateSelect').required = false;
+        document.getElementById('custStateText').required = false;
+        cityEl.required = false;
+        addrEl.required = false;
+      } else {
+        btnDel.className = 'py-2 px-3 rounded-lg text-xs font-bold bg-stone-900 text-white transition';
+        btnPick.className = 'py-2 px-3 rounded-lg text-xs font-bold text-stone-700 hover:bg-stone-200 transition';
+        delFields.classList.remove('hidden');
+        pickBox.classList.add('hidden');
+
+        countryEl.required = true;
+        cityEl.required = true;
+        addrEl.required = true;
+        handleCountryChange();
+        return;
+      }
+      updateShippingFee();
+    }
+
     function handleCountryChange() {
       const country = document.getElementById('custCountry').value;
       const sel = document.getElementById('custStateSelect');
@@ -178,7 +241,7 @@
 
       if (country === 'Nigeria') {
         sel.classList.remove('hidden');
-        sel.required = true;
+        sel.required = (fulfillmentMode === 'delivery');
         txt.classList.add('hidden');
         txt.required = false;
         txt.value = '';
@@ -187,7 +250,7 @@
         sel.required = false;
         sel.value = '';
         txt.classList.remove('hidden');
-        txt.required = true;
+        txt.required = (fulfillmentMode === 'delivery');
       }
       updateShippingFee();
     }
@@ -215,7 +278,6 @@
       populateNigeriaStates();
       renderCart();
 
-      // Instant render from local cache if available (0ms load)
       if (allProducts.length) {
         renderProducts(allProducts);
       }
@@ -225,7 +287,6 @@
       }
       updateShippingFee();
 
-      // Quietly fetch fresh live data from Supabase in the background
       const [{ data: products }, { data: zones }, { data: cats }] = await Promise.all([
         sb.from('products').select('*').eq('is_active', true).order('created_at', { ascending: false }),
         sb.from('shipping_zones').select('*').eq('is_active', true),
@@ -312,6 +373,13 @@
     }
 
     function updateShippingFee() {
+      if (fulfillmentMode === 'pickup') {
+        currentShippingFee = 0;
+        currentEstDays = 'Uyo HQ Pickup';
+        renderCart();
+        return;
+      }
+
       const country = (document.getElementById('custCountry').value || '').trim().toLowerCase();
       const state = getSelectedState().toLowerCase();
 
@@ -335,7 +403,13 @@
       const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
       document.getElementById('cartCount').textContent = count;
       document.getElementById('subTotalText').textContent = '₦' + sub.toLocaleString();
-      document.getElementById('shipFeeText').textContent = currentShippingFee > 0 ? '₦' + currentShippingFee.toLocaleString() : '—';
+
+      if (fulfillmentMode === 'pickup') {
+        document.getElementById('shipFeeText').textContent = 'FREE (₦0)';
+      } else {
+        document.getElementById('shipFeeText').textContent = currentShippingFee > 0 ? '₦' + currentShippingFee.toLocaleString() : '—';
+      }
+
       document.getElementById('estDaysText').textContent = currentEstDays;
       document.getElementById('grandTotalText').textContent = '₦' + (sub + currentShippingFee).toLocaleString();
 
@@ -365,10 +439,19 @@
     async function placeOrder(e) {
       e.preventDefault();
       if (!cart.length) return alert('Add at least one item to your bag first.');
-      const country = document.getElementById('custCountry').value.trim();
-      const state = getSelectedState();
-      if (country === 'Nigeria' && !state) {
-        return alert('Please select your delivery state first.');
+
+      let country = 'Nigeria';
+      let destination = 'Store Pickup — Sekiflex HQ, Urua Ekpa, Uyo, Akwa Ibom State';
+
+      if (fulfillmentMode === 'delivery') {
+        country = document.getElementById('custCountry').value.trim();
+        const state = getSelectedState();
+        if (country === 'Nigeria' && !state) {
+          return alert('Please select your delivery state first.');
+        }
+        const city = document.getElementById('custCity').value.trim();
+        const address = document.getElementById('custAddress').value.trim();
+        destination = `${address}, ${city}, ${state}, ${country}`;
       }
 
       const btn = document.getElementById('submitBtn');
@@ -378,9 +461,6 @@
       const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
       const tracking = 'SC-2026-' + Math.random().toString(36).substring(2, 8).toUpperCase();
       const summary = cart.map(i => `${i.qty}x ${i.name}`).join('; ');
-      const city = document.getElementById('custCity').value.trim();
-      const address = document.getElementById('custAddress').value.trim();
-      const destination = `${address}, ${city}, ${state}, ${country}`;
 
       const { data: order, error } = await sb.from('orders').insert({
         tracking_number: tracking,
@@ -394,7 +474,7 @@
         order_amount: sub,
         delivery_amount: currentShippingFee,
         status: 'Order Placed',
-        courier_name: 'Sekiflex Dispatch',
+        courier_name: fulfillmentMode === 'pickup' ? 'Walk-In Store Pickup (Uyo HQ)' : 'Sekiflex Dispatch',
         estimate_delivery: currentEstDays,
         country,
         currency: 'NGN',
