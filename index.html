@@ -14,183 +14,231 @@
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     .font-editorial { font-family: 'Playfair Display', serif; }
     @keyframes trackZoomPulse {
-      0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.45);
-      }
-      50% {
-        transform: scale(1.07);
-        box-shadow: 0 0 0 6px rgba(217, 119, 6, 0);
-      }
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.45); }
+      50% { transform: scale(1.07); box-shadow: 0 0 0 6px rgba(217, 119, 6, 0); }
     }
-    .track-zoom-btn {
-      animation: trackZoomPulse 2s ease-in-out infinite;
-    }
-    .track-zoom-btn:hover {
-      animation-play-state: paused;
-    }
+    .track-zoom-btn { animation: trackZoomPulse 2s ease-in-out infinite; }
+    .track-zoom-btn:hover { animation-play-state: paused; }
   </style>
 </head>
 <body class="bg-[#FAF8F5] text-stone-900 antialiased selection:bg-amber-200">
 
-  <!-- Top Announcement Bar -->
-  <div class="bg-stone-950 text-amber-200/95 text-[11px] tracking-wide py-2 px-4 text-center font-medium">
-    Walk-In HQ: Urua Ekpa, Uyo, Akwa Ibom &bull; Worldwide Dispatch (NG, UK, US, CA, GH)
-  </div>
-
-  <!-- Header -->
-  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200/80">
-    <div class="max-w-6xl mx-auto px-3 py-3 flex items-center justify-between gap-1.5">
-      <a href="index.html" class="font-editorial font-bold text-sm sm:text-xl tracking-tight text-stone-900 whitespace-nowrap">
-        SEKIFLEX <span class="text-amber-700">COLLECTIONS</span>
-      </a>
-      <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-        <a href="track.html" class="track-zoom-btn inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-bold px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-full border border-amber-500/80 bg-amber-50 text-amber-950 hover:bg-amber-100 transition whitespace-nowrap">
-          <span class="w-1.5 h-1.5 rounded-full bg-amber-600 animate-ping"></span>
-          <span>Track Order</span>
-        </a>
-        <button id="headerBagBtn" onclick="toggleCart(true)" class="relative bg-stone-900 text-white text-[11px] sm:text-xs font-semibold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full hover:bg-amber-800 transition shadow-sm whitespace-nowrap">
-          Bag (<span id="cartCount">0</span>)
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Luxury Editorial Hero -->
-  <section class="relative overflow-hidden bg-stone-950 text-white">
-    <div class="absolute inset-0 bg-cover bg-center opacity-35 scale-105"
-         style="background-image: url('https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&w=1600&q=80');"></div>
-    <div class="absolute inset-0 bg-gradient-to-b from-stone-950/75 via-stone-950/65 to-stone-950/95"></div>
-
-    <div class="relative max-w-4xl mx-auto px-4 py-14 md:py-20 text-center space-y-4">
-      <span class="inline-block text-[10px] sm:text-[11px] uppercase tracking-[0.22em] text-amber-300 font-semibold border border-amber-400/30 bg-amber-500/10 px-3.5 py-1 rounded-full">
-        Men &amp; Women &bull; Apparel &bull; Timepieces &bull; Accessories
-      </span>
-      <h1 class="font-editorial text-3xl md:text-5xl font-bold leading-tight text-white">
-        Refined Style for Every Occasion
-      </h1>
-      <p class="text-stone-300 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
-        Discover premium clothing, footwear, wristwatches, fine jewelry, bangles, designer bags, and signature fashion pieces for men and women—with instant delivery rates across all 36 states &amp; abroad, or free pickup at our Uyo HQ.
-      </p>
-      <div class="pt-3 flex items-center justify-center">
-        <a href="#catalogSection" class="bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold uppercase tracking-widest px-8 py-3.5 rounded-full transition shadow-lg">
-          Explore Collection
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Store Highlights Strip -->
-  <section class="bg-white border-b border-stone-200/80">
-    <div class="max-w-6xl mx-auto px-4 py-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
-      <div class="flex items-center gap-3">
-        <span class="w-8 h-8 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center font-bold text-sm border border-amber-200 shrink-0">01</span>
-        <div>
-          <p class="text-xs font-bold text-stone-900">Walk-In Store Pickup (Free)</p>
-          <p class="text-[11px] text-stone-500">Urua Ekpa, Uyo &bull; Mon–Sat 7:30am–9pm</p>
-        </div>
-      </div>
-      <div class="flex items-center gap-3">
-        <span class="w-8 h-8 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center font-bold text-sm border border-amber-200 shrink-0">02</span>
-        <div>
-          <p class="text-xs font-bold text-stone-900">36 States &amp; Global Shipping</p>
-          <p class="text-[11px] text-stone-500">Nigeria, UK, USA, Canada &amp; Ghana</p>
-        </div>
-      </div>
-      <div class="flex items-center gap-3">
-        <span class="w-8 h-8 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center font-bold text-sm border border-amber-200 shrink-0">03</span>
-        <div>
-          <p class="text-xs font-bold text-stone-900">Instant Live Tracking</p>
-          <p class="text-[11px] text-stone-500">Real-time dispatch code on every order</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Category Filter -->
-  <div id="catalogSection" class="max-w-6xl mx-auto px-4 pt-7 flex items-center justify-between flex-wrap gap-3">
-    <div class="flex gap-2 overflow-x-auto pb-1" id="categoryBar">
-      <button onclick="filterCategory('ALL', this)" class="cat-btn bg-stone-900 text-white text-xs font-semibold px-4 py-2 rounded-full">All Items</button>
-    </div>
-  </div>
-
-  <!-- Products Grid -->
-  <main class="max-w-6xl mx-auto px-4 py-6">
-    <div id="productsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-      <!-- Shimmering Skeleton Placeholders -->
-      <div class="bg-white rounded-2xl border border-stone-200/80 overflow-hidden animate-pulse">
-        <div class="w-full h-56 bg-stone-200"></div>
-        <div class="p-3.5 space-y-2">
-          <div class="h-4 bg-stone-200 rounded w-3/4"></div>
-          <div class="h-3 bg-stone-200 rounded w-full"></div>
-          <div class="h-4 bg-stone-200 rounded w-1/3 mt-3"></div>
-          <div class="h-9 bg-stone-200 rounded-xl w-full mt-2"></div>
-        </div>
-      </div>
-      <div class="bg-white rounded-2xl border border-stone-200/80 overflow-hidden animate-pulse">
-        <div class="w-full h-56 bg-stone-200"></div>
-        <div class="p-3.5 space-y-2">
-          <div class="h-4 bg-stone-200 rounded w-3/4"></div>
-          <div class="h-3 bg-stone-200 rounded w-full"></div>
-          <div class="h-4 bg-stone-200 rounded w-1/3 mt-3"></div>
-          <div class="h-9 bg-stone-200 rounded-xl w-full mt-2"></div>
-        </div>
-      </div>
-      <div class="bg-white rounded-2xl border border-stone-200/80 overflow-hidden animate-pulse hidden md:block">
-        <div class="w-full h-56 bg-stone-200"></div>
-        <div class="p-3.5 space-y-2">
-          <div class="h-4 bg-stone-200 rounded w-3/4"></div>
-          <div class="h-3 bg-stone-200 rounded w-full"></div>
-          <div class="h-4 bg-stone-200 rounded w-1/3 mt-3"></div>
-          <div class="h-9 bg-stone-200 rounded-xl w-full mt-2"></div>
-        </div>
-      </div>
-      <div class="bg-white rounded-2xl border border-stone-200/80 overflow-hidden animate-pulse hidden lg:block">
-        <div class="w-full h-56 bg-stone-200"></div>
-        <div class="p-3.5 space-y-2">
-          <div class="h-4 bg-stone-200 rounded w-3/4"></div>
-          <div class="h-3 bg-stone-200 rounded w-full"></div>
-          <div class="h-4 bg-stone-200 rounded w-1/3 mt-3"></div>
-          <div class="h-9 bg-stone-200 rounded-xl w-full mt-2"></div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- Store Location & Customer Care Footer -->
-  <footer class="bg-stone-950 text-stone-300 mt-14 border-t border-stone-800 pb-20 md:pb-6">
-    <div class="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
-      <div class="space-y-2.5">
-        <h3 class="font-editorial text-xl font-bold text-white">SEKIFLEX <span class="text-amber-500">COLLECTIONS</span></h3>
-        <p class="text-xs text-stone-400 leading-relaxed">
-          Your premier destination for men’s &amp; women’s apparel, luxury footwear, wristwatches, fine jewelry, bangles, designer bags, and timeless fashion essentials—with reliable dispatch across Nigeria and worldwide.
+  <!-- CUSTOMER SIGN UP / SIGN IN GATE (JUMIA / TEMU STYLE) -->
+  <div id="customerAuthGate" class="fixed inset-0 z-50 bg-stone-950/95 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl space-y-5 my-auto">
+      <div class="text-center space-y-1.5">
+        <span class="inline-block text-[10px] uppercase tracking-[0.22em] text-amber-800 font-bold bg-amber-100 px-3 py-1 rounded-full">
+          Verified Shopper Access
+        </span>
+        <h1 class="font-editorial text-2xl sm:text-3xl font-bold text-stone-900">
+          SEKIFLEX <span class="text-amber-700">COLLECTIONS</span>
+        </h1>
+        <p class="text-xs text-stone-500">
+          Create an account or sign in to browse our exclusive catalog, place orders, and track deliveries live.
         </p>
       </div>
-      <div class="space-y-2">
-        <h4 class="text-xs font-bold uppercase tracking-wider text-amber-400">Uyo Walk-In Headquarters</h4>
-        <p class="text-xs text-stone-300">Urua Ekpa, Uyo, Akwa Ibom State</p>
-        <p class="text-xs text-stone-400">Mon – Sat: 7:30 AM – 9:00 PM</p>
-        <p class="text-xs text-stone-400">Sunday: 2:00 PM – 9:00 PM</p>
+
+      <!-- Auth Tabs -->
+      <div class="grid grid-cols-2 gap-1.5 bg-stone-100 p-1 rounded-xl">
+        <button type="button" id="tabSignUpBtn" onclick="switchAuthTab('signup')"
+          class="py-2 rounded-lg text-xs font-bold bg-stone-900 text-white transition">
+          Create Account
+        </button>
+        <button type="button" id="tabSignInBtn" onclick="switchAuthTab('signin')"
+          class="py-2 rounded-lg text-xs font-bold text-stone-600 hover:text-stone-900 transition">
+          Sign In
+        </button>
       </div>
-      <div class="space-y-2.5">
-        <h4 class="text-xs font-bold uppercase tracking-wider text-amber-400">Need Directions or Size Help?</h4>
-        <p class="text-xs text-stone-400">WhatsApp: 09069037617 &bull; Call: 09163755234</p>
-        <div class="flex flex-wrap gap-2 pt-1">
-          <a id="footerWhatsappBtn" href="https://wa.me/2349069037617" target="_blank" rel="noopener"
-             class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-2 rounded-full transition">
-            Contact Support
+
+      <p id="authGateMsg" class="hidden text-xs font-semibold text-center p-2.5 rounded-xl"></p>
+
+      <!-- Sign Up Form -->
+      <form id="customerSignUpForm" onsubmit="handleCustomerSignUp(event)" class="space-y-3">
+        <input required id="regName" type="text" placeholder="Full Name (e.g. Chidinma Okafor)"
+          class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-amber-600" />
+        <input required id="regEmail" type="email" placeholder="Email Address"
+          class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-amber-600" />
+        <input required id="regPhone" type="tel" placeholder="Phone / WhatsApp Number (e.g. 08012345678)"
+          class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-amber-600" />
+        <input required id="regPassword" type="password" minlength="6" placeholder="Create Password (min. 6 characters)"
+          class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-amber-600" />
+        <button type="submit" id="regSubmitBtn"
+          class="w-full bg-stone-900 hover:bg-amber-800 text-white font-bold py-3 rounded-xl text-sm transition shadow-md">
+          Create Account &amp; Enter Store →
+        </button>
+      </form>
+
+      <!-- Sign In Form -->
+      <form id="customerSignInForm" onsubmit="handleCustomerSignIn(event)" class="hidden space-y-3">
+        <input required id="loginEmail" type="email" placeholder="Email Address"
+          class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-amber-600" />
+        <input required id="loginPassword" type="password" placeholder="Password"
+          class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-amber-600" />
+        <button type="submit" id="loginSubmitBtn"
+          class="w-full bg-stone-900 hover:bg-amber-800 text-white font-bold py-3 rounded-xl text-sm transition shadow-md">
+          Sign In to Store →
+        </button>
+      </form>
+
+      <div class="pt-2 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-500">
+        <a href="track.html" class="font-semibold text-amber-800 hover:underline">Track Existing Order →</a>
+        <span>Protected Storefront</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN STORE CONTENT (Revealed after Customer Login) -->
+  <div id="storeMainWrapper" class="hidden">
+
+    <!-- LIVE PROMO / ANNOUNCEMENT BANNER (Controlled from Store Admin) -->
+    <div id="livePromoBanner" class="hidden bg-amber-500 text-stone-950 text-xs font-bold py-2.5 px-4 text-center tracking-wide shadow-sm">
+      <span id="livePromoText"></span>
+    </div>
+
+    <!-- Top Location Bar -->
+    <div class="bg-stone-950 text-amber-200/95 text-[11px] tracking-wide py-2 px-4 text-center font-medium">
+      Walk-In HQ: Urua Ekpa, Uyo, Akwa Ibom &bull; Worldwide Dispatch (NG, UK, US, CA, GH)
+    </div>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200/80">
+      <div class="max-w-6xl mx-auto px-3 py-3 flex items-center justify-between gap-1.5">
+        <a href="index.html" class="font-editorial font-bold text-sm sm:text-xl tracking-tight text-stone-900 whitespace-nowrap">
+          SEKIFLEX <span class="text-amber-700">COLLECTIONS</span>
+        </a>
+        <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          <span id="welcomeCustomerBadge" class="hidden md:inline-block text-xs font-semibold text-stone-600 bg-stone-100 px-3 py-1.5 rounded-full"></span>
+          <a href="track.html" class="track-zoom-btn inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-bold px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-full border border-amber-500/80 bg-amber-50 text-amber-950 hover:bg-amber-100 transition whitespace-nowrap">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-600 animate-ping"></span>
+            <span>Track Order</span>
           </a>
-          <a id="footerCallBtn" href="tel:+2349163755234"
-             class="border border-stone-700 hover:bg-stone-800 text-white text-xs font-semibold px-4 py-2 rounded-full transition">
-            Call 09163755234
+          <button id="headerBagBtn" onclick="toggleCart(true)" class="relative bg-stone-900 text-white text-[11px] sm:text-xs font-semibold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full hover:bg-amber-800 transition shadow-sm whitespace-nowrap">
+            Bag (<span id="cartCount">0</span>)
+          </button>
+          <button onclick="customerLogout()" class="text-[11px] sm:text-xs font-semibold px-2.5 py-1.5 rounded-full border border-stone-300 text-stone-600 hover:bg-stone-100 transition">
+            Logout
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Luxury Editorial Hero -->
+    <section class="relative overflow-hidden bg-stone-950 text-white">
+      <div class="absolute inset-0 bg-cover bg-center opacity-35 scale-105"
+           style="background-image: url('https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&w=1600&q=80');"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-stone-950/75 via-stone-950/65 to-stone-950/95"></div>
+
+      <div class="relative max-w-4xl mx-auto px-4 py-14 md:py-20 text-center space-y-4">
+        <span class="inline-block text-[10px] sm:text-[11px] uppercase tracking-[0.22em] text-amber-300 font-semibold border border-amber-400/30 bg-amber-500/10 px-3.5 py-1 rounded-full">
+          Men &amp; Women &bull; Apparel &bull; Timepieces &bull; Accessories
+        </span>
+        <h1 class="font-editorial text-3xl md:text-5xl font-bold leading-tight text-white">
+          Refined Style for Every Occasion
+        </h1>
+        <p class="text-stone-300 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
+          Discover premium clothing, footwear, wristwatches, fine jewelry, bangles, designer bags, and signature fashion pieces for men and women—with instant delivery rates across all 36 states &amp; abroad, or free pickup at our Uyo HQ.
+        </p>
+        <div class="pt-3 flex items-center justify-center">
+          <a href="#catalogSection" class="bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold uppercase tracking-widest px-8 py-3.5 rounded-full transition shadow-lg">
+            Explore Collection
           </a>
         </div>
       </div>
+    </section>
+
+    <!-- Store Highlights Strip -->
+    <section class="bg-white border-b border-stone-200/80">
+      <div class="max-w-6xl mx-auto px-4 py-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center font-bold text-sm border border-amber-200 shrink-0">01</span>
+          <div>
+            <p class="text-xs font-bold text-stone-900">Walk-In Store Pickup (Free)</p>
+            <p class="text-[11px] text-stone-500">Urua Ekpa, Uyo &bull; Mon–Sat 7:30am–9pm</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center font-bold text-sm border border-amber-200 shrink-0">02</span>
+          <div>
+            <p class="text-xs font-bold text-stone-900">36 States &amp; Global Shipping</p>
+            <p class="text-[11px] text-stone-500">Nigeria, UK, USA, Canada &amp; Ghana</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center font-bold text-sm border border-amber-200 shrink-0">03</span>
+          <div>
+            <p class="text-xs font-bold text-stone-900">Instant Live Tracking</p>
+            <p class="text-[11px] text-stone-500">Real-time dispatch code on every order</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Category Filter -->
+    <div id="catalogSection" class="max-w-6xl mx-auto px-4 pt-7 flex items-center justify-between flex-wrap gap-3">
+      <div class="flex gap-2 overflow-x-auto pb-1" id="categoryBar">
+        <button onclick="filterCategory('ALL', this)" class="cat-btn bg-stone-900 text-white text-xs font-semibold px-4 py-2 rounded-full">All Items</button>
+      </div>
     </div>
-    <div class="border-t border-stone-900 py-4 text-center text-[11px] text-stone-500">
-      &copy; 2026 Sekiflex Collections &amp; Sekiflex Dispatch. All rights reserved.
-    </div>
-  </footer>
+
+    <!-- Products Grid -->
+    <main class="max-w-6xl mx-auto px-4 py-6">
+      <div id="productsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+        <div class="bg-white rounded-2xl border border-stone-200/80 overflow-hidden animate-pulse">
+          <div class="w-full h-56 bg-stone-200"></div>
+          <div class="p-3.5 space-y-2">
+            <div class="h-4 bg-stone-200 rounded w-3/4"></div>
+            <div class="h-3 bg-stone-200 rounded w-full"></div>
+            <div class="h-4 bg-stone-200 rounded w-1/3 mt-3"></div>
+            <div class="h-9 bg-stone-200 rounded-xl w-full mt-2"></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl border border-stone-200/80 overflow-hidden animate-pulse">
+          <div class="w-full h-56 bg-stone-200"></div>
+          <div class="p-3.5 space-y-2">
+            <div class="h-4 bg-stone-200 rounded w-3/4"></div>
+            <div class="h-3 bg-stone-200 rounded w-full"></div>
+            <div class="h-4 bg-stone-200 rounded w-1/3 mt-3"></div>
+            <div class="h-9 bg-stone-200 rounded-xl w-full mt-2"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Store Location & Customer Care Footer -->
+    <footer class="bg-stone-950 text-stone-300 mt-14 border-t border-stone-800 pb-20 md:pb-6">
+      <div class="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+        <div class="space-y-2.5">
+          <h3 class="font-editorial text-xl font-bold text-white">SEKIFLEX <span class="text-amber-500">COLLECTIONS</span></h3>
+          <p class="text-xs text-stone-400 leading-relaxed">
+            Your premier destination for men’s &amp; women’s apparel, luxury footwear, wristwatches, fine jewelry, bangles, designer bags, and timeless fashion essentials—with reliable dispatch across Nigeria and worldwide.
+          </p>
+        </div>
+        <div class="space-y-2">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-amber-400">Uyo Walk-In Headquarters</h4>
+          <p class="text-xs text-stone-300">Urua Ekpa, Uyo, Akwa Ibom State</p>
+          <p class="text-xs text-stone-400">Mon – Sat: 7:30 AM – 9:00 PM</p>
+          <p class="text-xs text-stone-400">Sunday: 2:00 PM – 9:00 PM</p>
+        </div>
+        <div class="space-y-2.5">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-amber-400">Need Directions or Size Help?</h4>
+          <p class="text-xs text-stone-400">WhatsApp: 09069037617 &bull; Call: 09163755234</p>
+          <div class="flex flex-wrap gap-2 pt-1">
+            <a id="footerWhatsappBtn" href="https://wa.me/2349069037617" target="_blank" rel="noopener"
+               class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-2 rounded-full transition">
+              Contact Support
+            </a>
+            <a id="footerCallBtn" href="tel:+2349163755234"
+               class="border border-stone-700 hover:bg-stone-800 text-white text-xs font-semibold px-4 py-2 rounded-full transition">
+              Call 09163755234
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-stone-900 py-4 text-center text-[11px] text-stone-500">
+        &copy; 2026 Sekiflex Collections &amp; Sekiflex Dispatch. All rights reserved.
+      </div>
+    </footer>
+  </div>
 
   <!-- Added-to-Bag Toast Notification -->
   <div id="bagToast" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-40 hidden bg-stone-900 text-white px-4 py-2.5 rounded-full shadow-2xl border border-stone-700 flex items-center gap-3 text-xs whitespace-nowrap">
@@ -223,7 +271,6 @@
         <form id="checkoutForm" onsubmit="placeOrder(event)" class="space-y-3 border-t border-stone-200 pt-4">
           <h3 class="font-semibold text-xs uppercase tracking-wider text-stone-500">1. How Would You Like to Receive Your Order?</h3>
 
-          <!-- Fulfillment Method Toggle -->
           <div class="grid grid-cols-2 gap-2 bg-stone-100 p-1 rounded-xl">
             <button type="button" id="btnDeliveryMode" onclick="setFulfillmentMode('delivery')"
               class="py-2 px-3 rounded-lg text-xs font-bold bg-stone-900 text-white transition">
@@ -295,7 +342,6 @@
               <p class="text-[11px] text-stone-600 mt-0.5">Transfer the exact <span class="font-bold text-stone-900" id="payBoxAmountText">₦0</span> to either official account below (applies to both delivery &amp; store pickup):</p>
             </div>
 
-            <!-- Bank Option 1: Stanbic IBTC -->
             <div class="bg-white border border-stone-200 rounded-xl p-2.5 flex items-center justify-between gap-2">
               <div class="text-xs">
                 <p class="font-bold text-stone-900">Stanbic IBTC</p>
@@ -308,7 +354,6 @@
               </button>
             </div>
 
-            <!-- Bank Option 2: OPay -->
             <div class="bg-white border border-stone-200 rounded-xl p-2.5 flex items-center justify-between gap-2">
               <div class="text-xs">
                 <p class="font-bold text-stone-900">OPay</p>
@@ -382,6 +427,158 @@
     let currentShippingFee = 0;
     let currentEstDays = 'select state';
     let toastTimer = null;
+    let currentCustomer = null;
+
+    // 1. CUSTOMER SIGN UP / SIGN IN GATE
+    function switchAuthTab(tab) {
+      const upForm = document.getElementById('customerSignUpForm');
+      const inForm = document.getElementById('customerSignInForm');
+      const upBtn = document.getElementById('tabSignUpBtn');
+      const inBtn = document.getElementById('tabSignInBtn');
+      document.getElementById('authGateMsg').classList.add('hidden');
+
+      if (tab === 'signup') {
+        upForm.classList.remove('hidden');
+        inForm.classList.add('hidden');
+        upBtn.className = 'py-2 rounded-lg text-xs font-bold bg-stone-900 text-white transition';
+        inBtn.className = 'py-2 rounded-lg text-xs font-bold text-stone-600 hover:text-stone-900 transition';
+      } else {
+        inForm.classList.remove('hidden');
+        upForm.classList.add('hidden');
+        inBtn.className = 'py-2 rounded-lg text-xs font-bold bg-stone-900 text-white transition';
+        upBtn.className = 'py-2 rounded-lg text-xs font-bold text-stone-600 hover:text-stone-900 transition';
+      }
+    }
+
+    function showAuthMessage(text, isError = true) {
+      const box = document.getElementById('authGateMsg');
+      box.textContent = text;
+      box.className = `text-xs font-semibold text-center p-2.5 rounded-xl ${
+        isError ? 'bg-red-100 text-red-800 border border-red-200' : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+      }`;
+      box.classList.remove('hidden');
+    }
+
+    async function handleCustomerSignUp(e) {
+      e.preventDefault();
+      const btn = document.getElementById('regSubmitBtn');
+      const fullName = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const phone = document.getElementById('regPhone').value.trim();
+      const password = document.getElementById('regPassword').value;
+
+      btn.disabled = true;
+      btn.textContent = 'Creating Your Account...';
+
+      const { data, error } = await sb.auth.signUp({
+        email,
+        password,
+        options: { data: { full_name: fullName, phone } }
+      });
+
+      btn.disabled = false;
+      btn.textContent = 'Create Account & Enter Store →';
+
+      if (error) return showAuthMessage(error.message, true);
+
+      if (data?.user) {
+        await sb.from('customer_profiles').upsert({
+          id: data.user.id,
+          full_name: fullName,
+          email,
+          phone
+        });
+      }
+
+      if (!data?.session) {
+        showAuthMessage('Account created! Please check your email to confirm, then sign in.', false);
+        switchAuthTab('signin');
+        return;
+      }
+
+      unlockStoreForUser(data.user, { full_name: fullName, email, phone });
+    }
+
+    async function handleCustomerSignIn(e) {
+      e.preventDefault();
+      const btn = document.getElementById('loginSubmitBtn');
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      btn.disabled = true;
+      btn.textContent = 'Signing In...';
+
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+      btn.disabled = false;
+      btn.textContent = 'Sign In to Store →';
+
+      if (error) return showAuthMessage(error.message, true);
+
+      const { data: profile } = await sb
+        .from('customer_profiles')
+        .select('*')
+        .eq('id', data.user.id)
+        .maybeSingle();
+
+      unlockStoreForUser(data.user, profile);
+    }
+
+    function unlockStoreForUser(user, profile) {
+      currentCustomer = {
+        id: user.id,
+        name: profile?.full_name || user.user_metadata?.full_name || 'Valued Shopper',
+        email: profile?.email || user.email || '',
+        phone: profile?.phone || user.user_metadata?.phone || ''
+      };
+
+      document.getElementById('customerAuthGate').classList.add('hidden');
+      document.getElementById('storeMainWrapper').classList.remove('hidden');
+
+      const badge = document.getElementById('welcomeCustomerBadge');
+      badge.textContent = `Hi, ${currentCustomer.name.split(' ')[0]}`;
+      badge.classList.remove('hidden');
+
+      prefillCustomerCheckout();
+    }
+
+    function prefillCustomerCheckout() {
+      if (!currentCustomer) return;
+      if (currentCustomer.name) document.getElementById('custName').value = currentCustomer.name;
+      if (currentCustomer.email) document.getElementById('custEmail').value = currentCustomer.email;
+      if (currentCustomer.phone) document.getElementById('custPhone').value = currentCustomer.phone;
+    }
+
+    async function customerLogout() {
+      await sb.auth.signOut();
+      location.reload();
+    }
+
+    // 2. LOAD LIVE PROMO / ANNOUNCEMENT BANNER
+    async function loadStoreBanner() {
+      const { data: banner } = await sb
+        .from('store_settings')
+        .select('*')
+        .eq('id', 'main')
+        .maybeSingle();
+
+      const bar = document.getElementById('livePromoBanner');
+      const txt = document.getElementById('livePromoText');
+      if (!banner || !banner.banner_active || !banner.banner_text) {
+        bar.classList.add('hidden');
+        return;
+      }
+
+      const colorMap = {
+        gold: 'bg-amber-500 text-stone-950',
+        green: 'bg-emerald-600 text-white',
+        red: 'bg-red-600 text-white',
+        dark: 'bg-stone-900 text-amber-300'
+      };
+      bar.className = `${colorMap[banner.banner_color] || colorMap.gold} text-xs font-bold py-2.5 px-4 text-center tracking-wide shadow-sm`;
+      txt.textContent = banner.banner_text;
+      bar.classList.remove('hidden');
+    }
 
     function copyAcct(acctNum, bankName, btnEl) {
       navigator.clipboard.writeText(acctNum);
@@ -496,13 +693,22 @@
       populateNigeriaStates();
       renderCart();
 
-      if (allProducts.length) {
-        renderProducts(allProducts);
+      // Check existing customer session first
+      const { data: { session } } = await sb.auth.getSession();
+      if (session?.user) {
+        const { data: profile } = await sb
+          .from('customer_profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .maybeSingle();
+        unlockStoreForUser(session.user, profile);
       }
+
+      loadStoreBanner();
+
+      if (allProducts.length) renderProducts(allProducts);
       const cachedCats = JSON.parse(localStorage.getItem('sekiflex_cats_cache') || '[]');
-      if (cachedCats.length) {
-        renderCategoryButtons(cachedCats);
-      }
+      if (cachedCats.length) renderCategoryButtons(cachedCats);
       updateShippingFee();
 
       const [{ data: products }, { data: zones }, { data: cats }] = await Promise.all([
@@ -729,7 +935,7 @@
         destination,
         package_description: summary,
         order_source: 'Sekiflex Store',
-        payment_status: 'pending_verification',
+        payment_status: 'Awaiting Payment',
         payment_reference: paymentNote,
         order_amount: sub,
         delivery_amount: currentShippingFee,
@@ -758,7 +964,6 @@
         }))
       );
 
-      // Trigger automatic email alert to Admin & Customer via Supabase Edge Function
       try {
         await sb.functions.invoke('sekiflex-order-notifications', {
           body: {
@@ -793,6 +998,7 @@
       cart = [];
       saveCart();
       document.getElementById('checkoutForm').reset();
+      prefillCustomerCheckout();
       setFulfillmentMode('delivery');
       toggleCart(false);
       btn.disabled = false;
