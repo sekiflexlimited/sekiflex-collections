@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sekiflex Store Manager</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+</head>
+<body class="bg-stone-100 text-stone-900 font-sans">
+
+  <!-- Login Screen -->
+  <div id="loginBox" class="min-h-screen flex items-center justify-center p-4">
+    <form onsubmit="adminLogin(event)" class="bg-white p-6 rounded-2xl shadow max-w-sm w-full space-y-4">
+      <h1 class="text-xl font-bold text-center">Sekiflex Store Manager</h1>
+      <p class="text-xs text-stone-500 text-center">Sign in with your Supabase Admin email & password</p>
+      <input required id="adminEmail" type="email" placeholder="Admin Email" class="w-full border rounded-lg px-3 py-2 text-sm" />
+      <input required id="adminPass" type="password" placeholder="Password" class="w-full border rounded-lg px-3 py-2 text-sm" />
+      <button type="submit" class="w-full bg-stone-900 text-white py-2.5 rounded-xl text-sm font-semibold">Sign In</button>
+    </form>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashBox" class="hidden max-w-4xl mx-auto p-4 space-y-6">
+    <header class="bg-white p-4 rounded-2xl shadow-sm flex flex-wrap items-center justify-between gap-2">
+      <div>
+        <h1 class="font-bold text-lg">Sekiflex Store Manager</h1>
+        <p class="text-xs text-stone-500">Add clothing/bags, manage stock, & view store orders</p>
+      </div>
+      <div class="flex gap-2">
+        <a href="admin.html" class="text-xs px-3 py-2 rounded-lg border font-medium">Dispatch Admin</a>
+        <a href="shop.html" target="_blank" class="text-xs px-3 py-2 rounded-lg bg-amber-600 text-white font-semibold">View Store</a>
+        <button onclick="logout()" class="text-xs px-3 py-2 rounded-lg bg-stone-200 font-medium">Logout</button>
+      </div>
+    </header>
+
+    <!-- Add Product Card -->
+    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-4">
+      <h2 class="font-bold text-base">Add New Product</h2>
+      <form onsubmit="addProduct(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <input required id="pName" type="text" placeholder="Product Name (e.g. Sekiflex Star Wide-Leg Jeans)" class="border rounded-lg px-3 py-2 text-sm" />
+        <input required id="pPrice" type="number" placeholder="Price in NGN (e.g. 28000)" class="border rounded-lg px-3 py-2 text-sm" />
+        <input id="pStock" type="number" value="10" placeholder="Stock Quantity" class="border rounded-lg px-3 py-2 text-sm" />
+        <input id="pImgFile" type="file" accept="image/*" class="border rounded-lg px-3 py-1.5 text-xs bg-stone-50" />
+        <input id="pImgUrl" type="url" placeholder="Or paste Image URL (optional if uploading photo)" class="md:col-span-2 border rounded-lg px-3 py-2 text-sm" />
+        <textarea id="pDesc" rows="2" placeholder="Product description (sizes, fabric, details)" class="md:col-span-2 border rounded-lg px-3 py-2 text-sm"></textarea>
+        <button type="submit" id="saveProdBtn" class="md:col-span-2 bg-stone-900 text-white py-2.5 rounded-xl text-sm font-semibold">
+          Publish Product to Store
+        </button>
+      </form>
+    </section>
+
+    <!-- Shipping Zone Quick Add -->
+    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3">
+      <h2 class="font-bold text-base">Set Delivery Rate by State / Country</h2>
+      <form onsubmit="addZone(event)" class="grid grid-cols-2 md:grid-cols-4 gap-2">
+        <input required id="zCountry" value="Nigeria" placeholder="Country" class="border rounded-lg px-3 py-2 text-sm" />
+        <input id="zState" placeholder="State (leave blank for all)" class="border rounded-lg px-3 py-2 text-sm" />
+        <input required id="zFee" type="number" placeholder="Fee (NGN)" class="border rounded-lg px-3 py-2 text-sm" />
+        <button type="submit" class="bg-amber-600 text-white rounded-lg text-xs font-bold py-2">Save Rate</button>
+      </form>
+      <div id="zonesList" class="text-xs text-stone-600 flex flex-wrap gap-2"></div>
+    </section>
+
+    <!-- Active Products List -->
+    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3">
+      <h2 class="font-bold text-base">Live Store Products</h2>
+      <div id="adminProducts" class="space-y-2"></div>
+    </section>
+  </div>
+
+  <script>
+    const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
+
+    async function checkSession() {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) {
+        document.getElementById('loginBox').classList.add('hidden');
+        document.getElementById('dashBox').classList.remove('hidden');
+        loadData();
+      }
+    }
+
+    async function adminLogin(e) {
+      e.preventDefault();
+      const { error } = await sb.auth.signInWithPassword({
+        email: document.getElementById('adminEmail').value.trim(),
+        password: document.getElementById('adminPass').value
+      });
+      if (error) return alert(error.message);
+      checkSession();
+    }
+
+    async function logout() {
+      await sb.auth.signOut();
+      location.reload();
+    }
+
+    async function addProduct(e) {
+      e.preventDefault();
+      const btn = document.getElementById('saveProdBtn');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      let imageUrl = document.getElementById('pImgUrl').value.trim();
+      const file = document.getElementById('pImgFile').files[0];
+
+      if (file) {
+        const fileName = `${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
+        const { error: upErr } = await sb.storage.from('product-images').upload(fileName, file);
+        if (upErr) {
+          btn.disabled = false;
+          btn.textContent = 'Publish Product to Store';
+          return alert('Image upload failed (create public bucket "product-images" in Supabase Storage or paste an image URL): ' + upErr.message);
+        }
+        const { data: pub } = sb.storage.from('product-images').getPublicUrl(fileName);
+        imageUrl = pub.publicUrl;
+      }
+
+      const { error } = await sb.from('products').insert({
+        name: document.getElementById('pName').value.trim(),
+        base_price: Number(document.getElementById('pPrice').value),
+        stock_quantity: Number(document.getElementById('pStock').value || 10),
+        description: document.getElementById('pDesc').value.trim(),
+        images: imageUrl ? [imageUrl] : [],
+        is_active: true
+      });
+
+      btn.disabled = false;
+      btn.textContent = 'Publish Product to Store';
+      if (error) return alert(error.message);
+      e.target.reset();
+      loadData();
+      alert('Product added to store!');
+    }
+
+    async function addZone(e) {
+      e.preventDefault();
+      const { error } = await sb.from('shipping_zones').insert({
+        country_name: document.getElementById('zCountry').value.trim(),
+        state_name: document.getElementById('zState').value.trim() || null,
+        delivery_fee_ngn: Number(document.getElementById('zFee').value),
+        estimated_days: '2-4 business days',
+        is_active: true
+      });
+      if (error) return alert(error.message);
+      e.target.reset();
+      loadData();
+    }
+
+    async function toggleActive(id, current) {
+      await sb.from('products').update({ is_active: !current }).eq('id', id);
+      loadData();
+    }
+
+    async function loadData() {
+      const [{ data: prods }, { data: zones }] = await Promise.all([
+        sb.from('products').select('*').order('created_at', { ascending: false }),
+        sb.from('shipping_zones').select('*').order('country_name')
+      ]);
+
+      document.getElementById('adminProducts').innerHTML = (prods || []).map(p => `
+        <div class="flex items-center justify-between border p-3 rounded-xl">
+          <div>
+            <p class="font-semibold text-sm">${p.name} <span class="text-xs text-stone-400">(${p.is_active ? 'Live' : 'Hidden'})</span></p>
+            <p class="text-xs text-amber-700 font-bold">₦${Number(p.base_price).toLocaleString()} • Stock: ${p.stock_quantity}</p>
+          </div>
+          <button onclick="toggleActive('${p.id}', ${p.is_active})" class="text-xs px-3 py-1.5 rounded-lg border">
+            ${p.is_active ? 'Hide' : 'Show'}
+          </button>
+        </div>
+      `).join('');
+
+      document.getElementById('zonesList').innerHTML = (zones || []).map(z => `
+        <span class="bg-stone-100 border px-2.5 py-1 rounded-full">
+          ${z.country_name}${z.state_name ? ' - ' + z.state_name : ''}: ₦${Number(z.delivery_fee_ngn).toLocaleString()}
+        </span>
+      `).join('');
+    }
+
+    checkSession();
+  </script>
+</body>
+        </html>
+  
