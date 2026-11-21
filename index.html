@@ -146,7 +146,7 @@
   <!-- MAIN APP-STYLE STOREFRONT -->
   <div id="storeMainWrapper" class="hidden">
 
-    <!-- STICKY TOP PILL SEARCH HEADER (Jumia-Style Clean App Bar) -->
+    <!-- STICKY TOP PILL SEARCH HEADER WITH WORKING SEARCH BUTTON -->
     <header class="sticky top-0 z-40 bg-white border-b border-stone-200/80 px-3 pt-2.5 pb-2 shadow-2xs">
       <div class="max-w-5xl mx-auto space-y-2">
         <!-- Brand + Greeting Row -->
@@ -159,18 +159,24 @@
           </span>
         </div>
 
-        <!-- Rounded Pill Search Bar -->
-        <div class="relative flex items-center">
-          <svg class="w-4 h-4 text-stone-500 absolute left-3.5 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
-          </svg>
-          <input id="storeSearchInput" type="search" oninput="handleSearchInput()"
-            placeholder="Search on Sekiflex Collections..."
-            class="w-full bg-stone-100 hover:bg-stone-200/70 focus:bg-white border border-transparent focus:border-amber-500 rounded-full pl-10 pr-9 py-2.5 text-sm text-stone-900 placeholder:text-stone-500 focus:outline-none transition" />
-          <button type="button" id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 text-stone-400 hover:text-stone-700 text-base font-bold">
-            &times;
+        <!-- Rounded Pill Search Form (Works on Typing, Keyboard Search/Enter, AND Search Button Click!) -->
+        <form onsubmit="submitSearch(event)" class="relative flex items-center gap-1.5">
+          <div class="relative flex-1 flex items-center">
+            <svg class="w-4 h-4 text-stone-500 absolute left-3.5 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+            </svg>
+            <input id="storeSearchInput" type="search" enterkeyhint="search" oninput="handleSearchInput()"
+              placeholder="Search on Sekiflex Collections..."
+              class="w-full bg-stone-100 hover:bg-stone-200/70 focus:bg-white border border-transparent focus:border-amber-500 rounded-full pl-10 pr-8 py-2.5 text-sm text-stone-900 placeholder:text-stone-500 focus:outline-none transition" />
+            <button type="button" id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 text-stone-400 hover:text-stone-700 text-base font-bold">
+              &times;
+            </button>
+          </div>
+          <button type="submit"
+            class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-4 py-2.5 rounded-full shrink-0 shadow-xs transition">
+            Search
           </button>
-        </div>
+        </form>
       </div>
     </header>
 
@@ -185,7 +191,7 @@
     <div class="max-w-5xl mx-auto px-3 pt-3 space-y-4">
 
       <!-- HORIZONTAL SWIPEABLE HERO PROMO BANNER CAROUSEL -->
-      <section class="space-y-2">
+      <section id="heroCarouselSection" class="space-y-2">
         <div id="bannerCarousel" class="flex gap-3 overflow-x-auto snap-x snap-mandatory no-scrollbar">
 
           <!-- Dynamic Live Store Banner Card (From Store Admin) -->
@@ -242,7 +248,7 @@
         </div>
       </section>
 
-      <!-- 3-CARD QUICK FEATURE STRIP (Like Jumia Quick Promo Tiles) -->
+      <!-- 3-CARD QUICK FEATURE STRIP -->
       <section class="grid grid-cols-3 gap-2">
         <button type="button" onclick="openInfoModal('about')"
           class="bg-stone-900 text-white rounded-2xl p-2.5 text-center space-y-1 shadow-xs hover:bg-stone-800 transition">
@@ -266,7 +272,7 @@
         </button>
       </section>
 
-      <!-- FEATURED / HOT PICKS STRIP (Crimson Header Like Flash Sales) -->
+      <!-- FEATURED / HOT PICKS STRIP -->
       <section id="featuredStripSection" class="rounded-2xl overflow-hidden shadow-sm border border-stone-200 bg-white">
         <div class="bg-[#C8102E] text-white px-3.5 py-2.5 flex items-center justify-between">
           <div>
@@ -278,12 +284,11 @@
           </a>
         </div>
         <div id="featuredHorizontalList" class="p-3 flex gap-3 overflow-x-auto no-scrollbar bg-[#C8102E]/95">
-          <!-- Populated dynamically with top products -->
         </div>
       </section>
 
-      <!-- CATEGORY FILTER PILLS -->
-      <section id="catalogSection" class="pt-1 space-y-2.5">
+      <!-- CATEGORY FILTER PILLS & SEARCH RESULTS GRID -->
+      <section id="catalogSection" class="pt-1 space-y-2.5 scroll-mt-28">
         <div class="flex items-center justify-between">
           <h2 id="catalogHeading" class="font-extrabold text-base sm:text-lg text-stone-900">All Products</h2>
           <span id="productResultCount" class="text-xs font-semibold text-stone-500"></span>
@@ -308,7 +313,7 @@
         </div>
       </section>
 
-      <!-- ABOUT US & STORE INFORMATION SECTION (At Bottom of Scrollable Page) -->
+      <!-- ABOUT US & STORE INFORMATION SECTION -->
       <section id="aboutUsSection" class="bg-white rounded-2xl border border-stone-200 p-5 space-y-4 shadow-2xs mt-6">
         <div class="border-b border-stone-100 pb-3">
           <span class="text-[10px] font-bold uppercase tracking-widest text-amber-700">About Sekiflex Collections</span>
@@ -341,21 +346,18 @@
   <!-- FIXED BOTTOM NAVIGATION BAR (Locked at Bottom Even When Scrolling!) -->
   <nav id="bottomFixedNav" class="hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-stone-200 shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
     <div class="max-w-5xl mx-auto grid grid-cols-4 h-16">
-      <!-- 1. Home -->
       <button type="button" id="navHomeBtn" onclick="switchBottomTab('home')"
         class="flex flex-col items-center justify-center gap-0.5 text-amber-600 font-bold text-[11px] transition">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3 2 12h3v8h6v-6h2v6h6v-8h3L12 3z"/></svg>
         <span>Home</span>
       </button>
 
-      <!-- 2. Categories & Pages -->
       <button type="button" id="navCatBtn" onclick="switchBottomTab('categories')"
         class="flex flex-col items-center justify-center gap-0.5 text-stone-600 hover:text-stone-900 font-semibold text-[11px] transition">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
         <span>Categories</span>
       </button>
 
-      <!-- 3. Cart (With Live Badge) -->
       <button type="button" id="navCartBtn" onclick="switchBottomTab('cart')"
         class="relative flex flex-col items-center justify-center gap-0.5 text-stone-600 hover:text-stone-900 font-semibold text-[11px] transition">
         <div class="relative">
@@ -365,7 +367,6 @@
         <span>Cart</span>
       </button>
 
-      <!-- 4. Account -->
       <button type="button" id="navAccountBtn" onclick="switchBottomTab('account')"
         class="flex flex-col items-center justify-center gap-0.5 text-stone-600 hover:text-stone-900 font-semibold text-[11px] transition">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -374,7 +375,7 @@
     </div>
   </nav>
 
-  <!-- CATEGORIES & STORE MENU SHEET (Opens when user clicks "Categories" on bottom bar) -->
+  <!-- CATEGORIES & STORE MENU SHEET -->
   <div id="categoriesDrawer" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center">
     <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 max-h-[82vh] overflow-y-auto space-y-4 shadow-2xl">
       <div class="flex items-center justify-between border-b border-stone-200 pb-3">
@@ -407,7 +408,7 @@
     </div>
   </div>
 
-  <!-- ACCOUNT & PROFILE SHEET (Opens when user clicks "Account" on bottom bar) -->
+  <!-- ACCOUNT & PROFILE SHEET -->
   <div id="accountDrawer" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center">
     <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 space-y-4 shadow-2xl">
       <div class="flex items-center justify-between border-b border-stone-200 pb-3">
@@ -687,12 +688,36 @@
       document.getElementById('infoModal').classList.remove('hidden');
     }
 
-    // LIVE SEARCH & CATEGORY FILTERING
-    function handleSearchInput() {
+    // LIVE SEARCH, SEARCH BUTTON SUBMIT & CATEGORY FILTERING
+    function submitSearch(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('storeSearchInput');
+      input.blur();
+      handleSearchInput(true);
+    }
+
+    function handleSearchInput(shouldScroll = false) {
       const input = document.getElementById('storeSearchInput');
       searchQuery = (input.value || '').trim().toLowerCase();
       document.getElementById('clearSearchBtn').classList.toggle('hidden', !searchQuery);
+
+      // Hide top hero banners while searching so matching products show immediately on screen
+      const heroSec = document.getElementById('heroCarouselSection');
+      const featSec = document.getElementById('featuredStripSection');
+      if (searchQuery) {
+        heroSec.classList.add('hidden');
+        featSec.classList.add('hidden');
+      } else {
+        heroSec.classList.remove('hidden');
+        if (allProducts.length) featSec.classList.remove('hidden');
+      }
+
       applyCatalogFilters();
+
+      if (shouldScroll) {
+        const target = document.getElementById('catalogSection');
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      }
     }
 
     function clearSearch() {
@@ -700,6 +725,8 @@
       input.value = '';
       searchQuery = '';
       document.getElementById('clearSearchBtn').classList.add('hidden');
+      document.getElementById('heroCarouselSection').classList.remove('hidden');
+      if (allProducts.length) document.getElementById('featuredStripSection').classList.remove('hidden');
       applyCatalogFilters();
     }
 
@@ -711,10 +738,12 @@
       }
 
       if (searchQuery) {
-        filtered = filtered.filter(p =>
-          (p.name || '').toLowerCase().includes(searchQuery) ||
-          (p.description || '').toLowerCase().includes(searchQuery)
-        );
+        const keywords = searchQuery.split(/\s+/).filter(Boolean);
+        filtered = filtered.filter(p => {
+          const catObj = allCategories.find(c => c.id === p.category_id);
+          const haystack = `${p.name || ''} ${p.description || ''} ${catObj ? catObj.name : ''}`.toLowerCase();
+          return keywords.every(word => haystack.includes(word));
+        });
       }
 
       const heading = document.getElementById('catalogHeading');
@@ -1200,7 +1229,7 @@
     function renderFeaturedStrip(list) {
       const strip = document.getElementById('featuredHorizontalList');
       const sec = document.getElementById('featuredStripSection');
-      if (!list || !list.length) {
+      if (!list || !list.length || searchQuery) {
         sec.classList.add('hidden');
         return;
       }
