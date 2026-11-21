@@ -34,7 +34,6 @@
         </p>
       </div>
 
-      <!-- Auth Tabs -->
       <div id="authTabsRow" class="grid grid-cols-2 gap-1.5 bg-stone-100 p-1 rounded-xl">
         <button type="button" id="tabSignUpBtn" onclick="switchAuthView('signup')"
           class="py-2 rounded-lg text-xs font-bold bg-stone-900 text-white transition">
@@ -149,7 +148,6 @@
     <!-- STICKY TOP PILL SEARCH HEADER WITH WORKING SEARCH BUTTON -->
     <header class="sticky top-0 z-40 bg-white border-b border-stone-200/80 px-3 pt-2.5 pb-2 shadow-2xs">
       <div class="max-w-5xl mx-auto space-y-2">
-        <!-- Brand + Greeting Row -->
         <div class="flex items-center justify-between text-xs">
           <a href="index.html" onclick="resetToHome(event)" class="font-editorial font-bold text-base tracking-tight text-stone-900">
             SEKIFLEX <span class="text-amber-600">COLLECTIONS</span>
@@ -165,7 +163,7 @@
             <svg class="w-4 h-4 text-stone-500 absolute left-3.5 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
             </svg>
-            <input id="storeSearchInput" type="search" enterkeyhint="search" oninput="handleSearchInput()"
+            <input id="storeSearchInput" type="search" enterkeyhint="search" oninput="handleSearchInput(false)"
               placeholder="Search on Sekiflex Collections..."
               class="w-full bg-stone-100 hover:bg-stone-200/70 focus:bg-white border border-transparent focus:border-amber-500 rounded-full pl-10 pr-8 py-2.5 text-sm text-stone-900 placeholder:text-stone-500 focus:outline-none transition" />
             <button type="button" id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 text-stone-400 hover:text-stone-700 text-base font-bold">
@@ -185,7 +183,6 @@
       <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs font-extrabold text-stone-900">
         <span class="tracking-tight">CALL TO ORDER:</span>
         <div class="flex items-center gap-2 flex-wrap">
-          <!-- Phone Call Button with Icon -->
           <a href="tel:+2349163755234"
             class="inline-flex items-center gap-1.5 bg-stone-900 hover:bg-stone-800 text-white px-2.5 py-1 rounded-full text-[11px] font-bold transition shadow-2xs">
             <svg class="w-3.5 h-3.5 fill-current text-amber-400 shrink-0" viewBox="0 0 24 24">
@@ -194,7 +191,6 @@
             <span>09163755234</span>
           </a>
 
-          <!-- WhatsApp Button with Icon -->
           <a href="https://wa.me/2349069037617?text=Hello%20Sekiflex%20Collections!%20I%20want%20to%20place%20an%20order." target="_blank" rel="noopener"
             class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-full text-[11px] font-bold transition shadow-2xs">
             <svg class="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24">
@@ -212,7 +208,6 @@
       <section id="heroCarouselSection" class="space-y-2">
         <div id="bannerCarousel" class="flex gap-3 overflow-x-auto snap-x snap-mandatory no-scrollbar">
 
-          <!-- Dynamic Live Store Banner Card (From Store Admin) -->
           <div id="livePromoBannerCard" class="hidden snap-start shrink-0 w-[92%] sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-900 via-stone-800 to-amber-900 text-white p-4 flex items-center justify-between gap-3 shadow-md">
             <div class="space-y-1.5 flex-1 min-w-0">
               <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-amber-500 text-stone-950 px-2 py-0.5 rounded-full">
@@ -226,7 +221,6 @@
             <img id="livePromoImg" src="" alt="Promo" class="hidden w-24 h-24 sm:w-28 sm:h-28 object-cover rounded-xl border border-white/20 shrink-0" />
           </div>
 
-          <!-- Default Brand Hero Card 1 -->
           <div class="snap-start shrink-0 w-[92%] sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-950 via-stone-900 to-amber-800 text-white p-4 flex items-center justify-between gap-3 shadow-md">
             <div class="space-y-1.5 flex-1">
               <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-amber-400 text-stone-950 px-2 py-0.5 rounded-full">
@@ -244,7 +238,6 @@
               class="w-24 h-24 sm:w-28 sm:h-28 object-cover rounded-xl border border-white/20 shrink-0" />
           </div>
 
-          <!-- Default Brand Hero Card 2 -->
           <div class="snap-start shrink-0 w-[92%] sm:w-[480px] rounded-2xl bg-gradient-to-r from-emerald-950 via-stone-900 to-stone-800 text-white p-4 flex items-center justify-between gap-3 shadow-md">
             <div class="space-y-1.5 flex-1">
               <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-emerald-400 text-stone-950 px-2 py-0.5 rounded-full">
@@ -645,7 +638,6 @@
     let pendingSignupData = { name: '', email: '', phone: '' };
     let pendingResetEmail = '';
 
-    // BOTTOM NAVIGATION & DRAWER CONTROLS
     function closeAllDrawers() {
       document.getElementById('categoriesDrawer').classList.add('hidden');
       document.getElementById('accountDrawer').classList.add('hidden');
@@ -706,7 +698,6 @@
       document.getElementById('infoModal').classList.remove('hidden');
     }
 
-    // DISMISS MOBILE KEYBOARD + LIVE SEARCH + SCROLL TO RESULTS
     function dismissMobileKeyboard() {
       const input = document.getElementById('storeSearchInput');
       if (input) {
@@ -796,7 +787,6 @@
       renderProducts(filtered);
     }
 
-    // AUTH GATE VIEWS & 8-DIGIT OTP FLOWS
     function switchAuthView(view) {
       const views = ['customerSignUpForm', 'verifyOtpForm', 'customerSignInForm', 'forgotRequestForm', 'forgotVerifyForm'];
       views.forEach(id => document.getElementById(id).classList.add('hidden'));
@@ -1053,7 +1043,6 @@
       location.reload();
     }
 
-    // LOAD LIVE PROMO / ANNOUNCEMENT BANNER
     async function loadStoreBanner() {
       const { data: banner } = await sb
         .from('store_settings')
