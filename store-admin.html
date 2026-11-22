@@ -479,6 +479,10 @@
       alert('Product added to store!');
     }
 
+    function getProductPicture(prod) {
+      return (Array.isArray(prod?.images) && prod.images[0]) || prod?.image_url || 'https://placehold.co/120x120?text=No+Photo';
+    }
+
     function getProductSampleVideo(prod) {
       if (prod?.video_url) return prod.video_url;
       const vidMap = JSON.parse(localStorage.getItem('sekiflex_product_videos_v1') || '{}');
@@ -552,6 +556,16 @@
       alert('Product updated!');
     }
 
+    async function deleteProduct(id, name) {
+      const ok = confirm(`Delete "${name || 'this product'}" permanently from your store?`);
+      if (!ok) return;
+
+      const { error } = await sb.from('products').delete().eq('id', id);
+      if (error) return alert('Error deleting product: ' + error.message);
+
+      loadData();
+    }
+
     async function addZone(e) {
       e.preventDefault();
       const { error } = await sb.from('shipping_zones').insert({
@@ -621,19 +635,27 @@
           ? `₦${Number(p.base_price).toLocaleString()} <span class="line-through text-stone-400 font-normal">₦${Number(cmp).toLocaleString()}</span>`
           : `₦${Number(p.base_price).toLocaleString()}`;
         const hasVid = getProductSampleVideo(p) ? ' • Video' : '';
+        const picUrl = getProductPicture(p);
+        const safeName = String(p.name || 'Product').replace(/'/g, "\\'");
 
         return `
-          <div class="flex items-center justify-between gap-2 border p-3 rounded-xl bg-white">
-            <div>
-              <p class="font-semibold text-sm">${p.name} <span class="text-xs text-stone-400">(${p.is_active ? 'Live' : 'Hidden'}${hasVid})</span></p>
-              <p class="text-xs text-amber-700 font-bold">${priceLabel} • Stock: ${p.stock_quantity}</p>
+          <div class="flex items-center justify-between gap-3 border p-3 rounded-xl bg-white">
+            <div class="flex items-center gap-3 min-w-0">
+              <img src="${picUrl}" alt="${p.name || 'Product'}" class="w-16 h-16 rounded-lg object-cover border shrink-0 bg-stone-100" />
+              <div class="min-w-0">
+                <p class="font-semibold text-sm truncate">${p.name} <span class="text-xs text-stone-400">(${p.is_active ? 'Live' : 'Hidden'}${hasVid})</span></p>
+                <p class="text-xs text-amber-700 font-bold">${priceLabel} • Stock: ${p.stock_quantity}</p>
+              </div>
             </div>
-            <div class="flex items-center gap-2 shrink-0">
+            <div class="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
               <button type="button" onclick="openEditProdModal('${p.id}')" class="text-xs px-3 py-1.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 font-bold hover:bg-amber-100">
                 Edit
               </button>
               <button type="button" onclick="toggleActive('${p.id}', ${p.is_active})" class="text-xs px-3 py-1.5 rounded-lg border hover:bg-stone-50">
                 ${p.is_active ? 'Hide' : 'Show'}
+              </button>
+              <button type="button" onclick="deleteProduct('${p.id}', '${safeName}')" class="text-xs px-3 py-1.5 rounded-lg bg-red-600 text-white font-bold hover:bg-red-700">
+                Delete
               </button>
             </div>
           </div>`;
