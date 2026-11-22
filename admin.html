@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -26,9 +25,9 @@
   <section id="admin-login">
     <div class="admin-heading">
       <div>
-        <p class="eyebrow">SEKIFLEX LIMITED · STAFF ACCESS</p>
+        <p class="eyebrow">SEKIFLEX LIMITED · ADMIN ACCESS ONLY</p>
         <h1>Staff <em>login.</em></h1>
-        <p>Sign in to manage customer orders and deliveries.</p>
+        <p>Restricted to authorized administrator only.</p>
       </div>
     </div>
 
@@ -214,9 +213,9 @@
       </div>
 
       <button onclick="enableSekiflexPush({ isAdmin: true })" style="padding:10px 16px;background:#111;color:#fff;border:none;border-radius:8px;cursor:pointer;">
-  🔔 Enable Order Alerts
+        🔔 Enable Order Alerts
       </button>
-      
+
       <label for="order-search">Search by tracking number, customer or destination</label>
       <input id="order-search" type="search" placeholder="Search orders..." style="width:100%;height:48px;padding:0 13px;border:1px solid #dcd6ca;margin-top:8px;font:inherit;font-size:12px;">
 
@@ -235,5 +234,96 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 <script src="app.js"></script>
+<script>
+  (function () {
+    const ALLOWED_ADMIN_EMAILS = ["sekiflexcollections@gmail.com"];
+    const loginSection = document.getElementById("admin-login");
+    const dashSection = document.getElementById("admin-dashboard");
+    const loginForm = document.getElementById("admin-login-form");
+    const emailInput = document.getElementById("admin-email");
+    const msgEl = document.getElementById("login-message");
+
+    const sbClient =
+      window.sb ||
+      window.supabaseClient ||
+      (window.supabase &&
+        window.SEKIFLEX_SUPABASE_URL &&
+        window.SEKIFLEX_SUPABASE_KEY &&
+        window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY));
+
+    function isAdminEmail(email) {
+      return ALLOWED_ADMIN_EMAILS.includes(String(email || "").trim().toLowerCase());
+    }
+
+    function lockDashboard(messageText) {
+      if (dashSection) dashSection.hidden = true;
+      if (loginSection) loginSection.hidden = false;
+      if (msgEl && messageText) {
+        msgEl.textContent = messageText;
+        msgEl.style.color = "#b91c1c";
+      }
+    }
+
+    function unlockDashboard() {
+      if (msgEl) msgEl.textContent = "";
+      if (loginSection) loginSection.hidden = true;
+      if (dashSection) dashSection.hidden = false;
+    }
+
+    async function enforceAdminAccess() {
+      if (!sbClient || !sbClient.auth) return;
+      const { data: { session } } = await sbClient.auth.getSession();
+      const userEmail = session?.user?.email || "";
+
+      if (session?.user && isAdminEmail(userEmail)) {
+        unlockDashboard();
+      } else {
+        if (session?.user && !isAdminEmail(userEmail)) {
+          await sbClient.auth.signOut();
+        }
+        lockDashboard(
+          session?.user && !isAdminEmail(userEmail)
+            ? "Access denied: Only sekiflexcollections@gmail.com can access this dashboard."
+            : ""
+        );
+      }
+    }
+
+    if (loginForm) {
+      loginForm.addEventListener(
+        "submit",
+        async function (e) {
+          const typedEmail = String(emailInput?.value || "").trim().toLowerCase();
+          if (!isAdminEmail(typedEmail)) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            if (sbClient && sbClient.auth) {
+              await sbClient.auth.signOut();
+            }
+            lockDashboard("Access denied: This login is restricted to sekiflexcollections@gmail.com.");
+          }
+        },
+        true
+      );
+    }
+
+    if (sbClient && sbClient.auth) {
+      sbClient.auth.onAuthStateChange(async (_event, session) => {
+        const email = session?.user?.email || "";
+        if (session?.user && !isAdminEmail(email)) {
+          await sbClient.auth.signOut();
+          lockDashboard("Access denied: Only sekiflexcollections@gmail.com can access this dashboard.");
+        } else if (session?.user && isAdminEmail(email)) {
+          unlockDashboard();
+        } else {
+          lockDashboard("");
+        }
+      });
+    }
+
+    setTimeout(enforceAdminAccess, 150);
+    setTimeout(enforceAdminAccess, 600);
+  })();
+</script>
 </body>
 </html>
