@@ -87,6 +87,10 @@
           class="text-xs font-extrabold px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 transition">
           🔔 Enable Pop-Up Alerts
         </button>
+        <a href="https://analytics.google.com" target="_blank" rel="noopener"
+          class="text-xs font-bold px-3.5 py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-400/40 transition">
+          📊 Google Analytics ↗
+        </a>
         <a href="index.html" class="text-xs font-bold px-3.5 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700">
           Storefront ↗
         </a>
@@ -97,7 +101,7 @@
     </header>
 
     <!-- LIVE VISITOR & ORDER MONITOR STRIP -->
-    <section class="grid grid-cols-3 gap-3">
+    <section class="grid grid-cols-2 sm:grid-cols-4 gap-3">
       <div class="bg-stone-900/95 border border-emerald-400/30 rounded-2xl p-4 shadow-lg">
         <div class="flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
@@ -110,7 +114,13 @@
       <div class="bg-stone-900/95 border border-amber-400/30 rounded-2xl p-4 shadow-lg">
         <p class="text-[10px] font-bold uppercase tracking-wider text-amber-300">Today's Visits</p>
         <p id="todayVisitorsCount" class="text-2xl sm:text-3xl font-extrabold text-white mt-1">0</p>
-        <p class="text-[11px] text-stone-400 mt-0.5">Unique shoppers today</p>
+        <p class="text-[11px] text-stone-400 mt-0.5">Shoppers today</p>
+      </div>
+
+      <div class="bg-stone-900/95 border border-purple-400/30 rounded-2xl p-4 shadow-lg">
+        <p class="text-[10px] font-bold uppercase tracking-wider text-purple-300">Total Visitors</p>
+        <p id="allTimeVisitorsCount" class="text-2xl sm:text-3xl font-extrabold text-white mt-1">0</p>
+        <p class="text-[11px] text-stone-400 mt-0.5">All-time unique</p>
       </div>
 
       <div class="bg-stone-900/95 border border-sky-400/30 rounded-2xl p-4 shadow-lg flex flex-col justify-between">
@@ -266,14 +276,16 @@
       const startOfDay = new Date();
       startOfDay.setHours(0, 0, 0, 0);
 
-      const [{ count: liveCount }, { count: todayCount }, { count: pendingCount }] = await Promise.all([
+      const [{ count: liveCount }, { count: todayCount }, { count: allTimeCount }, { count: pendingCount }] = await Promise.all([
         sb.from("site_visits").select("*", { count: "exact", head: true }).gte("last_seen", fiveMinsAgo),
         sb.from("site_visits").select("*", { count: "exact", head: true }).gte("last_seen", startOfDay.toISOString()),
+        sb.from("site_visits").select("*", { count: "exact", head: true }),
         sb.from("orders").select("*", { count: "exact", head: true }).ilike("status", "%processing%")
       ]);
 
       document.getElementById("liveVisitorsCount").textContent = liveCount ?? 0;
       document.getElementById("todayVisitorsCount").textContent = todayCount ?? 0;
+      document.getElementById("allTimeVisitorsCount").textContent = allTimeCount ?? 0;
       document.getElementById("pendingOrdersCount").textContent = pendingCount ?? 0;
     }
 
