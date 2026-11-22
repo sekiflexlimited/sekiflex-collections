@@ -23,6 +23,27 @@
 </head>
 <body class="text-white antialiased p-4 flex flex-col justify-between">
 
+  <!-- LIVE ORDER POP-UP NOTIFICATION TOAST -->
+  <div id="liveOrderToast" class="fixed top-4 right-4 left-4 sm:left-auto sm:w-96 z-50 hidden bg-stone-950 border-2 border-emerald-400 rounded-2xl p-4 shadow-2xl space-y-2">
+    <div class="flex items-start justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
+        <p class="text-xs font-extrabold uppercase tracking-wider text-emerald-400">New Customer Order!</p>
+      </div>
+      <button type="button" onclick="dismissOrderToast()" class="text-stone-400 hover:text-white text-base font-bold leading-none">&times;</button>
+    </div>
+    <p id="toastOrderTitle" class="text-sm font-extrabold text-white"></p>
+    <p id="toastOrderDetails" class="text-xs text-stone-300 leading-relaxed"></p>
+    <div class="pt-1 flex items-center justify-between gap-2">
+      <a href="admin.html" class="flex-1 text-center bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-extrabold text-xs py-2 rounded-xl transition">
+        Open Dispatch Admin →
+      </a>
+      <button type="button" onclick="dismissOrderToast()" class="px-3 py-2 rounded-xl bg-stone-800 text-xs font-bold text-stone-300">
+        Dismiss
+      </button>
+    </div>
+  </div>
+
   <!-- ADMIN LOGIN SCREEN -->
   <div id="hubLoginBox" class="my-auto max-w-sm w-full mx-auto bg-stone-900 border border-amber-400/30 rounded-3xl p-6 space-y-4 shadow-2xl">
     <div class="text-center space-y-1">
@@ -54,14 +75,18 @@
   </div>
 
   <!-- TWO-CHOICE ADMIN DASHBOARD -->
-  <div id="hubDashBox" class="hidden max-w-3xl w-full mx-auto my-auto space-y-6 py-4">
+  <div id="hubDashBox" class="hidden max-w-3xl w-full mx-auto my-auto space-y-5 py-4">
     <header class="bg-stone-900/95 border border-amber-400/30 rounded-3xl p-5 flex flex-wrap items-center justify-between gap-3 shadow-xl">
       <div>
         <p class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Sekiflex Collections Control Center</p>
         <h1 class="font-editorial text-2xl font-bold text-white">Choose Where to Work</h1>
         <p id="hubSignedInEmail" class="text-xs text-stone-400"></p>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 flex-wrap">
+        <button type="button" id="enablePushAlertBtn" onclick="requestAdminBrowserNotifications()"
+          class="text-xs font-extrabold px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 transition">
+          🔔 Enable Pop-Up Alerts
+        </button>
         <a href="index.html" class="text-xs font-bold px-3.5 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700">
           Storefront ↗
         </a>
@@ -70,6 +95,34 @@
         </button>
       </div>
     </header>
+
+    <!-- LIVE VISITOR & ORDER MONITOR STRIP -->
+    <section class="grid grid-cols-3 gap-3">
+      <div class="bg-stone-900/95 border border-emerald-400/30 rounded-2xl p-4 shadow-lg">
+        <div class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-300">Live Visitors</p>
+        </div>
+        <p id="liveVisitorsCount" class="text-2xl sm:text-3xl font-extrabold text-white mt-1">0</p>
+        <p class="text-[11px] text-stone-400 mt-0.5">Active last 5 mins</p>
+      </div>
+
+      <div class="bg-stone-900/95 border border-amber-400/30 rounded-2xl p-4 shadow-lg">
+        <p class="text-[10px] font-bold uppercase tracking-wider text-amber-300">Today's Visits</p>
+        <p id="todayVisitorsCount" class="text-2xl sm:text-3xl font-extrabold text-white mt-1">0</p>
+        <p class="text-[11px] text-stone-400 mt-0.5">Unique shoppers today</p>
+      </div>
+
+      <div class="bg-stone-900/95 border border-sky-400/30 rounded-2xl p-4 shadow-lg flex flex-col justify-between">
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-wider text-sky-300">Pending Orders</p>
+          <p id="pendingOrdersCount" class="text-2xl sm:text-3xl font-extrabold text-white mt-1">0</p>
+        </div>
+        <button type="button" onclick="triggerTestOrderAlert()" class="text-[10px] font-bold text-sky-300 hover:underline text-left mt-1">
+          Test Pop-Up Alert →
+        </button>
+      </div>
+    </section>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <!-- Store Admin Card -->
@@ -121,6 +174,8 @@
   <script>
     const ALLOWED_ADMIN_EMAILS = ["sekiflexcollections@gmail.com"];
     const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
+    let monitorInterval = null;
+    let realtimeChannel = null;
 
     function isAdmin(user) {
       const email = String(user?.email || "").trim().toLowerCase();
@@ -133,14 +188,126 @@
       el.classList.remove("hidden");
     }
 
+    function playNotificationChime() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        osc.frequency.setValueAtTime(1174.66, ctx.currentTime + 0.14);
+        gain.gain.setValueAtTime(0.18, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.45);
+      } catch (e) {}
+    }
+
+    function updateAlertButtonState() {
+      const btn = document.getElementById("enablePushAlertBtn");
+      if (!btn || !("Notification" in window)) return;
+      if (Notification.permission === "granted") {
+        btn.textContent = "🔔 Pop-Up Alerts Active";
+        btn.className = "text-xs font-extrabold px-3.5 py-2 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-400/40";
+      }
+    }
+
+    async function requestAdminBrowserNotifications() {
+      playNotificationChime();
+      if (!("Notification" in window)) {
+        return alert("Pop-up sound alerts are active inside this dashboard.");
+      }
+      const perm = await Notification.requestPermission();
+      updateAlertButtonState();
+      if (perm === "granted") {
+        new Notification("Sekiflex Admin Alerts Enabled", {
+          body: "You will receive live pop-up notifications whenever a customer places an order.",
+          icon: "icon-512.png"
+        });
+      }
+    }
+
+    function showLiveOrderPopup(order) {
+      playNotificationChime();
+      const total = Number(order.order_amount || 0) + Number(order.delivery_amount || 0);
+      const title = `${order.customer_name || "Customer"} • ₦${total.toLocaleString()}`;
+      const details = `${order.tracking_number || "New Order"} — ${order.package_description || "Store item"}`;
+
+      document.getElementById("toastOrderTitle").textContent = title;
+      document.getElementById("toastOrderDetails").textContent = details;
+      document.getElementById("liveOrderToast").classList.remove("hidden");
+
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification("New Sekiflex Order: " + title, {
+          body: details,
+          icon: "icon-512.png"
+        });
+      }
+    }
+
+    function dismissOrderToast() {
+      document.getElementById("liveOrderToast").classList.add("hidden");
+    }
+
+    function triggerTestOrderAlert() {
+      showLiveOrderPopup({
+        customer_name: "Test Customer",
+        order_amount: 25000,
+        delivery_amount: 3500,
+        tracking_number: "SC-TEST-001",
+        package_description: "Sample Order Pop-Up Verification"
+      });
+    }
+
+    async function refreshLiveMetrics() {
+      const fiveMinsAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const [{ count: liveCount }, { count: todayCount }, { count: pendingCount }] = await Promise.all([
+        sb.from("site_visits").select("*", { count: "exact", head: true }).gte("last_seen", fiveMinsAgo),
+        sb.from("site_visits").select("*", { count: "exact", head: true }).gte("last_seen", startOfDay.toISOString()),
+        sb.from("orders").select("*", { count: "exact", head: true }).ilike("status", "%processing%")
+      ]);
+
+      document.getElementById("liveVisitorsCount").textContent = liveCount ?? 0;
+      document.getElementById("todayVisitorsCount").textContent = todayCount ?? 0;
+      document.getElementById("pendingOrdersCount").textContent = pendingCount ?? 0;
+    }
+
+    function startAdminMonitoring() {
+      updateAlertButtonState();
+      refreshLiveMetrics();
+
+      if (monitorInterval) clearInterval(monitorInterval);
+      monitorInterval = setInterval(refreshLiveMetrics, 15000);
+
+      if (realtimeChannel) sb.removeChannel(realtimeChannel);
+      realtimeChannel = sb
+        .channel("admin-hub-live")
+        .on("postgres_changes", { event: "INSERT", schema: "public", table: "orders" }, (payload) => {
+          refreshLiveMetrics();
+          if (payload?.new) showLiveOrderPopup(payload.new);
+        })
+        .on("postgres_changes", { event: "*", schema: "public", table: "site_visits" }, () => {
+          refreshLiveMetrics();
+        })
+        .subscribe();
+    }
+
     function showDashboard(email) {
       document.getElementById("hubErrorMsg").classList.add("hidden");
       document.getElementById("hubLoginBox").classList.add("hidden");
       document.getElementById("hubDashBox").classList.remove("hidden");
       document.getElementById("hubSignedInEmail").textContent = "Signed in as " + email;
+      startAdminMonitoring();
     }
 
     function showLogin() {
+      if (monitorInterval) clearInterval(monitorInterval);
+      if (realtimeChannel) sb.removeChannel(realtimeChannel);
       document.getElementById("hubDashBox").classList.add("hidden");
       document.getElementById("hubLoginBox").classList.remove("hidden");
     }
