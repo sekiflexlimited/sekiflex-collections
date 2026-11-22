@@ -39,7 +39,7 @@
 </head>
 <body class="bg-[#F5F5F7] text-stone-900 antialiased pb-24">
 
-  <!-- CUSTOMER SIGN UP / SIGN IN & STAFF / ADMIN GATE -->
+  <!-- REDESIGNED FIRST VIEW: CLEAR CUSTOMER SIGN UP / SIGN IN + STAFF / ADMIN GATE -->
   <div id="customerAuthGate" class="fixed inset-0 z-50 bg-[#F5F5F7] flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white border border-stone-200/90 rounded-[28px] max-w-md w-full overflow-hidden shadow-2xl my-auto">
 
@@ -283,6 +283,11 @@
 
     <div class="max-w-5xl mx-auto px-3 pt-3 space-y-4">
 
+      <!-- OPTIONAL HERO SECTION VIDEO -->
+      <section id="heroVideoSection" class="hidden rounded-2xl overflow-hidden bg-stone-950 border border-stone-200 shadow-md">
+        <video id="heroShowcaseVideo" controls autoplay muted loop playsinline class="w-full max-h-64 object-cover bg-stone-950"></video>
+      </section>
+
       <!-- HORIZONTAL AUTO-SHIFTING HERO PROMO BANNER CAROUSEL (2 ANNOUNCEMENT SLOTS + EDITORIAL SLIDES) -->
       <section id="heroCarouselSection" class="space-y-2">
         <div id="bannerCarousel" class="flex gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
@@ -302,7 +307,7 @@
           </div>
 
           <!-- Announcement Banner Spot 2 -->
-          <div id="secondPromoBannerCard" class="promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-amber-800 via-amber-700 to-stone-900 text-white p-4 flex items-center justify-between gap-3 shadow-md">
+          <div id="secondPromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-amber-800 via-amber-700 to-stone-900 text-white p-4 flex items-center justify-between gap-3 shadow-md">
             <div class="space-y-1.5 flex-1 min-w-0">
               <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-white/20 text-amber-200 px-2 py-0.5 rounded-full">
                 Special Notice
@@ -529,9 +534,9 @@
     </div>
   </div>
 
-  <!-- PRODUCT DETAIL MODAL (VIEW FULL PHOTO, ABOUT & DESCRIPTION) -->
+  <!-- PRODUCT DETAIL MODAL (VIEW FULL PHOTO, OPTIONAL SAMPLE VIDEO, ABOUT & DESCRIPTION) -->
   <div id="productDetailModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl my-auto">
+    <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
       <div class="relative bg-stone-100">
         <img id="detailModalImg" src="" alt="" class="w-full max-h-80 object-contain object-top mx-auto bg-stone-100" />
         <button type="button" onclick="closeProductDetailModal()"
@@ -540,6 +545,9 @@
         </button>
         <span id="detailModalCategory" class="hidden absolute bottom-3 left-3 bg-stone-900/85 text-amber-300 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"></span>
       </div>
+
+      <!-- Optional Product Sample Video -->
+      <video id="detailModalVideo" controls playsinline preload="metadata" class="hidden w-full max-h-60 bg-stone-950 border-t border-stone-200"></video>
 
       <div class="p-5 space-y-4">
         <div class="flex items-start justify-between gap-3">
@@ -954,6 +962,32 @@
     let currentBannerSlideIdx = 0;
     let lastRotationSlot = -1;
 
+    function getProductSampleVideo(prod) {
+      if (prod?.video_url) return prod.video_url;
+      const vidMap = JSON.parse(localStorage.getItem('sekiflex_product_videos_v1') || '{}');
+      return vidMap[String(prod?.id)] || vidMap[(prod?.name || '').toLowerCase()] || '';
+    }
+
+    function applyHeroVideoState(mainBanner) {
+      const localHero = JSON.parse(localStorage.getItem('sekiflex_hero_video_v1') || 'null');
+      const active = mainBanner?.hero_video_active ?? localHero?.active ?? false;
+      const url = mainBanner?.hero_video_url || localHero?.url || '';
+      const sec = document.getElementById('heroVideoSection');
+      const vid = document.getElementById('heroShowcaseVideo');
+      if (!sec || !vid) return;
+
+      if (active && url) {
+        if (vid.src !== url) {
+          vid.src = url;
+        }
+        sec.classList.remove('hidden');
+      } else {
+        vid.pause();
+        vid.removeAttribute('src');
+        sec.classList.add('hidden');
+      }
+    }
+
     function getProductPricing(prod) {
       const base = Number(prod?.base_price || 0);
       const rawCompare = prod?.compare_at_price ?? prod?.original_price ?? prod?.old_price;
@@ -1282,6 +1316,7 @@
       if (!prod) return;
 
       const img = (prod.images && prod.images[0]) || prod.image_url || 'https://placehold.co/500x600?text=Sekiflex';
+      const sampleVidUrl = getProductSampleVideo(prod);
       const out = (prod.stock_quantity !== null && prod.stock_quantity <= 0);
       const catObj = allCategories.find(c => c.id === prod.category_id);
 
@@ -1290,6 +1325,16 @@
       document.getElementById('detailModalName').textContent = prod.name || 'Product';
       document.getElementById('detailModalPriceBlock').innerHTML = formatPriceHtml(prod, 'text-lg');
       document.getElementById('detailModalDesc').textContent = prod.description || 'Quality item from Sekiflex Collections.';
+
+      const vidEl = document.getElementById('detailModalVideo');
+      if (sampleVidUrl) {
+        vidEl.src = sampleVidUrl;
+        vidEl.classList.remove('hidden');
+      } else {
+        vidEl.pause();
+        vidEl.removeAttribute('src');
+        vidEl.classList.add('hidden');
+      }
 
       const catBadge = document.getElementById('detailModalCategory');
       if (catObj && catObj.name) {
@@ -1326,6 +1371,10 @@
     }
 
     function closeProductDetailModal() {
+      const vidEl = document.getElementById('detailModalVideo');
+      if (vidEl) {
+        vidEl.pause();
+      }
       document.getElementById('productDetailModal').classList.add('hidden');
     }
 
@@ -1391,7 +1440,7 @@
       document.getElementById('accountDrawer').classList.add('hidden');
       document.getElementById('cartDrawer').classList.add('hidden');
       document.getElementById('storeSettingsModal').classList.add('hidden');
-      document.getElementById('productDetailModal').classList.add('hidden');
+      closeProductDetailModal();
     }
 
     function setActiveBottomTab(tab) {
@@ -1856,6 +1905,8 @@
         sb.from('store_settings').select('*').eq('id', 'second').maybeSingle()
       ]);
 
+      applyHeroVideoState(mainBanner);
+
       applySingleBannerSlot(
         mainBanner,
         'livePromoBannerCard',
@@ -2006,6 +2057,7 @@
     async function init() {
       lastRotationSlot = Math.floor(Date.now() / (5 * 60 * 1000));
       applySocialLinks();
+      applyHeroVideoState(null);
       selectStarRating(5);
       renderReviews();
       populateNigeriaStates();
