@@ -27,27 +27,8 @@
     body.sekiflex-luxury-bg {
       background-color: #0f1115;
       background-image:
-        radial-gradient(circle at 50% 0%, rgba(217, 155, 38, 0.22) 0%, rgba(15, 17, 21, 0.96) 45%, #0b0c0f 100%);
+        radial-gradient(circle at 50% 0%, rgba(217, 155, 38, 0.18) 0%, rgba(15, 17, 21, 0.97) 48%, #0a0b0e 100%);
       background-attachment: fixed;
-    }
-
-    @keyframes zoomPulse {
-      0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
-      }
-      50% {
-        transform: scale(1.15);
-        box-shadow: 0 6px 18px rgba(217, 119, 6, 0.36);
-      }
-    }
-
-    .animate-zoom-pulse {
-      animation: zoomPulse 1.5s ease-in-out infinite;
-    }
-
-    .animate-zoom-pulse-delay {
-      animation: zoomPulse 1.5s ease-in-out 0.75s infinite;
     }
 
     @keyframes imgShimmer {
@@ -63,7 +44,7 @@
 
     .catalog-img-smooth {
       opacity: 0;
-      transition: opacity 0.28s ease-in-out;
+      transition: opacity 0.25s ease-in-out;
     }
 
     .catalog-img-smooth.is-loaded {
@@ -76,7 +57,7 @@
   <!-- REGISTER / SIGN IN MODAL (FOR CHECKOUT OR ACCOUNT) -->
   <div id="customerAuthGate" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white border border-amber-300/40 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
-      <div class="bg-gradient-to-r from-stone-950 via-stone-900 to-amber-900 text-white px-6 py-5 text-center space-y-1.5 relative">
+      <div class="bg-gradient-to-r from-stone-950 via-stone-900 to-amber-950 text-white px-6 py-5 text-center space-y-1.5 relative">
         <button type="button" onclick="closeAuthGate()" aria-label="Close sign in window"
           class="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 text-white font-bold text-lg flex items-center justify-center">
           &times;
@@ -88,7 +69,7 @@
           SEKIFLEX <span class="text-amber-400">COLLECTIONS</span>
         </h2>
         <p id="authSubtitle" class="text-xs text-stone-300 leading-relaxed">
-          Register first to continue straight to checkout.
+          Sign in or register to continue to checkout.
         </p>
       </div>
 
@@ -201,19 +182,29 @@
     </div>
   </div>
 
-  <!-- MAIN APP-STYLE STOREFRONT -->
+  <!-- MAIN STOREFRONT -->
   <div id="storeMainWrapper">
 
-    <!-- STICKY TOP PILL SEARCH HEADER -->
-    <header class="sticky top-0 z-40 bg-stone-950/95 backdrop-blur-md border-b border-amber-500/25 px-3 pt-2.5 pb-2 shadow-md">
+    <!-- COMPACT STICKY HEADER -->
+    <header class="sticky top-0 z-40 bg-stone-950/95 backdrop-blur-md border-b border-amber-500/20 px-3 pt-2.5 pb-2 shadow-md">
       <div class="max-w-5xl mx-auto space-y-2">
         <div class="flex items-center justify-between gap-2 text-xs">
           <a href="index.html" onclick="resetToHome(event)" class="font-editorial font-bold text-base tracking-tight text-white">
             SEKIFLEX <span class="text-amber-400">COLLECTIONS</span>
           </a>
-          <span id="topWelcomeGreeting" class="font-bold text-xs text-amber-300 bg-amber-500/15 border border-amber-400/30 px-2.5 py-0.5 rounded-full shrink-0">
-            Welcome!
-          </span>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button type="button" onclick="openInfoModal('about')"
+              class="text-[11px] font-semibold text-stone-300 hover:text-amber-300 bg-stone-900 border border-stone-800 px-2.5 py-1 rounded-full transition">
+              About
+            </button>
+            <button type="button" onclick="openReviewsModal()"
+              class="text-[11px] font-semibold text-amber-300 hover:text-amber-200 bg-stone-900 border border-amber-500/25 px-2.5 py-1 rounded-full transition">
+              ★ <span id="headerAvgRating">5.0</span>
+            </button>
+            <span id="topWelcomeGreeting" class="hidden sm:inline-block font-semibold text-[11px] text-stone-300 bg-stone-900 border border-stone-800 px-2.5 py-1 rounded-full">
+              Welcome
+            </span>
+          </div>
         </div>
 
         <form onsubmit="submitSearch(event)" class="relative flex items-center gap-1.5">
@@ -222,8 +213,8 @@
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
             </svg>
             <input id="storeSearchInput" type="search" enterkeyhint="search" oninput="handleSearchInput(false)"
-              placeholder="Search on Sekiflex Collections..."
-              class="w-full bg-white/95 focus:bg-white border border-amber-400/30 focus:border-amber-500 rounded-full pl-10 pr-8 py-2.5 text-sm text-stone-900 placeholder:text-stone-500 focus:outline-none transition" />
+              placeholder="Search clothing, footwear, watches, bags..."
+              class="w-full bg-white/95 focus:bg-white border border-stone-300 focus:border-amber-600 rounded-full pl-10 pr-8 py-2 text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none transition" />
             <button type="button" id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 text-stone-500 hover:text-stone-800 text-base font-bold">
               &times;
             </button>
@@ -233,7 +224,7 @@
           <button type="button" id="pictureSearchBtn" onclick="triggerPictureSearch()"
             aria-label="Search product by picture"
             title="Search by Picture"
-            class="bg-stone-800 hover:bg-stone-700 border border-amber-400/30 text-amber-300 p-2.5 rounded-full shrink-0 transition flex items-center justify-center">
+            class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-amber-300 p-2 rounded-full shrink-0 transition flex items-center justify-center">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 0 1 2-2h.93a2 2 0 0 0 1.664-.89l.812-1.22A2 2 0 0 1 10.07 4h3.86a2 2 0 0 1 1.664.89l.812 1.22A2 2 0 0 0 18.07 7H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
               <circle cx="12" cy="13" r="3"/>
@@ -241,52 +232,48 @@
           </button>
 
           <button type="submit" id="searchSubmitBtn"
-            class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-extrabold px-4 py-2.5 rounded-full shrink-0 shadow-xs transition">
+            class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-extrabold px-3.5 py-2 rounded-full shrink-0 transition">
             Search
           </button>
         </form>
 
-        <div id="pictureSearchBanner" class="hidden items-center justify-between gap-2 bg-amber-50 border border-amber-200 rounded-2xl px-3 py-2 text-xs">
-          <div class="flex items-center gap-2.5 min-w-0">
-            <img id="pictureSearchPreviewImg" src="" alt="Uploaded search photo" class="w-10 h-10 rounded-lg object-cover border border-amber-300 shrink-0" />
+        <div id="pictureSearchBanner" class="hidden items-center justify-between gap-2 bg-amber-50 border border-amber-200 rounded-2xl px-3 py-1.5 text-xs">
+          <div class="flex items-center gap-2 min-w-0">
+            <img id="pictureSearchPreviewImg" src="" alt="Uploaded search photo" class="w-8 h-8 rounded-lg object-cover border border-amber-300 shrink-0" />
             <div class="min-w-0">
-              <p class="font-extrabold text-stone-900 truncate">Matching your photo...</p>
-              <p id="pictureSearchStatusText" class="text-[11px] text-amber-800 truncate">Showing closest products</p>
+              <p class="font-bold text-stone-900 truncate">Photo Match</p>
+              <p id="pictureSearchStatusText" class="text-[10px] text-amber-800 truncate">Showing closest products</p>
             </div>
           </div>
-          <button type="button" onclick="clearPictureSearch()" class="bg-stone-900 text-white text-[11px] font-bold px-3 py-1 rounded-full shrink-0">
-            Clear Photo
+          <button type="button" onclick="clearPictureSearch()" class="bg-stone-900 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shrink-0">
+            Clear
           </button>
         </div>
       </div>
     </header>
 
-    <!-- CALL TO ORDER STRIP -->
-    <div class="bg-stone-900/90 border-b border-amber-500/20 px-3 py-2.5">
-      <div class="max-w-5xl mx-auto flex items-center justify-between gap-2 text-xs font-extrabold text-amber-200">
-        <div class="flex items-center gap-2">
-          <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-          <span class="tracking-tight uppercase">CALL TO ORDER:</span>
-        </div>
-        <div class="flex items-center gap-3">
-          <a href="tel:+2349163755234"
-            aria-label="Call Sekiflex Collections"
-            title="Call Us"
-            class="animate-zoom-pulse w-10 h-10 rounded-full bg-amber-500 hover:bg-amber-400 text-stone-950 flex items-center justify-center transition">
-            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
-              <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.61 21 3 13.39 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.58a1 1 0 0 1-.25 1.01l-2.2 2.2z"/>
-            </svg>
+    <!-- SUBTLE UTILITY BAR (SMALL MATURE BUTTONS) -->
+    <div class="bg-stone-950/80 border-b border-stone-800/80 px-3 py-1.5">
+      <div class="max-w-5xl mx-auto flex items-center justify-between gap-2 text-[11px] text-stone-300">
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+          <a href="track.html" class="px-2.5 py-1 rounded-full bg-stone-900 hover:bg-stone-800 border border-stone-700/80 text-amber-300 font-semibold whitespace-nowrap">
+            Track Order
           </a>
-
+          <button type="button" onclick="openInfoModal('delivery')" class="px-2.5 py-1 rounded-full bg-stone-900 hover:bg-stone-800 border border-stone-700/80 text-stone-200 font-medium whitespace-nowrap">
+            Delivery &amp; Pickup
+          </button>
+          <button type="button" onclick="openInfoModal('privacy')" class="px-2.5 py-1 rounded-full bg-stone-900 hover:bg-stone-800 border border-stone-700/80 text-stone-200 font-medium whitespace-nowrap">
+            Privacy Policy
+          </button>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <a href="tel:+2349163755234" class="px-2.5 py-1 rounded-full bg-stone-900 hover:bg-stone-800 border border-stone-700/80 text-stone-200 font-semibold">
+            Call
+          </a>
           <a href="https://wa.me/2349069037617?text=Hello%20Sekiflex%20Collections!%20I%20want%20to%20place%20an%20order."
-            target="_blank"
-            rel="noopener"
-            aria-label="Chat on WhatsApp"
-            title="WhatsApp Us"
-            class="animate-zoom-pulse-delay w-10 h-10 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center transition">
-            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
-              <path d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.5 0 .16 5.34.16 11.9c0 2.1.55 4.14 1.6 5.95L0 24l6.33-1.66a11.86 11.86 0 0 0 5.73 1.46h.01c6.56 0 11.9-5.34 11.9-11.9 0-3.18-1.24-6.17-3.45-8.42zM12.07 21.8h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.76.99 1-3.66-.24-.38a9.84 9.84 0 0 1-1.51-5.25c0-5.45 4.44-9.89 9.9-9.89 2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 0 1 2.9 7c0 5.45-4.44 9.89-9.88 9.89zm5.43-7.41c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/>
-            </svg>
+            target="_blank" rel="noopener"
+            class="px-2.5 py-1 rounded-full bg-emerald-700/90 hover:bg-emerald-600 text-white font-semibold">
+            WhatsApp
           </a>
         </div>
       </div>
@@ -294,141 +281,77 @@
 
     <div class="max-w-5xl mx-auto px-3 pt-3 space-y-4">
 
-      <!-- HORIZONTAL AUTO-SHIFTING HERO PROMO BANNER CAROUSEL -->
-      <section id="heroCarouselSection" class="space-y-2">
+      <!-- SLIM EDITORIAL HERO BANNER CAROUSEL -->
+      <section id="heroCarouselSection">
         <div id="bannerCarousel" class="flex gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
 
-          <div id="livePromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-900 via-stone-800 to-amber-900 text-white p-4 flex items-center justify-between gap-3 shadow-md border border-amber-400/25">
-            <div class="space-y-1.5 flex-1 min-w-0">
-              <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-amber-500 text-stone-950 px-2 py-0.5 rounded-full">
-                Store Announcement
+          <div id="livePromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-900 via-stone-800 to-amber-950 text-white p-3.5 flex items-center justify-between gap-3 border border-amber-400/20">
+            <div class="space-y-1 flex-1 min-w-0">
+              <span class="inline-block text-[9px] font-bold uppercase tracking-widest bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full">
+                Announcement
               </span>
-              <p id="livePromoText" class="text-base sm:text-lg font-extrabold leading-snug line-clamp-2"></p>
-              <a href="#catalogSection" class="inline-flex items-center gap-1 bg-white text-stone-950 text-xs font-bold px-3.5 py-1.5 rounded-full mt-1">
-                Shop Now →
+              <p id="livePromoText" class="text-sm sm:text-base font-bold leading-snug line-clamp-2"></p>
+              <a href="#catalogSection" class="inline-flex items-center gap-1 bg-amber-500 text-stone-950 text-[11px] font-bold px-3 py-1 rounded-full mt-0.5">
+                Browse →
               </a>
             </div>
-            <img id="livePromoImg" src="" alt="Promo" class="hidden w-24 h-24 sm:w-28 sm:h-28 object-cover object-top rounded-xl border border-white/20 shrink-0" />
+            <img id="livePromoImg" src="" alt="Promo" class="hidden w-20 h-20 object-cover object-top rounded-xl border border-white/15 shrink-0" />
           </div>
 
-          <div class="promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-950 via-stone-900 to-amber-800 text-white p-4 flex items-center justify-between gap-3 shadow-md border border-amber-400/25">
-            <div class="space-y-1.5 flex-1">
-              <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-amber-400 text-stone-950 px-2 py-0.5 rounded-full">
-                New Arrivals
+          <div class="promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-950 via-stone-900 to-amber-950/80 text-white p-3.5 flex items-center justify-between gap-3 border border-amber-400/20">
+            <div class="space-y-1 flex-1">
+              <span class="inline-block text-[9px] font-bold uppercase tracking-widest bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full">
+                Sekiflex Collections
               </span>
-              <h2 class="text-lg sm:text-xl font-extrabold leading-tight">
-                Upgrade Your Wardrobe
+              <h2 class="font-editorial text-base sm:text-lg font-bold leading-tight">
+                Curated Style &amp; Accessories
               </h2>
-              <p class="text-xs text-amber-200">Clothing, Footwear, Watches &amp; Bags</p>
-              <a href="#catalogSection" class="inline-flex items-center gap-1 bg-white text-stone-950 text-xs font-bold px-3.5 py-1.5 rounded-full mt-1">
+              <p class="text-[11px] text-stone-300">Apparel, footwear, watches &amp; bags</p>
+              <a href="#catalogSection" class="inline-flex items-center gap-1 bg-white text-stone-950 text-[11px] font-bold px-3 py-1 rounded-full mt-0.5">
                 Shop Now →
               </a>
             </div>
             <img src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&w=400&q=80" alt="Sekiflex Fashion"
-              class="w-24 h-24 sm:w-28 sm:h-28 object-cover object-top rounded-xl border border-white/20 shrink-0" />
+              class="w-20 h-20 object-cover object-top rounded-xl border border-white/15 shrink-0" />
           </div>
 
-          <div class="promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-emerald-950 via-stone-900 to-stone-800 text-white p-4 flex items-center justify-between gap-3 shadow-md border border-amber-400/25">
-            <div class="space-y-1.5 flex-1">
-              <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-emerald-400 text-stone-950 px-2 py-0.5 rounded-full">
-                Fast Dispatch
+          <div class="promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-950 via-stone-900 to-stone-800 text-white p-3.5 flex items-center justify-between gap-3 border border-amber-400/20">
+            <div class="space-y-1 flex-1">
+              <span class="inline-block text-[9px] font-bold uppercase tracking-widest bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded-full">
+                Dispatch &amp; Pickup
               </span>
-              <h2 class="text-lg sm:text-xl font-extrabold leading-tight">
-                36 States &amp; Global Delivery
+              <h2 class="font-editorial text-base sm:text-lg font-bold leading-tight">
+                Nationwide &amp; Global Delivery
               </h2>
-              <p class="text-xs text-stone-300">Or Free Walk-In Pickup at Urua Ekpa, Uyo</p>
-              <a href="track.html" class="inline-flex items-center gap-1 bg-amber-400 text-stone-950 text-xs font-bold px-3.5 py-1.5 rounded-full mt-1">
+              <p class="text-[11px] text-stone-300">Walk-in pickup at Urua Ekpa, Uyo</p>
+              <a href="track.html" class="inline-flex items-center gap-1 bg-amber-500 text-stone-950 text-[11px] font-bold px-3 py-1 rounded-full mt-0.5">
                 Track Order →
               </a>
             </div>
-            <div class="w-20 h-20 rounded-2xl bg-white/10 flex items-center justify-center text-3xl shrink-0">
-              🚚
-            </div>
           </div>
 
         </div>
       </section>
 
-      <!-- 3-CARD QUICK FEATURE STRIP -->
-      <section id="quickFeatureStrip" class="grid grid-cols-3 gap-2">
-        <button type="button" onclick="openInfoModal('about')"
-          class="bg-stone-900 border border-amber-400/25 text-white rounded-2xl p-2.5 text-center space-y-1 shadow-xs hover:bg-stone-800 transition">
-          <p class="text-[11px] font-bold text-amber-400 leading-tight">About Sekiflex</p>
-          <p class="text-[10px] text-stone-300 leading-tight">Our Story &amp; HQ</p>
-          <span class="inline-block bg-white text-stone-950 text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase">Read More</span>
-        </button>
-
-        <a href="track.html"
-          class="bg-amber-500 text-stone-950 rounded-2xl p-2.5 text-center space-y-1 shadow-xs hover:bg-amber-400 transition block">
-          <p class="text-[11px] font-extrabold leading-tight">Live Tracking</p>
-          <p class="text-[10px] text-stone-900 font-semibold leading-tight">Check Dispatch</p>
-          <span class="animate-zoom-pulse inline-block bg-stone-950 text-amber-300 text-[9px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">Track Now</span>
-        </a>
-
-        <button type="button" onclick="openInfoModal('delivery')"
-          class="bg-stone-900 border border-amber-400/25 text-white rounded-2xl p-2.5 text-center space-y-1 shadow-xs hover:bg-stone-800 transition">
-          <p class="text-[11px] font-bold text-emerald-400 leading-tight">Delivery &amp; Pickup</p>
-          <p class="text-[10px] text-stone-300 leading-tight">Uyo &amp; Worldwide</p>
-          <span class="inline-block bg-white text-stone-950 text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase">View Rates</span>
-        </button>
-      </section>
-
-      <!-- E-COMMERCE TRUST & HIGHLIGHTS STRIP -->
-      <section id="trustHighlightsStrip" class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-        <div class="bg-white/95 border border-amber-400/25 rounded-2xl p-2.5 flex items-center gap-2.5 shadow-xs">
-          <span class="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-sm shrink-0">✨</span>
-          <div>
-            <p class="text-[11px] font-extrabold text-stone-900 leading-tight">100% Quality</p>
-            <p class="text-[10px] text-stone-500">Checked before dispatch</p>
-          </div>
+      <!-- FEATURED PICKS STRIP (AUTO-SCROLLING) -->
+      <section id="featuredStripSection" class="rounded-2xl overflow-hidden border border-stone-800 bg-stone-900/90">
+        <div class="px-3.5 py-2 border-b border-stone-800 flex items-center justify-between">
+          <h2 class="text-xs font-extrabold uppercase tracking-wider text-amber-300">Featured Picks</h2>
+          <a href="#catalogSection" class="text-[11px] font-semibold text-stone-400 hover:text-amber-300">All Items →</a>
         </div>
-        <div class="bg-white/95 border border-amber-400/25 rounded-2xl p-2.5 flex items-center gap-2.5 shadow-xs">
-          <span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm shrink-0">🚚</span>
-          <div>
-            <p class="text-[11px] font-extrabold text-stone-900 leading-tight">Fast Dispatch</p>
-            <p class="text-[10px] text-stone-500">36 States &amp; Global</p>
-          </div>
-        </div>
-        <div class="bg-white/95 border border-amber-400/25 rounded-2xl p-2.5 flex items-center gap-2.5 shadow-xs">
-          <span class="w-8 h-8 rounded-full bg-stone-100 text-stone-800 flex items-center justify-center text-sm shrink-0">📦</span>
-          <div>
-            <p class="text-[11px] font-extrabold text-stone-900 leading-tight">SC Order Code</p>
-            <p class="text-[10px] text-stone-500">Live delivery tracking</p>
-          </div>
-        </div>
-        <div class="bg-white/95 border border-amber-400/25 rounded-2xl p-2.5 flex items-center gap-2.5 shadow-xs">
-          <span class="w-8 h-8 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center text-sm shrink-0">💬</span>
-          <div>
-            <p class="text-[11px] font-extrabold text-stone-900 leading-tight">Instant Support</p>
-            <p class="text-[10px] text-stone-500">Call or WhatsApp anytime</p>
-          </div>
+        <div id="featuredHorizontalList" class="p-2.5 flex gap-2.5 overflow-x-auto scroll-smooth no-scrollbar">
         </div>
       </section>
 
-      <!-- FEATURED / HOT PICKS STRIP (AUTO-SCROLLING) -->
-      <section id="featuredStripSection" class="rounded-2xl overflow-hidden shadow-md border border-amber-400/30 bg-white">
-        <div class="bg-[#C8102E] text-white px-3.5 py-2.5 flex items-center justify-between">
-          <div>
-            <h2 class="font-extrabold text-base sm:text-lg leading-tight">Featured Collection</h2>
-            <p class="text-[11px] text-rose-100">Auto-scrolling picks — tap any item to view or add to cart</p>
-          </div>
-          <a href="#catalogSection" class="w-8 h-8 rounded-full bg-white text-[#C8102E] font-bold flex items-center justify-center text-sm shadow-xs">
-            →
-          </a>
-        </div>
-        <div id="featuredHorizontalList" class="p-3 flex gap-3 overflow-x-auto scroll-smooth no-scrollbar bg-[#C8102E]/95">
-        </div>
-      </section>
-
-      <!-- CATEGORY FILTER PILLS & SEARCH RESULTS GRID (ROTATES EVERY 2 MINUTES) -->
-      <section id="catalogSection" class="pt-1 space-y-2.5 scroll-mt-32">
+      <!-- CATEGORY FILTER PILLS & COMPACT 2-COLUMN PRODUCT GRID -->
+      <section id="catalogSection" class="pt-1 space-y-2.5 scroll-mt-28">
         <div class="flex items-center justify-between gap-2">
-          <h2 id="catalogHeading" class="font-extrabold text-base sm:text-lg text-amber-300">All Products</h2>
-          <span id="productResultCount" class="text-xs font-semibold text-stone-300 shrink-0"></span>
+          <h2 id="catalogHeading" class="font-bold text-sm sm:text-base text-amber-300">All Products</h2>
+          <span id="productResultCount" class="text-[11px] font-medium text-stone-400 shrink-0"></span>
         </div>
 
-        <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1" id="categoryBar">
-          <button onclick="filterCategory('ALL', this)" class="cat-btn bg-amber-500 text-stone-950 text-xs font-extrabold px-4 py-2 rounded-full whitespace-nowrap">All Items</button>
+        <div class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1" id="categoryBar">
+          <button onclick="filterCategory('ALL', this)" class="cat-btn bg-amber-500 text-stone-950 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full whitespace-nowrap">All Items</button>
         </div>
 
         <!-- COMPACT 2-COLUMN PRODUCT GRID -->
@@ -446,85 +369,63 @@
         </div>
       </section>
 
-      <!-- CUSTOMER REVIEWS & 5-STAR RATING SECTION -->
-      <section id="customerReviewsSection" class="bg-white/95 rounded-2xl border border-amber-400/25 p-5 space-y-4 shadow-md mt-6">
-        <div class="flex items-center justify-between gap-2 border-b border-stone-100 pb-3">
-          <div>
-            <span class="text-[10px] font-bold uppercase tracking-widest text-amber-700">Customer Feedback</span>
-            <h3 class="font-editorial text-xl font-bold text-stone-900 mt-0.5">Ratings &amp; Reviews</h3>
-          </div>
-          <div class="text-right">
-            <p class="text-sm font-extrabold text-amber-600">★★★★★ <span id="avgRatingText" class="text-stone-900">5.0</span></p>
-            <p id="reviewCountText" class="text-[11px] text-stone-500">0 reviews</p>
-          </div>
+      <!-- MINIMAL FOOTER WITH SMALL BUTTONS (NO BIG PANELS ON SCREEN) -->
+      <footer class="pt-4 pb-2 border-t border-stone-800/80 flex flex-wrap items-center justify-between gap-2 text-[11px] text-stone-400">
+        <span>&copy; 2026 Sekiflex Collections &bull; Uyo</span>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="openInfoModal('about')" class="px-2.5 py-1 rounded-full bg-stone-900 hover:bg-stone-800 border border-stone-800 text-stone-300">About</button>
+          <button type="button" onclick="openReviewsModal()" class="px-2.5 py-1 rounded-full bg-stone-900 hover:bg-stone-800 border border-stone-800 text-stone-300">Reviews</button>
+          <button type="button" onclick="openInfoModal('privacy')" class="px-2.5 py-1 rounded-full bg-stone-900 hover:bg-stone-800 border border-stone-800 text-stone-300">Privacy</button>
         </div>
-
-        <form onsubmit="submitCustomerReview(event)" class="bg-stone-50 border border-stone-200/80 rounded-2xl p-3.5 space-y-3">
-          <div class="flex flex-wrap items-center justify-between gap-2">
-            <span class="text-xs font-extrabold text-stone-900">Rate &amp; Comment on Sekiflex Collections:</span>
-            <div id="starSelectorRow" class="flex items-center gap-1" role="group" aria-label="Select 1 to 5 stars">
-              <button type="button" data-star="1" onclick="selectStarRating(1)" class="star-btn text-xl text-amber-500 leading-none">★</button>
-              <button type="button" data-star="2" onclick="selectStarRating(2)" class="star-btn text-xl text-amber-500 leading-none">★</button>
-              <button type="button" data-star="3" onclick="selectStarRating(3)" class="star-btn text-xl text-amber-500 leading-none">★</button>
-              <button type="button" data-star="4" onclick="selectStarRating(4)" class="star-btn text-xl text-amber-500 leading-none">★</button>
-              <button type="button" data-star="5" onclick="selectStarRating(5)" class="star-btn text-xl text-amber-500 leading-none">★</button>
-              <span id="selectedStarLabel" class="ml-1.5 text-xs font-bold text-amber-800">5 / 5 Stars</span>
-            </div>
-          </div>
-
-          <input id="reviewAuthorInput" type="text" placeholder="Your Name (optional)"
-            class="w-full border border-stone-300 bg-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
-          <textarea required id="reviewCommentInput" rows="2" placeholder="Write your review or comment about our products and service..."
-            class="w-full border border-stone-300 bg-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600"></textarea>
-
-          <button type="submit"
-            class="w-full sm:w-auto bg-stone-900 hover:bg-amber-600 text-white font-bold px-5 py-2.5 rounded-xl text-xs transition">
-            Post Review
-          </button>
-        </form>
-
-        <div id="reviewsListContainer" class="space-y-2.5"></div>
-      </section>
-
-      <!-- ABOUT US, PRIVACY & DELIVERY POLICY SECTION -->
-      <section id="aboutUsSection" class="bg-white/95 rounded-2xl border border-amber-400/25 p-5 space-y-4 shadow-md mt-6">
-        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-stone-100 pb-3">
-          <div>
-            <span class="text-[10px] font-bold uppercase tracking-widest text-amber-700">About Sekiflex Collections</span>
-            <h3 class="font-editorial text-xl font-bold text-stone-900 mt-0.5">Refined Fashion &amp; Reliable Global Dispatch</h3>
-          </div>
-          <button type="button" onclick="openInfoModal('privacy')"
-            class="bg-stone-100 hover:bg-amber-50 border border-stone-200 text-stone-900 text-xs font-bold px-3 py-1.5 rounded-full transition">
-            Privacy &amp; Delivery Policy
-          </button>
-        </div>
-        <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
-          Sekiflex Collections is your trusted fashion and lifestyle destination based in Uyo, Akwa Ibom State. We curate quality men’s and women’s clothing, luxury footwear, wristwatches, fine jewelry, bangles, designer handbags, and everyday essentials—backed by our dedicated dispatch network delivering across all 36 states in Nigeria and internationally to the UK, USA, Canada, and Ghana.
-        </p>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs bg-stone-50 p-3.5 rounded-xl border border-stone-200/80">
-          <div>
-            <p class="font-bold text-stone-900">Walk-In Store Location</p>
-            <p class="text-stone-600 mt-0.5">Urua Ekpa, Uyo, Akwa Ibom State</p>
-            <p class="text-stone-500 mt-0.5">Mon–Sat: 7:30 AM – 9:00 PM &bull; Sun: 2:00 PM – 9:00 PM</p>
-          </div>
-          <div>
-            <p class="font-bold text-stone-900">Customer Care &amp; Orders</p>
-            <p class="text-stone-600 mt-0.5">Tap below for instant WhatsApp or Call support</p>
-            <div class="flex gap-2 mt-2 flex-wrap">
-              <a href="https://wa.me/2349069037617" target="_blank" rel="noopener" class="bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-lg text-[11px]">WhatsApp Us</a>
-              <a href="tel:+2349163755234" class="bg-stone-900 text-white font-bold px-3 py-1.5 rounded-lg text-[11px]">Call Now</a>
-              <button type="button" onclick="openInfoModal('privacy')" class="bg-amber-100 text-amber-950 font-bold px-3 py-1.5 rounded-lg text-[11px]">Privacy Policy</button>
-            </div>
-          </div>
-        </div>
-        <p class="text-center text-[11px] text-stone-400 pt-1">&copy; 2026 Sekiflex Collections &amp; Sekiflex Dispatch. All rights reserved.</p>
-      </section>
+      </footer>
 
     </div>
   </div>
 
+  <!-- REVIEWS & RATINGS MODAL (OPENED ON DEMAND) -->
+  <div id="reviewsModal" onclick="if(event.target === this) closeReviewsModal();" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
+    <div class="bg-white w-full max-w-lg rounded-3xl p-5 space-y-4 shadow-2xl my-auto max-h-[85vh] overflow-y-auto">
+      <div class="flex items-center justify-between gap-2 border-b border-stone-100 pb-3">
+        <div>
+          <h3 class="font-editorial text-lg font-bold text-stone-900">Ratings &amp; Reviews</h3>
+          <p id="reviewCountText" class="text-[11px] text-stone-500">0 reviews</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-extrabold text-amber-600">★ <span id="avgRatingText" class="text-stone-900">5.0</span></span>
+          <button type="button" onclick="closeReviewsModal()" class="w-8 h-8 rounded-full bg-stone-100 text-stone-600 font-bold text-lg">&times;</button>
+        </div>
+      </div>
+
+      <form onsubmit="submitCustomerReview(event)" class="bg-stone-50 border border-stone-200/80 rounded-2xl p-3 space-y-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="text-xs font-bold text-stone-900">Your Rating:</span>
+          <div id="starSelectorRow" class="flex items-center gap-1" role="group" aria-label="Select 1 to 5 stars">
+            <button type="button" data-star="1" onclick="selectStarRating(1)" class="star-btn text-lg text-amber-500 leading-none">★</button>
+            <button type="button" data-star="2" onclick="selectStarRating(2)" class="star-btn text-lg text-amber-500 leading-none">★</button>
+            <button type="button" data-star="3" onclick="selectStarRating(3)" class="star-btn text-lg text-amber-500 leading-none">★</button>
+            <button type="button" data-star="4" onclick="selectStarRating(4)" class="star-btn text-lg text-amber-500 leading-none">★</button>
+            <button type="button" data-star="5" onclick="selectStarRating(5)" class="star-btn text-lg text-amber-500 leading-none">★</button>
+            <span id="selectedStarLabel" class="ml-1 text-[11px] font-bold text-amber-800">5 / 5</span>
+          </div>
+        </div>
+
+        <input id="reviewAuthorInput" type="text" placeholder="Your Name (optional)"
+          class="w-full border border-stone-300 bg-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
+        <textarea required id="reviewCommentInput" rows="2" placeholder="Share your feedback..."
+          class="w-full border border-stone-300 bg-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600"></textarea>
+
+        <button type="submit"
+          class="w-full bg-stone-900 hover:bg-amber-600 text-white font-bold py-2.5 rounded-xl text-xs transition">
+          Post Review
+        </button>
+      </form>
+
+      <div id="reviewsListContainer" class="space-y-2"></div>
+    </div>
+  </div>
+
   <!-- PRODUCT DETAIL MODAL -->
-  <div id="productDetailModal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
+  <div id="productDetailModal" onclick="if(event.target === this) closeProductDetailModal();" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
     <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl my-auto">
       <div class="relative bg-stone-100">
         <img id="detailModalImg" src="" alt="" class="w-full max-h-80 object-contain object-top mx-auto bg-stone-100" />
@@ -545,7 +446,7 @@
         </div>
 
         <div class="border-t border-stone-100 pt-3 space-y-1.5">
-          <p class="text-[11px] font-extrabold uppercase tracking-wider text-stone-400">About This Product</p>
+          <p class="text-[11px] font-extrabold uppercase tracking-wider text-stone-400">Product Details</p>
           <p id="detailModalDesc" class="text-xs sm:text-sm text-stone-700 leading-relaxed whitespace-pre-line"></p>
         </div>
 
@@ -564,92 +465,82 @@
   </div>
 
   <!-- FIXED BOTTOM NAVIGATION BAR -->
-  <nav id="bottomFixedNav" class="fixed bottom-0 inset-x-0 z-40 bg-stone-950/95 backdrop-blur-md border-t border-amber-500/25 shadow-[0_-4px_16px_rgba(0,0,0,0.35)]">
-    <div class="max-w-5xl mx-auto grid grid-cols-4 h-16">
+  <nav id="bottomFixedNav" class="fixed bottom-0 inset-x-0 z-40 bg-stone-950/95 backdrop-blur-md border-t border-amber-500/20 shadow-[0_-4px_16px_rgba(0,0,0,0.35)]">
+    <div class="max-w-5xl mx-auto grid grid-cols-4 h-14">
       <button type="button" id="navHomeBtn" onclick="switchBottomTab('home')"
-        class="flex flex-col items-center justify-center gap-0.5 text-amber-400 font-bold text-[11px] transition">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3 2 12h3v8h6v-6h2v6h6v-8h3L12 3z"/></svg>
+        class="flex flex-col items-center justify-center gap-0.5 text-amber-400 font-bold text-[10px] transition">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3 2 12h3v8h6v-6h2v6h6v-8h3L12 3z"/></svg>
         <span>Home</span>
       </button>
 
       <button type="button" id="navCatBtn" onclick="switchBottomTab('categories')"
-        class="flex flex-col items-center justify-center gap-0.5 text-stone-300 hover:text-amber-300 font-semibold text-[11px] transition">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        class="flex flex-col items-center justify-center gap-0.5 text-stone-300 hover:text-amber-300 font-semibold text-[10px] transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
         <span>Categories</span>
       </button>
 
       <button type="button" id="navCartBtn" onclick="switchBottomTab('cart')"
-        class="relative flex flex-col items-center justify-center gap-0.5 text-stone-300 hover:text-amber-300 font-semibold text-[11px] transition">
+        class="relative flex flex-col items-center justify-center gap-0.5 text-stone-300 hover:text-amber-300 font-semibold text-[10px] transition">
         <div class="relative">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-          <span id="cartCount" class="absolute -top-1.5 -right-2.5 bg-amber-500 text-stone-950 text-[10px] font-extrabold min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center">0</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span id="cartCount" class="absolute -top-1.5 -right-2.5 bg-amber-500 text-stone-950 text-[9px] font-extrabold min-w-[16px] h-[16px] px-1 rounded-full flex items-center justify-center">0</span>
         </div>
         <span>Cart</span>
       </button>
 
       <button type="button" id="navAccountBtn" onclick="switchBottomTab('account')"
-        class="flex flex-col items-center justify-center gap-0.5 text-stone-300 hover:text-amber-300 font-semibold text-[11px] transition">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        class="flex flex-col items-center justify-center gap-0.5 text-stone-300 hover:text-amber-300 font-semibold text-[10px] transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         <span>Account</span>
       </button>
     </div>
   </nav>
 
-  <!-- ACCOUNT & PROFILE SHEET (CUSTOMER ONLY — NO ADMIN BUTTONS) -->
-  <div id="accountDrawer" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center">
+  <!-- ACCOUNT & PROFILE SHEET -->
+  <div id="accountDrawer" onclick="if(event.target === this) closeAllDrawers();" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center">
     <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 space-y-4 shadow-2xl">
       <div class="flex items-center justify-between gap-2 border-b border-stone-200 pb-3">
         <div class="min-w-0">
-          <h3 id="menuCustomerName" class="font-extrabold text-base text-stone-900 truncate">Welcome!</h3>
-          <p id="menuCustomerEmail" class="text-xs text-stone-500 truncate">Register before checkout to place an order</p>
+          <h3 id="menuCustomerName" class="font-extrabold text-base text-stone-900 truncate">Welcome</h3>
+          <p id="menuCustomerEmail" class="text-xs text-stone-500 truncate">Sign in or register before checkout</p>
         </div>
         <div class="flex items-center gap-2 shrink-0">
           <button type="button" onclick="openStoreSettingsModal()"
-            class="inline-flex items-center gap-1.5 bg-stone-900 hover:bg-amber-600 text-white text-xs font-bold px-3 py-1.5 rounded-full transition">
+            class="inline-flex items-center gap-1 bg-stone-900 hover:bg-amber-600 text-white text-xs font-bold px-3 py-1.5 rounded-full transition">
             <span>Settings</span>
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-              <circle cx="12" cy="12" r="3"/>
-            </svg>
           </button>
           <button type="button" onclick="closeAllDrawers()" class="w-8 h-8 rounded-full bg-stone-100 text-stone-600 font-bold text-lg">&times;</button>
         </div>
       </div>
 
       <div class="space-y-2 text-xs font-bold">
-        <a href="track.html" class="flex items-center justify-between p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950">
+        <a href="track.html" class="flex items-center justify-between p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-950">
           <span>Track My Orders</span>
           <span>→</span>
         </a>
-        <button type="button" onclick="closeAllDrawers(); document.getElementById('customerReviewsSection').scrollIntoView({behavior:'smooth'});"
-          class="w-full flex items-center justify-between p-3.5 rounded-xl bg-stone-100 text-stone-800">
-          <span>Rate &amp; Review Store (5★)</span>
+        <button type="button" onclick="closeAllDrawers(); openReviewsModal();"
+          class="w-full flex items-center justify-between p-3 rounded-xl bg-stone-100 text-stone-800">
+          <span>Rate &amp; Review Store</span>
           <span>→</span>
         </button>
-        <div class="flex items-center justify-between p-3.5 rounded-xl bg-stone-100 text-stone-800">
-          <span>Account, Password &amp; Socials</span>
-          <button type="button" onclick="openStoreSettingsModal()" class="bg-stone-900 text-white px-3 py-1 rounded-lg text-[11px]">
-            Open Settings →
-          </button>
-        </div>
-        <button type="button" onclick="closeAllDrawers(); openInfoModal('privacy')" class="w-full flex items-center justify-between p-3.5 rounded-xl bg-stone-100 text-stone-800">
-          <span>Privacy &amp; Delivery Policy</span>
+        <button type="button" onclick="closeAllDrawers(); openInfoModal('delivery')" class="w-full flex items-center justify-between p-3 rounded-xl bg-stone-100 text-stone-800">
+          <span>Delivery &amp; Pickup Info</span>
           <span>→</span>
         </button>
-        <button type="button" onclick="closeAllDrawers(); openInfoModal('about')" class="w-full flex items-center justify-between p-3.5 rounded-xl bg-stone-100 text-stone-800">
+        <button type="button" onclick="closeAllDrawers(); openInfoModal('privacy')" class="w-full flex items-center justify-between p-3 rounded-xl bg-stone-100 text-stone-800">
+          <span>Privacy Policy</span>
+          <span>→</span>
+        </button>
+        <button type="button" onclick="closeAllDrawers(); openInfoModal('about')" class="w-full flex items-center justify-between p-3 rounded-xl bg-stone-100 text-stone-800">
           <span>About Sekiflex Collections</span>
           <span>→</span>
         </button>
-        <a href="https://wa.me/2349069037617" target="_blank" rel="noopener" class="flex items-center justify-between p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900">
-          <span>Contact Customer Support</span>
-          <span>→</span>
-        </a>
         <button type="button" id="accountSignInActionBtn" onclick="closeAllDrawers(); openAuthGate('signup', false);"
-          class="w-full p-3.5 rounded-xl bg-amber-600 text-white text-center mt-2">
+          class="w-full p-3 rounded-xl bg-amber-600 text-white text-center mt-2">
           Register / Sign In
         </button>
         <button type="button" id="accountSignOutActionBtn" onclick="customerLogout()"
-          class="hidden w-full p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-center mt-2">
+          class="hidden w-full p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-center mt-2">
           Sign Out of Account
         </button>
       </div>
@@ -657,37 +548,29 @@
   </div>
 
   <!-- STORE SETTINGS MODAL -->
-  <div id="storeSettingsModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
+  <div id="storeSettingsModal" onclick="if(event.target === this) closeStoreSettingsModal();" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
     <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl my-auto">
       <div class="flex items-center justify-between border-b border-stone-100 pb-3">
         <div>
           <h3 class="font-editorial text-lg font-bold text-stone-900">Account &amp; Store Settings</h3>
-          <p class="text-xs text-stone-500">Password, social pages, privacy &amp; preferences</p>
+          <p class="text-xs text-stone-500">Password, social pages &amp; preferences</p>
         </div>
         <button type="button" onclick="closeStoreSettingsModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 font-bold text-lg">&times;</button>
       </div>
 
       <div class="bg-amber-50/70 border border-amber-200 rounded-2xl p-3.5 space-y-2">
-        <p class="text-xs font-extrabold text-stone-900">Follow Us on Social Media</p>
+        <p class="text-xs font-extrabold text-stone-900">Social Channels</p>
         <div class="grid grid-cols-2 gap-2 text-xs font-bold">
           <a id="settingsTikTokLink" href="https://www.tiktok.com/@sekiflex_collections?_r=1&_t=ZS-9BbSAFjxrZW" target="_blank" rel="noopener"
             class="flex items-center justify-center gap-1.5 bg-stone-950 hover:bg-stone-800 text-white py-2.5 px-3 rounded-xl transition">
-            <span>TikTok</span>
-            <span>→</span>
+            <span>TikTok →</span>
           </a>
           <a id="settingsFacebookLink" href="https://www.facebook.com/share/1G3ErASdHa/" target="_blank" rel="noopener"
             class="flex items-center justify-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-3 rounded-xl transition">
-            <span>Facebook</span>
-            <span>→</span>
+            <span>Facebook →</span>
           </a>
         </div>
       </div>
-
-      <button type="button" onclick="closeStoreSettingsModal(); openInfoModal('privacy')"
-        class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-stone-100 hover:bg-amber-50 border border-stone-200 text-stone-900 text-xs font-bold transition">
-        <span>🔒 Privacy &amp; Delivery Data Policy</span>
-        <span>Read →</span>
-      </button>
 
       <form onsubmit="handleAccountPasswordChange(event)" class="bg-stone-50 border border-stone-200 rounded-2xl p-3.5 space-y-2.5">
         <p class="text-xs font-extrabold text-stone-900">Change Account Password</p>
@@ -704,7 +587,7 @@
 
       <label class="flex items-center justify-between p-3.5 rounded-2xl bg-stone-50 border border-stone-200 text-stone-800 cursor-pointer text-xs font-bold">
         <div>
-          <p class="font-bold text-stone-900">Notification Sound Alerts</p>
+          <p class="font-bold text-stone-900">Sound Alerts</p>
           <p class="text-[11px] font-normal text-stone-500">Alert tone for store updates</p>
         </div>
         <input type="checkbox" id="prefSoundToggle"
@@ -718,41 +601,19 @@
     </div>
   </div>
 
-  <!-- CATEGORIES & STORE MENU SHEET -->
-  <div id="categoriesDrawer" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center">
+  <!-- CATEGORIES SHEET -->
+  <div id="categoriesDrawer" onclick="if(event.target === this) closeAllDrawers();" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center">
     <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 max-h-[82vh] overflow-y-auto space-y-4 shadow-2xl">
       <div class="flex items-center justify-between border-b border-stone-200 pb-3">
-        <h3 class="font-extrabold text-base text-stone-900">Categories &amp; Store Pages</h3>
+        <h3 class="font-extrabold text-base text-stone-900">Categories</h3>
         <button type="button" onclick="closeAllDrawers()" class="w-8 h-8 rounded-full bg-stone-100 text-stone-600 font-bold text-lg">&times;</button>
       </div>
-
-      <div class="space-y-2">
-        <p class="text-[11px] font-bold uppercase tracking-wider text-stone-400">Shop by Category</p>
-        <div id="drawerCategoriesList" class="grid grid-cols-2 gap-2"></div>
-      </div>
-
-      <div class="space-y-2 border-t border-stone-100 pt-3">
-        <p class="text-[11px] font-bold uppercase tracking-wider text-stone-400">Information &amp; Services</p>
-        <div class="grid grid-cols-2 gap-2 text-xs font-bold">
-          <button type="button" onclick="closeAllDrawers(); openInfoModal('about')" class="p-3 rounded-xl bg-stone-100 hover:bg-amber-50 text-left">
-            About Us &amp; HQ
-          </button>
-          <a href="track.html" class="p-3 rounded-xl bg-amber-50 text-amber-900 border border-amber-200 text-left block">
-            Track My Order →
-          </a>
-          <button type="button" onclick="closeAllDrawers(); openInfoModal('delivery')" class="p-3 rounded-xl bg-stone-100 hover:bg-amber-50 text-left">
-            Delivery &amp; Pickup
-          </button>
-          <button type="button" onclick="closeAllDrawers(); openInfoModal('privacy')" class="p-3 rounded-xl bg-stone-100 hover:bg-amber-50 text-left">
-            Privacy Policy
-          </button>
-        </div>
-      </div>
+      <div id="drawerCategoriesList" class="grid grid-cols-2 gap-2"></div>
     </div>
   </div>
 
   <!-- ABOUT US / DELIVERY / PRIVACY POLICY MODAL -->
-  <div id="infoModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+  <div id="infoModal" onclick="if(event.target === this) this.classList.add('hidden');" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl my-auto max-h-[85vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-stone-100 pb-2.5">
         <h3 id="infoModalTitle" class="font-editorial text-xl font-bold text-stone-900">About Sekiflex</h3>
@@ -766,7 +627,7 @@
   </div>
 
   <!-- Added-to-Bag Toast Notification -->
-  <div id="bagToast" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-40 hidden bg-stone-900 text-white px-4 py-2.5 rounded-full shadow-2xl border border-amber-400/40 flex items-center gap-3 text-xs whitespace-nowrap">
+  <div id="bagToast" class="fixed bottom-16 left-1/2 -translate-x-1/2 z-40 hidden bg-stone-900 text-white px-4 py-2 rounded-full shadow-2xl border border-amber-400/30 flex items-center gap-3 text-xs whitespace-nowrap">
     <span class="text-emerald-400 font-bold">&#10003;</span>
     <span id="bagToastText">Added to cart</span>
     <button type="button" onclick="hideBagToast(); openCartForCheckout();" class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-3 py-1 rounded-full text-[11px] transition">
@@ -775,7 +636,7 @@
   </div>
 
   <!-- CART & CHECKOUT DRAWER -->
-  <div id="cartDrawer" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex justify-end">
+  <div id="cartDrawer" onclick="if(event.target === this) toggleCart(false);" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex justify-end">
     <div class="bg-white w-full max-w-md h-full overflow-y-auto p-5 flex flex-col justify-between shadow-2xl">
       <div>
         <div class="flex items-center justify-between border-b border-stone-200 pb-3.5 mb-4">
@@ -894,7 +755,7 @@
     </div>
   </div>
 
-  <!-- Success Modal (With Back to Store Button & Phone Back Button Support) -->
+  <!-- Success Modal -->
   <div id="successModal" onclick="if(event.target === this) closeSuccessModalToStore();" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl relative">
       <button type="button" onclick="closeSuccessModalToStore()" aria-label="Back to store"
@@ -962,50 +823,68 @@
     let featuredAutoTimer = null;
     let featuredPauseUntil = 0;
     let lastRotationSlot = -1;
-    let successHistoryPushed = false;
+    let storeAnchorPushed = false;
+
+    function hasAnyOverlayOpen() {
+      const overlayIds = [
+        'customerAuthGate',
+        'productDetailModal',
+        'accountDrawer',
+        'storeSettingsModal',
+        'categoriesDrawer',
+        'infoModal',
+        'cartDrawer',
+        'successModal',
+        'reviewsModal'
+      ];
+      return overlayIds.some(id => {
+        const el = document.getElementById(id);
+        return el && !el.classList.contains('hidden');
+      });
+    }
+
+    function armStoreBackGuard() {
+      if (storeAnchorPushed) return;
+      try {
+        window.history.pushState({ sekiflexStoreGuard: true }, '', window.location.href);
+        storeAnchorPushed = true;
+      } catch (e) {}
+    }
 
     function openSuccessModalWithHistory() {
       const modal = document.getElementById('successModal');
-      if (!modal) return;
-      modal.classList.remove('hidden');
-      if (!successHistoryPushed) {
-        try {
-          window.history.pushState({ sekiflexOrderSuccess: true }, '', window.location.href);
-          successHistoryPushed = true;
-        } catch (err) {
-          console.warn('History pushState skipped:', err);
-        }
-      }
+      if (modal) modal.classList.remove('hidden');
+      armStoreBackGuard();
     }
 
-    function closeSuccessModalToStore(fromPopState = false) {
+    function closeSuccessModalToStore() {
       const modal = document.getElementById('successModal');
       if (modal) modal.classList.add('hidden');
       closeAllDrawers();
       setActiveBottomTab('home');
-      if (successHistoryPushed) {
-        successHistoryPushed = false;
-        if (!fromPopState) {
-          try {
-            window.history.back();
-          } catch (err) {}
-        }
-      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      armStoreBackGuard();
     }
 
     window.addEventListener('popstate', () => {
-      const successModal = document.getElementById('successModal');
-      if (successModal && !successModal.classList.contains('hidden')) {
-        closeSuccessModalToStore(true);
+      if (hasAnyOverlayOpen()) {
+        closeAllDrawers();
+        setActiveBottomTab('home');
+        armStoreBackGuard();
         return;
       }
-      const cartDrawer = document.getElementById('cartDrawer');
-      if (cartDrawer && !cartDrawer.classList.contains('hidden')) {
-        toggleCart(false);
+
+      if (activeCategory !== 'ALL' || searchQuery || pictureSearchScores || window.scrollY > 180) {
+        clearPictureSearch();
+        clearSearch();
+        filterCategory('ALL');
+        setActiveBottomTab('home');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        armStoreBackGuard();
         return;
       }
-      closeAllDrawers();
+
+      storeAnchorPushed = false;
     });
 
     function getStatusColor(value) {
@@ -1239,6 +1118,7 @@
       const file = event?.target?.files?.[0];
       if (!file) return;
 
+      armStoreBackGuard();
       pictureSearchFileName = (file.name || '').toLowerCase();
       const reader = new FileReader();
 
@@ -1293,12 +1173,10 @@
 
           pictureSearchScores = scores;
           statusEl.textContent = visualMatchedCount > 0
-            ? `Matched against ${visualMatchedCount} catalog photo${visualMatchedCount === 1 ? '' : 's'}`
+            ? `Matched against ${visualMatchedCount} photo${visualMatchedCount === 1 ? '' : 's'}`
             : 'Showing catalog items for your photo';
 
           document.getElementById('heroCarouselSection').classList.add('hidden');
-          document.getElementById('quickFeatureStrip').classList.add('hidden');
-          document.getElementById('trustHighlightsStrip').classList.add('hidden');
           document.getElementById('featuredStripSection').classList.add('hidden');
 
           applyCatalogFilters();
@@ -1321,8 +1199,6 @@
 
       if (!searchQuery) {
         document.getElementById('heroCarouselSection').classList.remove('hidden');
-        document.getElementById('quickFeatureStrip').classList.remove('hidden');
-        document.getElementById('trustHighlightsStrip').classList.remove('hidden');
         if (allProducts.length) {
           document.getElementById('featuredStripSection').classList.remove('hidden');
           startFeaturedAutoScroll();
@@ -1331,34 +1207,47 @@
       applyCatalogFilters();
     }
 
+    function openReviewsModal() {
+      renderReviews();
+      document.getElementById('reviewsModal').classList.remove('hidden');
+      armStoreBackGuard();
+    }
+
+    function closeReviewsModal() {
+      document.getElementById('reviewsModal').classList.add('hidden');
+    }
+
     function selectStarRating(stars) {
       selectedStarRating = Math.max(1, Math.min(5, Number(stars) || 5));
       document.querySelectorAll('.star-btn').forEach(btn => {
         const val = Number(btn.getAttribute('data-star'));
         btn.className = val <= selectedStarRating
-          ? 'star-btn text-xl text-amber-500 leading-none'
-          : 'star-btn text-xl text-stone-300 leading-none';
+          ? 'star-btn text-lg text-amber-500 leading-none'
+          : 'star-btn text-lg text-stone-300 leading-none';
       });
       const label = document.getElementById('selectedStarLabel');
-      if (label) label.textContent = `${selectedStarRating} / 5 Stars`;
+      if (label) label.textContent = `${selectedStarRating} / 5`;
     }
 
     function renderReviews() {
       const container = document.getElementById('reviewsListContainer');
       const avgEl = document.getElementById('avgRatingText');
+      const headerAvgEl = document.getElementById('headerAvgRating');
       const countEl = document.getElementById('reviewCountText');
       if (!container) return;
 
       if (!storeReviews.length) {
         avgEl.textContent = '5.0';
+        if (headerAvgEl) headerAvgEl.textContent = '5.0';
         countEl.textContent = 'No reviews yet';
-        container.innerHTML = '<p class="text-xs text-stone-400 text-center py-2">Be the first customer to leave a 5-star review!</p>';
+        container.innerHTML = '<p class="text-xs text-stone-400 text-center py-2">No reviews yet. Be the first to leave one.</p>';
         return;
       }
 
       const sum = storeReviews.reduce((acc, r) => acc + (Number(r.rating) || 5), 0);
       const avg = (sum / storeReviews.length).toFixed(1);
       avgEl.textContent = avg;
+      if (headerAvgEl) headerAvgEl.textContent = avg;
       countEl.textContent = `${storeReviews.length} review${storeReviews.length === 1 ? '' : 's'}`;
 
       container.innerHTML = storeReviews.map(r => {
@@ -1403,6 +1292,7 @@
       const prod = allProducts.find(p => String(p.id) === String(productId));
       if (!prod) return;
 
+      armStoreBackGuard();
       const img = (prod.images && prod.images[0]) || prod.image_url || 'https://placehold.co/500x600?text=Sekiflex';
       const out = (prod.stock_quantity !== null && prod.stock_quantity <= 0);
       const catObj = allCategories.find(c => c.id === prod.category_id);
@@ -1453,6 +1343,7 @@
 
     function openStoreSettingsModal() {
       applySocialLinks();
+      armStoreBackGuard();
       const toggle = document.getElementById('prefSoundToggle');
       if (toggle) {
         const saved = localStorage.getItem('sekiflex_sound_enabled');
@@ -1520,6 +1411,9 @@
       document.getElementById('cartDrawer').classList.add('hidden');
       document.getElementById('storeSettingsModal').classList.add('hidden');
       document.getElementById('productDetailModal').classList.add('hidden');
+      document.getElementById('reviewsModal').classList.add('hidden');
+      document.getElementById('infoModal').classList.add('hidden');
+      document.getElementById('customerAuthGate').classList.add('hidden');
     }
 
     function setActiveBottomTab(tab) {
@@ -1528,8 +1422,8 @@
         const el = document.getElementById(elId);
         if (!el) return;
         el.className = key === tab
-          ? 'relative flex flex-col items-center justify-center gap-0.5 text-amber-400 font-bold text-[11px] transition'
-          : 'relative flex flex-col items-center justify-center gap-0.5 text-stone-300 hover:text-amber-300 font-semibold text-[11px] transition';
+          ? 'relative flex flex-col items-center justify-center gap-0.5 text-amber-400 font-bold text-[10px] transition'
+          : 'relative flex flex-col items-center justify-center gap-0.5 text-stone-300 hover:text-amber-300 font-semibold text-[10px] transition';
       });
     }
 
@@ -1540,10 +1434,12 @@
       if (tab === 'home') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (tab === 'categories') {
+        armStoreBackGuard();
         document.getElementById('categoriesDrawer').classList.remove('hidden');
       } else if (tab === 'cart') {
         openCartForCheckout();
       } else if (tab === 'account') {
+        armStoreBackGuard();
         document.getElementById('accountDrawer').classList.remove('hidden');
       }
     }
@@ -1557,29 +1453,29 @@
     }
 
     function openInfoModal(type) {
+      armStoreBackGuard();
       const title = document.getElementById('infoModalTitle');
       const body = document.getElementById('infoModalBody');
       if (type === 'delivery') {
         title.textContent = 'Delivery & Walk-In Store Pickup';
         body.innerHTML = `
-          <p><strong>1. Free Walk-In Store Pickup (Uyo HQ):</strong><br/>Pick up your order at <strong>Urua Ekpa, Uyo, Akwa Ibom State</strong> (Mon–Sat: 7:30 AM – 9:00 PM, Sun: 2:00 PM – 9:00 PM) with zero delivery fee.</p>
-          <p><strong>2. Nationwide &amp; Worldwide Courier Delivery:</strong><br/>We deliver across all 36 states in Nigeria (2–4 business days) and internationally to the UK, USA, Canada, and Ghana (5–10 business days).</p>
-          <p><strong>3. Live Tracking:</strong><br/>Every order receives an instant tracking code (e.g. <code>SC-2026-XXXXXX</code>) to monitor live dispatch progress.</p>
+          <p><strong>Free Walk-In Pickup (Uyo HQ):</strong><br/>Urua Ekpa, Uyo, Akwa Ibom State (Mon–Sat: 7:30 AM – 9:00 PM, Sun: 2:00 PM – 9:00 PM).</p>
+          <p><strong>Nationwide &amp; Global Dispatch:</strong><br/>Delivery across all 36 states in Nigeria (2–4 business days) and internationally to the UK, USA, Canada, and Ghana (5–10 business days).</p>
+          <p><strong>Order Tracking:</strong><br/>Every order gets a tracking code (<code>SC-2026-XXXXXX</code>) usable on the Track Order page.</p>
         `;
       } else if (type === 'privacy') {
         title.textContent = 'Privacy & Delivery Data Policy';
         body.innerHTML = `
-          <p><strong>1. Customer Data We Collect:</strong><br/>We collect only the details needed to run your account and fulfill orders: your name, email address, phone/WhatsApp number, delivery address (or Uyo HQ pickup choice), and payment transfer reference.</p>
-          <p><strong>2. How We Handle Your Delivery &amp; Order Data:</strong><br/>Your recipient name, phone number, and destination address are used strictly to pack, dispatch, and track your order via Sekiflex Dispatch or our courier partners and to send order status updates.</p>
-          <p><strong>3. Data Protection &amp; No Selling of Data:</strong><br/>Sekiflex Collections never sells or rents your personal information to third-party advertisers. Your payment reference is used only to verify bank transfer confirmation for your order.</p>
-          <p><strong>4. Your Choices &amp; Support:</strong><br/>You can update your password anytime under <strong>Account → Settings</strong>, or contact us via WhatsApp (<code>09069037617</code>) or phone (<code>09163755234</code>) for account or delivery privacy questions.</p>
+          <p><strong>Data Collected:</strong><br/>Name, email, phone/WhatsApp number, delivery address or Uyo pickup option, and payment transfer reference for fulfilling your order.</p>
+          <p><strong>How It Is Used:</strong><br/>Used strictly to pack, dispatch, and track your order and share status updates. Customer data is never sold to third parties.</p>
+          <p><strong>Support:</strong><br/>WhatsApp <code>09069037617</code> or call <code>09163755234</code> for assistance.</p>
         `;
       } else {
         title.textContent = 'About Sekiflex Collections';
         body.innerHTML = `
-          <p><strong>Sekiflex Collections</strong> is a premier fashion and lifestyle brand headquartered in Uyo, Akwa Ibom State, Nigeria.</p>
-          <p>We specialize in curated men’s &amp; women’s apparel, footwear, wristwatches, fine jewelry, bangles, designer handbags, and timeless accessories.</p>
-          <p><strong>Store Address:</strong> Urua Ekpa, Uyo, Akwa Ibom State</p>
+          <p><strong>Sekiflex Collections</strong> curates apparel, footwear, wristwatches, jewelry, and accessories with nationwide and global dispatch from Uyo, Akwa Ibom State.</p>
+          <p><strong>Store Location:</strong> Urua Ekpa, Uyo, Akwa Ibom State</p>
+          <p><strong>Hours:</strong> Mon–Sat: 7:30 AM – 9:00 PM &bull; Sun: 2:00 PM – 9:00 PM</p>
         `;
       }
       document.getElementById('infoModal').classList.remove('hidden');
@@ -1610,22 +1506,14 @@
       searchQuery = (input.value || '').trim().toLowerCase();
       document.getElementById('clearSearchBtn').classList.toggle('hidden', !searchQuery);
 
-      const heroSec = document.getElementById('heroCarouselSection');
-      const quickSec = document.getElementById('quickFeatureStrip');
-      const trustSec = document.getElementById('trustHighlightsStrip');
-      const featSec = document.getElementById('featuredStripSection');
-
       if (searchQuery || pictureSearchScores) {
-        heroSec.classList.add('hidden');
-        quickSec.classList.add('hidden');
-        trustSec.classList.add('hidden');
-        featSec.classList.add('hidden');
+        armStoreBackGuard();
+        document.getElementById('heroCarouselSection').classList.add('hidden');
+        document.getElementById('featuredStripSection').classList.add('hidden');
       } else {
-        heroSec.classList.remove('hidden');
-        quickSec.classList.remove('hidden');
-        trustSec.classList.remove('hidden');
+        document.getElementById('heroCarouselSection').classList.remove('hidden');
         if (allProducts.length) {
-          featSec.classList.remove('hidden');
+          document.getElementById('featuredStripSection').classList.remove('hidden');
           startFeaturedAutoScroll();
         }
         startBannerAutoShift();
@@ -1647,8 +1535,6 @@
       document.getElementById('clearSearchBtn').classList.add('hidden');
       if (!pictureSearchScores) {
         document.getElementById('heroCarouselSection').classList.remove('hidden');
-        document.getElementById('quickFeatureStrip').classList.remove('hidden');
-        document.getElementById('trustHighlightsStrip').classList.remove('hidden');
         if (allProducts.length) {
           document.getElementById('featuredStripSection').classList.remove('hidden');
           startFeaturedAutoScroll();
@@ -1698,9 +1584,10 @@
 
     function openAuthGate(defaultTab = 'signup', returnToCheckout = false) {
       returnToCheckoutAfterAuth = Boolean(returnToCheckout);
+      armStoreBackGuard();
       document.getElementById('authSubtitle').textContent = returnToCheckoutAfterAuth
-        ? 'Please register or sign in first — you will return straight to checkout.'
-        : 'Register or sign in to your Sekiflex Collections account.';
+        ? 'Sign in or register first — you will return straight to checkout.'
+        : 'Sign in or register to your Sekiflex Collections account.';
 
       switchAuthView(defaultTab);
       document.getElementById('customerAuthGate').classList.remove('hidden');
@@ -1943,8 +1830,8 @@
         phone: profile?.phone || user.user_metadata?.phone || ''
       };
 
-      document.getElementById('topWelcomeGreeting').textContent = `Hello ${firstName}`;
-      document.getElementById('menuCustomerName').textContent = `Hello ${exactFullName}`;
+      document.getElementById('topWelcomeGreeting').textContent = `Hello, ${firstName}`;
+      document.getElementById('menuCustomerName').textContent = exactFullName;
       document.getElementById('menuCustomerEmail').textContent = currentCustomer.email;
       document.getElementById('accountSignInActionBtn').classList.add('hidden');
       document.getElementById('accountSignOutActionBtn').classList.remove('hidden');
@@ -1998,12 +1885,12 @@
       }
 
       const colorMap = {
-        gold: 'from-amber-600 via-amber-700 to-stone-900',
-        green: 'from-emerald-700 via-emerald-800 to-stone-900',
-        red: 'from-rose-700 via-red-800 to-stone-950',
-        dark: 'from-stone-950 via-stone-900 to-amber-900'
+        gold: 'from-amber-950 via-stone-900 to-stone-800',
+        green: 'from-emerald-950 via-stone-900 to-stone-800',
+        red: 'from-stone-950 via-stone-900 to-rose-950',
+        dark: 'from-stone-950 via-stone-900 to-amber-950'
       };
-      card.className = `promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r ${colorMap[banner.banner_color] || colorMap.gold} text-white p-4 flex items-center justify-between gap-3 shadow-md border border-amber-400/25`;
+      card.className = `promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r ${colorMap[banner.banner_color] || colorMap.dark} text-white p-3.5 flex items-center justify-between gap-3 border border-amber-400/20`;
       txt.textContent = banner.banner_text;
 
       if (banner.banner_image_url) {
@@ -2107,12 +1994,12 @@
       const bar = document.getElementById('categoryBar');
       const drawerList = document.getElementById('drawerCategoriesList');
 
-      bar.innerHTML = `<button onclick="filterCategory('ALL', this)" class="cat-btn ${activeCategory === 'ALL' ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-stone-900 border border-amber-400/30 text-amber-200 font-bold'} text-xs px-4 py-2 rounded-full whitespace-nowrap">All Items</button>`;
+      bar.innerHTML = `<button onclick="filterCategory('ALL', this)" class="cat-btn ${activeCategory === 'ALL' ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-stone-900 border border-stone-800 text-stone-300 font-semibold'} text-[11px] px-3.5 py-1.5 rounded-full whitespace-nowrap">All Items</button>`;
       drawerList.innerHTML = `<button onclick="filterCategory('ALL'); closeAllDrawers(); document.getElementById('catalogSection').scrollIntoView({behavior:'smooth'});" class="p-3 rounded-xl bg-amber-600 text-white text-xs font-bold text-left">All Products</button>`;
 
       allCategories.forEach(c => {
         const btn = document.createElement('button');
-        btn.className = `cat-btn ${activeCategory === c.id ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-stone-900 border border-amber-400/30 text-amber-200 font-bold'} text-xs px-4 py-2 rounded-full whitespace-nowrap`;
+        btn.className = `cat-btn ${activeCategory === c.id ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-stone-900 border border-stone-800 text-stone-300 font-semibold'} text-[11px] px-3.5 py-1.5 rounded-full whitespace-nowrap`;
         btn.textContent = c.name;
         btn.onclick = () => filterCategory(c.id, btn);
         bar.appendChild(btn);
@@ -2147,6 +2034,7 @@
     }
 
     async function init() {
+      armStoreBackGuard();
       trackLiveVisitorHeartbeat();
       lastRotationSlot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000));
       applySocialLinks();
@@ -2208,11 +2096,12 @@
 
     function filterCategory(catId, activeBtn) {
       activeCategory = catId;
+      if (catId !== 'ALL') armStoreBackGuard();
       document.querySelectorAll('.cat-btn').forEach(b => {
-        b.className = 'cat-btn bg-stone-900 border border-amber-400/30 text-amber-200 text-xs font-bold px-4 py-2 rounded-full whitespace-nowrap';
+        b.className = 'cat-btn bg-stone-900 border border-stone-800 text-stone-300 text-[11px] font-semibold px-3.5 py-1.5 rounded-full whitespace-nowrap';
       });
       if (activeBtn) {
-        activeBtn.className = 'cat-btn bg-amber-500 text-stone-950 text-xs font-extrabold px-4 py-2 rounded-full whitespace-nowrap';
+        activeBtn.className = 'cat-btn bg-amber-500 text-stone-950 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full whitespace-nowrap';
       } else {
         renderCategoryButtons(allCategories);
       }
@@ -2260,7 +2149,7 @@
     function renderProducts(list) {
       const grid = document.getElementById('productsGrid');
       if (!list.length) {
-        grid.innerHTML = '<p class="col-span-full text-center text-stone-300 py-12 text-sm">No matching products found. Try another search word or photo!</p>';
+        grid.innerHTML = '<p class="col-span-full text-center text-stone-400 py-12 text-xs">No matching products found.</p>';
         return;
       }
       grid.innerHTML = list.map((p, idx) => {
@@ -2268,7 +2157,7 @@
         const out = (p.stock_quantity !== null && p.stock_quantity <= 0);
         const isAboveFold = idx < 8;
         return `
-          <div onclick="openProductDetail('${p.id}')" class="bg-white rounded-2xl border border-amber-400/25 overflow-hidden flex flex-col justify-between shadow-md cursor-pointer hover:border-amber-400 transition">
+          <div onclick="openProductDetail('${p.id}')" class="bg-white rounded-2xl border border-stone-200/80 overflow-hidden flex flex-col justify-between shadow-sm cursor-pointer hover:border-amber-500 transition">
             <div class="img-skeleton-box w-full h-36 sm:h-40">
               <img src="${img}" alt="${p.name}"
                 loading="${isAboveFold ? 'eager' : 'lazy'}"
@@ -2286,7 +2175,7 @@
               <div class="mt-2">
                 ${formatPriceHtml(p, 'text-xs sm:text-sm')}
                 <button type="button" ${out ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart('${p.id}', this)"
-                  class="mt-1.5 w-full ${out ? 'bg-stone-200 text-stone-500' : 'bg-amber-600 hover:bg-amber-700 text-white'} text-[11px] font-bold py-1.5 rounded-xl transition shadow-2xs">
+                  class="mt-1.5 w-full ${out ? 'bg-stone-200 text-stone-500' : 'bg-stone-900 hover:bg-amber-600 text-white'} text-[11px] font-bold py-1.5 rounded-xl transition">
                   ${out ? 'Sold Out' : 'Add to Cart'}
                 </button>
               </div>
@@ -2417,6 +2306,7 @@
           openAuthGate('signup', true);
           return;
         }
+        armStoreBackGuard();
         prefillCustomerCheckout();
         setActiveBottomTab('cart');
       } else {
