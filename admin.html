@@ -48,7 +48,7 @@
     </div>
   </section>
 
-  <section id="admin-dashboard" hidden>
+  <section id="admin-dashboard" hidden style="display:none;">
     <div class="admin-heading">
       <div>
         <p class="eyebrow">SEKIFLEX COLLECTIONS · MANAGEMENT</p>
@@ -243,6 +243,11 @@
     const emailInput = document.getElementById("admin-email");
     const msgEl = document.getElementById("login-message");
 
+    if (dashSection) {
+      dashSection.hidden = true;
+      dashSection.style.display = "none";
+    }
+
     const sbClient =
       window.sb ||
       window.supabaseClient ||
@@ -255,37 +260,44 @@
       return ALLOWED_ADMIN_EMAILS.includes(String(email || "").trim().toLowerCase());
     }
 
-    function lockDashboard(messageText) {
-      if (dashSection) dashSection.hidden = true;
-      if (loginSection) loginSection.hidden = false;
-      if (msgEl && messageText) {
-        msgEl.textContent = messageText;
+    function blockNonAdmin(reason) {
+      if (dashSection) {
+        dashSection.hidden = true;
+        dashSection.style.display = "none";
+        dashSection.innerHTML = "";
+      }
+      if (loginSection) {
+        loginSection.hidden = false;
+        loginSection.style.display = "block";
+      }
+      if (msgEl && reason) {
+        msgEl.textContent = reason;
         msgEl.style.color = "#b91c1c";
       }
     }
 
-    function unlockDashboard() {
+    function allowAdmin() {
       if (msgEl) msgEl.textContent = "";
-      if (loginSection) loginSection.hidden = true;
-      if (dashSection) dashSection.hidden = false;
+      if (loginSection) {
+        loginSection.hidden = true;
+        loginSection.style.display = "none";
+      }
+      if (dashSection) {
+        dashSection.hidden = false;
+        dashSection.style.display = "block";
+      }
     }
 
-    async function enforceAdminAccess() {
+    async function verifyAdminSession() {
       if (!sbClient || !sbClient.auth) return;
       const { data: { session } } = await sbClient.auth.getSession();
-      const userEmail = session?.user?.email || "";
+      const email = session?.user?.email || "";
 
-      if (session?.user && isAdminEmail(userEmail)) {
-        unlockDashboard();
-      } else {
-        if (session?.user && !isAdminEmail(userEmail)) {
-          await sbClient.auth.signOut();
-        }
-        lockDashboard(
-          session?.user && !isAdminEmail(userEmail)
-            ? "Access denied: Only sekiflexcollections@gmail.com can access this dashboard."
-            : ""
-        );
+      if (session?.user && isAdminEmail(email)) {
+        allowAdmin();
+      } else if (session?.user) {
+        await sbClient.auth.signOut();
+        blockNonAdmin("Access denied: Customers cannot access the admin dashboard.");
       }
     }
 
@@ -297,10 +309,8 @@
           if (!isAdminEmail(typedEmail)) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            if (sbClient && sbClient.auth) {
-              await sbClient.auth.signOut();
-            }
-            lockDashboard("Access denied: This login is restricted to sekiflexcollections@gmail.com.");
+            if (sbClient && sbClient.auth) await sbClient.auth.signOut();
+            blockNonAdmin("Access denied: Restricted to sekiflexcollections@gmail.com only.");
           }
         },
         true
@@ -310,19 +320,19 @@
     if (sbClient && sbClient.auth) {
       sbClient.auth.onAuthStateChange(async (_event, session) => {
         const email = session?.user?.email || "";
-        if (session?.user && !isAdminEmail(email)) {
+        if (session?.user && isAdminEmail(email)) {
+          allowAdmin();
+        } else if (session?.user) {
           await sbClient.auth.signOut();
-          lockDashboard("Access denied: Only sekiflexcollections@gmail.com can access this dashboard.");
-        } else if (session?.user && isAdminEmail(email)) {
-          unlockDashboard();
-        } else {
-          lockDashboard("");
+          blockNonAdmin("Access denied: Customers cannot access the admin dashboard.");
         }
       });
     }
 
-    setTimeout(enforceAdminAccess, 150);
-    setTimeout(enforceAdminAccess, 600);
+    verifyAdminSession();
+    setTimeout(verifyAdminSession, 200);
+    setTimeout(verifyAdminSession, 800);
+    setTimeout(verifyAdminSession, 1800);
   })();
 </script>
 </body>
