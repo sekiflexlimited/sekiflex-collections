@@ -258,11 +258,11 @@
 
     <div class="max-w-5xl mx-auto px-3 pt-3 space-y-4">
 
-      <!-- HORIZONTAL SWIPEABLE HERO PROMO BANNER CAROUSEL -->
+      <!-- HORIZONTAL AUTO-SHIFTING HERO PROMO BANNER CAROUSEL -->
       <section id="heroCarouselSection" class="space-y-2">
-        <div id="bannerCarousel" class="flex gap-3 overflow-x-auto snap-x snap-mandatory no-scrollbar">
+        <div id="bannerCarousel" class="flex gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
 
-          <div id="livePromoBannerCard" class="hidden snap-start shrink-0 w-[92%] sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-900 via-stone-800 to-amber-900 text-white p-4 flex items-center justify-between gap-3 shadow-md">
+          <div id="livePromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-900 via-stone-800 to-amber-900 text-white p-4 flex items-center justify-between gap-3 shadow-md">
             <div class="space-y-1.5 flex-1 min-w-0">
               <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-amber-500 text-stone-950 px-2 py-0.5 rounded-full">
                 Store Announcement
@@ -275,7 +275,7 @@
             <img id="livePromoImg" src="" alt="Promo" class="hidden w-24 h-24 sm:w-28 sm:h-28 object-cover object-top rounded-xl border border-white/20 shrink-0" />
           </div>
 
-          <div class="snap-start shrink-0 w-[92%] sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-950 via-stone-900 to-amber-800 text-white p-4 flex items-center justify-between gap-3 shadow-md">
+          <div class="promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-950 via-stone-900 to-amber-800 text-white p-4 flex items-center justify-between gap-3 shadow-md">
             <div class="space-y-1.5 flex-1">
               <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-amber-400 text-stone-950 px-2 py-0.5 rounded-full">
                 New Arrivals
@@ -292,7 +292,7 @@
               class="w-24 h-24 sm:w-28 sm:h-28 object-cover object-top rounded-xl border border-white/20 shrink-0" />
           </div>
 
-          <div class="snap-start shrink-0 w-[92%] sm:w-[480px] rounded-2xl bg-gradient-to-r from-emerald-950 via-stone-900 to-stone-800 text-white p-4 flex items-center justify-between gap-3 shadow-md">
+          <div class="promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-emerald-950 via-stone-900 to-stone-800 text-white p-4 flex items-center justify-between gap-3 shadow-md">
             <div class="space-y-1.5 flex-1">
               <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-emerald-400 text-stone-950 px-2 py-0.5 rounded-full">
                 Fast Dispatch
@@ -384,11 +384,11 @@
         </div>
       </section>
 
-      <!-- CATEGORY FILTER PILLS & SEARCH RESULTS GRID -->
+      <!-- CATEGORY FILTER PILLS & SEARCH RESULTS GRID (ROTATES EVERY 5 MINUTES) -->
       <section id="catalogSection" class="pt-1 space-y-2.5 scroll-mt-32">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between gap-2">
           <h2 id="catalogHeading" class="font-extrabold text-base sm:text-lg text-stone-900">All Products</h2>
-          <span id="productResultCount" class="text-xs font-semibold text-stone-500"></span>
+          <span id="productResultCount" class="text-xs font-semibold text-stone-500 shrink-0"></span>
         </div>
 
         <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1" id="categoryBar">
@@ -900,7 +900,7 @@
     let selectedStarRating = 5;
     let activeCategory = 'ALL';
     let searchQuery = '';
-    let pictureSearchScores = null; // Map<string, number> when searching by photo
+    let pictureSearchScores = null;
     let pictureSearchFileName = '';
     let fulfillmentMode = 'delivery';
     let currentShippingFee = 0;
@@ -909,6 +909,77 @@
     let currentCustomer = null;
     let pendingSignupData = { name: '', email: '', phone: '' };
     let pendingResetEmail = '';
+    let bannerAutoTimer = null;
+    let bannerPauseUntil = 0;
+    let currentBannerSlideIdx = 0;
+    let lastRotationSlot = -1;
+
+    function startBannerAutoShift() {
+      const carousel = document.getElementById('bannerCarousel');
+      if (!carousel) return;
+
+      if (!carousel.dataset.autoBound) {
+        carousel.dataset.autoBound = '1';
+        const pauseAuto = () => {
+          bannerPauseUntil = Date.now() + 6000;
+        };
+        carousel.addEventListener('touchstart', pauseAuto, { passive: true });
+        carousel.addEventListener('pointerdown', pauseAuto, { passive: true });
+        carousel.addEventListener('mouseenter', pauseAuto);
+      }
+
+      if (bannerAutoTimer) clearInterval(bannerAutoTimer);
+
+      bannerAutoTimer = setInterval(() => {
+        if (Date.now() < bannerPauseUntil) return;
+        const heroSec = document.getElementById('heroCarouselSection');
+        if (!heroSec || heroSec.classList.contains('hidden')) return;
+
+        const visibleSlides = Array.from(carousel.querySelectorAll('.promo-slide'))
+          .filter(el => !el.classList.contains('hidden'));
+
+        if (visibleSlides.length <= 1) return;
+
+        currentBannerSlideIdx = (currentBannerSlideIdx + 1) % visibleSlides.length;
+        const target = visibleSlides[currentBannerSlideIdx];
+        carousel.scrollTo({
+          left: target.offsetLeft - carousel.offsetLeft,
+          behavior: 'smooth'
+        });
+      }, 3500);
+    }
+
+    function getFiveMinuteRotatedProducts(list) {
+      if (!Array.isArray(list) || list.length <= 1) return list || [];
+      const slot = Math.floor(Date.now() / (5 * 60 * 1000));
+      const items = [...list];
+      const n = items.length;
+
+      // Deterministic pseudo-random shuffle per 5-minute window so top/bottom order shifts differently every 5 mins
+      let seed = (slot * 2654435761) >>> 0;
+      const nextRand = () => {
+        seed = (1664525 * seed + 1013904223) >>> 0;
+        return seed / 4294967296;
+      };
+
+      for (let i = n - 1; i > 0; i--) {
+        const j = Math.floor(nextRand() * (i + 1));
+        const tmp = items[i];
+        items[i] = items[j];
+        items[j] = tmp;
+      }
+      return items;
+    }
+
+    function startFiveMinuteProductRotation() {
+      setInterval(() => {
+        const slot = Math.floor(Date.now() / (5 * 60 * 1000));
+        if (slot !== lastRotationSlot && allProducts.length > 1) {
+          lastRotationSlot = slot;
+          applyCatalogFilters();
+        }
+      }, 15000);
+    }
 
     function applySocialLinks() {
       const tt = document.getElementById('settingsTikTokLink');
@@ -1349,6 +1420,7 @@
         quickSec.classList.remove('hidden');
         trustSec.classList.remove('hidden');
         if (allProducts.length) featSec.classList.remove('hidden');
+        startBannerAutoShift();
       }
 
       applyCatalogFilters();
@@ -1370,12 +1442,13 @@
         document.getElementById('quickFeatureStrip').classList.remove('hidden');
         document.getElementById('trustHighlightsStrip').classList.remove('hidden');
         if (allProducts.length) document.getElementById('featuredStripSection').classList.remove('hidden');
+        startBannerAutoShift();
       }
       applyCatalogFilters();
     }
 
     function applyCatalogFilters() {
-      let filtered = [...allProducts];
+      let filtered = getFiveMinuteRotatedProducts(allProducts);
 
       if (activeCategory !== 'ALL') {
         filtered = filtered.filter(p => p.category_id === activeCategory);
@@ -1654,6 +1727,7 @@
 
       prefillCustomerCheckout();
       loadStoreBanner();
+      startBannerAutoShift();
     }
 
     function prefillCustomerCheckout() {
@@ -1690,7 +1764,7 @@
         red: 'from-rose-700 via-red-800 to-stone-950',
         dark: 'from-stone-950 via-stone-900 to-amber-900'
       };
-      card.className = `snap-start shrink-0 w-[92%] sm:w-[480px] rounded-2xl bg-gradient-to-r ${colorMap[banner.banner_color] || colorMap.gold} text-white p-4 flex items-center justify-between gap-3 shadow-md`;
+      card.className = `promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r ${colorMap[banner.banner_color] || colorMap.gold} text-white p-4 flex items-center justify-between gap-3 shadow-md`;
       txt.textContent = banner.banner_text;
 
       if (banner.banner_image_url) {
@@ -1701,6 +1775,9 @@
       }
 
       card.classList.remove('hidden');
+      currentBannerSlideIdx = 0;
+      const carousel = document.getElementById('bannerCarousel');
+      if (carousel) carousel.scrollLeft = 0;
     }
 
     function copyAcct(acctNum, bankName, btnEl) {
@@ -1814,11 +1891,14 @@
     }
 
     async function init() {
+      lastRotationSlot = Math.floor(Date.now() / (5 * 60 * 1000));
       applySocialLinks();
       selectStarRating(5);
       renderReviews();
       populateNigeriaStates();
       renderCart();
+      startBannerAutoShift();
+      startFiveMinuteProductRotation();
 
       const { data: { session } } = await sb.auth.getSession();
       if (session?.user) {
@@ -1830,7 +1910,8 @@
         unlockStoreForUser(session.user, profile);
       }
 
-      loadStoreBanner();
+      await loadStoreBanner();
+      startBannerAutoShift();
 
       if (allProducts.length) {
         renderFeaturedStrip(allProducts);
