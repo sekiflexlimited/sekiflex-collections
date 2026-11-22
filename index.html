@@ -165,7 +165,7 @@
   <!-- MAIN APP-STYLE STOREFRONT -->
   <div id="storeMainWrapper" class="hidden">
 
-    <!-- STICKY TOP PILL SEARCH HEADER (CLEAN BRAND & WELCOME PILL) -->
+    <!-- STICKY TOP PILL SEARCH HEADER (WITH PICTURE SEARCH) -->
     <header class="sticky top-0 z-40 bg-white border-b border-stone-200/80 px-3 pt-2.5 pb-2 shadow-2xs">
       <div class="max-w-5xl mx-auto space-y-2">
         <div class="flex items-center justify-between gap-2 text-xs">
@@ -177,7 +177,7 @@
           </span>
         </div>
 
-        <!-- Rounded Pill Search Form -->
+        <!-- Rounded Pill Search Form + Picture Search Button -->
         <form onsubmit="submitSearch(event)" class="relative flex items-center gap-1.5">
           <div class="relative flex-1 flex items-center">
             <svg class="w-4 h-4 text-stone-500 absolute left-3.5 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -190,11 +190,38 @@
               &times;
             </button>
           </div>
+
+          <!-- Search by Picture Trigger -->
+          <input type="file" id="pictureSearchInput" accept="image/*" class="hidden" onchange="handlePictureSearch(event)" />
+          <button type="button" id="pictureSearchBtn" onclick="triggerPictureSearch()"
+            aria-label="Search product by picture"
+            title="Search by Picture"
+            class="bg-stone-100 hover:bg-stone-200 border border-stone-200 text-stone-800 p-2.5 rounded-full shrink-0 transition flex items-center justify-center">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 0 1 2-2h.93a2 2 0 0 0 1.664-.89l.812-1.22A2 2 0 0 1 10.07 4h3.86a2 2 0 0 1 1.664.89l.812 1.22A2 2 0 0 0 18.07 7H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+              <circle cx="12" cy="13" r="3"/>
+            </svg>
+          </button>
+
           <button type="submit" id="searchSubmitBtn"
             class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-4 py-2.5 rounded-full shrink-0 shadow-xs transition">
             Search
           </button>
         </form>
+
+        <!-- Active Picture Search Preview Banner -->
+        <div id="pictureSearchBanner" class="hidden items-center justify-between gap-2 bg-amber-50 border border-amber-200 rounded-2xl px-3 py-2 text-xs">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <img id="pictureSearchPreviewImg" src="" alt="Uploaded search photo" class="w-10 h-10 rounded-lg object-cover border border-amber-300 shrink-0" />
+            <div class="min-w-0">
+              <p class="font-extrabold text-stone-900 truncate">Matching your photo...</p>
+              <p id="pictureSearchStatusText" class="text-[11px] text-amber-800 truncate">Showing closest products</p>
+            </div>
+          </div>
+          <button type="button" onclick="clearPictureSearch()" class="bg-stone-900 text-white text-[11px] font-bold px-3 py-1 rounded-full shrink-0">
+            Clear Photo
+          </button>
+        </div>
       </div>
     </header>
 
@@ -425,11 +452,17 @@
         <div id="reviewsListContainer" class="space-y-2.5"></div>
       </section>
 
-      <!-- ABOUT US & STORE INFORMATION SECTION -->
+      <!-- ABOUT US, PRIVACY & DELIVERY POLICY SECTION -->
       <section id="aboutUsSection" class="bg-white rounded-2xl border border-stone-200 p-5 space-y-4 shadow-2xs mt-6">
-        <div class="border-b border-stone-100 pb-3">
-          <span class="text-[10px] font-bold uppercase tracking-widest text-amber-700">About Sekiflex Collections</span>
-          <h3 class="font-editorial text-xl font-bold text-stone-900 mt-0.5">Refined Fashion &amp; Reliable Global Dispatch</h3>
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-stone-100 pb-3">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-widest text-amber-700">About Sekiflex Collections</span>
+            <h3 class="font-editorial text-xl font-bold text-stone-900 mt-0.5">Refined Fashion &amp; Reliable Global Dispatch</h3>
+          </div>
+          <button type="button" onclick="openInfoModal('privacy')"
+            class="bg-stone-100 hover:bg-amber-50 border border-stone-200 text-stone-900 text-xs font-bold px-3 py-1.5 rounded-full transition">
+            Privacy &amp; Delivery Policy
+          </button>
         </div>
         <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
           Sekiflex Collections is your trusted fashion and lifestyle destination based in Uyo, Akwa Ibom State. We curate quality men’s and women’s clothing, luxury footwear, wristwatches, fine jewelry, bangles, designer handbags, and everyday essentials—backed by our dedicated dispatch network delivering across all 36 states in Nigeria and internationally to the UK, USA, Canada, and Ghana.
@@ -443,9 +476,10 @@
           <div>
             <p class="font-bold text-stone-900">Customer Care &amp; Orders</p>
             <p class="text-stone-600 mt-0.5">Tap below for instant WhatsApp or Call support</p>
-            <div class="flex gap-2 mt-2">
+            <div class="flex gap-2 mt-2 flex-wrap">
               <a href="https://wa.me/2349069037617" target="_blank" rel="noopener" class="bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-lg text-[11px]">WhatsApp Us</a>
               <a href="tel:+2349163755234" class="bg-stone-900 text-white font-bold px-3 py-1.5 rounded-lg text-[11px]">Call Now</a>
+              <button type="button" onclick="openInfoModal('privacy')" class="bg-amber-100 text-amber-950 font-bold px-3 py-1.5 rounded-lg text-[11px]">Privacy Policy</button>
             </div>
           </div>
         </div>
@@ -564,6 +598,10 @@
             Open Settings →
           </button>
         </div>
+        <button type="button" onclick="closeAllDrawers(); openInfoModal('privacy')" class="w-full flex items-center justify-between p-3.5 rounded-xl bg-stone-100 text-stone-800">
+          <span>Privacy &amp; Delivery Policy</span>
+          <span>→</span>
+        </button>
         <button type="button" onclick="closeAllDrawers(); openInfoModal('about')" class="w-full flex items-center justify-between p-3.5 rounded-xl bg-stone-100 text-stone-800">
           <span>About Sekiflex Collections</span>
           <span>→</span>
@@ -579,13 +617,13 @@
     </div>
   </div>
 
-  <!-- STORE SETTINGS MODAL (CHANGE PASSWORD + TIKTOK & FACEBOOK LINKS) -->
+  <!-- STORE SETTINGS MODAL (CHANGE PASSWORD + TIKTOK & FACEBOOK LINKS + PRIVACY POLICY) -->
   <div id="storeSettingsModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
     <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl my-auto">
       <div class="flex items-center justify-between border-b border-stone-100 pb-3">
         <div>
           <h3 class="font-editorial text-lg font-bold text-stone-900">Account &amp; Store Settings</h3>
-          <p class="text-xs text-stone-500">Password, social pages &amp; preferences</p>
+          <p class="text-xs text-stone-500">Password, social pages, privacy &amp; preferences</p>
         </div>
         <button type="button" onclick="closeStoreSettingsModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 font-bold text-lg">&times;</button>
       </div>
@@ -606,6 +644,13 @@
           </a>
         </div>
       </div>
+
+      <!-- Privacy & Delivery Policy Quick Access -->
+      <button type="button" onclick="closeStoreSettingsModal(); openInfoModal('privacy')"
+        class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-stone-100 hover:bg-amber-50 border border-stone-200 text-stone-900 text-xs font-bold transition">
+        <span>🔒 Privacy &amp; Delivery Data Policy</span>
+        <span>Read →</span>
+      </button>
 
       <!-- Change Password Box -->
       <form onsubmit="handleAccountPasswordChange(event)" class="bg-stone-50 border border-stone-200 rounded-2xl p-3.5 space-y-2.5">
@@ -662,17 +707,17 @@
           <button type="button" onclick="closeAllDrawers(); openInfoModal('delivery')" class="p-3 rounded-xl bg-stone-100 hover:bg-amber-50 text-left">
             Delivery &amp; Pickup
           </button>
-          <a href="https://wa.me/2349069037617" target="_blank" rel="noopener" class="p-3 rounded-xl bg-emerald-50 text-emerald-900 border border-emerald-200 text-left block">
-            WhatsApp Support
-          </a>
+          <button type="button" onclick="closeAllDrawers(); openInfoModal('privacy')" class="p-3 rounded-xl bg-stone-100 hover:bg-amber-50 text-left">
+            Privacy Policy
+          </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ABOUT US / DELIVERY INFO MODAL -->
-  <div id="infoModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+  <!-- ABOUT US / DELIVERY / PRIVACY POLICY MODAL -->
+  <div id="infoModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl my-auto max-h-[85vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-stone-100 pb-2.5">
         <h3 id="infoModalTitle" class="font-editorial text-xl font-bold text-stone-900">About Sekiflex</h3>
         <button type="button" onclick="document.getElementById('infoModal').classList.add('hidden')" class="w-8 h-8 rounded-full bg-stone-100 font-bold">&times;</button>
@@ -803,7 +848,7 @@
 
             <label class="flex items-start gap-2 text-[11px] text-stone-700 cursor-pointer">
               <input required id="paymentConfirmCheck" type="checkbox" class="mt-0.5 accent-amber-700" />
-              <span>I have completed the bank transfer for the exact order total above.</span>
+              <span>I have completed the bank transfer for the exact order total above and accept the <button type="button" onclick="event.preventDefault(); openInfoModal('privacy');" class="underline font-semibold text-amber-800">Privacy &amp; Delivery Policy</button>.</span>
             </label>
           </div>
 
@@ -855,6 +900,8 @@
     let selectedStarRating = 5;
     let activeCategory = 'ALL';
     let searchQuery = '';
+    let pictureSearchScores = null; // Map<string, number> when searching by photo
+    let pictureSearchFileName = '';
     let fulfillmentMode = 'delivery';
     let currentShippingFee = 0;
     let currentEstDays = 'select state';
@@ -868,6 +915,150 @@
       const fb = document.getElementById('settingsFacebookLink');
       if (tt) tt.href = TIKTOK_URL;
       if (fb) fb.href = FACEBOOK_URL;
+    }
+
+    function triggerPictureSearch() {
+      const input = document.getElementById('pictureSearchInput');
+      if (input) {
+        input.value = '';
+        input.click();
+      }
+    }
+
+    function computeImageSignature(imgEl) {
+      return new Promise((resolve) => {
+        try {
+          const canvas = document.createElement('canvas');
+          const size = 12;
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(imgEl, 0, 0, size, size);
+          const data = ctx.getImageData(0, 0, size, size).data;
+          const vec = [];
+          for (let i = 0; i < data.length; i += 4) {
+            vec.push(data[i] / 255, data[i + 1] / 255, data[i + 2] / 255);
+          }
+          resolve(vec);
+        } catch (err) {
+          resolve(null);
+        }
+      });
+    }
+
+    function loadImageForVisualMatch(url) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = async () => {
+          const sig = await computeImageSignature(img);
+          resolve(sig);
+        };
+        img.onerror = () => resolve(null);
+        img.src = url;
+      });
+    }
+
+    function signatureSimilarity(vecA, vecB) {
+      if (!vecA || !vecB || vecA.length !== vecB.length || !vecA.length) return -1;
+      let diffSum = 0;
+      for (let i = 0; i < vecA.length; i++) {
+        diffSum += Math.abs(vecA[i] - vecB[i]);
+      }
+      return 1 - (diffSum / vecA.length);
+    }
+
+    async function handlePictureSearch(event) {
+      const file = event?.target?.files?.[0];
+      if (!file) return;
+
+      pictureSearchFileName = (file.name || '').toLowerCase();
+      const reader = new FileReader();
+
+      reader.onload = async (e) => {
+        const dataUrl = e.target.result;
+        const banner = document.getElementById('pictureSearchBanner');
+        const preview = document.getElementById('pictureSearchPreviewImg');
+        const statusEl = document.getElementById('pictureSearchStatusText');
+
+        preview.src = dataUrl;
+        statusEl.textContent = 'Scanning catalog photos...';
+        banner.classList.remove('hidden');
+        banner.classList.add('flex');
+
+        const queryImg = new Image();
+        queryImg.onload = async () => {
+          const querySig = await computeImageSignature(queryImg);
+          const scores = {};
+          let visualMatchedCount = 0;
+
+          const nameTokens = pictureSearchFileName
+            .replace(/\.[a-z0-9]+$/i, '')
+            .replace(/[^a-z0-9]+/gi, ' ')
+            .trim()
+            .toLowerCase()
+            .split(/\s+/)
+            .filter(w => w.length >= 3);
+
+          for (const prod of allProducts) {
+            const imgUrl = (prod.images && prod.images[0]) || prod.image_url || '';
+            let score = 0;
+
+            if (querySig && imgUrl) {
+              const prodSig = await loadImageForVisualMatch(imgUrl);
+              if (prodSig) {
+                score = signatureSimilarity(querySig, prodSig);
+                visualMatchedCount += 1;
+              }
+            }
+
+            if (nameTokens.length) {
+              const catObj = allCategories.find(c => c.id === prod.category_id);
+              const hay = `${prod.name || ''} ${prod.description || ''} ${catObj ? catObj.name : ''} ${imgUrl}`.toLowerCase();
+              const hits = nameTokens.filter(t => hay.includes(t)).length;
+              if (hits > 0) {
+                score = Math.max(score, 0.5 + hits * 0.15);
+              }
+            }
+
+            scores[String(prod.id)] = score;
+          }
+
+          pictureSearchScores = scores;
+          statusEl.textContent = visualMatchedCount > 0
+            ? `Matched against ${visualMatchedCount} catalog photo${visualMatchedCount === 1 ? '' : 's'}`
+            : 'Showing catalog items for your photo';
+
+          document.getElementById('heroCarouselSection').classList.add('hidden');
+          document.getElementById('quickFeatureStrip').classList.add('hidden');
+          document.getElementById('trustHighlightsStrip').classList.add('hidden');
+          document.getElementById('featuredStripSection').classList.add('hidden');
+
+          applyCatalogFilters();
+          document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+        queryImg.src = dataUrl;
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    function clearPictureSearch() {
+      pictureSearchScores = null;
+      pictureSearchFileName = '';
+      const input = document.getElementById('pictureSearchInput');
+      if (input) input.value = '';
+      const banner = document.getElementById('pictureSearchBanner');
+      banner.classList.add('hidden');
+      banner.classList.remove('flex');
+
+      if (!searchQuery) {
+        document.getElementById('heroCarouselSection').classList.remove('hidden');
+        document.getElementById('quickFeatureStrip').classList.remove('hidden');
+        document.getElementById('trustHighlightsStrip').classList.remove('hidden');
+        if (allProducts.length) document.getElementById('featuredStripSection').classList.remove('hidden');
+      }
+      applyCatalogFilters();
     }
 
     function selectStarRating(stars) {
@@ -1083,6 +1274,7 @@
 
     function resetToHome(e) {
       if (e) e.preventDefault();
+      clearPictureSearch();
       clearSearch();
       filterCategory('ALL');
       switchBottomTab('home');
@@ -1097,6 +1289,14 @@
           <p><strong>1. Free Walk-In Store Pickup (Uyo HQ):</strong><br/>Pick up your order at <strong>Urua Ekpa, Uyo, Akwa Ibom State</strong> (Mon–Sat: 7:30 AM – 9:00 PM, Sun: 2:00 PM – 9:00 PM) with zero delivery fee.</p>
           <p><strong>2. Nationwide &amp; Worldwide Courier Delivery:</strong><br/>We deliver across all 36 states in Nigeria (2–4 business days) and internationally to the UK, USA, Canada, and Ghana (5–10 business days).</p>
           <p><strong>3. Live Tracking:</strong><br/>Every order receives an instant tracking code (e.g. <code>SC-2026-XXXXXX</code>) to monitor live dispatch progress.</p>
+        `;
+      } else if (type === 'privacy') {
+        title.textContent = 'Privacy & Delivery Data Policy';
+        body.innerHTML = `
+          <p><strong>1. Customer Data We Collect:</strong><br/>We collect only the details needed to run your account and fulfill orders: your name, email address, phone/WhatsApp number, delivery address (or Uyo HQ pickup choice), and payment transfer reference.</p>
+          <p><strong>2. How We Handle Your Delivery &amp; Order Data:</strong><br/>Your recipient name, phone number, and destination address are used strictly to pack, dispatch, and track your order via Sekiflex Dispatch or our courier partners and to send order status updates.</p>
+          <p><strong>3. Data Protection &amp; No Selling of Data:</strong><br/>Sekiflex Collections never sells or rents your personal information to third-party advertisers. Your payment reference is used only to verify bank transfer confirmation for your order.</p>
+          <p><strong>4. Your Choices &amp; Support:</strong><br/>You can update your password anytime under <strong>Account → Settings</strong>, or contact us via WhatsApp (<code>09069037617</code>) or phone (<code>09163755234</code>) for account or delivery privacy questions.</p>
         `;
       } else {
         title.textContent = 'About Sekiflex Collections';
@@ -1139,7 +1339,7 @@
       const trustSec = document.getElementById('trustHighlightsStrip');
       const featSec = document.getElementById('featuredStripSection');
 
-      if (searchQuery) {
+      if (searchQuery || pictureSearchScores) {
         heroSec.classList.add('hidden');
         quickSec.classList.add('hidden');
         trustSec.classList.add('hidden');
@@ -1165,15 +1365,17 @@
       input.value = '';
       searchQuery = '';
       document.getElementById('clearSearchBtn').classList.add('hidden');
-      document.getElementById('heroCarouselSection').classList.remove('hidden');
-      document.getElementById('quickFeatureStrip').classList.remove('hidden');
-      document.getElementById('trustHighlightsStrip').classList.remove('hidden');
-      if (allProducts.length) document.getElementById('featuredStripSection').classList.remove('hidden');
+      if (!pictureSearchScores) {
+        document.getElementById('heroCarouselSection').classList.remove('hidden');
+        document.getElementById('quickFeatureStrip').classList.remove('hidden');
+        document.getElementById('trustHighlightsStrip').classList.remove('hidden');
+        if (allProducts.length) document.getElementById('featuredStripSection').classList.remove('hidden');
+      }
       applyCatalogFilters();
     }
 
     function applyCatalogFilters() {
-      let filtered = allProducts;
+      let filtered = [...allProducts];
 
       if (activeCategory !== 'ALL') {
         filtered = filtered.filter(p => p.category_id === activeCategory);
@@ -1188,8 +1390,16 @@
         });
       }
 
+      if (pictureSearchScores) {
+        filtered.sort((a, b) => (pictureSearchScores[String(b.id)] ?? -1) - (pictureSearchScores[String(a.id)] ?? -1));
+      }
+
       const heading = document.getElementById('catalogHeading');
-      if (searchQuery) {
+      if (pictureSearchScores && searchQuery) {
+        heading.textContent = `Photo & "${document.getElementById('storeSearchInput').value.trim()}" Matches`;
+      } else if (pictureSearchScores) {
+        heading.textContent = 'Closest Matches for Your Picture';
+      } else if (searchQuery) {
         heading.textContent = `Search results for "${document.getElementById('storeSearchInput').value.trim()}"`;
       } else if (activeCategory !== 'ALL') {
         const catObj = allCategories.find(c => c.id === activeCategory);
@@ -1672,7 +1882,7 @@
     function renderFeaturedStrip(list) {
       const strip = document.getElementById('featuredHorizontalList');
       const sec = document.getElementById('featuredStripSection');
-      if (!list || !list.length || searchQuery) {
+      if (!list || !list.length || searchQuery || pictureSearchScores) {
         sec.classList.add('hidden');
         return;
       }
@@ -1695,7 +1905,7 @@
     function renderProducts(list) {
       const grid = document.getElementById('productsGrid');
       if (!list.length) {
-        grid.innerHTML = '<p class="col-span-full text-center text-stone-500 py-12 text-sm">No matching products found. Try another search word!</p>';
+        grid.innerHTML = '<p class="col-span-full text-center text-stone-500 py-12 text-sm">No matching products found. Try another search word or photo!</p>';
         return;
       }
       grid.innerHTML = list.map(p => {
