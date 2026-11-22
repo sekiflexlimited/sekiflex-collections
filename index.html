@@ -39,19 +39,19 @@
 </head>
 <body class="bg-[#F5F5F7] text-stone-900 antialiased pb-24">
 
-  <!-- REDESIGNED EDITORIAL & AMBER SIGN UP / OTP / LOGIN / FORGOT PASSWORD GATE -->
+  <!-- CUSTOMER SIGN UP / LOGIN & STAFF / ADMIN ACCESS GATE -->
   <div id="customerAuthGate" class="fixed inset-0 z-50 bg-[#F5F5F7] flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white border border-stone-200/90 rounded-3xl max-w-md w-full overflow-hidden shadow-xl my-auto">
       <!-- Warm Brand Header Matching Storefront -->
       <div class="bg-gradient-to-r from-stone-950 via-stone-900 to-amber-900 text-white px-6 py-6 text-center space-y-2">
         <span class="inline-block text-[10px] uppercase tracking-[0.22em] text-amber-300 font-bold bg-white/10 border border-white/15 px-3 py-1 rounded-full">
-          Verified Shopper Access
+          Sekiflex Collections Portal
         </span>
         <h1 class="font-editorial text-2xl sm:text-3xl font-bold tracking-tight">
           SEKIFLEX <span class="text-amber-400">COLLECTIONS</span>
         </h1>
         <p id="authSubtitle" class="text-xs text-stone-300 leading-relaxed">
-          Create an account or sign in to shop our catalog, check live dispatch, and track orders.
+          Register as a customer to shop our catalog, or sign in as Staff / Admin to manage the store.
         </p>
       </div>
 
@@ -59,11 +59,11 @@
         <div id="authTabsRow" class="grid grid-cols-2 gap-1.5 bg-[#F5F5F7] border border-stone-200/80 p-1 rounded-2xl">
           <button type="button" id="tabSignUpBtn" onclick="switchAuthView('signup')"
             class="py-2.5 rounded-xl text-xs font-extrabold bg-amber-600 text-white shadow-xs transition">
-            Create Account
+            Register as Customer
           </button>
           <button type="button" id="tabSignInBtn" onclick="switchAuthView('signin')"
             class="py-2.5 rounded-xl text-xs font-extrabold text-stone-600 hover:text-stone-900 transition">
-            Sign In
+            Customer Sign In
           </button>
         </div>
 
@@ -81,7 +81,7 @@
             class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
           <button type="submit" id="regSubmitBtn"
             class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3.5 rounded-2xl text-sm transition shadow-sm">
-            Send Registration Code →
+            Register as Customer →
           </button>
         </form>
 
@@ -109,7 +109,7 @@
 
         <!-- 3. Sign In Form -->
         <form id="customerSignInForm" onsubmit="handleCustomerSignIn(event)" class="hidden space-y-3">
-          <input required id="loginEmail" type="email" placeholder="Email Address"
+          <input required id="loginEmail" type="email" placeholder="Customer Email Address"
             class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
           <input required id="loginPassword" type="password" placeholder="Password"
             class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
@@ -120,7 +120,7 @@
           </div>
           <button type="submit" id="loginSubmitBtn"
             class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3.5 rounded-2xl text-sm transition shadow-sm">
-            Sign In to Store →
+            Sign In as Customer →
           </button>
         </form>
 
@@ -157,9 +157,21 @@
           </button>
         </form>
 
-        <div class="pt-3 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-500">
-          <a href="track.html" class="font-bold text-amber-700 hover:underline">Track Existing Order →</a>
-          <span>Sekiflex Storefront</span>
+        <!-- Dedicated Staff / Admin Login & Order Tracking Bar -->
+        <div class="pt-3 border-t border-stone-100 space-y-2.5">
+          <a href="store-admin.html"
+            class="w-full flex items-center justify-between px-4 py-3 rounded-2xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-extrabold transition shadow-xs">
+            <span class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              <span>Login as Staff / Admin</span>
+            </span>
+            <span class="text-amber-300">Manage Store →</span>
+          </a>
+
+          <div class="flex items-center justify-between text-[11px] text-stone-500 px-1">
+            <a href="track.html" class="font-bold text-amber-700 hover:underline">Track Existing Order →</a>
+            <span>Sekiflex Storefront</span>
+          </div>
         </div>
       </div>
     </div>
@@ -564,7 +576,7 @@
     </div>
   </nav>
 
-  <!-- ACCOUNT & PROFILE SHEET (SETTINGS BUTTON ON THE RIGHT SIDE) -->
+  <!-- ACCOUNT & PROFILE SHEET (INCLUDES STAFF / ADMIN PANEL LINK + SETTINGS ON RIGHT) -->
   <div id="accountDrawer" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center">
     <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 space-y-4 shadow-2xl">
       <div class="flex items-center justify-between gap-2 border-b border-stone-200 pb-3">
@@ -586,6 +598,10 @@
       </div>
 
       <div class="space-y-2 text-xs font-bold">
+        <a href="store-admin.html" class="flex items-center justify-between p-3.5 rounded-xl bg-stone-900 text-amber-300">
+          <span>Staff / Admin Dashboard</span>
+          <span>Open →</span>
+        </a>
         <a href="track.html" class="flex items-center justify-between p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950">
           <span>Track My Orders</span>
           <span>→</span>
@@ -1582,7 +1598,7 @@
       });
 
       btn.disabled = false;
-      btn.textContent = 'Send Registration Code →';
+      btn.textContent = 'Register as Customer →';
 
       if (error) return showAuthMessage(error.message, true);
 
@@ -1668,7 +1684,7 @@
       const { data, error } = await sb.auth.signInWithPassword({ email, password });
 
       btn.disabled = false;
-      btn.textContent = 'Sign In to Store →';
+      btn.textContent = 'Sign In as Customer →';
 
       if (error) return showAuthMessage(error.message, true);
 
