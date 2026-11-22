@@ -39,7 +39,7 @@
 </head>
 <body class="bg-[#F5F5F7] text-stone-900 antialiased pb-24">
 
-  <!-- REDESIGNED FIRST VIEW: CLEAR CUSTOMER SIGN UP / SIGN IN + STAFF / ADMIN GATE -->
+  <!-- CUSTOMER SIGN UP / SIGN IN & STAFF / ADMIN GATE -->
   <div id="customerAuthGate" class="fixed inset-0 z-50 bg-[#F5F5F7] flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white border border-stone-200/90 rounded-[28px] max-w-md w-full overflow-hidden shadow-2xl my-auto">
 
@@ -302,12 +302,12 @@
           </div>
 
           <!-- Announcement Banner Spot 2 -->
-          <div id="secondPromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-amber-800 via-amber-700 to-stone-900 text-white p-4 flex items-center justify-between gap-3 shadow-md">
+          <div id="secondPromoBannerCard" class="promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-amber-800 via-amber-700 to-stone-900 text-white p-4 flex items-center justify-between gap-3 shadow-md">
             <div class="space-y-1.5 flex-1 min-w-0">
               <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-white/20 text-amber-200 px-2 py-0.5 rounded-full">
                 Special Notice
               </span>
-              <p id="secondPromoText" class="text-base sm:text-lg font-extrabold leading-snug line-clamp-2"></p>
+              <p id="secondPromoText" class="text-base sm:text-lg font-extrabold leading-snug line-clamp-2">Fresh Deals &amp; Uyo Pickup Available Daily at Urua Ekpa</p>
               <a href="#catalogSection" class="inline-flex items-center gap-1 bg-amber-400 text-stone-950 text-xs font-bold px-3.5 py-1.5 rounded-full mt-1">
                 Explore Deals →
               </a>
@@ -529,42 +529,6 @@
     </div>
   </div>
 
-  <!-- PRODUCT PRICE & DISCOUNT EDITOR MODAL -->
-  <div id="editProductPriceModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl my-auto">
-      <div class="flex items-center justify-between border-b border-stone-100 pb-3">
-        <div>
-          <h3 class="font-editorial text-lg font-bold text-stone-900">Edit Product Price</h3>
-          <p id="editPriceProdName" class="text-xs text-stone-500"></p>
-        </div>
-        <button type="button" onclick="closeEditPriceModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 font-bold text-lg">&times;</button>
-      </div>
-
-      <form onsubmit="saveProductPriceEdit(event)" class="space-y-3 text-xs">
-        <input type="hidden" id="editPriceProdId" />
-        <div>
-          <label class="block font-bold text-stone-700 mb-1">Active Selling Price (₦)</label>
-          <input required id="editActivePriceInput" type="number" min="0" step="any" placeholder="e.g. 8000"
-            class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-bold focus:outline-none focus:border-amber-600" />
-        </div>
-        <div>
-          <label class="block font-bold text-stone-700 mb-1">Original / Crossed-Out Price (₦, optional)</label>
-          <input id="editComparePriceInput" type="number" min="0" step="any" placeholder="e.g. 10000 (leave blank for no discount)"
-            class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-amber-600" />
-        </div>
-        <p id="editPriceMsg" class="hidden text-[11px] font-semibold p-2 rounded-xl"></p>
-        <div class="flex gap-2 pt-1">
-          <button type="button" onclick="closeEditPriceModal()" class="px-4 py-2.5 rounded-xl border border-stone-300 font-bold text-stone-700">
-            Cancel
-          </button>
-          <button type="submit" id="saveProductPriceBtn" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-2.5 rounded-xl transition">
-            Save Price
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
   <!-- PRODUCT DETAIL MODAL (VIEW FULL PHOTO, ABOUT & DESCRIPTION) -->
   <div id="productDetailModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
     <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl my-auto">
@@ -595,10 +559,6 @@
           <button type="button" onclick="closeProductDetailModal()"
             class="px-4 py-3 rounded-xl border border-stone-300 text-xs font-bold text-stone-700 hover:bg-stone-50 transition">
             Close
-          </button>
-          <button type="button" id="detailEditPriceBtn"
-            class="px-4 py-3 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 text-xs font-bold text-amber-900 transition">
-            Edit Price
           </button>
           <button type="button" id="detailAddToCartBtn"
             class="flex-1 bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-xl text-xs font-extrabold transition shadow-md">
@@ -1032,80 +992,6 @@
       return `<p class="font-extrabold text-stone-900 ${sizeClass}">₦${effectivePrice.toLocaleString()}</p>`;
     }
 
-    function openEditPriceModal(productId) {
-      const prod = allProducts.find(p => String(p.id) === String(productId));
-      if (!prod) return;
-
-      const { effectivePrice, originalPrice } = getProductPricing(prod);
-      document.getElementById('editPriceProdId').value = prod.id;
-      document.getElementById('editPriceProdName').textContent = prod.name || 'Product';
-      document.getElementById('editActivePriceInput').value = effectivePrice;
-      document.getElementById('editComparePriceInput').value = originalPrice !== null ? originalPrice : '';
-
-      const msg = document.getElementById('editPriceMsg');
-      msg.classList.add('hidden');
-      document.getElementById('editProductPriceModal').classList.remove('hidden');
-    }
-
-    function closeEditPriceModal() {
-      document.getElementById('editProductPriceModal').classList.add('hidden');
-    }
-
-    function showEditPriceStatus(text, isError = true) {
-      const box = document.getElementById('editPriceMsg');
-      box.textContent = text;
-      box.className = `text-[11px] font-semibold p-2 rounded-xl ${
-        isError ? 'bg-red-100 text-red-800 border border-red-200' : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-      }`;
-      box.classList.remove('hidden');
-    }
-
-    async function saveProductPriceEdit(e) {
-      e.preventDefault();
-      const prodId = document.getElementById('editPriceProdId').value;
-      const newPrice = Number(document.getElementById('editActivePriceInput').value);
-      const rawCompareVal = document.getElementById('editComparePriceInput').value.trim();
-      const compareVal = rawCompareVal === '' ? null : Number(rawCompareVal);
-      const btn = document.getElementById('saveProductPriceBtn');
-
-      if (Number.isNaN(newPrice) || newPrice < 0) {
-        return showEditPriceStatus('Enter a valid selling price.', true);
-      }
-      if (compareVal !== null && (Number.isNaN(compareVal) || compareVal <= newPrice)) {
-        return showEditPriceStatus('Crossed-out original price must be higher than the selling price.', true);
-      }
-
-      btn.disabled = true;
-      btn.textContent = 'Saving...';
-
-      const payload = { base_price: newPrice, compare_at_price: compareVal };
-      const { error } = await sb.from('products').update(payload).eq('id', prodId);
-
-      btn.disabled = false;
-      btn.textContent = 'Save Price';
-
-      if (error && !/compare_at_price/i.test(error.message)) {
-        return showEditPriceStatus(error.message, true);
-      }
-
-      allProducts = allProducts.map(item => {
-        if (String(item.id) !== String(prodId)) return item;
-        const updated = { ...item, base_price: newPrice, compare_at_price: compareVal };
-        delete updated.discount_price;
-        delete updated.sale_price;
-        return updated;
-      });
-
-      localStorage.setItem('sekiflex_products_cache', JSON.stringify(allProducts));
-      renderFeaturedStrip(allProducts);
-      applyCatalogFilters();
-      showEditPriceStatus('Price updated!', false);
-
-      setTimeout(() => {
-        closeEditPriceModal();
-      }, 500);
-    }
-
     function startBannerAutoShift() {
       const carousel = document.getElementById('bannerCarousel');
       if (!carousel) return;
@@ -1425,12 +1311,6 @@
         stockEl.className = 'text-xs font-semibold text-emerald-700 mt-0.5';
       }
 
-      const editBtn = document.getElementById('detailEditPriceBtn');
-      editBtn.onclick = () => {
-        closeProductDetailModal();
-        openEditPriceModal(prod.id);
-      };
-
       const addBtn = document.getElementById('detailAddToCartBtn');
       addBtn.disabled = out;
       addBtn.textContent = out ? 'Sold Out' : 'Add to Cart';
@@ -1512,7 +1392,6 @@
       document.getElementById('cartDrawer').classList.add('hidden');
       document.getElementById('storeSettingsModal').classList.add('hidden');
       document.getElementById('productDetailModal').classList.add('hidden');
-      document.getElementById('editProductPriceModal').classList.add('hidden');
     }
 
     function setActiveBottomTab(tab) {
@@ -1985,8 +1864,24 @@
         'from-amber-600 via-amber-700 to-stone-900'
       );
 
+      const resolvedSecond = (secondBanner && secondBanner.banner_active && secondBanner.banner_text)
+        ? secondBanner
+        : (mainBanner && mainBanner.second_banner_active && mainBanner.second_banner_text
+          ? {
+              banner_active: true,
+              banner_text: mainBanner.second_banner_text,
+              banner_color: mainBanner.second_banner_color || 'gold',
+              banner_image_url: mainBanner.second_banner_image_url || ''
+            }
+          : {
+              banner_active: true,
+              banner_text: 'Fresh Deals & Uyo Pickup Available Daily at Urua Ekpa',
+              banner_color: 'gold',
+              banner_image_url: ''
+            });
+
       applySingleBannerSlot(
-        secondBanner,
+        resolvedSecond,
         'secondPromoBannerCard',
         'secondPromoText',
         'secondPromoImg',
@@ -2224,18 +2119,12 @@
                 <h3 class="font-bold text-xs sm:text-sm text-stone-900 line-clamp-1">${p.name}</h3>
                 <p class="text-[11px] text-stone-500 line-clamp-2 mt-0.5">${p.description || 'Tap to view details'}</p>
               </div>
-              <div class="mt-2.5 space-y-2">
+              <div class="mt-2.5">
                 ${formatPriceHtml(p, 'text-sm sm:text-base')}
-                <div class="flex items-center gap-1.5">
-                  <button type="button" ${out ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart('${p.id}', this)"
-                    class="flex-1 ${out ? 'bg-stone-200 text-stone-500' : 'bg-amber-600 hover:bg-amber-700 text-white'} text-xs font-bold py-2 rounded-xl transition shadow-2xs">
-                    ${out ? 'Sold Out' : 'Add to Cart'}
-                  </button>
-                  <button type="button" onclick="event.stopPropagation(); openEditPriceModal('${p.id}')"
-                    class="px-2.5 py-2 rounded-xl border border-stone-200 bg-stone-50 hover:bg-stone-100 text-[11px] font-bold text-stone-700 transition">
-                    Edit Price
-                  </button>
-                </div>
+                <button type="button" ${out ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart('${p.id}', this)"
+                  class="mt-2 w-full ${out ? 'bg-stone-200 text-stone-500' : 'bg-amber-600 hover:bg-amber-700 text-white'} text-xs font-bold py-2 rounded-xl transition shadow-2xs">
+                  ${out ? 'Sold Out' : 'Add to Cart'}
+                </button>
               </div>
             </div>
           </div>`;
