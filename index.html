@@ -39,43 +39,56 @@
 </head>
 <body class="bg-[#F5F5F7] text-stone-900 antialiased pb-24">
 
-  <!-- CUSTOMER SIGN UP / LOGIN & STAFF / ADMIN ACCESS GATE -->
+  <!-- REDESIGNED FIRST VIEW: CLEAR CUSTOMER SIGN UP / SIGN IN + STAFF / ADMIN GATE -->
   <div id="customerAuthGate" class="fixed inset-0 z-50 bg-[#F5F5F7] flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white border border-stone-200/90 rounded-3xl max-w-md w-full overflow-hidden shadow-xl my-auto">
-      <!-- Warm Brand Header Matching Storefront -->
-      <div class="bg-gradient-to-r from-stone-950 via-stone-900 to-amber-900 text-white px-6 py-6 text-center space-y-2">
-        <span class="inline-block text-[10px] uppercase tracking-[0.22em] text-amber-300 font-bold bg-white/10 border border-white/15 px-3 py-1 rounded-full">
-          Sekiflex Collections Portal
-        </span>
-        <h1 class="font-editorial text-2xl sm:text-3xl font-bold tracking-tight">
-          SEKIFLEX <span class="text-amber-400">COLLECTIONS</span>
-        </h1>
-        <p id="authSubtitle" class="text-xs text-stone-300 leading-relaxed">
-          Register as a customer to shop our catalog, or sign in as Staff / Admin to manage the store.
-        </p>
+    <div class="bg-white border border-stone-200/90 rounded-[28px] max-w-md w-full overflow-hidden shadow-2xl my-auto">
+
+      <!-- Top Editorial Showcase Header -->
+      <div class="bg-stone-950 text-white px-6 pt-7 pb-6 relative overflow-hidden">
+        <div class="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-amber-500/15 blur-xl pointer-events-none"></div>
+        <div class="relative space-y-2">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-amber-400">
+              Sekiflex Collections
+            </span>
+            <span class="text-[10px] font-bold bg-white/10 text-stone-200 px-2.5 py-0.5 rounded-full">
+              Uyo &bull; Nationwide &bull; Global
+            </span>
+          </div>
+          <h1 class="font-editorial text-2xl sm:text-3xl font-bold leading-tight pt-1">
+            Welcome to <span class="text-amber-400">Sekiflex</span>
+          </h1>
+          <p id="authSubtitle" class="text-xs text-stone-300 leading-relaxed">
+            New shoppers can register below. Already have an account? Switch to Customer Sign In, or use Staff / Admin below.
+          </p>
+        </div>
       </div>
 
-      <div class="p-6 sm:p-7 space-y-5">
-        <div id="authTabsRow" class="grid grid-cols-2 gap-1.5 bg-[#F5F5F7] border border-stone-200/80 p-1 rounded-2xl">
-          <button type="button" id="tabSignUpBtn" onclick="switchAuthView('signup')"
-            class="py-2.5 rounded-xl text-xs font-extrabold bg-amber-600 text-white shadow-xs transition">
-            Register as Customer
-          </button>
-          <button type="button" id="tabSignInBtn" onclick="switchAuthView('signin')"
-            class="py-2.5 rounded-xl text-xs font-extrabold text-stone-600 hover:text-stone-900 transition">
-            Customer Sign In
-          </button>
+      <div class="p-6 space-y-5">
+        <!-- Customer Mode Switcher -->
+        <div class="space-y-1.5">
+          <p class="text-[10px] font-extrabold uppercase tracking-wider text-stone-400 px-1">Shopper Access</p>
+          <div id="authTabsRow" class="grid grid-cols-2 gap-1.5 bg-[#F5F5F7] border border-stone-200/80 p-1 rounded-2xl">
+            <button type="button" id="tabSignUpBtn" onclick="switchAuthView('signup')"
+              class="py-2.5 rounded-xl text-xs font-extrabold bg-amber-600 text-white shadow-xs transition">
+              Register as Customer
+            </button>
+            <button type="button" id="tabSignInBtn" onclick="switchAuthView('signin')"
+              class="py-2.5 rounded-xl text-xs font-extrabold text-stone-600 hover:text-stone-900 transition">
+              Customer Sign In
+            </button>
+          </div>
         </div>
 
         <p id="authGateMsg" class="hidden text-xs font-semibold text-center p-2.5 rounded-xl"></p>
 
-        <!-- 1. Sign Up Form -->
+        <!-- 1. Customer Registration Form -->
         <form id="customerSignUpForm" autocomplete="off" onsubmit="handleCustomerSignUp(event)" class="space-y-3">
-          <input required id="regName" name="sekiflex_reg_fullname" autocomplete="new-password" type="text" placeholder="Your Full Name (e.g. Daniel Okafor)"
+          <input required id="regName" name="sekiflex_reg_fullname" autocomplete="new-password" type="text" placeholder="Full Name (e.g. Daniel Okafor)"
             class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
           <input required id="regEmail" name="sekiflex_reg_email" autocomplete="off" type="email" placeholder="Email Address"
             class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
-          <input required id="regPhone" name="sekiflex_reg_phone" autocomplete="off" type="tel" placeholder="Phone / WhatsApp Number (e.g. 08012345678)"
+          <input required id="regPhone" name="sekiflex_reg_phone" autocomplete="off" type="tel" placeholder="Phone / WhatsApp Number"
             class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
           <input required id="regPassword" name="sekiflex_reg_pass" autocomplete="new-password" type="password" minlength="6" placeholder="Create Password (min. 6 characters)"
             class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
@@ -107,7 +120,7 @@
           </div>
         </form>
 
-        <!-- 3. Sign In Form -->
+        <!-- 3. Customer Sign In Form -->
         <form id="customerSignInForm" onsubmit="handleCustomerSignIn(event)" class="hidden space-y-3">
           <input required id="loginEmail" type="email" placeholder="Customer Email Address"
             class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
@@ -134,7 +147,7 @@
             Send Reset Code →
           </button>
           <button type="button" onclick="switchAuthView('signin')" class="w-full text-xs text-stone-500 hover:underline">
-            ← Back to Sign In
+            ← Back to Customer Sign In
           </button>
         </form>
 
@@ -153,24 +166,21 @@
             Update Password &amp; Enter Store →
           </button>
           <button type="button" onclick="switchAuthView('signin')" class="w-full text-xs text-stone-500 hover:underline">
-            ← Back to Sign In
+            ← Back to Customer Sign In
           </button>
         </form>
 
-        <!-- Dedicated Staff / Admin Login & Order Tracking Bar -->
-        <div class="pt-3 border-t border-stone-100 space-y-2.5">
+        <!-- Separate Staff / Admin Portal Box (Only on Sign-In / Gateway Page) -->
+        <div class="pt-3 border-t border-stone-100 space-y-2">
+          <p class="text-[10px] font-extrabold uppercase tracking-wider text-stone-400 px-1">Store Management</p>
           <a href="store-admin.html"
-            class="w-full flex items-center justify-between px-4 py-3 rounded-2xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-extrabold transition shadow-xs">
-            <span class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-              <span>Login as Staff / Admin</span>
-            </span>
-            <span class="text-amber-300">Manage Store →</span>
+            class="w-full flex items-center justify-between px-4 py-3 rounded-2xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-extrabold transition">
+            <span>Login as Staff / Admin</span>
+            <span class="text-amber-400">Admin Panel →</span>
           </a>
-
-          <div class="flex items-center justify-between text-[11px] text-stone-500 px-1">
+          <div class="flex items-center justify-between text-[11px] text-stone-500 pt-1 px-1">
             <a href="track.html" class="font-bold text-amber-700 hover:underline">Track Existing Order →</a>
-            <span>Sekiflex Storefront</span>
+            <span>Sekiflex Collections</span>
           </div>
         </div>
       </div>
@@ -273,10 +283,11 @@
 
     <div class="max-w-5xl mx-auto px-3 pt-3 space-y-4">
 
-      <!-- HORIZONTAL AUTO-SHIFTING HERO PROMO BANNER CAROUSEL -->
+      <!-- HORIZONTAL AUTO-SHIFTING HERO PROMO BANNER CAROUSEL (2 ANNOUNCEMENT SLOTS + EDITORIAL SLIDES) -->
       <section id="heroCarouselSection" class="space-y-2">
         <div id="bannerCarousel" class="flex gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
 
+          <!-- Announcement Banner Spot 1 -->
           <div id="livePromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-900 via-stone-800 to-amber-900 text-white p-4 flex items-center justify-between gap-3 shadow-md">
             <div class="space-y-1.5 flex-1 min-w-0">
               <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-amber-500 text-stone-950 px-2 py-0.5 rounded-full">
@@ -288,6 +299,20 @@
               </a>
             </div>
             <img id="livePromoImg" src="" alt="Promo" class="hidden w-24 h-24 sm:w-28 sm:h-28 object-cover object-top rounded-xl border border-white/20 shrink-0" />
+          </div>
+
+          <!-- Announcement Banner Spot 2 -->
+          <div id="secondPromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-amber-800 via-amber-700 to-stone-900 text-white p-4 flex items-center justify-between gap-3 shadow-md">
+            <div class="space-y-1.5 flex-1 min-w-0">
+              <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-white/20 text-amber-200 px-2 py-0.5 rounded-full">
+                Special Notice
+              </span>
+              <p id="secondPromoText" class="text-base sm:text-lg font-extrabold leading-snug line-clamp-2"></p>
+              <a href="#catalogSection" class="inline-flex items-center gap-1 bg-amber-400 text-stone-950 text-xs font-bold px-3.5 py-1.5 rounded-full mt-1">
+                Explore Deals →
+              </a>
+            </div>
+            <img id="secondPromoImg" src="" alt="Promo 2" class="hidden w-24 h-24 sm:w-28 sm:h-28 object-cover object-top rounded-xl border border-white/20 shrink-0" />
           </div>
 
           <div class="promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-950 via-stone-900 to-amber-800 text-white p-4 flex items-center justify-between gap-3 shadow-md">
@@ -504,6 +529,42 @@
     </div>
   </div>
 
+  <!-- PRODUCT PRICE & DISCOUNT EDITOR MODAL -->
+  <div id="editProductPriceModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
+    <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl my-auto">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+        <div>
+          <h3 class="font-editorial text-lg font-bold text-stone-900">Edit Product Price</h3>
+          <p id="editPriceProdName" class="text-xs text-stone-500"></p>
+        </div>
+        <button type="button" onclick="closeEditPriceModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 font-bold text-lg">&times;</button>
+      </div>
+
+      <form onsubmit="saveProductPriceEdit(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="editPriceProdId" />
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Active Selling Price (₦)</label>
+          <input required id="editActivePriceInput" type="number" min="0" step="any" placeholder="e.g. 8000"
+            class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-bold focus:outline-none focus:border-amber-600" />
+        </div>
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Original / Crossed-Out Price (₦, optional)</label>
+          <input id="editComparePriceInput" type="number" min="0" step="any" placeholder="e.g. 10000 (leave blank for no discount)"
+            class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-amber-600" />
+        </div>
+        <p id="editPriceMsg" class="hidden text-[11px] font-semibold p-2 rounded-xl"></p>
+        <div class="flex gap-2 pt-1">
+          <button type="button" onclick="closeEditPriceModal()" class="px-4 py-2.5 rounded-xl border border-stone-300 font-bold text-stone-700">
+            Cancel
+          </button>
+          <button type="submit" id="saveProductPriceBtn" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-2.5 rounded-xl transition">
+            Save Price
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- PRODUCT DETAIL MODAL (VIEW FULL PHOTO, ABOUT & DESCRIPTION) -->
   <div id="productDetailModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
     <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl my-auto">
@@ -534,6 +595,10 @@
           <button type="button" onclick="closeProductDetailModal()"
             class="px-4 py-3 rounded-xl border border-stone-300 text-xs font-bold text-stone-700 hover:bg-stone-50 transition">
             Close
+          </button>
+          <button type="button" id="detailEditPriceBtn"
+            class="px-4 py-3 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 text-xs font-bold text-amber-900 transition">
+            Edit Price
           </button>
           <button type="button" id="detailAddToCartBtn"
             class="flex-1 bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-xl text-xs font-extrabold transition shadow-md">
@@ -576,7 +641,7 @@
     </div>
   </nav>
 
-  <!-- ACCOUNT & PROFILE SHEET (INCLUDES STAFF / ADMIN PANEL LINK + SETTINGS ON RIGHT) -->
+  <!-- ACCOUNT & PROFILE SHEET (CUSTOMER ONLY — NO ADMIN BUTTON INSIDE STORE) -->
   <div id="accountDrawer" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center">
     <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 space-y-4 shadow-2xl">
       <div class="flex items-center justify-between gap-2 border-b border-stone-200 pb-3">
@@ -598,10 +663,6 @@
       </div>
 
       <div class="space-y-2 text-xs font-bold">
-        <a href="store-admin.html" class="flex items-center justify-between p-3.5 rounded-xl bg-stone-900 text-amber-300">
-          <span>Staff / Admin Dashboard</span>
-          <span>Open →</span>
-        </a>
         <a href="track.html" class="flex items-center justify-between p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950">
           <span>Track My Orders</span>
           <span>→</span>
@@ -971,6 +1032,80 @@
       return `<p class="font-extrabold text-stone-900 ${sizeClass}">₦${effectivePrice.toLocaleString()}</p>`;
     }
 
+    function openEditPriceModal(productId) {
+      const prod = allProducts.find(p => String(p.id) === String(productId));
+      if (!prod) return;
+
+      const { effectivePrice, originalPrice } = getProductPricing(prod);
+      document.getElementById('editPriceProdId').value = prod.id;
+      document.getElementById('editPriceProdName').textContent = prod.name || 'Product';
+      document.getElementById('editActivePriceInput').value = effectivePrice;
+      document.getElementById('editComparePriceInput').value = originalPrice !== null ? originalPrice : '';
+
+      const msg = document.getElementById('editPriceMsg');
+      msg.classList.add('hidden');
+      document.getElementById('editProductPriceModal').classList.remove('hidden');
+    }
+
+    function closeEditPriceModal() {
+      document.getElementById('editProductPriceModal').classList.add('hidden');
+    }
+
+    function showEditPriceStatus(text, isError = true) {
+      const box = document.getElementById('editPriceMsg');
+      box.textContent = text;
+      box.className = `text-[11px] font-semibold p-2 rounded-xl ${
+        isError ? 'bg-red-100 text-red-800 border border-red-200' : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+      }`;
+      box.classList.remove('hidden');
+    }
+
+    async function saveProductPriceEdit(e) {
+      e.preventDefault();
+      const prodId = document.getElementById('editPriceProdId').value;
+      const newPrice = Number(document.getElementById('editActivePriceInput').value);
+      const rawCompareVal = document.getElementById('editComparePriceInput').value.trim();
+      const compareVal = rawCompareVal === '' ? null : Number(rawCompareVal);
+      const btn = document.getElementById('saveProductPriceBtn');
+
+      if (Number.isNaN(newPrice) || newPrice < 0) {
+        return showEditPriceStatus('Enter a valid selling price.', true);
+      }
+      if (compareVal !== null && (Number.isNaN(compareVal) || compareVal <= newPrice)) {
+        return showEditPriceStatus('Crossed-out original price must be higher than the selling price.', true);
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      const payload = { base_price: newPrice, compare_at_price: compareVal };
+      const { error } = await sb.from('products').update(payload).eq('id', prodId);
+
+      btn.disabled = false;
+      btn.textContent = 'Save Price';
+
+      if (error && !/compare_at_price/i.test(error.message)) {
+        return showEditPriceStatus(error.message, true);
+      }
+
+      allProducts = allProducts.map(item => {
+        if (String(item.id) !== String(prodId)) return item;
+        const updated = { ...item, base_price: newPrice, compare_at_price: compareVal };
+        delete updated.discount_price;
+        delete updated.sale_price;
+        return updated;
+      });
+
+      localStorage.setItem('sekiflex_products_cache', JSON.stringify(allProducts));
+      renderFeaturedStrip(allProducts);
+      applyCatalogFilters();
+      showEditPriceStatus('Price updated!', false);
+
+      setTimeout(() => {
+        closeEditPriceModal();
+      }, 500);
+    }
+
     function startBannerAutoShift() {
       const carousel = document.getElementById('bannerCarousel');
       if (!carousel) return;
@@ -1290,6 +1425,12 @@
         stockEl.className = 'text-xs font-semibold text-emerald-700 mt-0.5';
       }
 
+      const editBtn = document.getElementById('detailEditPriceBtn');
+      editBtn.onclick = () => {
+        closeProductDetailModal();
+        openEditPriceModal(prod.id);
+      };
+
       const addBtn = document.getElementById('detailAddToCartBtn');
       addBtn.disabled = out;
       addBtn.textContent = out ? 'Sold Out' : 'Add to Cart';
@@ -1371,6 +1512,7 @@
       document.getElementById('cartDrawer').classList.add('hidden');
       document.getElementById('storeSettingsModal').classList.add('hidden');
       document.getElementById('productDetailModal').classList.add('hidden');
+      document.getElementById('editProductPriceModal').classList.add('hidden');
     }
 
     function setActiveBottomTab(tab) {
@@ -1798,16 +1940,11 @@
       location.reload();
     }
 
-    async function loadStoreBanner() {
-      const { data: banner } = await sb
-        .from('store_settings')
-        .select('*')
-        .eq('id', 'main')
-        .maybeSingle();
-
-      const card = document.getElementById('livePromoBannerCard');
-      const txt = document.getElementById('livePromoText');
-      const img = document.getElementById('livePromoImg');
+    function applySingleBannerSlot(banner, cardId, textId, imgId, defaultGradient) {
+      const card = document.getElementById(cardId);
+      const txt = document.getElementById(textId);
+      const img = document.getElementById(imgId);
+      if (!card || !txt || !img) return;
 
       if (!banner || !banner.banner_active || !banner.banner_text) {
         card.classList.add('hidden');
@@ -1820,7 +1957,8 @@
         red: 'from-rose-700 via-red-800 to-stone-950',
         dark: 'from-stone-950 via-stone-900 to-amber-900'
       };
-      card.className = `promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r ${colorMap[banner.banner_color] || colorMap.gold} text-white p-4 flex items-center justify-between gap-3 shadow-md`;
+      const grad = colorMap[banner.banner_color] || defaultGradient;
+      card.className = `promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r ${grad} text-white p-4 flex items-center justify-between gap-3 shadow-md`;
       txt.textContent = banner.banner_text;
 
       if (banner.banner_image_url) {
@@ -1831,6 +1969,30 @@
       }
 
       card.classList.remove('hidden');
+    }
+
+    async function loadStoreBanner() {
+      const [{ data: mainBanner }, { data: secondBanner }] = await Promise.all([
+        sb.from('store_settings').select('*').eq('id', 'main').maybeSingle(),
+        sb.from('store_settings').select('*').eq('id', 'second').maybeSingle()
+      ]);
+
+      applySingleBannerSlot(
+        mainBanner,
+        'livePromoBannerCard',
+        'livePromoText',
+        'livePromoImg',
+        'from-amber-600 via-amber-700 to-stone-900'
+      );
+
+      applySingleBannerSlot(
+        secondBanner,
+        'secondPromoBannerCard',
+        'secondPromoText',
+        'secondPromoImg',
+        'from-amber-800 via-amber-700 to-stone-900'
+      );
+
       currentBannerSlideIdx = 0;
       const carousel = document.getElementById('bannerCarousel');
       if (carousel) carousel.scrollLeft = 0;
@@ -2062,12 +2224,18 @@
                 <h3 class="font-bold text-xs sm:text-sm text-stone-900 line-clamp-1">${p.name}</h3>
                 <p class="text-[11px] text-stone-500 line-clamp-2 mt-0.5">${p.description || 'Tap to view details'}</p>
               </div>
-              <div class="mt-2.5">
+              <div class="mt-2.5 space-y-2">
                 ${formatPriceHtml(p, 'text-sm sm:text-base')}
-                <button type="button" ${out ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart('${p.id}', this)"
-                  class="mt-2 w-full ${out ? 'bg-stone-200 text-stone-500' : 'bg-amber-600 hover:bg-amber-700 text-white'} text-xs font-bold py-2 rounded-xl transition shadow-2xs">
-                  ${out ? 'Sold Out' : 'Add to Cart'}
-                </button>
+                <div class="flex items-center gap-1.5">
+                  <button type="button" ${out ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart('${p.id}', this)"
+                    class="flex-1 ${out ? 'bg-stone-200 text-stone-500' : 'bg-amber-600 hover:bg-amber-700 text-white'} text-xs font-bold py-2 rounded-xl transition shadow-2xs">
+                    ${out ? 'Sold Out' : 'Add to Cart'}
+                  </button>
+                  <button type="button" onclick="event.stopPropagation(); openEditPriceModal('${p.id}')"
+                    class="px-2.5 py-2 rounded-xl border border-stone-200 bg-stone-50 hover:bg-stone-100 text-[11px] font-bold text-stone-700 transition">
+                    Edit Price
+                  </button>
+                </div>
               </div>
             </div>
           </div>`;
