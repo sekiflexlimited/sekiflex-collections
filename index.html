@@ -16,7 +16,6 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* Smooth Attention Zoom-In / Zoom-Out Pulse */
     @keyframes zoomPulse {
       0%, 100% {
         transform: scale(1);
@@ -39,7 +38,7 @@
 </head>
 <body class="bg-[#F5F5F7] text-stone-900 antialiased pb-24">
 
-  <!-- CHECKOUT / ACCOUNT SIGN UP & SIGN IN MODAL (ONLY SHOWN WHEN PLACING ORDER OR REQUESTED) -->
+  <!-- REGISTER / SIGN IN MODAL (FOR CHECKOUT OR ACCOUNT) -->
   <div id="customerAuthGate" class="fixed inset-0 z-50 hidden bg-black/65 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white border border-stone-200/90 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
       <div class="bg-gradient-to-r from-stone-950 via-stone-900 to-amber-900 text-white px-6 py-5 text-center space-y-1.5 relative">
@@ -48,13 +47,13 @@
           &times;
         </button>
         <span class="inline-block text-[10px] uppercase tracking-[0.22em] text-amber-300 font-bold bg-white/10 border border-white/15 px-3 py-1 rounded-full">
-          Checkout Account Step
+          Sekiflex Collections Account
         </span>
         <h2 class="font-editorial text-2xl font-bold tracking-tight">
           SEKIFLEX <span class="text-amber-400">COLLECTIONS</span>
         </h2>
         <p id="authSubtitle" class="text-xs text-stone-300 leading-relaxed">
-          Sign up or sign in to complete your order and track your delivery.
+          Register first to continue straight to checkout.
         </p>
       </div>
 
@@ -62,7 +61,7 @@
         <div id="authTabsRow" class="grid grid-cols-2 gap-1.5 bg-[#F5F5F7] border border-stone-200/80 p-1 rounded-2xl">
           <button type="button" id="tabSignUpBtn" onclick="switchAuthView('signup')"
             class="py-2.5 rounded-xl text-xs font-extrabold bg-amber-600 text-white shadow-xs transition">
-            Sign Up
+            Register
           </button>
           <button type="button" id="tabSignInBtn" onclick="switchAuthView('signin')"
             class="py-2.5 rounded-xl text-xs font-extrabold text-stone-600 hover:text-stone-900 transition">
@@ -84,7 +83,7 @@
             class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
           <button type="submit" id="regSubmitBtn"
             class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3.5 rounded-2xl text-sm transition shadow-sm">
-            Create Account &amp; Continue Order →
+            Register &amp; Go to Checkout →
           </button>
         </form>
 
@@ -98,7 +97,7 @@
             class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-center font-mono text-lg tracking-[0.3em] font-bold focus:outline-none focus:border-amber-600" />
           <button type="submit" id="verifyOtpBtn"
             class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3.5 rounded-2xl text-sm transition shadow-sm">
-            Verify Code &amp; Continue →
+            Verify &amp; Go to Checkout →
           </button>
           <div class="flex items-center justify-between text-xs pt-1">
             <button type="button" onclick="resendSignupCode()" class="font-bold text-amber-700 hover:underline">
@@ -123,7 +122,7 @@
           </div>
           <button type="submit" id="loginSubmitBtn"
             class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3.5 rounded-2xl text-sm transition shadow-sm">
-            Sign In &amp; Continue Order →
+            Sign In &amp; Go to Checkout →
           </button>
         </form>
 
@@ -153,7 +152,7 @@
             class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600" />
           <button type="submit" id="completeResetBtn"
             class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3.5 rounded-2xl text-sm transition shadow-sm">
-            Update Password &amp; Continue →
+            Update Password &amp; Go to Checkout →
           </button>
           <button type="button" onclick="switchAuthView('signin')" class="w-full text-xs text-stone-500 hover:underline">
             ← Back to Sign In
@@ -162,16 +161,16 @@
 
         <div class="pt-2 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-500">
           <a href="store-admin.html" class="font-bold text-stone-800 hover:underline">Staff / Admin Login →</a>
-          <button type="button" onclick="closeAuthGate()" class="font-bold text-amber-700 hover:underline">Keep Browsing</button>
+          <button type="button" onclick="closeAuthGate()" class="font-bold text-amber-700 hover:underline">Keep Shopping</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- MAIN APP-STYLE STOREFRONT (VISIBLE IMMEDIATELY ON LOAD & REFRESH) -->
+  <!-- MAIN APP-STYLE STOREFRONT -->
   <div id="storeMainWrapper">
 
-    <!-- STICKY TOP PILL SEARCH HEADER (WITH PICTURE SEARCH) -->
+    <!-- STICKY TOP PILL SEARCH HEADER -->
     <header class="sticky top-0 z-40 bg-white border-b border-stone-200/80 px-3 pt-2.5 pb-2 shadow-2xs">
       <div class="max-w-5xl mx-auto space-y-2">
         <div class="flex items-center justify-between gap-2 text-xs">
@@ -183,7 +182,6 @@
           </span>
         </div>
 
-        <!-- Rounded Pill Search Form + Picture Search Button -->
         <form onsubmit="submitSearch(event)" class="relative flex items-center gap-1.5">
           <div class="relative flex-1 flex items-center">
             <svg class="w-4 h-4 text-stone-500 absolute left-3.5 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -197,7 +195,6 @@
             </button>
           </div>
 
-          <!-- Search by Picture Trigger -->
           <input type="file" id="pictureSearchInput" accept="image/*" class="hidden" onchange="handlePictureSearch(event)" />
           <button type="button" id="pictureSearchBtn" onclick="triggerPictureSearch()"
             aria-label="Search product by picture"
@@ -215,7 +212,6 @@
           </button>
         </form>
 
-        <!-- Active Picture Search Preview Banner -->
         <div id="pictureSearchBanner" class="hidden items-center justify-between gap-2 bg-amber-50 border border-amber-200 rounded-2xl px-3 py-2 text-xs">
           <div class="flex items-center gap-2.5 min-w-0">
             <img id="pictureSearchPreviewImg" src="" alt="Uploaded search photo" class="w-10 h-10 rounded-lg object-cover border border-amber-300 shrink-0" />
@@ -231,7 +227,7 @@
       </div>
     </header>
 
-    <!-- CALL TO ORDER STRIP WITH CIRCULAR ZOOMING CALL & WHATSAPP ICONS ONLY -->
+    <!-- CALL TO ORDER STRIP -->
     <div class="bg-white border-b border-stone-200/70 px-3 py-2.5">
       <div class="max-w-5xl mx-auto flex items-center justify-between gap-2 text-xs font-extrabold text-stone-900">
         <div class="flex items-center gap-2">
@@ -319,7 +315,7 @@
         </div>
       </section>
 
-      <!-- 3-CARD QUICK FEATURE STRIP (WITH ZOOMING TRACK NOW BUTTON) -->
+      <!-- 3-CARD QUICK FEATURE STRIP -->
       <section id="quickFeatureStrip" class="grid grid-cols-3 gap-2">
         <button type="button" onclick="openInfoModal('about')"
           class="bg-stone-900 text-white rounded-2xl p-2.5 text-center space-y-1 shadow-xs hover:bg-stone-800 transition">
@@ -375,22 +371,22 @@
         </div>
       </section>
 
-      <!-- FEATURED / HOT PICKS STRIP (NO '+' BUTTON) -->
+      <!-- FEATURED / HOT PICKS STRIP (AUTO-SCROLLING) -->
       <section id="featuredStripSection" class="rounded-2xl overflow-hidden shadow-sm border border-stone-200 bg-white">
         <div class="bg-[#C8102E] text-white px-3.5 py-2.5 flex items-center justify-between">
           <div>
             <h2 class="font-extrabold text-base sm:text-lg leading-tight">Featured Collection</h2>
-            <p class="text-[11px] text-rose-100">Tap any item to read details or add to cart</p>
+            <p class="text-[11px] text-rose-100">Auto-scrolling picks — tap any item to view or add to cart</p>
           </div>
           <a href="#catalogSection" class="w-8 h-8 rounded-full bg-white text-[#C8102E] font-bold flex items-center justify-center text-sm shadow-xs">
             →
           </a>
         </div>
-        <div id="featuredHorizontalList" class="p-3 flex gap-3 overflow-x-auto no-scrollbar bg-[#C8102E]/95">
+        <div id="featuredHorizontalList" class="p-3 flex gap-3 overflow-x-auto scroll-smooth no-scrollbar bg-[#C8102E]/95">
         </div>
       </section>
 
-      <!-- CATEGORY FILTER PILLS & SEARCH RESULTS GRID (ROTATES EVERY 5 MINUTES) -->
+      <!-- CATEGORY FILTER PILLS & SEARCH RESULTS GRID (ROTATES EVERY 2 MINUTES) -->
       <section id="catalogSection" class="pt-1 space-y-2.5 scroll-mt-32">
         <div class="flex items-center justify-between gap-2">
           <h2 id="catalogHeading" class="font-extrabold text-base sm:text-lg text-stone-900">All Products</h2>
@@ -429,7 +425,6 @@
           </div>
         </div>
 
-        <!-- Submit a 5-Star Review Form -->
         <form onsubmit="submitCustomerReview(event)" class="bg-stone-50 border border-stone-200/80 rounded-2xl p-3.5 space-y-3">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <span class="text-xs font-extrabold text-stone-900">Rate &amp; Comment on Sekiflex Collections:</span>
@@ -454,7 +449,6 @@
           </button>
         </form>
 
-        <!-- Reviews List -->
         <div id="reviewsListContainer" class="space-y-2.5"></div>
       </section>
 
@@ -495,7 +489,7 @@
     </div>
   </div>
 
-  <!-- PRODUCT DETAIL MODAL (VIEW FULL PHOTO, ABOUT & DESCRIPTION) -->
+  <!-- PRODUCT DETAIL MODAL -->
   <div id="productDetailModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
     <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl my-auto">
       <div class="relative bg-stone-100">
@@ -535,7 +529,7 @@
     </div>
   </div>
 
-  <!-- FIXED BOTTOM NAVIGATION BAR (Locked at Bottom Even When Scrolling!) -->
+  <!-- FIXED BOTTOM NAVIGATION BAR -->
   <nav id="bottomFixedNav" class="fixed bottom-0 inset-x-0 z-40 bg-white border-t border-stone-200 shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
     <div class="max-w-5xl mx-auto grid grid-cols-4 h-16">
       <button type="button" id="navHomeBtn" onclick="switchBottomTab('home')"
@@ -567,13 +561,13 @@
     </div>
   </nav>
 
-  <!-- ACCOUNT & PROFILE SHEET (INCLUDES STAFF / ADMIN PANEL LINK + SIGN IN / SIGN OUT) -->
+  <!-- ACCOUNT & PROFILE SHEET -->
   <div id="accountDrawer" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center">
     <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 space-y-4 shadow-2xl">
       <div class="flex items-center justify-between gap-2 border-b border-stone-200 pb-3">
         <div class="min-w-0">
           <h3 id="menuCustomerName" class="font-extrabold text-base text-stone-900 truncate">Welcome!</h3>
-          <p id="menuCustomerEmail" class="text-xs text-stone-500 truncate">Guest shopper — sign up or sign in when placing an order</p>
+          <p id="menuCustomerEmail" class="text-xs text-stone-500 truncate">Register before checkout to place an order</p>
         </div>
         <div class="flex items-center gap-2 shrink-0">
           <button type="button" onclick="openStoreSettingsModal()"
@@ -620,9 +614,9 @@
           <span>Contact Customer Support</span>
           <span>→</span>
         </a>
-        <button type="button" id="accountSignInActionBtn" onclick="closeAllDrawers(); openAuthGate('signin');"
+        <button type="button" id="accountSignInActionBtn" onclick="closeAllDrawers(); openAuthGate('signup', false);"
           class="w-full p-3.5 rounded-xl bg-amber-600 text-white text-center mt-2">
-          Sign In / Create Customer Account
+          Register / Sign In
         </button>
         <button type="button" id="accountSignOutActionBtn" onclick="customerLogout()"
           class="hidden w-full p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-center mt-2">
@@ -632,7 +626,7 @@
     </div>
   </div>
 
-  <!-- STORE SETTINGS MODAL (CHANGE PASSWORD + TIKTOK & FACEBOOK LINKS + PRIVACY POLICY) -->
+  <!-- STORE SETTINGS MODAL -->
   <div id="storeSettingsModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
     <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl my-auto">
       <div class="flex items-center justify-between border-b border-stone-100 pb-3">
@@ -643,7 +637,6 @@
         <button type="button" onclick="closeStoreSettingsModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 font-bold text-lg">&times;</button>
       </div>
 
-      <!-- TikTok & Facebook Links -->
       <div class="bg-amber-50/70 border border-amber-200 rounded-2xl p-3.5 space-y-2">
         <p class="text-xs font-extrabold text-stone-900">Follow Us on Social Media</p>
         <div class="grid grid-cols-2 gap-2 text-xs font-bold">
@@ -660,14 +653,12 @@
         </div>
       </div>
 
-      <!-- Privacy & Delivery Policy Quick Access -->
       <button type="button" onclick="closeStoreSettingsModal(); openInfoModal('privacy')"
         class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-stone-100 hover:bg-amber-50 border border-stone-200 text-stone-900 text-xs font-bold transition">
         <span>🔒 Privacy &amp; Delivery Data Policy</span>
         <span>Read →</span>
       </button>
 
-      <!-- Change Password Box -->
       <form onsubmit="handleAccountPasswordChange(event)" class="bg-stone-50 border border-stone-200 rounded-2xl p-3.5 space-y-2.5">
         <p class="text-xs font-extrabold text-stone-900">Change Account Password</p>
         <p id="changePasswordMsg" class="hidden text-[11px] font-semibold p-2 rounded-xl"></p>
@@ -748,8 +739,8 @@
   <div id="bagToast" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-40 hidden bg-stone-900 text-white px-4 py-2.5 rounded-full shadow-2xl border border-stone-700 flex items-center gap-3 text-xs whitespace-nowrap">
     <span class="text-emerald-400 font-bold">&#10003;</span>
     <span id="bagToastText">Added to cart</span>
-    <button type="button" onclick="hideBagToast(); toggleCart(true);" class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-3 py-1 rounded-full text-[11px] transition">
-      View Cart
+    <button type="button" onclick="hideBagToast(); openCartForCheckout();" class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-3 py-1 rounded-full text-[11px] transition">
+      Checkout
     </button>
   </div>
 
@@ -783,7 +774,6 @@
           <input required id="custEmail" name="sekiflex_order_email" autocomplete="off" type="email" placeholder="Email Address (for tracking receipt)" class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-amber-600" />
           <input required id="custPhone" name="sekiflex_order_phone" autocomplete="off" type="tel" placeholder="Phone / WhatsApp Number" class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-amber-600" />
 
-          <!-- Courier Delivery Fields -->
           <div id="deliveryFields" class="space-y-3">
             <div class="grid grid-cols-2 gap-2">
               <select required id="custCountry" onchange="handleCountryChange()" class="w-full border border-stone-300 rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:border-amber-600">
@@ -805,7 +795,6 @@
             <input required id="custAddress" type="text" placeholder="Full Street Delivery Address" class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-amber-600" />
           </div>
 
-          <!-- Walk-In Store Pickup Info Box -->
           <div id="pickupInfoBox" class="hidden bg-amber-50/90 border border-amber-200 rounded-xl p-3.5 text-xs space-y-2">
             <p class="font-bold text-amber-950 text-sm">Walk-In Store Pickup — Uyo HQ (FREE)</p>
             <p class="text-stone-700"><span class="font-semibold">Location:</span> Urua Ekpa, Uyo, Akwa Ibom State</p>
@@ -880,6 +869,9 @@
     <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
       <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto text-2xl font-bold">&#10003;</div>
       <h2 class="font-editorial text-2xl font-bold">Order &amp; Payment Submitted!</h2>
+      <p id="successOrderStatusBadge" class="inline-block text-xs font-extrabold px-3 py-1 rounded-full bg-amber-100 text-amber-800">
+        Order processing • Awaiting payment
+      </p>
       <p class="text-xs text-stone-600">Save your tracking number below to monitor your dispatch or present at our Uyo HQ counter:</p>
       <div class="bg-stone-100 border border-dashed border-stone-400 rounded-xl py-3 px-4 font-mono text-lg font-bold text-amber-700" id="newTrackingCode"></div>
       <a id="orderWhatsappConfirmBtn" href="https://wa.me/2349069037617" target="_blank" rel="noopener"
@@ -897,6 +889,7 @@
     const STORE_WHATSAPP_NUMBER = '2349069037617';
     const TIKTOK_URL = 'https://www.tiktok.com/@sekiflex_collections?_r=1&_t=ZS-9BbSAFjxrZW';
     const FACEBOOK_URL = 'https://www.facebook.com/share/1G3ErASdHa/';
+    const ROTATION_MINUTES = 2;
 
     const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
     const NIGERIA_STATES = [
@@ -922,13 +915,47 @@
     let currentEstDays = 'select state';
     let toastTimer = null;
     let currentCustomer = null;
-    let pendingOrderAfterAuth = false;
+    let returnToCheckoutAfterAuth = false;
     let pendingSignupData = { name: '', email: '', phone: '' };
     let pendingResetEmail = '';
     let bannerAutoTimer = null;
     let bannerPauseUntil = 0;
     let currentBannerSlideIdx = 0;
+    let featuredAutoTimer = null;
+    let featuredPauseUntil = 0;
     let lastRotationSlot = -1;
+
+    function getStatusColor(value) {
+      const status = String(value || '').toLowerCase();
+      if (
+        status.includes('delayed') ||
+        status.includes('returned') ||
+        status.includes('attempted') ||
+        status.includes('cancel')
+      ) return '#D93636';
+      if (
+        status.includes('delivered') ||
+        status.includes('arrived') ||
+        status.includes('confirmed') ||
+        status.includes('ready for collection') ||
+        status.includes('payment confirmed') ||
+        status.includes('payment received')
+      ) return '#239B59';
+      return '#D6A500';
+    }
+
+    function applyStatusBadgeStyle(el, statusText) {
+      if (!el) return;
+      const color = getStatusColor(statusText);
+      el.textContent = statusText;
+      el.style.color = color;
+      el.style.border = `1px solid ${color}`;
+      el.style.backgroundColor = color === '#239B59'
+        ? '#EAF7EF'
+        : color === '#D93636'
+          ? '#FDECEC'
+          : '#FFF8DB';
+    }
 
     function getProductPricing(prod) {
       const base = Number(prod?.base_price || 0);
@@ -1003,9 +1030,42 @@
       }, 3500);
     }
 
-    function getFiveMinuteRotatedProducts(list) {
+    function startFeaturedAutoScroll() {
+      const strip = document.getElementById('featuredHorizontalList');
+      if (!strip) return;
+
+      if (!strip.dataset.autoBound) {
+        strip.dataset.autoBound = '1';
+        const pauseFeatured = () => {
+          featuredPauseUntil = Date.now() + 5000;
+        };
+        strip.addEventListener('touchstart', pauseFeatured, { passive: true });
+        strip.addEventListener('pointerdown', pauseFeatured, { passive: true });
+        strip.addEventListener('mouseenter', pauseFeatured);
+      }
+
+      if (featuredAutoTimer) clearInterval(featuredAutoTimer);
+
+      featuredAutoTimer = setInterval(() => {
+        if (Date.now() < featuredPauseUntil) return;
+        const sec = document.getElementById('featuredStripSection');
+        if (!sec || sec.classList.contains('hidden')) return;
+
+        const maxScroll = strip.scrollWidth - strip.clientWidth;
+        if (maxScroll <= 4) return;
+
+        const step = 160;
+        if (strip.scrollLeft + step >= maxScroll - 4) {
+          strip.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          strip.scrollBy({ left: step, behavior: 'smooth' });
+        }
+      }, 2800);
+    }
+
+    function getRotatedProducts(list) {
       if (!Array.isArray(list) || list.length <= 1) return list || [];
-      const slot = Math.floor(Date.now() / (5 * 60 * 1000));
+      const slot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000));
       const items = [...list];
       const n = items.length;
 
@@ -1024,14 +1084,14 @@
       return items;
     }
 
-    function startFiveMinuteProductRotation() {
+    function startProductRotation() {
       setInterval(() => {
-        const slot = Math.floor(Date.now() / (5 * 60 * 1000));
+        const slot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000));
         if (slot !== lastRotationSlot && allProducts.length > 1) {
           lastRotationSlot = slot;
           applyCatalogFilters();
         }
-      }, 15000);
+      }, 10000);
     }
 
     function applySocialLinks() {
@@ -1180,7 +1240,10 @@
         document.getElementById('heroCarouselSection').classList.remove('hidden');
         document.getElementById('quickFeatureStrip').classList.remove('hidden');
         document.getElementById('trustHighlightsStrip').classList.remove('hidden');
-        if (allProducts.length) document.getElementById('featuredStripSection').classList.remove('hidden');
+        if (allProducts.length) {
+          document.getElementById('featuredStripSection').classList.remove('hidden');
+          startFeaturedAutoScroll();
+        }
       }
       applyCatalogFilters();
     }
@@ -1396,7 +1459,7 @@
       } else if (tab === 'categories') {
         document.getElementById('categoriesDrawer').classList.remove('hidden');
       } else if (tab === 'cart') {
-        toggleCart(true);
+        openCartForCheckout();
       } else if (tab === 'account') {
         document.getElementById('accountDrawer').classList.remove('hidden');
       }
@@ -1478,7 +1541,10 @@
         heroSec.classList.remove('hidden');
         quickSec.classList.remove('hidden');
         trustSec.classList.remove('hidden');
-        if (allProducts.length) featSec.classList.remove('hidden');
+        if (allProducts.length) {
+          featSec.classList.remove('hidden');
+          startFeaturedAutoScroll();
+        }
         startBannerAutoShift();
       }
 
@@ -1500,14 +1566,17 @@
         document.getElementById('heroCarouselSection').classList.remove('hidden');
         document.getElementById('quickFeatureStrip').classList.remove('hidden');
         document.getElementById('trustHighlightsStrip').classList.remove('hidden');
-        if (allProducts.length) document.getElementById('featuredStripSection').classList.remove('hidden');
+        if (allProducts.length) {
+          document.getElementById('featuredStripSection').classList.remove('hidden');
+          startFeaturedAutoScroll();
+        }
         startBannerAutoShift();
       }
       applyCatalogFilters();
     }
 
     function applyCatalogFilters() {
-      let filtered = getFiveMinuteRotatedProducts(allProducts);
+      let filtered = getRotatedProducts(allProducts);
 
       if (activeCategory !== 'ALL') {
         filtered = filtered.filter(p => p.category_id === activeCategory);
@@ -1544,33 +1613,18 @@
       renderProducts(filtered);
     }
 
-    function openAuthGate(defaultTab = 'signup', forOrder = false) {
-      pendingOrderAfterAuth = Boolean(forOrder);
-      document.getElementById('authSubtitle').textContent = forOrder
-        ? 'Sign up or sign in now to confirm your order and receive your tracking code.'
-        : 'Sign up or sign in to your Sekiflex Collections customer account.';
-
-      const namePrefill = document.getElementById('custName')?.value?.trim() || '';
-      const emailPrefill = document.getElementById('custEmail')?.value?.trim() || '';
-      const phonePrefill = document.getElementById('custPhone')?.value?.trim() || '';
-
-      if (namePrefill && !document.getElementById('regName').value) {
-        document.getElementById('regName').value = namePrefill;
-      }
-      if (emailPrefill) {
-        if (!document.getElementById('regEmail').value) document.getElementById('regEmail').value = emailPrefill;
-        if (!document.getElementById('loginEmail').value) document.getElementById('loginEmail').value = emailPrefill;
-      }
-      if (phonePrefill && !document.getElementById('regPhone').value) {
-        document.getElementById('regPhone').value = phonePrefill;
-      }
+    function openAuthGate(defaultTab = 'signup', returnToCheckout = false) {
+      returnToCheckoutAfterAuth = Boolean(returnToCheckout);
+      document.getElementById('authSubtitle').textContent = returnToCheckoutAfterAuth
+        ? 'Please register or sign in first — you will return straight to checkout.'
+        : 'Register or sign in to your Sekiflex Collections account.';
 
       switchAuthView(defaultTab);
       document.getElementById('customerAuthGate').classList.remove('hidden');
     }
 
     function closeAuthGate() {
-      pendingOrderAfterAuth = false;
+      returnToCheckoutAfterAuth = false;
       document.getElementById('customerAuthGate').classList.add('hidden');
     }
 
@@ -1631,7 +1685,7 @@
       });
 
       btn.disabled = false;
-      btn.textContent = 'Create Account & Continue Order →';
+      btn.textContent = 'Register & Go to Checkout →';
 
       if (error) return showAuthMessage(error.message, true);
 
@@ -1645,7 +1699,7 @@
           email,
           phone
         });
-        await completeAuthAndContinue(data.user, { full_name: fullName, email, phone });
+        completeAuthAndBounceBack(data.user, { full_name: fullName, email, phone });
         return;
       }
 
@@ -1668,7 +1722,7 @@
       });
 
       btn.disabled = false;
-      btn.textContent = 'Verify Code & Continue →';
+      btn.textContent = 'Verify & Go to Checkout →';
 
       if (error) return showAuthMessage(error.message, true);
 
@@ -1687,7 +1741,7 @@
           phone: chosenPhone
         });
 
-        await completeAuthAndContinue(data.user, {
+        completeAuthAndBounceBack(data.user, {
           full_name: chosenName,
           email: pendingSignupData.email,
           phone: chosenPhone
@@ -1717,7 +1771,7 @@
       const { data, error } = await sb.auth.signInWithPassword({ email, password });
 
       btn.disabled = false;
-      btn.textContent = 'Sign In & Continue Order →';
+      btn.textContent = 'Sign In & Go to Checkout →';
 
       if (error) return showAuthMessage(error.message, true);
 
@@ -1727,7 +1781,7 @@
         .eq('id', data.user.id)
         .maybeSingle();
 
-      await completeAuthAndContinue(data.user, profile);
+      completeAuthAndBounceBack(data.user, profile);
     }
 
     async function handleSendResetCode(e) {
@@ -1768,14 +1822,14 @@
 
       if (error) {
         btn.disabled = false;
-        btn.textContent = 'Update Password & Continue →';
+        btn.textContent = 'Update Password & Go to Checkout →';
         return showAuthMessage(error.message, true);
       }
 
       const { error: pwErr } = await sb.auth.updateUser({ password: newPassword });
 
       btn.disabled = false;
-      btn.textContent = 'Update Password & Continue →';
+      btn.textContent = 'Update Password & Go to Checkout →';
 
       if (pwErr) return showAuthMessage(pwErr.message, true);
 
@@ -1785,7 +1839,7 @@
         .eq('id', data.user.id)
         .maybeSingle();
 
-      await completeAuthAndContinue(data.user, profile);
+      completeAuthAndBounceBack(data.user, profile);
     }
 
     function applySignedInCustomerState(user, profile) {
@@ -1815,15 +1869,14 @@
       prefillCustomerCheckout();
     }
 
-    async function completeAuthAndContinue(user, profile) {
-      const shouldSubmitOrder = pendingOrderAfterAuth;
-      pendingOrderAfterAuth = false;
+    function completeAuthAndBounceBack(user, profile) {
+      const shouldReturnCheckout = returnToCheckoutAfterAuth;
+      returnToCheckoutAfterAuth = false;
       applySignedInCustomerState(user, profile);
       document.getElementById('customerAuthGate').classList.add('hidden');
 
-      if (shouldSubmitOrder) {
-        document.getElementById('cartDrawer').classList.remove('hidden');
-        await submitOrderToDatabase();
+      if (shouldReturnCheckout) {
+        toggleCart(true);
       }
     }
 
@@ -1994,14 +2047,15 @@
     }
 
     async function init() {
-      lastRotationSlot = Math.floor(Date.now() / (5 * 60 * 1000));
+      lastRotationSlot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000));
       applySocialLinks();
       selectStarRating(5);
       renderReviews();
       populateNigeriaStates();
       renderCart();
       startBannerAutoShift();
-      startFiveMinuteProductRotation();
+      startFeaturedAutoScroll();
+      startProductRotation();
 
       if (allProducts.length) {
         renderFeaturedStrip(allProducts);
@@ -2038,6 +2092,7 @@
 
       await loadStoreBanner();
       startBannerAutoShift();
+      startFeaturedAutoScroll();
 
       const { data: { session } } = await sb.auth.getSession();
       if (session?.user) {
@@ -2088,6 +2143,7 @@
             </div>
           </div>`;
       }).join('');
+      startFeaturedAutoScroll();
     }
 
     function renderProducts(list) {
@@ -2229,8 +2285,20 @@
         </div>`).join('');
     }
 
+    function openCartForCheckout() {
+      if (!currentCustomer) {
+        openAuthGate('signup', true);
+        return;
+      }
+      toggleCart(true);
+    }
+
     function toggleCart(show) {
       if (show) {
+        if (!currentCustomer) {
+          openAuthGate('signup', true);
+          return;
+        }
         prefillCustomerCheckout();
         setActiveBottomTab('cart');
       } else {
@@ -2239,51 +2307,13 @@
       document.getElementById('cartDrawer').classList.toggle('hidden', !show);
     }
 
-    function validateCheckoutDetails() {
-      if (!cart.length) {
-        alert('Add at least one item to your cart first.');
-        return false;
-      }
-
-      if (fulfillmentMode === 'delivery') {
-        const country = document.getElementById('custCountry').value.trim();
-        const state = getSelectedState();
-        if (country === 'Nigeria' && !state) {
-          alert('Please select your delivery state first.');
-          return false;
-        }
-        const city = document.getElementById('custCity').value.trim();
-        const address = document.getElementById('custAddress').value.trim();
-        if (!city || !address) {
-          alert('Please enter your city and street delivery address.');
-          return false;
-        }
-      }
-
-      const paidBank = document.getElementById('paidBankSelect').value.trim();
-      const senderRef = document.getElementById('senderRefInput').value.trim();
-      if (!paidBank || !senderRef) {
-        alert('Please select the Sekiflex bank account you transferred to and enter the sender name/reference.');
-        return false;
-      }
-
-      return true;
-    }
-
     async function placeOrder(e) {
       e.preventDefault();
-      if (!validateCheckoutDetails()) return;
-
       if (!currentCustomer) {
         openAuthGate('signup', true);
         return;
       }
-
-      await submitOrderToDatabase();
-    }
-
-    async function submitOrderToDatabase() {
-      if (!validateCheckoutDetails()) return;
+      if (!cart.length) return alert('Add at least one item to your cart first.');
 
       let country = 'Nigeria';
       let destination = 'Store Pickup — Sekiflex HQ, Urua Ekpa, Uyo, Akwa Ibom State';
@@ -2291,6 +2321,9 @@
       if (fulfillmentMode === 'delivery') {
         country = document.getElementById('custCountry').value.trim();
         const state = getSelectedState();
+        if (country === 'Nigeria' && !state) {
+          return alert('Please select your delivery state first.');
+        }
         const city = document.getElementById('custCity').value.trim();
         const address = document.getElementById('custAddress').value.trim();
         destination = `${address}, ${city}, ${state}, ${country}`;
@@ -2298,6 +2331,9 @@
 
       const paidBank = document.getElementById('paidBankSelect').value.trim();
       const senderRef = document.getElementById('senderRefInput').value.trim();
+      if (!paidBank || !senderRef) {
+        return alert('Please select the Sekiflex bank account you transferred to and enter the sender name/reference.');
+      }
 
       const btn = document.getElementById('submitBtn');
       btn.disabled = true;
@@ -2307,10 +2343,12 @@
       const total = sub + currentShippingFee;
       const tracking = 'SC-2026-' + Math.random().toString(36).substring(2, 8).toUpperCase();
       const summary = cart.map(i => `${i.qty}x ${i.name}`).join('; ');
-      const custName = document.getElementById('custName').value.trim() || currentCustomer?.name || 'Customer';
-      const custEmail = document.getElementById('custEmail').value.trim() || currentCustomer?.email || '';
-      const custPhone = document.getElementById('custPhone').value.trim() || currentCustomer?.phone || '';
+      const custName = document.getElementById('custName').value.trim() || currentCustomer.name;
+      const custEmail = document.getElementById('custEmail').value.trim() || currentCustomer.email;
+      const custPhone = document.getElementById('custPhone').value.trim() || currentCustomer.phone;
       const paymentNote = `${paidBank} | Sender/Ref: ${senderRef}`;
+      const orderStatus = 'Order processing';
+      const payStatus = 'Awaiting payment';
 
       const { data: order, error } = await sb.from('orders').insert({
         tracking_number: tracking,
@@ -2320,11 +2358,11 @@
         destination,
         package_description: summary,
         order_source: 'Sekiflex Store',
-        payment_status: 'Awaiting payment',
+        payment_status: payStatus,
         payment_reference: paymentNote,
         order_amount: sub,
         delivery_amount: currentShippingFee,
-        status: 'Order processing',
+        status: orderStatus,
         courier_name: fulfillmentMode === 'pickup' ? 'Walk-In Store Pickup (Uyo HQ)' : 'Sekiflex Dispatch',
         estimate_delivery: currentEstDays,
         country,
@@ -2361,7 +2399,8 @@
             items: summary,
             total_amount: total,
             payment_method: paymentNote,
-            status: 'Order processing'
+            status: orderStatus,
+            payment_status: payStatus
           }
         });
       } catch (notifyErr) {
@@ -2371,6 +2410,7 @@
       const waOrderText = encodeURIComponent(
         `Hello Sekiflex Collections! I have completed payment for my order.\n` +
         `Tracking Code: ${tracking}\n` +
+        `Status: ${orderStatus} (${payStatus})\n` +
         `Name: ${custName}\n` +
         `Items: ${summary}\n` +
         `Method: ${fulfillmentMode === 'pickup' ? 'Walk-In Store Pickup (Urua Ekpa, Uyo)' : destination}\n` +
@@ -2389,6 +2429,10 @@
       btn.disabled = false;
       btn.textContent = 'I Have Paid — Confirm Order & Get Tracking Code';
 
+      applyStatusBadgeStyle(
+        document.getElementById('successOrderStatusBadge'),
+        `${orderStatus} • ${payStatus}`
+      );
       document.getElementById('newTrackingCode').textContent = tracking;
       document.getElementById('trackNowLink').href = `track.html?tracking=${tracking}`;
       document.getElementById('successModal').classList.remove('hidden');
