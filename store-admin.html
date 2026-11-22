@@ -26,26 +26,26 @@
     <header class="bg-white p-4 rounded-2xl shadow-sm flex flex-wrap items-center justify-between gap-2">
       <div>
         <h1 class="font-bold text-lg">Sekiflex Store Manager</h1>
-        <p class="text-xs text-stone-500">Manage promo banner, clothing/bags, stock, &amp; shipping rates</p>
+        <p class="text-xs text-stone-500">Manage promo banners, clothing/bags, prices, stock, &amp; shipping rates</p>
       </div>
       <div class="flex gap-2">
         <a href="admin.html" class="text-xs px-3 py-2 rounded-lg border font-medium">Dispatch Admin</a>
-        <a href="shop.html" target="_blank" class="text-xs px-3 py-2 rounded-lg bg-amber-600 text-white font-semibold">View Store</a>
+        <a href="index.html" target="_blank" class="text-xs px-3 py-2 rounded-lg bg-amber-600 text-white font-semibold">View Store</a>
         <button onclick="logout()" class="text-xs px-3 py-2 rounded-lg bg-stone-200 font-medium">Logout</button>
       </div>
     </header>
 
-    <!-- Store Promo / Announcement Banner Card -->
+    <!-- Store Promo / Announcement Banner #1 Card -->
     <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-amber-500">
       <div class="flex items-center justify-between gap-2">
-        <h2 class="font-bold text-base">Store Promo / Announcement Banner</h2>
+        <h2 class="font-bold text-base">Announcement Banner #1 (Store Promo)</h2>
         <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer shrink-0">
           <input id="bannerActive" type="checkbox" checked class="accent-amber-600 w-4 h-4" />
-          <span>Show Banner</span>
+          <span>Show Banner 1</span>
         </label>
       </div>
       <form onsubmit="saveBanner(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <input required id="bannerText" type="text" placeholder="e.g. Weekend Promo: 10% off all luxury handbags & watches!"
+        <input required id="bannerText" type="text" placeholder="e.g. Weekend Promo: Discounted prices on top picks!"
           class="border rounded-lg px-3 py-2 text-sm" />
         <select id="bannerColor" class="border rounded-lg px-3 py-2 text-sm bg-white">
           <option value="gold">Gold Banner (Promo)</option>
@@ -67,7 +67,7 @@
         <div id="bannerPreviewWrap" class="hidden md:col-span-2 flex items-center justify-between bg-stone-50 border rounded-xl p-2.5">
           <div class="flex items-center gap-2.5">
             <img id="bannerPreviewImg" src="" alt="Banner preview" class="w-12 h-12 object-cover rounded-lg border" />
-            <span class="text-xs text-stone-600 font-medium">Current Banner Picture</span>
+            <span class="text-xs text-stone-600 font-medium">Current Banner 1 Picture</span>
           </div>
           <button type="button" onclick="clearBannerImage()" class="text-xs text-red-600 font-semibold px-2.5 py-1 rounded-lg border border-red-200 hover:bg-red-50">
             Remove Picture
@@ -75,7 +75,51 @@
         </div>
 
         <button type="submit" id="saveBannerBtn" class="md:col-span-2 bg-stone-900 hover:bg-amber-700 text-white rounded-xl text-xs font-bold py-3 transition">
-          Update Banner
+          Update Banner 1
+        </button>
+      </form>
+    </section>
+
+    <!-- Second Announcement Banner #2 Card -->
+    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-emerald-600">
+      <div class="flex items-center justify-between gap-2">
+        <h2 class="font-bold text-base">Announcement Banner #2 (Second Scrolling Notice)</h2>
+        <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer shrink-0">
+          <input id="banner2Active" type="checkbox" checked class="accent-emerald-600 w-4 h-4" />
+          <span>Show Banner 2</span>
+        </label>
+      </div>
+      <form onsubmit="saveSecondBanner(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <input required id="banner2Text" type="text" placeholder="e.g. Fast Dispatch Across 36 States + Free Pickup at Urua Ekpa, Uyo!"
+          class="border rounded-lg px-3 py-2 text-sm" />
+        <select id="banner2Color" class="border rounded-lg px-3 py-2 text-sm bg-white">
+          <option value="gold">Gold Banner (Promo)</option>
+          <option value="green">Green Banner (Good News)</option>
+          <option value="red">Red Banner (Urgent Notice)</option>
+          <option value="dark">Luxury Black &amp; Gold</option>
+        </select>
+
+        <div class="space-y-1">
+          <label class="block text-[11px] font-semibold text-stone-500">Optional Banner 2 Picture (Upload)</label>
+          <input id="banner2ImgFile" type="file" accept="image/*" class="w-full border rounded-lg px-3 py-1.5 text-xs bg-stone-50" />
+        </div>
+        <div class="space-y-1">
+          <label class="block text-[11px] font-semibold text-stone-500">Or Paste Banner 2 Image URL (Optional)</label>
+          <input id="banner2ImgUrl" type="url" placeholder="https://... (leave empty for text-only banner)" class="w-full border rounded-lg px-3 py-2 text-sm" />
+        </div>
+
+        <div id="banner2PreviewWrap" class="hidden md:col-span-2 flex items-center justify-between bg-stone-50 border rounded-xl p-2.5">
+          <div class="flex items-center gap-2.5">
+            <img id="banner2PreviewImg" src="" alt="Banner 2 preview" class="w-12 h-12 object-cover rounded-lg border" />
+            <span class="text-xs text-stone-600 font-medium">Current Banner 2 Picture</span>
+          </div>
+          <button type="button" onclick="clearBanner2Image()" class="text-xs text-red-600 font-semibold px-2.5 py-1 rounded-lg border border-red-200 hover:bg-red-50">
+            Remove Picture
+          </button>
+        </div>
+
+        <button type="submit" id="saveBanner2Btn" class="md:col-span-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold py-3 transition">
+          Update Banner 2
         </button>
       </form>
     </section>
@@ -85,10 +129,11 @@
       <h2 class="font-bold text-base">Add New Product</h2>
       <form onsubmit="addProduct(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <input required id="pName" type="text" placeholder="Product Name (e.g. Sekiflex Star Wide-Leg Jeans)" class="border rounded-lg px-3 py-2 text-sm" />
-        <input required id="pPrice" type="number" placeholder="Price in NGN (e.g. 28000)" class="border rounded-lg px-3 py-2 text-sm" />
+        <input required id="pPrice" type="number" placeholder="Selling Price in NGN (e.g. 8000)" class="border rounded-lg px-3 py-2 text-sm" />
+        <input id="pComparePrice" type="number" placeholder="Original / Crossed-Out Price in NGN (e.g. 10000, optional)" class="border rounded-lg px-3 py-2 text-sm" />
         <input id="pStock" type="number" value="10" placeholder="Stock Quantity" class="border rounded-lg px-3 py-2 text-sm" />
         <input id="pImgFile" type="file" accept="image/*" class="border rounded-lg px-3 py-1.5 text-xs bg-stone-50" />
-        <input id="pImgUrl" type="url" placeholder="Or paste Image URL (optional if uploading photo)" class="md:col-span-2 border rounded-lg px-3 py-2 text-sm" />
+        <input id="pImgUrl" type="url" placeholder="Or paste Image URL (optional if uploading photo)" class="border rounded-lg px-3 py-2 text-sm" />
         <textarea id="pDesc" rows="2" placeholder="Product description (sizes, fabric, details)" class="md:col-span-2 border rounded-lg px-3 py-2 text-sm"></textarea>
         <button type="submit" id="saveProdBtn" class="md:col-span-2 bg-stone-900 text-white py-2.5 rounded-xl text-sm font-semibold">
           Publish Product to Store
@@ -115,8 +160,51 @@
     </section>
   </div>
 
+  <!-- Edit Product Modal -->
+  <div id="editProdModal" class="fixed inset-0 z-50 hidden bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b pb-2.5">
+        <h3 class="font-bold text-base">Edit Product &amp; Discount Price</h3>
+        <button type="button" onclick="closeEditProdModal()" class="w-8 h-8 rounded-full bg-stone-100 font-bold text-lg">&times;</button>
+      </div>
+
+      <form onsubmit="updateProduct(event)" class="space-y-3 text-sm">
+        <input type="hidden" id="editProdId" />
+        <div>
+          <label class="block text-xs font-semibold text-stone-600 mb-1">Product Name</label>
+          <input required id="editProdName" type="text" class="w-full border rounded-lg px-3 py-2 text-sm" />
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-xs font-semibold text-stone-600 mb-1">Active Price (₦)</label>
+            <input required id="editProdPrice" type="number" min="0" step="any" class="w-full border rounded-lg px-3 py-2 text-sm font-bold" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-stone-600 mb-1">Crossed-Out Price (₦)</label>
+            <input id="editProdComparePrice" type="number" min="0" step="any" placeholder="e.g. 10000" class="w-full border rounded-lg px-3 py-2 text-sm" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-stone-600 mb-1">Stock Quantity</label>
+          <input id="editProdStock" type="number" min="0" class="w-full border rounded-lg px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-stone-600 mb-1">Description</label>
+          <textarea id="editProdDesc" rows="2" class="w-full border rounded-lg px-3 py-2 text-sm"></textarea>
+        </div>
+        <div class="flex gap-2 pt-1">
+          <button type="button" onclick="closeEditProdModal()" class="px-4 py-2.5 rounded-xl border text-xs font-semibold">Cancel</button>
+          <button type="submit" id="updateProdBtn" class="flex-1 bg-stone-900 hover:bg-amber-700 text-white py-2.5 rounded-xl text-xs font-bold transition">
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
     const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
+    let adminProductsCache = [];
 
     async function checkSession() {
       const { data: { session } } = await sb.auth.getSession();
@@ -148,11 +236,17 @@
       document.getElementById('bannerPreviewWrap').classList.add('hidden');
     }
 
+    function clearBanner2Image() {
+      document.getElementById('banner2ImgUrl').value = '';
+      document.getElementById('banner2ImgFile').value = '';
+      document.getElementById('banner2PreviewWrap').classList.add('hidden');
+    }
+
     async function saveBanner(e) {
       e.preventDefault();
       const btn = document.getElementById('saveBannerBtn');
       btn.disabled = true;
-      btn.textContent = 'Saving Banner...';
+      btn.textContent = 'Saving Banner 1...';
 
       let bannerImgUrl = document.getElementById('bannerImgUrl').value.trim() || null;
       const file = document.getElementById('bannerImgFile').files[0];
@@ -162,7 +256,7 @@
         const { error: upErr } = await sb.storage.from('product-images').upload(fileName, file);
         if (upErr) {
           btn.disabled = false;
-          btn.textContent = 'Update Banner';
+          btn.textContent = 'Update Banner 1';
           return alert('Banner image upload failed: ' + upErr.message);
         }
         const { data: pub } = sb.storage.from('product-images').getPublicUrl(fileName);
@@ -179,12 +273,51 @@
       });
 
       btn.disabled = false;
-      btn.textContent = 'Update Banner';
-      if (error) return alert('Error saving banner: ' + error.message);
+      btn.textContent = 'Update Banner 1';
+      if (error) return alert('Error saving banner 1: ' + error.message);
 
       document.getElementById('bannerImgFile').value = '';
       loadData();
-      alert('Store banner updated! Customers will see it immediately.');
+      alert('Announcement Banner #1 updated!');
+    }
+
+    async function saveSecondBanner(e) {
+      e.preventDefault();
+      const btn = document.getElementById('saveBanner2Btn');
+      btn.disabled = true;
+      btn.textContent = 'Saving Banner 2...';
+
+      let banner2ImgUrl = document.getElementById('banner2ImgUrl').value.trim() || null;
+      const file = document.getElementById('banner2ImgFile').files[0];
+
+      if (file) {
+        const fileName = `banner2-${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
+        const { error: upErr } = await sb.storage.from('product-images').upload(fileName, file);
+        if (upErr) {
+          btn.disabled = false;
+          btn.textContent = 'Update Banner 2';
+          return alert('Banner 2 image upload failed: ' + upErr.message);
+        }
+        const { data: pub } = sb.storage.from('product-images').getPublicUrl(fileName);
+        banner2ImgUrl = pub.publicUrl;
+      }
+
+      const { error } = await sb.from('store_settings').upsert({
+        id: 'second',
+        banner_active: document.getElementById('banner2Active').checked,
+        banner_text: document.getElementById('banner2Text').value.trim(),
+        banner_color: document.getElementById('banner2Color').value,
+        banner_image_url: banner2ImgUrl,
+        updated_at: new Date().toISOString()
+      });
+
+      btn.disabled = false;
+      btn.textContent = 'Update Banner 2';
+      if (error) return alert('Error saving banner 2: ' + error.message);
+
+      document.getElementById('banner2ImgFile').value = '';
+      loadData();
+      alert('Announcement Banner #2 updated!');
     }
 
     async function addProduct(e) {
@@ -208,14 +341,26 @@
         imageUrl = pub.publicUrl;
       }
 
-      const { error } = await sb.from('products').insert({
+      const rawCompare = document.getElementById('pComparePrice').value.trim();
+      const compareVal = rawCompare === '' ? null : Number(rawCompare);
+
+      const payload = {
         name: document.getElementById('pName').value.trim(),
         base_price: Number(document.getElementById('pPrice').value),
         stock_quantity: Number(document.getElementById('pStock').value || 10),
         description: document.getElementById('pDesc').value.trim(),
         images: imageUrl ? [imageUrl] : [],
         is_active: true
-      });
+      };
+      if (compareVal !== null && !Number.isNaN(compareVal)) {
+        payload.compare_at_price = compareVal;
+      }
+
+      let { error } = await sb.from('products').insert(payload);
+      if (error && /compare_at_price/i.test(error.message)) {
+        delete payload.compare_at_price;
+        ({ error } = await sb.from('products').insert(payload));
+      }
 
       btn.disabled = false;
       btn.textContent = 'Publish Product to Store';
@@ -223,6 +368,66 @@
       e.target.reset();
       loadData();
       alert('Product added to store!');
+    }
+
+    function openEditProdModal(prodId) {
+      const prod = adminProductsCache.find(item => String(item.id) === String(prodId));
+      if (!prod) return;
+
+      document.getElementById('editProdId').value = prod.id;
+      document.getElementById('editProdName').value = prod.name || '';
+      document.getElementById('editProdPrice').value = prod.base_price ?? 0;
+      const compareVal = prod.compare_at_price ?? prod.original_price ?? prod.old_price ?? '';
+      document.getElementById('editProdComparePrice').value = compareVal !== null ? compareVal : '';
+      document.getElementById('editProdStock').value = prod.stock_quantity ?? 0;
+      document.getElementById('editProdDesc').value = prod.description || '';
+      document.getElementById('editProdModal').classList.remove('hidden');
+    }
+
+    function closeEditProdModal() {
+      document.getElementById('editProdModal').classList.add('hidden');
+    }
+
+    async function updateProduct(e) {
+      e.preventDefault();
+      const id = document.getElementById('editProdId').value;
+      const name = document.getElementById('editProdName').value.trim();
+      const price = Number(document.getElementById('editProdPrice').value);
+      const rawCompare = document.getElementById('editProdComparePrice').value.trim();
+      const compareVal = rawCompare === '' ? null : Number(rawCompare);
+      const stock = Number(document.getElementById('editProdStock').value || 0);
+      const desc = document.getElementById('editProdDesc').value.trim();
+      const btn = document.getElementById('updateProdBtn');
+
+      if (compareVal !== null && !Number.isNaN(compareVal) && compareVal <= price) {
+        return alert('Crossed-out original price must be higher than the active selling price.');
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      const payload = {
+        name,
+        base_price: price,
+        compare_at_price: compareVal,
+        stock_quantity: stock,
+        description: desc
+      };
+
+      let { error } = await sb.from('products').update(payload).eq('id', id);
+      if (error && /compare_at_price/i.test(error.message)) {
+        delete payload.compare_at_price;
+        ({ error } = await sb.from('products').update(payload).eq('id', id));
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Save Changes';
+
+      if (error) return alert('Error updating product: ' + error.message);
+
+      closeEditProdModal();
+      loadData();
+      alert('Product updated!');
     }
 
     async function addZone(e) {
@@ -245,11 +450,14 @@
     }
 
     async function loadData() {
-      const [{ data: prods }, { data: zones }, { data: banner }] = await Promise.all([
+      const [{ data: prods }, { data: zones }, { data: banner }, { data: banner2 }] = await Promise.all([
         sb.from('products').select('*').order('created_at', { ascending: false }),
         sb.from('shipping_zones').select('*').order('country_name'),
-        sb.from('store_settings').select('*').eq('id', 'main').maybeSingle()
+        sb.from('store_settings').select('*').eq('id', 'main').maybeSingle(),
+        sb.from('store_settings').select('*').eq('id', 'second').maybeSingle()
       ]);
+
+      adminProductsCache = prods || [];
 
       if (banner) {
         document.getElementById('bannerActive').checked = !!banner.banner_active;
@@ -265,17 +473,42 @@
         }
       }
 
-      document.getElementById('adminProducts').innerHTML = (prods || []).map(p => `
-        <div class="flex items-center justify-between border p-3 rounded-xl">
-          <div>
-            <p class="font-semibold text-sm">${p.name} <span class="text-xs text-stone-400">(${p.is_active ? 'Live' : 'Hidden'})</span></p>
-            <p class="text-xs text-amber-700 font-bold">₦${Number(p.base_price).toLocaleString()} • Stock: ${p.stock_quantity}</p>
-          </div>
-          <button onclick="toggleActive('${p.id}', ${p.is_active})" class="text-xs px-3 py-1.5 rounded-lg border">
-            ${p.is_active ? 'Hide' : 'Show'}
-          </button>
-        </div>
-      `).join('');
+      if (banner2) {
+        document.getElementById('banner2Active').checked = !!banner2.banner_active;
+        document.getElementById('banner2Text').value = banner2.banner_text || '';
+        document.getElementById('banner2Color').value = banner2.banner_color || 'gold';
+        document.getElementById('banner2ImgUrl').value = banner2.banner_image_url || '';
+
+        if (banner2.banner_image_url) {
+          document.getElementById('banner2PreviewImg').src = banner2.banner_image_url;
+          document.getElementById('banner2PreviewWrap').classList.remove('hidden');
+        } else {
+          document.getElementById('banner2PreviewWrap').classList.add('hidden');
+        }
+      }
+
+      document.getElementById('adminProducts').innerHTML = adminProductsCache.map(p => {
+        const cmp = p.compare_at_price ?? p.original_price ?? p.old_price;
+        const priceLabel = (cmp !== null && cmp !== undefined && Number(cmp) > Number(p.base_price))
+          ? `₦${Number(p.base_price).toLocaleString()} <span class="line-through text-stone-400 font-normal">₦${Number(cmp).toLocaleString()}</span>`
+          : `₦${Number(p.base_price).toLocaleString()}`;
+
+        return `
+          <div class="flex items-center justify-between gap-2 border p-3 rounded-xl bg-white">
+            <div>
+              <p class="font-semibold text-sm">${p.name} <span class="text-xs text-stone-400">(${p.is_active ? 'Live' : 'Hidden'})</span></p>
+              <p class="text-xs text-amber-700 font-bold">${priceLabel} • Stock: ${p.stock_quantity}</p>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <button type="button" onclick="openEditProdModal('${p.id}')" class="text-xs px-3 py-1.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 font-bold hover:bg-amber-100">
+                Edit
+              </button>
+              <button type="button" onclick="toggleActive('${p.id}', ${p.is_active})" class="text-xs px-3 py-1.5 rounded-lg border hover:bg-stone-50">
+                ${p.is_active ? 'Hide' : 'Show'}
+              </button>
+            </div>
+          </div>`;
+      }).join('');
 
       document.getElementById('zonesList').innerHTML = (zones || []).map(z => `
         <span class="bg-stone-100 border px-2.5 py-1 rounded-full">
