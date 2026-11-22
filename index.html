@@ -16,6 +16,13 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+    body.sekiflex-luxury-bg {
+      background-color: #0f1115;
+      background-image:
+        radial-gradient(circle at 50% 0%, rgba(217, 155, 38, 0.22) 0%, rgba(15, 17, 21, 0.96) 45%, #0b0c0f 100%);
+      background-attachment: fixed;
+    }
+
     @keyframes zoomPulse {
       0%, 100% {
         transform: scale(1);
@@ -36,11 +43,11 @@
     }
   </style>
 </head>
-<body class="bg-[#F5F5F7] text-stone-900 antialiased pb-24">
+<body class="sekiflex-luxury-bg text-stone-900 antialiased pb-24">
 
   <!-- REGISTER / SIGN IN MODAL (FOR CHECKOUT OR ACCOUNT) -->
-  <div id="customerAuthGate" class="fixed inset-0 z-50 hidden bg-black/65 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white border border-stone-200/90 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
+  <div id="customerAuthGate" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white border border-amber-300/40 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
       <div class="bg-gradient-to-r from-stone-950 via-stone-900 to-amber-900 text-white px-6 py-5 text-center space-y-1.5 relative">
         <button type="button" onclick="closeAuthGate()" aria-label="Close sign in window"
           class="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 text-white font-bold text-lg flex items-center justify-center">
@@ -159,9 +166,8 @@
           </button>
         </form>
 
-        <div class="pt-2 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-500">
-          <a href="store-admin.html" class="font-bold text-stone-800 hover:underline">Staff / Admin Login →</a>
-          <button type="button" onclick="closeAuthGate()" class="font-bold text-amber-700 hover:underline">Keep Shopping</button>
+        <div class="pt-2 border-t border-stone-100 flex items-center justify-center text-[11px] text-stone-500">
+          <button type="button" onclick="closeAuthGate()" class="font-bold text-amber-700 hover:underline">← Back to Storefront</button>
         </div>
       </div>
     </div>
@@ -171,26 +177,26 @@
   <div id="storeMainWrapper">
 
     <!-- STICKY TOP PILL SEARCH HEADER -->
-    <header class="sticky top-0 z-40 bg-white border-b border-stone-200/80 px-3 pt-2.5 pb-2 shadow-2xs">
+    <header class="sticky top-0 z-40 bg-stone-950/95 backdrop-blur-md border-b border-amber-500/25 px-3 pt-2.5 pb-2 shadow-md">
       <div class="max-w-5xl mx-auto space-y-2">
         <div class="flex items-center justify-between gap-2 text-xs">
-          <a href="index.html" onclick="resetToHome(event)" class="font-editorial font-bold text-base tracking-tight text-stone-900">
-            SEKIFLEX <span class="text-amber-600">COLLECTIONS</span>
+          <a href="index.html" onclick="resetToHome(event)" class="font-editorial font-bold text-base tracking-tight text-white">
+            SEKIFLEX <span class="text-amber-400">COLLECTIONS</span>
           </a>
-          <span id="topWelcomeGreeting" class="font-bold text-xs text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full shrink-0">
+          <span id="topWelcomeGreeting" class="font-bold text-xs text-amber-300 bg-amber-500/15 border border-amber-400/30 px-2.5 py-0.5 rounded-full shrink-0">
             Welcome!
           </span>
         </div>
 
         <form onsubmit="submitSearch(event)" class="relative flex items-center gap-1.5">
           <div class="relative flex-1 flex items-center">
-            <svg class="w-4 h-4 text-stone-500 absolute left-3.5 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 text-stone-400 absolute left-3.5 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
             </svg>
             <input id="storeSearchInput" type="search" enterkeyhint="search" oninput="handleSearchInput(false)"
               placeholder="Search on Sekiflex Collections..."
-              class="w-full bg-stone-100 hover:bg-stone-200/70 focus:bg-white border border-transparent focus:border-amber-500 rounded-full pl-10 pr-8 py-2.5 text-sm text-stone-900 placeholder:text-stone-500 focus:outline-none transition" />
-            <button type="button" id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 text-stone-400 hover:text-stone-700 text-base font-bold">
+              class="w-full bg-white/95 focus:bg-white border border-amber-400/30 focus:border-amber-500 rounded-full pl-10 pr-8 py-2.5 text-sm text-stone-900 placeholder:text-stone-500 focus:outline-none transition" />
+            <button type="button" id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 text-stone-500 hover:text-stone-800 text-base font-bold">
               &times;
             </button>
           </div>
@@ -199,7 +205,7 @@
           <button type="button" id="pictureSearchBtn" onclick="triggerPictureSearch()"
             aria-label="Search product by picture"
             title="Search by Picture"
-            class="bg-stone-100 hover:bg-stone-200 border border-stone-200 text-stone-800 p-2.5 rounded-full shrink-0 transition flex items-center justify-center">
+            class="bg-stone-800 hover:bg-stone-700 border border-amber-400/30 text-amber-300 p-2.5 rounded-full shrink-0 transition flex items-center justify-center">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 0 1 2-2h.93a2 2 0 0 0 1.664-.89l.812-1.22A2 2 0 0 1 10.07 4h3.86a2 2 0 0 1 1.664.89l.812 1.22A2 2 0 0 0 18.07 7H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
               <circle cx="12" cy="13" r="3"/>
@@ -207,7 +213,7 @@
           </button>
 
           <button type="submit" id="searchSubmitBtn"
-            class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-4 py-2.5 rounded-full shrink-0 shadow-xs transition">
+            class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-extrabold px-4 py-2.5 rounded-full shrink-0 shadow-xs transition">
             Search
           </button>
         </form>
@@ -228,17 +234,17 @@
     </header>
 
     <!-- CALL TO ORDER STRIP -->
-    <div class="bg-white border-b border-stone-200/70 px-3 py-2.5">
-      <div class="max-w-5xl mx-auto flex items-center justify-between gap-2 text-xs font-extrabold text-stone-900">
+    <div class="bg-stone-900/90 border-b border-amber-500/20 px-3 py-2.5">
+      <div class="max-w-5xl mx-auto flex items-center justify-between gap-2 text-xs font-extrabold text-amber-200">
         <div class="flex items-center gap-2">
-          <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
           <span class="tracking-tight uppercase">CALL TO ORDER:</span>
         </div>
         <div class="flex items-center gap-3">
           <a href="tel:+2349163755234"
             aria-label="Call Sekiflex Collections"
             title="Call Us"
-            class="animate-zoom-pulse w-10 h-10 rounded-full bg-stone-900 hover:bg-stone-800 text-amber-400 flex items-center justify-center transition">
+            class="animate-zoom-pulse w-10 h-10 rounded-full bg-amber-500 hover:bg-amber-400 text-stone-950 flex items-center justify-center transition">
             <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
               <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.61 21 3 13.39 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.58a1 1 0 0 1-.25 1.01l-2.2 2.2z"/>
             </svg>
@@ -264,7 +270,7 @@
       <section id="heroCarouselSection" class="space-y-2">
         <div id="bannerCarousel" class="flex gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
 
-          <div id="livePromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-900 via-stone-800 to-amber-900 text-white p-4 flex items-center justify-between gap-3 shadow-md">
+          <div id="livePromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-900 via-stone-800 to-amber-900 text-white p-4 flex items-center justify-between gap-3 shadow-md border border-amber-400/25">
             <div class="space-y-1.5 flex-1 min-w-0">
               <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-amber-500 text-stone-950 px-2 py-0.5 rounded-full">
                 Store Announcement
@@ -277,7 +283,7 @@
             <img id="livePromoImg" src="" alt="Promo" class="hidden w-24 h-24 sm:w-28 sm:h-28 object-cover object-top rounded-xl border border-white/20 shrink-0" />
           </div>
 
-          <div class="promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-950 via-stone-900 to-amber-800 text-white p-4 flex items-center justify-between gap-3 shadow-md">
+          <div class="promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-950 via-stone-900 to-amber-800 text-white p-4 flex items-center justify-between gap-3 shadow-md border border-amber-400/25">
             <div class="space-y-1.5 flex-1">
               <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-amber-400 text-stone-950 px-2 py-0.5 rounded-full">
                 New Arrivals
@@ -294,7 +300,7 @@
               class="w-24 h-24 sm:w-28 sm:h-28 object-cover object-top rounded-xl border border-white/20 shrink-0" />
           </div>
 
-          <div class="promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-emerald-950 via-stone-900 to-stone-800 text-white p-4 flex items-center justify-between gap-3 shadow-md">
+          <div class="promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-emerald-950 via-stone-900 to-stone-800 text-white p-4 flex items-center justify-between gap-3 shadow-md border border-amber-400/25">
             <div class="space-y-1.5 flex-1">
               <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-emerald-400 text-stone-950 px-2 py-0.5 rounded-full">
                 Fast Dispatch
@@ -318,21 +324,21 @@
       <!-- 3-CARD QUICK FEATURE STRIP -->
       <section id="quickFeatureStrip" class="grid grid-cols-3 gap-2">
         <button type="button" onclick="openInfoModal('about')"
-          class="bg-stone-900 text-white rounded-2xl p-2.5 text-center space-y-1 shadow-xs hover:bg-stone-800 transition">
+          class="bg-stone-900 border border-amber-400/25 text-white rounded-2xl p-2.5 text-center space-y-1 shadow-xs hover:bg-stone-800 transition">
           <p class="text-[11px] font-bold text-amber-400 leading-tight">About Sekiflex</p>
           <p class="text-[10px] text-stone-300 leading-tight">Our Story &amp; HQ</p>
           <span class="inline-block bg-white text-stone-950 text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase">Read More</span>
         </button>
 
         <a href="track.html"
-          class="bg-amber-600 text-white rounded-2xl p-2.5 text-center space-y-1 shadow-xs hover:bg-amber-500 transition block">
-          <p class="text-[11px] font-bold leading-tight">Live Tracking</p>
-          <p class="text-[10px] text-amber-100 leading-tight">Check Dispatch</p>
-          <span class="animate-zoom-pulse inline-block bg-stone-950 text-white text-[9px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">Track Now</span>
+          class="bg-amber-500 text-stone-950 rounded-2xl p-2.5 text-center space-y-1 shadow-xs hover:bg-amber-400 transition block">
+          <p class="text-[11px] font-extrabold leading-tight">Live Tracking</p>
+          <p class="text-[10px] text-stone-900 font-semibold leading-tight">Check Dispatch</p>
+          <span class="animate-zoom-pulse inline-block bg-stone-950 text-amber-300 text-[9px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">Track Now</span>
         </a>
 
         <button type="button" onclick="openInfoModal('delivery')"
-          class="bg-stone-800 text-white rounded-2xl p-2.5 text-center space-y-1 shadow-xs hover:bg-stone-700 transition">
+          class="bg-stone-900 border border-amber-400/25 text-white rounded-2xl p-2.5 text-center space-y-1 shadow-xs hover:bg-stone-800 transition">
           <p class="text-[11px] font-bold text-emerald-400 leading-tight">Delivery &amp; Pickup</p>
           <p class="text-[10px] text-stone-300 leading-tight">Uyo &amp; Worldwide</p>
           <span class="inline-block bg-white text-stone-950 text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase">View Rates</span>
@@ -341,28 +347,28 @@
 
       <!-- E-COMMERCE TRUST & HIGHLIGHTS STRIP -->
       <section id="trustHighlightsStrip" class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-        <div class="bg-white border border-stone-200/80 rounded-2xl p-2.5 flex items-center gap-2.5 shadow-2xs">
+        <div class="bg-white/95 border border-amber-400/25 rounded-2xl p-2.5 flex items-center gap-2.5 shadow-xs">
           <span class="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-sm shrink-0">✨</span>
           <div>
             <p class="text-[11px] font-extrabold text-stone-900 leading-tight">100% Quality</p>
             <p class="text-[10px] text-stone-500">Checked before dispatch</p>
           </div>
         </div>
-        <div class="bg-white border border-stone-200/80 rounded-2xl p-2.5 flex items-center gap-2.5 shadow-2xs">
+        <div class="bg-white/95 border border-amber-400/25 rounded-2xl p-2.5 flex items-center gap-2.5 shadow-xs">
           <span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm shrink-0">🚚</span>
           <div>
             <p class="text-[11px] font-extrabold text-stone-900 leading-tight">Fast Dispatch</p>
             <p class="text-[10px] text-stone-500">36 States &amp; Global</p>
           </div>
         </div>
-        <div class="bg-white border border-stone-200/80 rounded-2xl p-2.5 flex items-center gap-2.5 shadow-2xs">
+        <div class="bg-white/95 border border-amber-400/25 rounded-2xl p-2.5 flex items-center gap-2.5 shadow-xs">
           <span class="w-8 h-8 rounded-full bg-stone-100 text-stone-800 flex items-center justify-center text-sm shrink-0">📦</span>
           <div>
             <p class="text-[11px] font-extrabold text-stone-900 leading-tight">SC Order Code</p>
             <p class="text-[10px] text-stone-500">Live delivery tracking</p>
           </div>
         </div>
-        <div class="bg-white border border-stone-200/80 rounded-2xl p-2.5 flex items-center gap-2.5 shadow-2xs">
+        <div class="bg-white/95 border border-amber-400/25 rounded-2xl p-2.5 flex items-center gap-2.5 shadow-xs">
           <span class="w-8 h-8 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center text-sm shrink-0">💬</span>
           <div>
             <p class="text-[11px] font-extrabold text-stone-900 leading-tight">Instant Support</p>
@@ -372,7 +378,7 @@
       </section>
 
       <!-- FEATURED / HOT PICKS STRIP (AUTO-SCROLLING) -->
-      <section id="featuredStripSection" class="rounded-2xl overflow-hidden shadow-sm border border-stone-200 bg-white">
+      <section id="featuredStripSection" class="rounded-2xl overflow-hidden shadow-md border border-amber-400/30 bg-white">
         <div class="bg-[#C8102E] text-white px-3.5 py-2.5 flex items-center justify-between">
           <div>
             <h2 class="font-extrabold text-base sm:text-lg leading-tight">Featured Collection</h2>
@@ -389,12 +395,12 @@
       <!-- CATEGORY FILTER PILLS & SEARCH RESULTS GRID (ROTATES EVERY 2 MINUTES) -->
       <section id="catalogSection" class="pt-1 space-y-2.5 scroll-mt-32">
         <div class="flex items-center justify-between gap-2">
-          <h2 id="catalogHeading" class="font-extrabold text-base sm:text-lg text-stone-900">All Products</h2>
-          <span id="productResultCount" class="text-xs font-semibold text-stone-500 shrink-0"></span>
+          <h2 id="catalogHeading" class="font-extrabold text-base sm:text-lg text-amber-300">All Products</h2>
+          <span id="productResultCount" class="text-xs font-semibold text-stone-300 shrink-0"></span>
         </div>
 
         <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1" id="categoryBar">
-          <button onclick="filterCategory('ALL', this)" class="cat-btn bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-full whitespace-nowrap">All Items</button>
+          <button onclick="filterCategory('ALL', this)" class="cat-btn bg-amber-500 text-stone-950 text-xs font-extrabold px-4 py-2 rounded-full whitespace-nowrap">All Items</button>
         </div>
 
         <!-- 2-COLUMN RESPONSIVE PRODUCT GRID -->
@@ -413,7 +419,7 @@
       </section>
 
       <!-- CUSTOMER REVIEWS & 5-STAR RATING SECTION -->
-      <section id="customerReviewsSection" class="bg-white rounded-2xl border border-stone-200 p-5 space-y-4 shadow-2xs mt-6">
+      <section id="customerReviewsSection" class="bg-white/95 rounded-2xl border border-amber-400/25 p-5 space-y-4 shadow-md mt-6">
         <div class="flex items-center justify-between gap-2 border-b border-stone-100 pb-3">
           <div>
             <span class="text-[10px] font-bold uppercase tracking-widest text-amber-700">Customer Feedback</span>
@@ -453,7 +459,7 @@
       </section>
 
       <!-- ABOUT US, PRIVACY & DELIVERY POLICY SECTION -->
-      <section id="aboutUsSection" class="bg-white rounded-2xl border border-stone-200 p-5 space-y-4 shadow-2xs mt-6">
+      <section id="aboutUsSection" class="bg-white/95 rounded-2xl border border-amber-400/25 p-5 space-y-4 shadow-md mt-6">
         <div class="flex flex-wrap items-center justify-between gap-2 border-b border-stone-100 pb-3">
           <div>
             <span class="text-[10px] font-bold uppercase tracking-widest text-amber-700">About Sekiflex Collections</span>
@@ -490,7 +496,7 @@
   </div>
 
   <!-- PRODUCT DETAIL MODAL -->
-  <div id="productDetailModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
+  <div id="productDetailModal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
     <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl my-auto">
       <div class="relative bg-stone-100">
         <img id="detailModalImg" src="" alt="" class="w-full max-h-80 object-contain object-top mx-auto bg-stone-100" />
@@ -530,39 +536,39 @@
   </div>
 
   <!-- FIXED BOTTOM NAVIGATION BAR -->
-  <nav id="bottomFixedNav" class="fixed bottom-0 inset-x-0 z-40 bg-white border-t border-stone-200 shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
+  <nav id="bottomFixedNav" class="fixed bottom-0 inset-x-0 z-40 bg-stone-950/95 backdrop-blur-md border-t border-amber-500/25 shadow-[0_-4px_16px_rgba(0,0,0,0.35)]">
     <div class="max-w-5xl mx-auto grid grid-cols-4 h-16">
       <button type="button" id="navHomeBtn" onclick="switchBottomTab('home')"
-        class="flex flex-col items-center justify-center gap-0.5 text-amber-600 font-bold text-[11px] transition">
+        class="flex flex-col items-center justify-center gap-0.5 text-amber-400 font-bold text-[11px] transition">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3 2 12h3v8h6v-6h2v6h6v-8h3L12 3z"/></svg>
         <span>Home</span>
       </button>
 
       <button type="button" id="navCatBtn" onclick="switchBottomTab('categories')"
-        class="flex flex-col items-center justify-center gap-0.5 text-stone-600 hover:text-stone-900 font-semibold text-[11px] transition">
+        class="flex flex-col items-center justify-center gap-0.5 text-stone-300 hover:text-amber-300 font-semibold text-[11px] transition">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
         <span>Categories</span>
       </button>
 
       <button type="button" id="navCartBtn" onclick="switchBottomTab('cart')"
-        class="relative flex flex-col items-center justify-center gap-0.5 text-stone-600 hover:text-stone-900 font-semibold text-[11px] transition">
+        class="relative flex flex-col items-center justify-center gap-0.5 text-stone-300 hover:text-amber-300 font-semibold text-[11px] transition">
         <div class="relative">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-          <span id="cartCount" class="absolute -top-1.5 -right-2.5 bg-amber-600 text-white text-[10px] font-extrabold min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center">0</span>
+          <span id="cartCount" class="absolute -top-1.5 -right-2.5 bg-amber-500 text-stone-950 text-[10px] font-extrabold min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center">0</span>
         </div>
         <span>Cart</span>
       </button>
 
       <button type="button" id="navAccountBtn" onclick="switchBottomTab('account')"
-        class="flex flex-col items-center justify-center gap-0.5 text-stone-600 hover:text-stone-900 font-semibold text-[11px] transition">
+        class="flex flex-col items-center justify-center gap-0.5 text-stone-300 hover:text-amber-300 font-semibold text-[11px] transition">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         <span>Account</span>
       </button>
     </div>
   </nav>
 
-  <!-- ACCOUNT & PROFILE SHEET -->
-  <div id="accountDrawer" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center">
+  <!-- ACCOUNT & PROFILE SHEET (CUSTOMER ONLY — NO ADMIN BUTTONS) -->
+  <div id="accountDrawer" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center">
     <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 space-y-4 shadow-2xl">
       <div class="flex items-center justify-between gap-2 border-b border-stone-200 pb-3">
         <div class="min-w-0">
@@ -583,10 +589,6 @@
       </div>
 
       <div class="space-y-2 text-xs font-bold">
-        <a href="store-admin.html" class="flex items-center justify-between p-3.5 rounded-xl bg-stone-900 text-amber-300">
-          <span>Staff / Admin Dashboard</span>
-          <span>Open →</span>
-        </a>
         <a href="track.html" class="flex items-center justify-between p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950">
           <span>Track My Orders</span>
           <span>→</span>
@@ -627,7 +629,7 @@
   </div>
 
   <!-- STORE SETTINGS MODAL -->
-  <div id="storeSettingsModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
+  <div id="storeSettingsModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
     <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl my-auto">
       <div class="flex items-center justify-between border-b border-stone-100 pb-3">
         <div>
@@ -689,7 +691,7 @@
   </div>
 
   <!-- CATEGORIES & STORE MENU SHEET -->
-  <div id="categoriesDrawer" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center">
+  <div id="categoriesDrawer" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center">
     <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 max-h-[82vh] overflow-y-auto space-y-4 shadow-2xl">
       <div class="flex items-center justify-between border-b border-stone-200 pb-3">
         <h3 class="font-extrabold text-base text-stone-900">Categories &amp; Store Pages</h3>
@@ -722,7 +724,7 @@
   </div>
 
   <!-- ABOUT US / DELIVERY / PRIVACY POLICY MODAL -->
-  <div id="infoModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+  <div id="infoModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl my-auto max-h-[85vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-stone-100 pb-2.5">
         <h3 id="infoModalTitle" class="font-editorial text-xl font-bold text-stone-900">About Sekiflex</h3>
@@ -736,7 +738,7 @@
   </div>
 
   <!-- Added-to-Bag Toast Notification -->
-  <div id="bagToast" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-40 hidden bg-stone-900 text-white px-4 py-2.5 rounded-full shadow-2xl border border-stone-700 flex items-center gap-3 text-xs whitespace-nowrap">
+  <div id="bagToast" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-40 hidden bg-stone-900 text-white px-4 py-2.5 rounded-full shadow-2xl border border-amber-400/40 flex items-center gap-3 text-xs whitespace-nowrap">
     <span class="text-emerald-400 font-bold">&#10003;</span>
     <span id="bagToastText">Added to cart</span>
     <button type="button" onclick="hideBagToast(); openCartForCheckout();" class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-3 py-1 rounded-full text-[11px] transition">
@@ -745,7 +747,7 @@
   </div>
 
   <!-- CART & CHECKOUT DRAWER -->
-  <div id="cartDrawer" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex justify-end">
+  <div id="cartDrawer" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex justify-end">
     <div class="bg-white w-full max-w-md h-full overflow-y-auto p-5 flex flex-col justify-between shadow-2xl">
       <div>
         <div class="flex items-center justify-between border-b border-stone-200 pb-3.5 mb-4">
@@ -864,10 +866,14 @@
     </div>
   </div>
 
-  <!-- Success Modal -->
-  <div id="successModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
-      <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto text-2xl font-bold">&#10003;</div>
+  <!-- Success Modal (With Back to Store Button & Phone Back Button Support) -->
+  <div id="successModal" onclick="if(event.target === this) closeSuccessModalToStore();" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl relative">
+      <button type="button" onclick="closeSuccessModalToStore()" aria-label="Back to store"
+        class="absolute top-3.5 left-3.5 inline-flex items-center gap-1 text-xs font-bold text-stone-600 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-full transition">
+        ← Back
+      </button>
+      <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto text-2xl font-bold mt-2">&#10003;</div>
       <h2 class="font-editorial text-2xl font-bold">Order &amp; Payment Submitted!</h2>
       <p id="successOrderStatusBadge" class="inline-block text-xs font-extrabold px-3 py-1 rounded-full bg-amber-100 text-amber-800">
         Order processing • Awaiting payment
@@ -879,9 +885,13 @@
         Send Payment Receipt &amp; Tracking Code on WhatsApp
       </a>
       <div class="flex gap-2">
-        <button onclick="copyTracking()" class="flex-1 border border-stone-300 py-2.5 rounded-xl text-xs font-semibold hover:bg-stone-50">Copy Code</button>
+        <button type="button" onclick="copyTracking()" class="flex-1 border border-stone-300 py-2.5 rounded-xl text-xs font-semibold hover:bg-stone-50">Copy Code</button>
         <a id="trackNowLink" href="track.html" class="flex-1 bg-stone-900 text-white py-2.5 rounded-xl text-xs font-semibold hover:bg-stone-800">Track Now</a>
       </div>
+      <button type="button" onclick="closeSuccessModalToStore()"
+        class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 py-3 rounded-xl text-xs font-extrabold transition shadow-xs">
+        ← Back to Store
+      </button>
     </div>
   </div>
 
@@ -924,6 +934,51 @@
     let featuredAutoTimer = null;
     let featuredPauseUntil = 0;
     let lastRotationSlot = -1;
+    let successHistoryPushed = false;
+
+    function openSuccessModalWithHistory() {
+      const modal = document.getElementById('successModal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      if (!successHistoryPushed) {
+        try {
+          window.history.pushState({ sekiflexOrderSuccess: true }, '', window.location.href);
+          successHistoryPushed = true;
+        } catch (err) {
+          console.warn('History pushState skipped:', err);
+        }
+      }
+    }
+
+    function closeSuccessModalToStore(fromPopState = false) {
+      const modal = document.getElementById('successModal');
+      if (modal) modal.classList.add('hidden');
+      closeAllDrawers();
+      setActiveBottomTab('home');
+      if (successHistoryPushed) {
+        successHistoryPushed = false;
+        if (!fromPopState) {
+          try {
+            window.history.back();
+          } catch (err) {}
+        }
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.addEventListener('popstate', () => {
+      const successModal = document.getElementById('successModal');
+      if (successModal && !successModal.classList.contains('hidden')) {
+        closeSuccessModalToStore(true);
+        return;
+      }
+      const cartDrawer = document.getElementById('cartDrawer');
+      if (cartDrawer && !cartDrawer.classList.contains('hidden')) {
+        toggleCart(false);
+        return;
+      }
+      closeAllDrawers();
+    });
 
     function getStatusColor(value) {
       const status = String(value || '').toLowerCase();
@@ -1445,8 +1500,8 @@
         const el = document.getElementById(elId);
         if (!el) return;
         el.className = key === tab
-          ? 'relative flex flex-col items-center justify-center gap-0.5 text-amber-600 font-bold text-[11px] transition'
-          : 'relative flex flex-col items-center justify-center gap-0.5 text-stone-600 hover:text-stone-900 font-semibold text-[11px] transition';
+          ? 'relative flex flex-col items-center justify-center gap-0.5 text-amber-400 font-bold text-[11px] transition'
+          : 'relative flex flex-col items-center justify-center gap-0.5 text-stone-300 hover:text-amber-300 font-semibold text-[11px] transition';
       });
     }
 
@@ -1920,7 +1975,7 @@
         red: 'from-rose-700 via-red-800 to-stone-950',
         dark: 'from-stone-950 via-stone-900 to-amber-900'
       };
-      card.className = `promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r ${colorMap[banner.banner_color] || colorMap.gold} text-white p-4 flex items-center justify-between gap-3 shadow-md`;
+      card.className = `promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r ${colorMap[banner.banner_color] || colorMap.gold} text-white p-4 flex items-center justify-between gap-3 shadow-md border border-amber-400/25`;
       txt.textContent = banner.banner_text;
 
       if (banner.banner_image_url) {
@@ -2024,12 +2079,12 @@
       const bar = document.getElementById('categoryBar');
       const drawerList = document.getElementById('drawerCategoriesList');
 
-      bar.innerHTML = `<button onclick="filterCategory('ALL', this)" class="cat-btn ${activeCategory === 'ALL' ? 'bg-amber-600 text-white' : 'bg-white border border-stone-300 text-stone-700'} text-xs font-bold px-4 py-2 rounded-full whitespace-nowrap">All Items</button>`;
+      bar.innerHTML = `<button onclick="filterCategory('ALL', this)" class="cat-btn ${activeCategory === 'ALL' ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-stone-900 border border-amber-400/30 text-amber-200 font-bold'} text-xs px-4 py-2 rounded-full whitespace-nowrap">All Items</button>`;
       drawerList.innerHTML = `<button onclick="filterCategory('ALL'); closeAllDrawers(); document.getElementById('catalogSection').scrollIntoView({behavior:'smooth'});" class="p-3 rounded-xl bg-amber-600 text-white text-xs font-bold text-left">All Products</button>`;
 
       allCategories.forEach(c => {
         const btn = document.createElement('button');
-        btn.className = `cat-btn ${activeCategory === c.id ? 'bg-amber-600 text-white' : 'bg-white border border-stone-300 text-stone-700'} text-xs font-bold px-4 py-2 rounded-full whitespace-nowrap`;
+        btn.className = `cat-btn ${activeCategory === c.id ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-stone-900 border border-amber-400/30 text-amber-200 font-bold'} text-xs px-4 py-2 rounded-full whitespace-nowrap`;
         btn.textContent = c.name;
         btn.onclick = () => filterCategory(c.id, btn);
         bar.appendChild(btn);
@@ -2108,10 +2163,10 @@
     function filterCategory(catId, activeBtn) {
       activeCategory = catId;
       document.querySelectorAll('.cat-btn').forEach(b => {
-        b.className = 'cat-btn bg-white border border-stone-300 text-stone-700 text-xs font-bold px-4 py-2 rounded-full whitespace-nowrap';
+        b.className = 'cat-btn bg-stone-900 border border-amber-400/30 text-amber-200 text-xs font-bold px-4 py-2 rounded-full whitespace-nowrap';
       });
       if (activeBtn) {
-        activeBtn.className = 'cat-btn bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-full whitespace-nowrap';
+        activeBtn.className = 'cat-btn bg-amber-500 text-stone-950 text-xs font-extrabold px-4 py-2 rounded-full whitespace-nowrap';
       } else {
         renderCategoryButtons(allCategories);
       }
@@ -2149,14 +2204,14 @@
     function renderProducts(list) {
       const grid = document.getElementById('productsGrid');
       if (!list.length) {
-        grid.innerHTML = '<p class="col-span-full text-center text-stone-500 py-12 text-sm">No matching products found. Try another search word or photo!</p>';
+        grid.innerHTML = '<p class="col-span-full text-center text-stone-300 py-12 text-sm">No matching products found. Try another search word or photo!</p>';
         return;
       }
       grid.innerHTML = list.map(p => {
         const img = (p.images && p.images[0]) || p.image_url || 'https://placehold.co/400x500?text=Sekiflex';
         const out = (p.stock_quantity !== null && p.stock_quantity <= 0);
         return `
-          <div onclick="openProductDetail('${p.id}')" class="bg-white rounded-2xl border border-stone-200/80 overflow-hidden flex flex-col justify-between shadow-2xs cursor-pointer hover:border-amber-400 transition">
+          <div onclick="openProductDetail('${p.id}')" class="bg-white rounded-2xl border border-amber-400/25 overflow-hidden flex flex-col justify-between shadow-md cursor-pointer hover:border-amber-400 transition">
             <div class="bg-stone-100">
               <img src="${img}" alt="${p.name}" loading="lazy" class="w-full h-48 sm:h-56 object-cover object-top" />
             </div>
@@ -2435,7 +2490,7 @@
       );
       document.getElementById('newTrackingCode').textContent = tracking;
       document.getElementById('trackNowLink').href = `track.html?tracking=${tracking}`;
-      document.getElementById('successModal').classList.remove('hidden');
+      openSuccessModalWithHistory();
     }
 
     function copyTracking() {
