@@ -335,7 +335,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // STAFF DASHBOARD
+  // STAFF DASHBOARD & ADMIN PRODUCT MANAGER
   const loginSection = document.getElementById("admin-login");
   const dashboard = document.getElementById("admin-dashboard");
 
@@ -349,6 +349,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const ordersList = document.getElementById("orders-list");
   const searchInput = document.getElementById("order-search");
   const refreshButton = document.getElementById("refresh-orders");
+  const adminProductsList = document.getElementById("admin-products-list");
+  const refreshProductsButton = document.getElementById("refresh-products");
+
+  const PRODUCTS_TABLE = "products";
 
   const statuses = [
     "Order processing",
@@ -376,6 +380,166 @@ document.addEventListener("DOMContentLoaded", async () => {
   function setDashboardVisible(visible) {
     loginSection.hidden = visible;
     dashboard.hidden = !visible;
+  }
+
+  function getProductImageUrl(product) {
+    return (
+      product?.image_url ||
+      product?.image ||
+      product?.product_image ||
+      product?.thumbnail_url ||
+      "icon-512.png"
+    );
+  }
+
+  function renderAdminProducts(products) {
+    if (!adminProductsList) return;
+    adminProductsList.replaceChildren();
+
+    if (!products.length) {
+      adminProductsList.textContent = "No products saved yet.";
+      return;
+    }
+
+    products.forEach(product => {
+      const row = document.createElement("div");
+      row.style.display = "flex";
+      row.style.alignItems = "center";
+      row.style.justifyContent = "space-between";
+      row.style.gap = "12px";
+      row.style.flexWrap = "wrap";
+      row.style.padding = "12px";
+      row.style.margin = "8px 0";
+      row.style.background = "#17191D";
+      row.style.color = "#FFFFFF";
+      row.style.border = "1px solid #444";
+      row.style.borderRadius = "10px";
+
+      const leftGroup = document.createElement("div");
+      leftGroup.style.display = "flex";
+      leftGroup.style.alignItems = "center";
+      leftGroup.style.gap = "12px";
+      leftGroup.style.flex = "1";
+      leftGroup.style.minWidth = "200px";
+
+      const img = document.createElement("img");
+      img.src = getProductImageUrl(product);
+      img.alt = product.name || product.title || "Product picture";
+      img.style.width = "68px";
+      img.style.height = "68px";
+      img.style.objectFit = "cover";
+      img.style.borderRadius = "8px";
+      img.style.border = "1px solid #555";
+      img.style.flexShrink = "0";
+      img.addEventListener("error", () => {
+        img.src = "icon-512.png";
+      });
+
+      const meta = document.createElement("div");
+
+      const title = document.createElement("div");
+      title.textContent = product.name || product.title || "Untitled product";
+      title.style.fontWeight = "700";
+      title.style.fontSize = "14px";
+
+      const price = document.createElement("div");
+      price.textContent =
+        product.price != null
+          ? `${product.currency || ""} ${product.price}`.trim()
+          : "";
+      price.style.color = "#D4AF37";
+      price.style.fontSize = "13px";
+      price.style.marginTop = "4px";
+
+      meta.append(title, price);
+      leftGroup.append(img, meta);
+
+      const actions = document.createElement("div");
+      actions.style.display = "flex";
+      actions.style.gap = "8px";
+
+      const editBtn = document.createElement("button");
+      editBtn.type = "button";
+      editBtn.textContent = "Edit";
+      editBtn.style.padding = "8px 12px";
+      editBtn.style.border = "none";
+      editBtn.style.borderRadius = "6px";
+      editBtn.style.background = "#D4AF37";
+      editBtn.style.color = "#17191D";
+      editBtn.style.fontWeight = "700";
+      editBtn.style.cursor = "pointer";
+
+      editBtn.addEventListener("click", () => {
+        window.dispatchEvent(
+          new CustomEvent("sekiflex:edit-product", { detail: product })
+        );
+      });
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.type = "button";
+      deleteBtn.textContent = "Delete";
+      deleteBtn.style.padding = "8px 12px";
+      deleteBtn.style.border = "none";
+      deleteBtn.style.borderRadius = "6px";
+      deleteBtn.style.background = "#c62828";
+      deleteBtn.style.color = "#FFFFFF";
+      deleteBtn.style.fontWeight = "700";
+      deleteBtn.style.cursor = "pointer";
+
+      deleteBtn.addEventListener("click", async () => {
+        const label = product.name || product.title || "this product";
+        const confirmed = window.confirm(`Delete "${label}" permanently?`);
+        if (!confirmed) return;
+
+        deleteBtn.disabled = true;
+        deleteBtn.textContent = "Deleting...";
+
+        try {
+          const { error } = await db
+            .from(PRODUCTS_TABLE)
+            .delete()
+            .eq("id", product.id);
+
+          if (error) throw error;
+
+          await loadAdminProducts();
+        } catch (error) {
+          console.error("Delete product error:", error);
+          alert("Could not delete product: " + getErrorDetails(error));
+          deleteBtn.disabled = false;
+          deleteBtn.textContent = "Delete";
+        }
+      });
+
+      actions.append(editBtn, deleteBtn);
+      row.append(leftGroup, actions);
+      adminProductsList.appendChild(row);
+    });
+  }
+
+  async function loadAdminProducts() {
+    if (!db || !adminProductsList) return;
+
+    adminProductsList.textContent = "Loading products...";
+
+    const { data, error } = await db
+      .from(PRODUCTS_TABLE)
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Admin products load error:", error);
+      adminProductsList.textContent = "Could not load products.";
+      return;
+    }
+
+    renderAdminProducts(data || []);
+  }
+
+  window.loadSekiflexAdminProducts = loadAdminProducts;
+
+  if (refreshProductsButton) {
+    refreshProductsButton.addEventListener("click", loadAdminProducts);
   }
 
   // VERIFY STAFF ACCESS
@@ -411,7 +575,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     setDashboardVisible(true);
-    await loadOrders();
+    await Promise.all([loadOrders(), loadAdminProducts()]);
   }
 
   // STAFF LOGIN
@@ -1008,6 +1172,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       currentOrders = [];
       ordersList.replaceChildren();
+      if (adminProductsList) adminProductsList.replaceChildren();
       setDashboardVisible(false);
 
       showMessage(loginMessage, "You have signed out.", "success");
