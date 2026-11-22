@@ -26,7 +26,7 @@
     <header class="bg-white p-4 rounded-2xl shadow-sm flex flex-wrap items-center justify-between gap-2">
       <div>
         <h1 class="font-bold text-lg">Sekiflex Store Manager</h1>
-        <p class="text-xs text-stone-500">Manage promo banners, clothing/bags, prices, stock, &amp; shipping rates</p>
+        <p class="text-xs text-stone-500">Manage hero video, promo banners, products, sample videos, stock, &amp; shipping</p>
       </div>
       <div class="flex gap-2">
         <a href="admin.html" class="text-xs px-3 py-2 rounded-lg border font-medium">Dispatch Admin</a>
@@ -34,6 +34,33 @@
         <button onclick="logout()" class="text-xs px-3 py-2 rounded-lg bg-stone-200 font-medium">Logout</button>
       </div>
     </header>
+
+    <!-- Hero Section Video Card -->
+    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-stone-900">
+      <div class="flex items-center justify-between gap-2">
+        <div>
+          <h2 class="font-bold text-base">Hero Section Video (Optional)</h2>
+          <p class="text-xs text-stone-500">Showcase a highlight or promo video at the top of your storefront</p>
+        </div>
+        <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer shrink-0">
+          <input id="heroVideoActive" type="checkbox" class="accent-amber-600 w-4 h-4" />
+          <span>Show Hero Video</span>
+        </label>
+      </div>
+      <form onsubmit="saveHeroVideo(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="space-y-1">
+          <label class="block text-[11px] font-semibold text-stone-500">Upload Hero Video File (MP4 / WebM)</label>
+          <input id="heroVideoFile" type="file" accept="video/*" class="w-full border rounded-lg px-3 py-1.5 text-xs bg-stone-50" />
+        </div>
+        <div class="space-y-1">
+          <label class="block text-[11px] font-semibold text-stone-500">Or Paste Hero Video URL (Optional)</label>
+          <input id="heroVideoUrl" type="url" placeholder="https://... (MP4 / WebM URL)" class="w-full border rounded-lg px-3 py-2 text-sm" />
+        </div>
+        <button type="submit" id="saveHeroVideoBtn" class="md:col-span-2 bg-stone-900 hover:bg-amber-700 text-white rounded-xl text-xs font-bold py-3 transition">
+          Save Hero Video Settings
+        </button>
+      </form>
+    </section>
 
     <!-- Store Promo / Announcement Banner #1 Card -->
     <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-amber-500">
@@ -54,7 +81,6 @@
           <option value="dark">Luxury Black &amp; Gold</option>
         </select>
 
-        <!-- Optional Banner Image Upload or URL -->
         <div class="space-y-1">
           <label class="block text-[11px] font-semibold text-stone-500">Optional Banner Picture (Upload)</label>
           <input id="bannerImgFile" type="file" accept="image/*" class="w-full border rounded-lg px-3 py-1.5 text-xs bg-stone-50" />
@@ -124,7 +150,7 @@
       </form>
     </section>
 
-    <!-- Add Product Card -->
+    <!-- Add Product Card (With Optional Sample Video) -->
     <section class="bg-white p-5 rounded-2xl shadow-sm space-y-4">
       <h2 class="font-bold text-base">Add New Product</h2>
       <form onsubmit="addProduct(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -132,8 +158,25 @@
         <input required id="pPrice" type="number" placeholder="Selling Price in NGN (e.g. 8000)" class="border rounded-lg px-3 py-2 text-sm" />
         <input id="pComparePrice" type="number" placeholder="Original / Crossed-Out Price in NGN (e.g. 10000, optional)" class="border rounded-lg px-3 py-2 text-sm" />
         <input id="pStock" type="number" value="10" placeholder="Stock Quantity" class="border rounded-lg px-3 py-2 text-sm" />
-        <input id="pImgFile" type="file" accept="image/*" class="border rounded-lg px-3 py-1.5 text-xs bg-stone-50" />
-        <input id="pImgUrl" type="url" placeholder="Or paste Image URL (optional if uploading photo)" class="border rounded-lg px-3 py-2 text-sm" />
+
+        <div class="space-y-1">
+          <label class="block text-[11px] font-semibold text-stone-500">Product Picture (Upload)</label>
+          <input id="pImgFile" type="file" accept="image/*" class="w-full border rounded-lg px-3 py-1.5 text-xs bg-stone-50" />
+        </div>
+        <div class="space-y-1">
+          <label class="block text-[11px] font-semibold text-stone-500">Or Paste Product Image URL</label>
+          <input id="pImgUrl" type="url" placeholder="https://... (optional if uploading photo)" class="w-full border rounded-lg px-3 py-2 text-sm" />
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-[11px] font-semibold text-stone-500">Optional Sample Video (Upload MP4/MOV)</label>
+          <input id="pVideoFile" type="file" accept="video/*" class="w-full border rounded-lg px-3 py-1.5 text-xs bg-stone-50" />
+        </div>
+        <div class="space-y-1">
+          <label class="block text-[11px] font-semibold text-stone-500">Or Paste Sample Video URL (Optional)</label>
+          <input id="pVideoUrl" type="url" placeholder="https://... (optional product sample video)" class="w-full border rounded-lg px-3 py-2 text-sm" />
+        </div>
+
         <textarea id="pDesc" rows="2" placeholder="Product description (sizes, fabric, details)" class="md:col-span-2 border rounded-lg px-3 py-2 text-sm"></textarea>
         <button type="submit" id="saveProdBtn" class="md:col-span-2 bg-stone-900 text-white py-2.5 rounded-xl text-sm font-semibold">
           Publish Product to Store
@@ -161,8 +204,8 @@
   </div>
 
   <!-- Edit Product Modal -->
-  <div id="editProdModal" class="fixed inset-0 z-50 hidden bg-black/60 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl">
+  <div id="editProdModal" class="fixed inset-0 z-50 hidden bg-black/60 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl my-auto">
       <div class="flex items-center justify-between border-b pb-2.5">
         <h3 class="font-bold text-base">Edit Product &amp; Discount Price</h3>
         <button type="button" onclick="closeEditProdModal()" class="w-8 h-8 rounded-full bg-stone-100 font-bold text-lg">&times;</button>
@@ -187,6 +230,10 @@
         <div>
           <label class="block text-xs font-semibold text-stone-600 mb-1">Stock Quantity</label>
           <input id="editProdStock" type="number" min="0" class="w-full border rounded-lg px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-stone-600 mb-1">Sample Video URL (Optional)</label>
+          <input id="editProdVideoUrl" type="url" placeholder="https://... (optional sample video)" class="w-full border rounded-lg px-3 py-2 text-sm" />
         </div>
         <div>
           <label class="block text-xs font-semibold text-stone-600 mb-1">Description</label>
@@ -228,6 +275,45 @@
     async function logout() {
       await sb.auth.signOut();
       location.reload();
+    }
+
+    async function saveHeroVideo(e) {
+      e.preventDefault();
+      const btn = document.getElementById('saveHeroVideoBtn');
+      const active = document.getElementById('heroVideoActive').checked;
+      let videoUrl = document.getElementById('heroVideoUrl').value.trim() || null;
+      const file = document.getElementById('heroVideoFile').files[0];
+
+      btn.disabled = true;
+      btn.textContent = 'Saving Hero Video...';
+
+      if (file) {
+        const fileName = `hero-video-${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
+        const { error: upErr } = await sb.storage.from('product-images').upload(fileName, file);
+        if (upErr) {
+          btn.disabled = false;
+          btn.textContent = 'Save Hero Video Settings';
+          return alert('Hero video upload failed: ' + upErr.message);
+        }
+        const { data: pub } = sb.storage.from('product-images').getPublicUrl(fileName);
+        videoUrl = pub.publicUrl;
+      }
+
+      localStorage.setItem('sekiflex_hero_video_v1', JSON.stringify({ active, url: videoUrl }));
+
+      const { error } = await sb.from('store_settings').upsert({
+        id: 'main',
+        hero_video_active: active,
+        hero_video_url: videoUrl,
+        updated_at: new Date().toISOString()
+      });
+
+      btn.disabled = false;
+      btn.textContent = 'Save Hero Video Settings';
+      document.getElementById('heroVideoFile').value = '';
+
+      if (error) return alert('Error saving hero video: ' + error.message);
+      alert('Hero video settings saved!');
     }
 
     function clearBannerImage() {
@@ -327,11 +413,11 @@
       btn.textContent = 'Saving...';
 
       let imageUrl = document.getElementById('pImgUrl').value.trim();
-      const file = document.getElementById('pImgFile').files[0];
+      const imgFile = document.getElementById('pImgFile').files[0];
 
-      if (file) {
-        const fileName = `${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
-        const { error: upErr } = await sb.storage.from('product-images').upload(fileName, file);
+      if (imgFile) {
+        const fileName = `${Date.now()}-${imgFile.name.replace(/\s+/g, '_')}`;
+        const { error: upErr } = await sb.storage.from('product-images').upload(fileName, imgFile);
         if (upErr) {
           btn.disabled = false;
           btn.textContent = 'Publish Product to Store';
@@ -341,11 +427,27 @@
         imageUrl = pub.publicUrl;
       }
 
+      let videoUrl = document.getElementById('pVideoUrl').value.trim() || null;
+      const vidFile = document.getElementById('pVideoFile').files[0];
+
+      if (vidFile) {
+        const vidName = `sample-vid-${Date.now()}-${vidFile.name.replace(/\s+/g, '_')}`;
+        const { error: vidErr } = await sb.storage.from('product-images').upload(vidName, vidFile);
+        if (vidErr) {
+          btn.disabled = false;
+          btn.textContent = 'Publish Product to Store';
+          return alert('Sample video upload failed: ' + vidErr.message);
+        }
+        const { data: vidPub } = sb.storage.from('product-images').getPublicUrl(vidName);
+        videoUrl = vidPub.publicUrl;
+      }
+
       const rawCompare = document.getElementById('pComparePrice').value.trim();
       const compareVal = rawCompare === '' ? null : Number(rawCompare);
+      const prodName = document.getElementById('pName').value.trim();
 
       const payload = {
-        name: document.getElementById('pName').value.trim(),
+        name: prodName,
         base_price: Number(document.getElementById('pPrice').value),
         stock_quantity: Number(document.getElementById('pStock').value || 10),
         description: document.getElementById('pDesc').value.trim(),
@@ -355,19 +457,32 @@
       if (compareVal !== null && !Number.isNaN(compareVal)) {
         payload.compare_at_price = compareVal;
       }
-
-      let { error } = await sb.from('products').insert(payload);
-      if (error && /compare_at_price/i.test(error.message)) {
-        delete payload.compare_at_price;
-        ({ error } = await sb.from('products').insert(payload));
+      if (videoUrl) {
+        payload.video_url = videoUrl;
       }
+
+      const { data: inserted, error } = await sb.from('products').insert(payload).select().maybeSingle();
 
       btn.disabled = false;
       btn.textContent = 'Publish Product to Store';
       if (error) return alert(error.message);
+
+      if (videoUrl) {
+        const vidMap = JSON.parse(localStorage.getItem('sekiflex_product_videos_v1') || '{}');
+        if (inserted?.id) vidMap[String(inserted.id)] = videoUrl;
+        vidMap[prodName.toLowerCase()] = videoUrl;
+        localStorage.setItem('sekiflex_product_videos_v1', JSON.stringify(vidMap));
+      }
+
       e.target.reset();
       loadData();
       alert('Product added to store!');
+    }
+
+    function getProductSampleVideo(prod) {
+      if (prod?.video_url) return prod.video_url;
+      const vidMap = JSON.parse(localStorage.getItem('sekiflex_product_videos_v1') || '{}');
+      return vidMap[String(prod?.id)] || vidMap[(prod?.name || '').toLowerCase()] || '';
     }
 
     function openEditProdModal(prodId) {
@@ -380,6 +495,7 @@
       const compareVal = prod.compare_at_price ?? prod.original_price ?? prod.old_price ?? '';
       document.getElementById('editProdComparePrice').value = compareVal !== null ? compareVal : '';
       document.getElementById('editProdStock').value = prod.stock_quantity ?? 0;
+      document.getElementById('editProdVideoUrl').value = getProductSampleVideo(prod);
       document.getElementById('editProdDesc').value = prod.description || '';
       document.getElementById('editProdModal').classList.remove('hidden');
     }
@@ -396,6 +512,7 @@
       const rawCompare = document.getElementById('editProdComparePrice').value.trim();
       const compareVal = rawCompare === '' ? null : Number(rawCompare);
       const stock = Number(document.getElementById('editProdStock').value || 0);
+      const videoUrl = document.getElementById('editProdVideoUrl').value.trim() || null;
       const desc = document.getElementById('editProdDesc').value.trim();
       const btn = document.getElementById('updateProdBtn');
 
@@ -406,24 +523,29 @@
       btn.disabled = true;
       btn.textContent = 'Saving...';
 
-      const payload = {
+      const { error } = await sb.from('products').update({
         name,
         base_price: price,
         compare_at_price: compareVal,
         stock_quantity: stock,
+        video_url: videoUrl,
         description: desc
-      };
-
-      let { error } = await sb.from('products').update(payload).eq('id', id);
-      if (error && /compare_at_price/i.test(error.message)) {
-        delete payload.compare_at_price;
-        ({ error } = await sb.from('products').update(payload).eq('id', id));
-      }
+      }).eq('id', id);
 
       btn.disabled = false;
       btn.textContent = 'Save Changes';
 
       if (error) return alert('Error updating product: ' + error.message);
+
+      const vidMap = JSON.parse(localStorage.getItem('sekiflex_product_videos_v1') || '{}');
+      if (videoUrl) {
+        vidMap[String(id)] = videoUrl;
+        vidMap[name.toLowerCase()] = videoUrl;
+      } else {
+        delete vidMap[String(id)];
+        delete vidMap[name.toLowerCase()];
+      }
+      localStorage.setItem('sekiflex_product_videos_v1', JSON.stringify(vidMap));
 
       closeEditProdModal();
       loadData();
@@ -459,6 +581,12 @@
 
       adminProductsCache = prods || [];
 
+      const localHero = JSON.parse(localStorage.getItem('sekiflex_hero_video_v1') || 'null');
+      const heroActive = banner?.hero_video_active ?? localHero?.active ?? false;
+      const heroUrl = banner?.hero_video_url || localHero?.url || '';
+      document.getElementById('heroVideoActive').checked = !!heroActive;
+      document.getElementById('heroVideoUrl').value = heroUrl;
+
       if (banner) {
         document.getElementById('bannerActive').checked = !!banner.banner_active;
         document.getElementById('bannerText').value = banner.banner_text || '';
@@ -492,11 +620,12 @@
         const priceLabel = (cmp !== null && cmp !== undefined && Number(cmp) > Number(p.base_price))
           ? `₦${Number(p.base_price).toLocaleString()} <span class="line-through text-stone-400 font-normal">₦${Number(cmp).toLocaleString()}</span>`
           : `₦${Number(p.base_price).toLocaleString()}`;
+        const hasVid = getProductSampleVideo(p) ? ' • Video' : '';
 
         return `
           <div class="flex items-center justify-between gap-2 border p-3 rounded-xl bg-white">
             <div>
-              <p class="font-semibold text-sm">${p.name} <span class="text-xs text-stone-400">(${p.is_active ? 'Live' : 'Hidden'})</span></p>
+              <p class="font-semibold text-sm">${p.name} <span class="text-xs text-stone-400">(${p.is_active ? 'Live' : 'Hidden'}${hasVid})</span></p>
               <p class="text-xs text-amber-700 font-bold">${priceLabel} • Stock: ${p.stock_quantity}</p>
             </div>
             <div class="flex items-center gap-2 shrink-0">
