@@ -10,8 +10,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
-  <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#D97706" />
   <style>
     html, body { max-width: 100%; overflow-x: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
     .font-editorial { font-family: 'Playfair Display', serif; }
@@ -41,62 +39,52 @@
 </head>
 <body class="bg-[#F5F5F7] text-stone-900 antialiased pb-24">
 
-  <!-- REDESIGNED FIRST VIEW: CLEAR CUSTOMER SIGN UP / SIGN IN + STAFF / ADMIN GATE -->
-  <div id="customerAuthGate" class="fixed inset-0 z-50 bg-[#F5F5F7] flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white border border-stone-200/90 rounded-[28px] max-w-md w-full overflow-hidden shadow-2xl my-auto">
-
-      <!-- Top Editorial Showcase Header -->
-      <div class="bg-stone-950 text-white px-6 pt-7 pb-6 relative overflow-hidden">
-        <div class="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-amber-500/15 blur-xl pointer-events-none"></div>
-        <div class="relative space-y-2">
-          <div class="flex items-center justify-between gap-2">
-            <span class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-amber-400">
-              Sekiflex Collections
-            </span>
-            <span class="text-[10px] font-bold bg-white/10 text-stone-200 px-2.5 py-0.5 rounded-full">
-              Uyo &bull; Nationwide &bull; Global
-            </span>
-          </div>
-          <h1 class="font-editorial text-2xl sm:text-3xl font-bold leading-tight pt-1">
-            Welcome to <span class="text-amber-400">Sekiflex</span>
-          </h1>
-          <p id="authSubtitle" class="text-xs text-stone-300 leading-relaxed">
-            New shoppers can register below. Already have an account? Switch to Customer Sign In, or use Staff / Admin below.
-          </p>
-        </div>
+  <!-- CHECKOUT / ACCOUNT SIGN UP & SIGN IN MODAL (ONLY SHOWN WHEN PLACING ORDER OR REQUESTED) -->
+  <div id="customerAuthGate" class="fixed inset-0 z-50 hidden bg-black/65 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white border border-stone-200/90 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
+      <div class="bg-gradient-to-r from-stone-950 via-stone-900 to-amber-900 text-white px-6 py-5 text-center space-y-1.5 relative">
+        <button type="button" onclick="closeAuthGate()" aria-label="Close sign in window"
+          class="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 text-white font-bold text-lg flex items-center justify-center">
+          &times;
+        </button>
+        <span class="inline-block text-[10px] uppercase tracking-[0.22em] text-amber-300 font-bold bg-white/10 border border-white/15 px-3 py-1 rounded-full">
+          Checkout Account Step
+        </span>
+        <h2 class="font-editorial text-2xl font-bold tracking-tight">
+          SEKIFLEX <span class="text-amber-400">COLLECTIONS</span>
+        </h2>
+        <p id="authSubtitle" class="text-xs text-stone-300 leading-relaxed">
+          Sign up or sign in to complete your order and track your delivery.
+        </p>
       </div>
 
-      <div class="p-6 space-y-5">
-        <!-- Customer Mode Switcher -->
-        <div class="space-y-1.5">
-          <p class="text-[10px] font-extrabold uppercase tracking-wider text-stone-400 px-1">Shopper Access</p>
-          <div id="authTabsRow" class="grid grid-cols-2 gap-1.5 bg-[#F5F5F7] border border-stone-200/80 p-1 rounded-2xl">
-            <button type="button" id="tabSignUpBtn" onclick="switchAuthView('signup')"
-              class="py-2.5 rounded-xl text-xs font-extrabold bg-amber-600 text-white shadow-xs transition">
-              Register as Customer
-            </button>
-            <button type="button" id="tabSignInBtn" onclick="switchAuthView('signin')"
-              class="py-2.5 rounded-xl text-xs font-extrabold text-stone-600 hover:text-stone-900 transition">
-              Customer Sign In
-            </button>
-          </div>
+      <div class="p-6 space-y-4">
+        <div id="authTabsRow" class="grid grid-cols-2 gap-1.5 bg-[#F5F5F7] border border-stone-200/80 p-1 rounded-2xl">
+          <button type="button" id="tabSignUpBtn" onclick="switchAuthView('signup')"
+            class="py-2.5 rounded-xl text-xs font-extrabold bg-amber-600 text-white shadow-xs transition">
+            Sign Up
+          </button>
+          <button type="button" id="tabSignInBtn" onclick="switchAuthView('signin')"
+            class="py-2.5 rounded-xl text-xs font-extrabold text-stone-600 hover:text-stone-900 transition">
+            Sign In
+          </button>
         </div>
 
         <p id="authGateMsg" class="hidden text-xs font-semibold text-center p-2.5 rounded-xl"></p>
 
-        <!-- 1. Customer Registration Form -->
+        <!-- 1. Sign Up Form -->
         <form id="customerSignUpForm" autocomplete="off" onsubmit="handleCustomerSignUp(event)" class="space-y-3">
-          <input required id="regName" name="sekiflex_reg_fullname" autocomplete="new-password" type="text" placeholder="Full Name (e.g. Daniel Okafor)"
+          <input required id="regName" name="sekiflex_reg_fullname" autocomplete="new-password" type="text" placeholder="Your Full Name (e.g. Daniel Okafor)"
             class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
           <input required id="regEmail" name="sekiflex_reg_email" autocomplete="off" type="email" placeholder="Email Address"
             class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
-          <input required id="regPhone" name="sekiflex_reg_phone" autocomplete="off" type="tel" placeholder="Phone / WhatsApp Number"
+          <input required id="regPhone" name="sekiflex_reg_phone" autocomplete="off" type="tel" placeholder="Phone / WhatsApp Number (e.g. 08012345678)"
             class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
           <input required id="regPassword" name="sekiflex_reg_pass" autocomplete="new-password" type="password" minlength="6" placeholder="Create Password (min. 6 characters)"
             class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
           <button type="submit" id="regSubmitBtn"
             class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3.5 rounded-2xl text-sm transition shadow-sm">
-            Register as Customer →
+            Create Account &amp; Continue Order →
           </button>
         </form>
 
@@ -110,7 +98,7 @@
             class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-center font-mono text-lg tracking-[0.3em] font-bold focus:outline-none focus:border-amber-600" />
           <button type="submit" id="verifyOtpBtn"
             class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3.5 rounded-2xl text-sm transition shadow-sm">
-            Verify Code &amp; Enter Store →
+            Verify Code &amp; Continue →
           </button>
           <div class="flex items-center justify-between text-xs pt-1">
             <button type="button" onclick="resendSignupCode()" class="font-bold text-amber-700 hover:underline">
@@ -122,7 +110,7 @@
           </div>
         </form>
 
-        <!-- 3. Customer Sign In Form -->
+        <!-- 3. Sign In Form -->
         <form id="customerSignInForm" onsubmit="handleCustomerSignIn(event)" class="hidden space-y-3">
           <input required id="loginEmail" type="email" placeholder="Customer Email Address"
             class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
@@ -135,7 +123,7 @@
           </div>
           <button type="submit" id="loginSubmitBtn"
             class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3.5 rounded-2xl text-sm transition shadow-sm">
-            Sign In as Customer →
+            Sign In &amp; Continue Order →
           </button>
         </form>
 
@@ -149,7 +137,7 @@
             Send Reset Code →
           </button>
           <button type="button" onclick="switchAuthView('signin')" class="w-full text-xs text-stone-500 hover:underline">
-            ← Back to Customer Sign In
+            ← Back to Sign In
           </button>
         </form>
 
@@ -165,32 +153,23 @@
             class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600" />
           <button type="submit" id="completeResetBtn"
             class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3.5 rounded-2xl text-sm transition shadow-sm">
-            Update Password &amp; Enter Store →
+            Update Password &amp; Continue →
           </button>
           <button type="button" onclick="switchAuthView('signin')" class="w-full text-xs text-stone-500 hover:underline">
-            ← Back to Customer Sign In
+            ← Back to Sign In
           </button>
         </form>
 
-        <!-- Separate Staff / Admin Portal Box (Only on Sign-In / Gateway Page) -->
-        <div class="pt-3 border-t border-stone-100 space-y-2">
-          <p class="text-[10px] font-extrabold uppercase tracking-wider text-stone-400 px-1">Store Management</p>
-          <a href="store-admin.html"
-            class="w-full flex items-center justify-between px-4 py-3 rounded-2xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-extrabold transition">
-            <span>Login as Staff / Admin</span>
-            <span class="text-amber-400">Admin Panel →</span>
-          </a>
-          <div class="flex items-center justify-between text-[11px] text-stone-500 pt-1 px-1">
-            <a href="track.html" class="font-bold text-amber-700 hover:underline">Track Existing Order →</a>
-            <span>Sekiflex Collections</span>
-          </div>
+        <div class="pt-2 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-500">
+          <a href="store-admin.html" class="font-bold text-stone-800 hover:underline">Staff / Admin Login →</a>
+          <button type="button" onclick="closeAuthGate()" class="font-bold text-amber-700 hover:underline">Keep Browsing</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- MAIN APP-STYLE STOREFRONT -->
-  <div id="storeMainWrapper" class="hidden">
+  <!-- MAIN APP-STYLE STOREFRONT (VISIBLE IMMEDIATELY ON LOAD & REFRESH) -->
+  <div id="storeMainWrapper">
 
     <!-- STICKY TOP PILL SEARCH HEADER (WITH PICTURE SEARCH) -->
     <header class="sticky top-0 z-40 bg-white border-b border-stone-200/80 px-3 pt-2.5 pb-2 shadow-2xs">
@@ -200,7 +179,7 @@
             SEKIFLEX <span class="text-amber-600">COLLECTIONS</span>
           </a>
           <span id="topWelcomeGreeting" class="font-bold text-xs text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full shrink-0">
-            Hello!
+            Welcome!
           </span>
         </div>
 
@@ -285,16 +264,10 @@
 
     <div class="max-w-5xl mx-auto px-3 pt-3 space-y-4">
 
-      <!-- OPTIONAL HERO SECTION VIDEO -->
-      <section id="heroVideoSection" class="hidden rounded-2xl overflow-hidden bg-stone-950 border border-stone-200 shadow-md">
-        <video id="heroShowcaseVideo" controls autoplay muted loop playsinline class="w-full max-h-64 object-cover bg-stone-950"></video>
-      </section>
-
-      <!-- HORIZONTAL AUTO-SHIFTING HERO PROMO BANNER CAROUSEL (2 ANNOUNCEMENT SLOTS + EDITORIAL SLIDES) -->
+      <!-- HORIZONTAL AUTO-SHIFTING HERO PROMO BANNER CAROUSEL -->
       <section id="heroCarouselSection" class="space-y-2">
         <div id="bannerCarousel" class="flex gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
 
-          <!-- Announcement Banner Spot 1 -->
           <div id="livePromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-900 via-stone-800 to-amber-900 text-white p-4 flex items-center justify-between gap-3 shadow-md">
             <div class="space-y-1.5 flex-1 min-w-0">
               <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-amber-500 text-stone-950 px-2 py-0.5 rounded-full">
@@ -306,20 +279,6 @@
               </a>
             </div>
             <img id="livePromoImg" src="" alt="Promo" class="hidden w-24 h-24 sm:w-28 sm:h-28 object-cover object-top rounded-xl border border-white/20 shrink-0" />
-          </div>
-
-          <!-- Announcement Banner Spot 2 -->
-          <div id="secondPromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-amber-800 via-amber-700 to-stone-900 text-white p-4 flex items-center justify-between gap-3 shadow-md">
-            <div class="space-y-1.5 flex-1 min-w-0">
-              <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-white/20 text-amber-200 px-2 py-0.5 rounded-full">
-                Special Notice
-              </span>
-              <p id="secondPromoText" class="text-base sm:text-lg font-extrabold leading-snug line-clamp-2">Fresh Deals &amp; Uyo Pickup Available Daily at Urua Ekpa</p>
-              <a href="#catalogSection" class="inline-flex items-center gap-1 bg-amber-400 text-stone-950 text-xs font-bold px-3.5 py-1.5 rounded-full mt-1">
-                Explore Deals →
-              </a>
-            </div>
-            <img id="secondPromoImg" src="" alt="Promo 2" class="hidden w-24 h-24 sm:w-28 sm:h-28 object-cover object-top rounded-xl border border-white/20 shrink-0" />
           </div>
 
           <div class="promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-950 via-stone-900 to-amber-800 text-white p-4 flex items-center justify-between gap-3 shadow-md">
@@ -536,9 +495,9 @@
     </div>
   </div>
 
-  <!-- PRODUCT DETAIL MODAL (VIEW FULL PHOTO, OPTIONAL SAMPLE VIDEO, ABOUT & DESCRIPTION) -->
+  <!-- PRODUCT DETAIL MODAL (VIEW FULL PHOTO, ABOUT & DESCRIPTION) -->
   <div id="productDetailModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
+    <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl my-auto">
       <div class="relative bg-stone-100">
         <img id="detailModalImg" src="" alt="" class="w-full max-h-80 object-contain object-top mx-auto bg-stone-100" />
         <button type="button" onclick="closeProductDetailModal()"
@@ -547,9 +506,6 @@
         </button>
         <span id="detailModalCategory" class="hidden absolute bottom-3 left-3 bg-stone-900/85 text-amber-300 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"></span>
       </div>
-
-      <!-- Optional Product Sample Video -->
-      <video id="detailModalVideo" controls playsinline preload="metadata" class="hidden w-full max-h-60 bg-stone-950 border-t border-stone-200"></video>
 
       <div class="p-5 space-y-4">
         <div class="flex items-start justify-between gap-3">
@@ -580,7 +536,7 @@
   </div>
 
   <!-- FIXED BOTTOM NAVIGATION BAR (Locked at Bottom Even When Scrolling!) -->
-  <nav id="bottomFixedNav" class="hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-stone-200 shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
+  <nav id="bottomFixedNav" class="fixed bottom-0 inset-x-0 z-40 bg-white border-t border-stone-200 shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
     <div class="max-w-5xl mx-auto grid grid-cols-4 h-16">
       <button type="button" id="navHomeBtn" onclick="switchBottomTab('home')"
         class="flex flex-col items-center justify-center gap-0.5 text-amber-600 font-bold text-[11px] transition">
@@ -611,13 +567,13 @@
     </div>
   </nav>
 
-  <!-- ACCOUNT & PROFILE SHEET (CUSTOMER ONLY — NO ADMIN BUTTON INSIDE STORE) -->
+  <!-- ACCOUNT & PROFILE SHEET (INCLUDES STAFF / ADMIN PANEL LINK + SIGN IN / SIGN OUT) -->
   <div id="accountDrawer" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center">
     <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 space-y-4 shadow-2xl">
       <div class="flex items-center justify-between gap-2 border-b border-stone-200 pb-3">
         <div class="min-w-0">
-          <h3 id="menuCustomerName" class="font-extrabold text-base text-stone-900 truncate">Hello!</h3>
-          <p id="menuCustomerEmail" class="text-xs text-stone-500 truncate"></p>
+          <h3 id="menuCustomerName" class="font-extrabold text-base text-stone-900 truncate">Welcome!</h3>
+          <p id="menuCustomerEmail" class="text-xs text-stone-500 truncate">Guest shopper — sign up or sign in when placing an order</p>
         </div>
         <div class="flex items-center gap-2 shrink-0">
           <button type="button" onclick="openStoreSettingsModal()"
@@ -633,6 +589,10 @@
       </div>
 
       <div class="space-y-2 text-xs font-bold">
+        <a href="store-admin.html" class="flex items-center justify-between p-3.5 rounded-xl bg-stone-900 text-amber-300">
+          <span>Staff / Admin Dashboard</span>
+          <span>Open →</span>
+        </a>
         <a href="track.html" class="flex items-center justify-between p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950">
           <span>Track My Orders</span>
           <span>→</span>
@@ -660,7 +620,12 @@
           <span>Contact Customer Support</span>
           <span>→</span>
         </a>
-        <button type="button" onclick="customerLogout()" class="w-full p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-center mt-2">
+        <button type="button" id="accountSignInActionBtn" onclick="closeAllDrawers(); openAuthGate('signin');"
+          class="w-full p-3.5 rounded-xl bg-amber-600 text-white text-center mt-2">
+          Sign In / Create Customer Account
+        </button>
+        <button type="button" id="accountSignOutActionBtn" onclick="customerLogout()"
+          class="hidden w-full p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-center mt-2">
           Sign Out of Account
         </button>
       </div>
@@ -957,38 +922,13 @@
     let currentEstDays = 'select state';
     let toastTimer = null;
     let currentCustomer = null;
+    let pendingOrderAfterAuth = false;
     let pendingSignupData = { name: '', email: '', phone: '' };
     let pendingResetEmail = '';
     let bannerAutoTimer = null;
     let bannerPauseUntil = 0;
     let currentBannerSlideIdx = 0;
     let lastRotationSlot = -1;
-
-    function getProductSampleVideo(prod) {
-      if (prod?.video_url) return prod.video_url;
-      const vidMap = JSON.parse(localStorage.getItem('sekiflex_product_videos_v1') || '{}');
-      return vidMap[String(prod?.id)] || vidMap[(prod?.name || '').toLowerCase()] || '';
-    }
-
-    function applyHeroVideoState(mainBanner) {
-      const localHero = JSON.parse(localStorage.getItem('sekiflex_hero_video_v1') || 'null');
-      const active = mainBanner?.hero_video_active ?? localHero?.active ?? false;
-      const url = mainBanner?.hero_video_url || localHero?.url || '';
-      const sec = document.getElementById('heroVideoSection');
-      const vid = document.getElementById('heroShowcaseVideo');
-      if (!sec || !vid) return;
-
-      if (active && url) {
-        if (vid.src !== url) {
-          vid.src = url;
-        }
-        sec.classList.remove('hidden');
-      } else {
-        vid.pause();
-        vid.removeAttribute('src');
-        sec.classList.add('hidden');
-      }
-    }
 
     function getProductPricing(prod) {
       const base = Number(prod?.base_price || 0);
@@ -1318,7 +1258,6 @@
       if (!prod) return;
 
       const img = (prod.images && prod.images[0]) || prod.image_url || 'https://placehold.co/500x600?text=Sekiflex';
-      const sampleVidUrl = getProductSampleVideo(prod);
       const out = (prod.stock_quantity !== null && prod.stock_quantity <= 0);
       const catObj = allCategories.find(c => c.id === prod.category_id);
 
@@ -1327,16 +1266,6 @@
       document.getElementById('detailModalName').textContent = prod.name || 'Product';
       document.getElementById('detailModalPriceBlock').innerHTML = formatPriceHtml(prod, 'text-lg');
       document.getElementById('detailModalDesc').textContent = prod.description || 'Quality item from Sekiflex Collections.';
-
-      const vidEl = document.getElementById('detailModalVideo');
-      if (sampleVidUrl) {
-        vidEl.src = sampleVidUrl;
-        vidEl.classList.remove('hidden');
-      } else {
-        vidEl.pause();
-        vidEl.removeAttribute('src');
-        vidEl.classList.add('hidden');
-      }
 
       const catBadge = document.getElementById('detailModalCategory');
       if (catObj && catObj.name) {
@@ -1373,10 +1302,6 @@
     }
 
     function closeProductDetailModal() {
-      const vidEl = document.getElementById('detailModalVideo');
-      if (vidEl) {
-        vidEl.pause();
-      }
       document.getElementById('productDetailModal').classList.add('hidden');
     }
 
@@ -1409,6 +1334,12 @@
 
     async function handleAccountPasswordChange(e) {
       e.preventDefault();
+      if (!currentCustomer) {
+        closeStoreSettingsModal();
+        openAuthGate('signin', false);
+        return;
+      }
+
       const newPass = document.getElementById('accountNewPassword').value;
       const confirmPass = document.getElementById('accountConfirmPassword').value;
       const btn = document.getElementById('saveNewPasswordBtn');
@@ -1442,7 +1373,7 @@
       document.getElementById('accountDrawer').classList.add('hidden');
       document.getElementById('cartDrawer').classList.add('hidden');
       document.getElementById('storeSettingsModal').classList.add('hidden');
-      closeProductDetailModal();
+      document.getElementById('productDetailModal').classList.add('hidden');
     }
 
     function setActiveBottomTab(tab) {
@@ -1613,6 +1544,36 @@
       renderProducts(filtered);
     }
 
+    function openAuthGate(defaultTab = 'signup', forOrder = false) {
+      pendingOrderAfterAuth = Boolean(forOrder);
+      document.getElementById('authSubtitle').textContent = forOrder
+        ? 'Sign up or sign in now to confirm your order and receive your tracking code.'
+        : 'Sign up or sign in to your Sekiflex Collections customer account.';
+
+      const namePrefill = document.getElementById('custName')?.value?.trim() || '';
+      const emailPrefill = document.getElementById('custEmail')?.value?.trim() || '';
+      const phonePrefill = document.getElementById('custPhone')?.value?.trim() || '';
+
+      if (namePrefill && !document.getElementById('regName').value) {
+        document.getElementById('regName').value = namePrefill;
+      }
+      if (emailPrefill) {
+        if (!document.getElementById('regEmail').value) document.getElementById('regEmail').value = emailPrefill;
+        if (!document.getElementById('loginEmail').value) document.getElementById('loginEmail').value = emailPrefill;
+      }
+      if (phonePrefill && !document.getElementById('regPhone').value) {
+        document.getElementById('regPhone').value = phonePrefill;
+      }
+
+      switchAuthView(defaultTab);
+      document.getElementById('customerAuthGate').classList.remove('hidden');
+    }
+
+    function closeAuthGate() {
+      pendingOrderAfterAuth = false;
+      document.getElementById('customerAuthGate').classList.add('hidden');
+    }
+
     function switchAuthView(view) {
       const views = ['customerSignUpForm', 'verifyOtpForm', 'customerSignInForm', 'forgotRequestForm', 'forgotVerifyForm'];
       views.forEach(id => document.getElementById(id).classList.add('hidden'));
@@ -1670,7 +1631,7 @@
       });
 
       btn.disabled = false;
-      btn.textContent = 'Register as Customer →';
+      btn.textContent = 'Create Account & Continue Order →';
 
       if (error) return showAuthMessage(error.message, true);
 
@@ -1684,7 +1645,7 @@
           email,
           phone
         });
-        unlockStoreForUser(data.user, { full_name: fullName, email, phone });
+        await completeAuthAndContinue(data.user, { full_name: fullName, email, phone });
         return;
       }
 
@@ -1707,7 +1668,7 @@
       });
 
       btn.disabled = false;
-      btn.textContent = 'Verify Code & Enter Store →';
+      btn.textContent = 'Verify Code & Continue →';
 
       if (error) return showAuthMessage(error.message, true);
 
@@ -1726,7 +1687,7 @@
           phone: chosenPhone
         });
 
-        unlockStoreForUser(data.user, {
+        await completeAuthAndContinue(data.user, {
           full_name: chosenName,
           email: pendingSignupData.email,
           phone: chosenPhone
@@ -1756,7 +1717,7 @@
       const { data, error } = await sb.auth.signInWithPassword({ email, password });
 
       btn.disabled = false;
-      btn.textContent = 'Sign In as Customer →';
+      btn.textContent = 'Sign In & Continue Order →';
 
       if (error) return showAuthMessage(error.message, true);
 
@@ -1766,7 +1727,7 @@
         .eq('id', data.user.id)
         .maybeSingle();
 
-      unlockStoreForUser(data.user, profile);
+      await completeAuthAndContinue(data.user, profile);
     }
 
     async function handleSendResetCode(e) {
@@ -1807,14 +1768,14 @@
 
       if (error) {
         btn.disabled = false;
-        btn.textContent = 'Update Password & Enter Store →';
+        btn.textContent = 'Update Password & Continue →';
         return showAuthMessage(error.message, true);
       }
 
       const { error: pwErr } = await sb.auth.updateUser({ password: newPassword });
 
       btn.disabled = false;
-      btn.textContent = 'Update Password & Enter Store →';
+      btn.textContent = 'Update Password & Continue →';
 
       if (pwErr) return showAuthMessage(pwErr.message, true);
 
@@ -1824,10 +1785,10 @@
         .eq('id', data.user.id)
         .maybeSingle();
 
-      unlockStoreForUser(data.user, profile);
+      await completeAuthAndContinue(data.user, profile);
     }
 
-    function unlockStoreForUser(user, profile) {
+    function applySignedInCustomerState(user, profile) {
       const exactFullName = (
         profile?.full_name ||
         user.user_metadata?.full_name ||
@@ -1845,24 +1806,38 @@
         phone: profile?.phone || user.user_metadata?.phone || ''
       };
 
-      document.getElementById('customerAuthGate').classList.add('hidden');
-      document.getElementById('storeMainWrapper').classList.remove('hidden');
-      document.getElementById('bottomFixedNav').classList.remove('hidden');
-
       document.getElementById('topWelcomeGreeting').textContent = `Hello ${firstName}`;
       document.getElementById('menuCustomerName').textContent = `Hello ${exactFullName}`;
       document.getElementById('menuCustomerEmail').textContent = currentCustomer.email;
+      document.getElementById('accountSignInActionBtn').classList.add('hidden');
+      document.getElementById('accountSignOutActionBtn').classList.remove('hidden');
 
       prefillCustomerCheckout();
-      loadStoreBanner();
-      startBannerAutoShift();
+    }
+
+    async function completeAuthAndContinue(user, profile) {
+      const shouldSubmitOrder = pendingOrderAfterAuth;
+      pendingOrderAfterAuth = false;
+      applySignedInCustomerState(user, profile);
+      document.getElementById('customerAuthGate').classList.add('hidden');
+
+      if (shouldSubmitOrder) {
+        document.getElementById('cartDrawer').classList.remove('hidden');
+        await submitOrderToDatabase();
+      }
     }
 
     function prefillCustomerCheckout() {
       if (!currentCustomer) return;
-      if (currentCustomer.name) document.getElementById('custName').value = currentCustomer.name;
-      if (currentCustomer.email) document.getElementById('custEmail').value = currentCustomer.email;
-      if (currentCustomer.phone) document.getElementById('custPhone').value = currentCustomer.phone;
+      if (currentCustomer.name && !document.getElementById('custName').value.trim()) {
+        document.getElementById('custName').value = currentCustomer.name;
+      }
+      if (currentCustomer.email && !document.getElementById('custEmail').value.trim()) {
+        document.getElementById('custEmail').value = currentCustomer.email;
+      }
+      if (currentCustomer.phone && !document.getElementById('custPhone').value.trim()) {
+        document.getElementById('custPhone').value = currentCustomer.phone;
+      }
     }
 
     async function customerLogout() {
@@ -1870,11 +1845,16 @@
       location.reload();
     }
 
-    function applySingleBannerSlot(banner, cardId, textId, imgId, defaultGradient) {
-      const card = document.getElementById(cardId);
-      const txt = document.getElementById(textId);
-      const img = document.getElementById(imgId);
-      if (!card || !txt || !img) return;
+    async function loadStoreBanner() {
+      const { data: banner } = await sb
+        .from('store_settings')
+        .select('*')
+        .eq('id', 'main')
+        .maybeSingle();
+
+      const card = document.getElementById('livePromoBannerCard');
+      const txt = document.getElementById('livePromoText');
+      const img = document.getElementById('livePromoImg');
 
       if (!banner || !banner.banner_active || !banner.banner_text) {
         card.classList.add('hidden');
@@ -1887,8 +1867,7 @@
         red: 'from-rose-700 via-red-800 to-stone-950',
         dark: 'from-stone-950 via-stone-900 to-amber-900'
       };
-      const grad = colorMap[banner.banner_color] || defaultGradient;
-      card.className = `promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r ${grad} text-white p-4 flex items-center justify-between gap-3 shadow-md`;
+      card.className = `promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r ${colorMap[banner.banner_color] || colorMap.gold} text-white p-4 flex items-center justify-between gap-3 shadow-md`;
       txt.textContent = banner.banner_text;
 
       if (banner.banner_image_url) {
@@ -1899,48 +1878,6 @@
       }
 
       card.classList.remove('hidden');
-    }
-
-    async function loadStoreBanner() {
-      const [{ data: mainBanner }, { data: secondBanner }] = await Promise.all([
-        sb.from('store_settings').select('*').eq('id', 'main').maybeSingle(),
-        sb.from('store_settings').select('*').eq('id', 'second').maybeSingle()
-      ]);
-
-      applyHeroVideoState(mainBanner);
-
-      applySingleBannerSlot(
-        mainBanner,
-        'livePromoBannerCard',
-        'livePromoText',
-        'livePromoImg',
-        'from-amber-600 via-amber-700 to-stone-900'
-      );
-
-      const resolvedSecond = (secondBanner && secondBanner.banner_active && secondBanner.banner_text)
-        ? secondBanner
-        : (mainBanner && mainBanner.second_banner_active && mainBanner.second_banner_text
-          ? {
-              banner_active: true,
-              banner_text: mainBanner.second_banner_text,
-              banner_color: mainBanner.second_banner_color || 'gold',
-              banner_image_url: mainBanner.second_banner_image_url || ''
-            }
-          : {
-              banner_active: true,
-              banner_text: 'Fresh Deals & Uyo Pickup Available Daily at Urua Ekpa',
-              banner_color: 'gold',
-              banner_image_url: ''
-            });
-
-      applySingleBannerSlot(
-        resolvedSecond,
-        'secondPromoBannerCard',
-        'secondPromoText',
-        'secondPromoImg',
-        'from-amber-800 via-amber-700 to-stone-900'
-      );
-
       currentBannerSlideIdx = 0;
       const carousel = document.getElementById('bannerCarousel');
       if (carousel) carousel.scrollLeft = 0;
@@ -2057,34 +1994,14 @@
     }
 
     async function init() {
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch(() => {});
-        });
-      }
-
       lastRotationSlot = Math.floor(Date.now() / (5 * 60 * 1000));
       applySocialLinks();
-      applyHeroVideoState(null);
       selectStarRating(5);
       renderReviews();
       populateNigeriaStates();
       renderCart();
       startBannerAutoShift();
       startFiveMinuteProductRotation();
-
-      const { data: { session } } = await sb.auth.getSession();
-      if (session?.user) {
-        const { data: profile } = await sb
-          .from('customer_profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .maybeSingle();
-        unlockStoreForUser(session.user, profile);
-      }
-
-      await loadStoreBanner();
-      startBannerAutoShift();
 
       if (allProducts.length) {
         renderFeaturedStrip(allProducts);
@@ -2117,6 +2034,19 @@
       if (cats) {
         localStorage.setItem('sekiflex_cats_cache', JSON.stringify(cats));
         renderCategoryButtons(cats);
+      }
+
+      await loadStoreBanner();
+      startBannerAutoShift();
+
+      const { data: { session } } = await sb.auth.getSession();
+      if (session?.user) {
+        const { data: profile } = await sb
+          .from('customer_profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .maybeSingle();
+        applySignedInCustomerState(session.user, profile);
       }
     }
 
@@ -2309,9 +2239,51 @@
       document.getElementById('cartDrawer').classList.toggle('hidden', !show);
     }
 
+    function validateCheckoutDetails() {
+      if (!cart.length) {
+        alert('Add at least one item to your cart first.');
+        return false;
+      }
+
+      if (fulfillmentMode === 'delivery') {
+        const country = document.getElementById('custCountry').value.trim();
+        const state = getSelectedState();
+        if (country === 'Nigeria' && !state) {
+          alert('Please select your delivery state first.');
+          return false;
+        }
+        const city = document.getElementById('custCity').value.trim();
+        const address = document.getElementById('custAddress').value.trim();
+        if (!city || !address) {
+          alert('Please enter your city and street delivery address.');
+          return false;
+        }
+      }
+
+      const paidBank = document.getElementById('paidBankSelect').value.trim();
+      const senderRef = document.getElementById('senderRefInput').value.trim();
+      if (!paidBank || !senderRef) {
+        alert('Please select the Sekiflex bank account you transferred to and enter the sender name/reference.');
+        return false;
+      }
+
+      return true;
+    }
+
     async function placeOrder(e) {
       e.preventDefault();
-      if (!cart.length) return alert('Add at least one item to your cart first.');
+      if (!validateCheckoutDetails()) return;
+
+      if (!currentCustomer) {
+        openAuthGate('signup', true);
+        return;
+      }
+
+      await submitOrderToDatabase();
+    }
+
+    async function submitOrderToDatabase() {
+      if (!validateCheckoutDetails()) return;
 
       let country = 'Nigeria';
       let destination = 'Store Pickup — Sekiflex HQ, Urua Ekpa, Uyo, Akwa Ibom State';
@@ -2319,9 +2291,6 @@
       if (fulfillmentMode === 'delivery') {
         country = document.getElementById('custCountry').value.trim();
         const state = getSelectedState();
-        if (country === 'Nigeria' && !state) {
-          return alert('Please select your delivery state first.');
-        }
         const city = document.getElementById('custCity').value.trim();
         const address = document.getElementById('custAddress').value.trim();
         destination = `${address}, ${city}, ${state}, ${country}`;
@@ -2329,9 +2298,6 @@
 
       const paidBank = document.getElementById('paidBankSelect').value.trim();
       const senderRef = document.getElementById('senderRefInput').value.trim();
-      if (!paidBank || !senderRef) {
-        return alert('Please select the Sekiflex bank account you transferred to and enter the sender name/reference.');
-      }
 
       const btn = document.getElementById('submitBtn');
       btn.disabled = true;
@@ -2341,9 +2307,9 @@
       const total = sub + currentShippingFee;
       const tracking = 'SC-2026-' + Math.random().toString(36).substring(2, 8).toUpperCase();
       const summary = cart.map(i => `${i.qty}x ${i.name}`).join('; ');
-      const custName = document.getElementById('custName').value.trim();
-      const custEmail = document.getElementById('custEmail').value.trim();
-      const custPhone = document.getElementById('custPhone').value.trim();
+      const custName = document.getElementById('custName').value.trim() || currentCustomer?.name || 'Customer';
+      const custEmail = document.getElementById('custEmail').value.trim() || currentCustomer?.email || '';
+      const custPhone = document.getElementById('custPhone').value.trim() || currentCustomer?.phone || '';
       const paymentNote = `${paidBank} | Sender/Ref: ${senderRef}`;
 
       const { data: order, error } = await sb.from('orders').insert({
