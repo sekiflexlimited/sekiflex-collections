@@ -14,21 +14,17 @@
   <title>Sekiflex Collections | Shop Fashion, Footwear, Watches &amp; Accessories</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
   <style>
     html, body { max-width: 100%; overflow-x: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
-    .font-editorial { font-family: 'Playfair Display', serif; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
     body.sekiflex-luxury-bg {
-      background-color: #0f1115;
-      background-image:
-        radial-gradient(circle at 50% 0%, rgba(217, 155, 38, 0.18) 0%, rgba(15, 17, 21, 0.97) 48%, #0a0b0e 100%);
-      background-attachment: fixed;
+      background-color: #f4f5f7;
     }
 
     @keyframes imgShimmer {
@@ -37,7 +33,7 @@
     }
 
     .img-skeleton-box {
-      background: linear-gradient(90deg, #f3f4f6 25%, #e7e5e4 50%, #f3f4f6 75%);
+      background: linear-gradient(90deg, #eceef2 25%, #e2e5ea 50%, #eceef2 75%);
       background-size: 200% 100%;
       animation: imgShimmer 1.3s infinite linear;
     }
@@ -52,20 +48,17 @@
     }
   </style>
 </head>
-<body class="sekiflex-luxury-bg text-stone-900 antialiased pb-24">
+<body class="sekiflex-luxury-bg text-stone-900 antialiased pb-20">
 
   <!-- REGISTER / SIGN IN MODAL (FOR CHECKOUT OR ACCOUNT) -->
-  <div id="customerAuthGate" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white border border-amber-300/40 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
-      <div class="bg-gradient-to-r from-stone-950 via-stone-900 to-amber-950 text-white px-6 py-5 text-center space-y-1.5 relative">
+  <div id="customerAuthGate" class="fixed inset-0 z-50 hidden bg-black/65 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white border border-stone-200 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
+      <div class="bg-stone-900 text-white px-6 py-4 text-center space-y-1 relative">
         <button type="button" onclick="closeAuthGate()" aria-label="Close sign in window"
-          class="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 text-white font-bold text-lg flex items-center justify-center">
+          class="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold text-lg flex items-center justify-center">
           &times;
         </button>
-        <span class="inline-block text-[10px] uppercase tracking-[0.22em] text-amber-300 font-bold bg-white/10 border border-white/15 px-3 py-1 rounded-full">
-          Sekiflex Collections Account
-        </span>
-        <h2 class="font-editorial text-2xl font-bold tracking-tight">
+        <h2 class="text-lg font-extrabold tracking-wide uppercase">
           SEKIFLEX <span class="text-amber-400">COLLECTIONS</span>
         </h2>
         <p id="authSubtitle" class="text-xs text-stone-300 leading-relaxed">
@@ -73,14 +66,14 @@
         </p>
       </div>
 
-      <div class="p-6 space-y-4">
-        <div id="authTabsRow" class="grid grid-cols-2 gap-1.5 bg-[#F5F5F7] border border-stone-200/80 p-1 rounded-2xl">
+      <div class="p-5 space-y-4">
+        <div id="authTabsRow" class="grid grid-cols-2 gap-1.5 bg-stone-100 border border-stone-200 p-1 rounded-2xl">
           <button type="button" id="tabSignUpBtn" onclick="switchAuthView('signup')"
-            class="py-2.5 rounded-xl text-xs font-extrabold bg-amber-600 text-white shadow-xs transition">
+            class="py-2 rounded-xl text-xs font-extrabold bg-amber-600 text-white shadow-2xs transition">
             Register
           </button>
           <button type="button" id="tabSignInBtn" onclick="switchAuthView('signin')"
-            class="py-2.5 rounded-xl text-xs font-extrabold text-stone-600 hover:text-stone-900 transition">
+            class="py-2 rounded-xl text-xs font-extrabold text-stone-600 hover:text-stone-900 transition">
             Sign In
           </button>
         </div>
@@ -88,17 +81,17 @@
         <p id="authGateMsg" class="hidden text-xs font-semibold text-center p-2.5 rounded-xl"></p>
 
         <!-- 1. Sign Up Form -->
-        <form id="customerSignUpForm" autocomplete="off" onsubmit="handleCustomerSignUp(event)" class="space-y-3">
+        <form id="customerSignUpForm" autocomplete="off" onsubmit="handleCustomerSignUp(event)" class="space-y-2.5">
           <input required id="regName" name="sekiflex_reg_fullname" autocomplete="new-password" type="text" placeholder="Your Full Name (e.g. Daniel Okafor)"
-            class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
+            class="w-full bg-stone-50 focus:bg-white border border-stone-200 rounded-2xl px-4 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
           <input required id="regEmail" name="sekiflex_reg_email" autocomplete="off" type="email" placeholder="Email Address"
-            class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
+            class="w-full bg-stone-50 focus:bg-white border border-stone-200 rounded-2xl px-4 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
           <input required id="regPhone" name="sekiflex_reg_phone" autocomplete="off" type="tel" placeholder="Phone / WhatsApp Number (e.g. 08012345678)"
-            class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
+            class="w-full bg-stone-50 focus:bg-white border border-stone-200 rounded-2xl px-4 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
           <input required id="regPassword" name="sekiflex_reg_pass" autocomplete="new-password" type="password" minlength="6" placeholder="Create Password (min. 6 characters)"
-            class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
+            class="w-full bg-stone-50 focus:bg-white border border-stone-200 rounded-2xl px-4 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
           <button type="submit" id="regSubmitBtn"
-            class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3.5 rounded-2xl text-sm transition shadow-sm">
+            class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3 rounded-2xl text-sm transition shadow-xs">
             Register &amp; Go to Checkout →
           </button>
         </form>
@@ -110,9 +103,9 @@
           </div>
           <input required id="signupOtpCode" type="text" inputmode="numeric" maxlength="8" pattern="[0-9]{6,8}"
             placeholder="Enter 8-digit code"
-            class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-center font-mono text-lg tracking-[0.3em] font-bold focus:outline-none focus:border-amber-600" />
+            class="w-full bg-stone-50 focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-center font-mono text-lg tracking-[0.3em] font-bold focus:outline-none focus:border-amber-600" />
           <button type="submit" id="verifyOtpBtn"
-            class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3.5 rounded-2xl text-sm transition shadow-sm">
+            class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3 rounded-2xl text-sm transition shadow-xs">
             Verify &amp; Go to Checkout →
           </button>
           <div class="flex items-center justify-between text-xs pt-1">
@@ -126,18 +119,18 @@
         </form>
 
         <!-- 3. Sign In Form -->
-        <form id="customerSignInForm" onsubmit="handleCustomerSignIn(event)" class="hidden space-y-3">
+        <form id="customerSignInForm" onsubmit="handleCustomerSignIn(event)" class="hidden space-y-2.5">
           <input required id="loginEmail" type="email" placeholder="Customer Email Address"
-            class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
+            class="w-full bg-stone-50 focus:bg-white border border-stone-200 rounded-2xl px-4 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
           <input required id="loginPassword" type="password" placeholder="Password"
-            class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
+            class="w-full bg-stone-50 focus:bg-white border border-stone-200 rounded-2xl px-4 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
           <div class="text-right">
             <button type="button" onclick="switchAuthView('forgot')" class="text-xs font-bold text-amber-700 hover:underline">
               Forgot Password?
             </button>
           </div>
           <button type="submit" id="loginSubmitBtn"
-            class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3.5 rounded-2xl text-sm transition shadow-sm">
+            class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3 rounded-2xl text-sm transition shadow-xs">
             Sign In &amp; Go to Checkout →
           </button>
         </form>
@@ -146,9 +139,9 @@
         <form id="forgotRequestForm" onsubmit="handleSendResetCode(event)" class="hidden space-y-3">
           <p class="text-xs text-stone-600 text-center">Enter your registered email to receive an 8-digit password reset code.</p>
           <input required id="forgotEmail" type="email" placeholder="Registered Email Address"
-            class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
+            class="w-full bg-stone-50 focus:bg-white border border-stone-200 rounded-2xl px-4 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 transition" />
           <button type="submit" id="sendResetBtn"
-            class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3.5 rounded-2xl text-sm transition shadow-sm">
+            class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3 rounded-2xl text-sm transition shadow-xs">
             Send Reset Code →
           </button>
           <button type="button" onclick="switchAuthView('signin')" class="w-full text-xs text-stone-500 hover:underline">
@@ -163,11 +156,11 @@
           </div>
           <input required id="resetOtpCode" type="text" inputmode="numeric" maxlength="8" pattern="[0-9]{6,8}"
             placeholder="8-digit reset code"
-            class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-center font-mono text-base tracking-[0.25em] font-bold focus:outline-none focus:border-amber-600" />
+            class="w-full bg-stone-50 focus:bg-white border border-stone-200 rounded-2xl px-4 py-2.5 text-center font-mono text-base tracking-[0.25em] font-bold focus:outline-none focus:border-amber-600" />
           <input required id="resetNewPassword" type="password" minlength="6" placeholder="New Password (min. 6 characters)"
-            class="w-full bg-[#F5F5F7] focus:bg-white border border-stone-200 rounded-2xl px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600" />
+            class="w-full bg-stone-50 focus:bg-white border border-stone-200 rounded-2xl px-4 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-600" />
           <button type="submit" id="completeResetBtn"
-            class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3.5 rounded-2xl text-sm transition shadow-sm">
+            class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3 rounded-2xl text-sm transition shadow-xs">
             Update Password &amp; Go to Checkout →
           </button>
           <button type="button" onclick="switchAuthView('signin')" class="w-full text-xs text-stone-500 hover:underline">
@@ -185,26 +178,16 @@
   <!-- MAIN STOREFRONT -->
   <div id="storeMainWrapper">
 
-    <!-- COMPACT STICKY HEADER -->
-    <header class="sticky top-0 z-40 bg-stone-950/95 backdrop-blur-md border-b border-amber-500/20 px-3 pt-2.5 pb-2 shadow-md">
+    <!-- CLEAN STICKY SEARCH HEADER -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200/90 px-3 pt-2.5 pb-2 shadow-2xs">
       <div class="max-w-5xl mx-auto space-y-2">
-        <div class="flex items-center justify-between gap-2 text-xs">
-          <a href="index.html" onclick="resetToHome(event)" class="font-editorial font-bold text-base tracking-tight text-white">
-            SEKIFLEX <span class="text-amber-400">COLLECTIONS</span>
+        <div class="flex items-center justify-between gap-2">
+          <a href="index.html" onclick="resetToHome(event)" class="font-extrabold text-sm sm:text-base tracking-tight text-stone-900">
+            SEKIFLEX <span class="text-amber-600">COLLECTIONS</span>
           </a>
-          <div class="flex items-center gap-1.5 shrink-0">
-            <button type="button" onclick="openInfoModal('about')"
-              class="text-[11px] font-semibold text-stone-300 hover:text-amber-300 bg-stone-900 border border-stone-800 px-2.5 py-1 rounded-full transition">
-              About
-            </button>
-            <button type="button" onclick="openReviewsModal()"
-              class="text-[11px] font-semibold text-amber-300 hover:text-amber-200 bg-stone-900 border border-amber-500/25 px-2.5 py-1 rounded-full transition">
-              ★ <span id="headerAvgRating">5.0</span>
-            </button>
-            <span id="topWelcomeGreeting" class="hidden sm:inline-block font-semibold text-[11px] text-stone-300 bg-stone-900 border border-stone-800 px-2.5 py-1 rounded-full">
-              Welcome
-            </span>
-          </div>
+          <span id="topWelcomeGreeting" class="text-[11px] font-semibold text-stone-500 truncate max-w-[140px]">
+            Welcome
+          </span>
         </div>
 
         <form onsubmit="submitSearch(event)" class="relative flex items-center gap-1.5">
@@ -213,8 +196,8 @@
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
             </svg>
             <input id="storeSearchInput" type="search" enterkeyhint="search" oninput="handleSearchInput(false)"
-              placeholder="Search clothing, footwear, watches, bags..."
-              class="w-full bg-white/95 focus:bg-white border border-stone-300 focus:border-amber-600 rounded-full pl-10 pr-8 py-2 text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none transition" />
+              placeholder="Search items on Sekiflex Collections..."
+              class="w-full bg-stone-100 focus:bg-white border border-stone-200 focus:border-amber-600 rounded-full pl-10 pr-8 py-2 text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none transition" />
             <button type="button" id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 text-stone-500 hover:text-stone-800 text-base font-bold">
               &times;
             </button>
@@ -224,7 +207,7 @@
           <button type="button" id="pictureSearchBtn" onclick="triggerPictureSearch()"
             aria-label="Search product by picture"
             title="Search by Picture"
-            class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-amber-300 p-2 rounded-full shrink-0 transition flex items-center justify-center">
+            class="bg-stone-100 hover:bg-stone-200 border border-stone-200 text-stone-700 p-2 rounded-full shrink-0 transition flex items-center justify-center">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 0 1 2-2h.93a2 2 0 0 0 1.664-.89l.812-1.22A2 2 0 0 1 10.07 4h3.86a2 2 0 0 1 1.664.89l.812 1.22A2 2 0 0 0 18.07 7H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
               <circle cx="12" cy="13" r="3"/>
@@ -232,7 +215,7 @@
           </button>
 
           <button type="submit" id="searchSubmitBtn"
-            class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-extrabold px-3.5 py-2 rounded-full shrink-0 transition">
+            class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-extrabold px-3.5 py-2 rounded-full shrink-0 transition">
             Search
           </button>
         </form>
@@ -252,79 +235,52 @@
       </div>
     </header>
 
-    <!-- SUBTLE UTILITY BAR WITH CLASSY STEADY TRACK ORDER PILL -->
-    <div class="bg-stone-950/80 border-b border-stone-800/80 px-3 py-1.5">
-      <div class="max-w-5xl mx-auto flex items-center justify-between gap-2 text-[11px] text-stone-300">
-        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-          <a href="track.html" class="px-3 py-1 rounded-full bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/40 text-amber-300 font-bold whitespace-nowrap transition">
-            Track Order →
-          </a>
-          <button type="button" onclick="openInfoModal('delivery')" class="px-2.5 py-1 rounded-full bg-stone-900 hover:bg-stone-800 border border-stone-800 text-stone-300 font-medium whitespace-nowrap transition">
-            Delivery &amp; Pickup
-          </button>
-          <button type="button" onclick="openInfoModal('privacy')" class="px-2.5 py-1 rounded-full bg-stone-900 hover:bg-stone-800 border border-stone-800 text-stone-300 font-medium whitespace-nowrap transition">
-            Privacy Policy
-          </button>
-        </div>
-        <div class="flex items-center gap-1.5 shrink-0">
-          <a href="tel:+2349163755234" class="px-2.5 py-1 rounded-full bg-stone-900 hover:bg-stone-800 border border-stone-800 text-stone-200 font-semibold transition">
-            Call
-          </a>
-          <a href="https://wa.me/2349069037617?text=Hello%20Sekiflex%20Collections!%20I%20want%20to%20place%20an%20order."
-            target="_blank" rel="noopener"
-            class="px-2.5 py-1 rounded-full bg-stone-900 hover:bg-stone-800 border border-emerald-500/35 text-emerald-300 font-semibold transition">
-            WhatsApp
-          </a>
-        </div>
-      </div>
-    </div>
+    <div class="max-w-5xl mx-auto px-3 pt-2.5 space-y-3">
 
-    <div class="max-w-5xl mx-auto px-3 pt-3 space-y-4">
-
-      <!-- SLIM EDITORIAL HERO BANNER CAROUSEL -->
+      <!-- SLIM PROMO CAROUSEL -->
       <section id="heroCarouselSection">
-        <div id="bannerCarousel" class="flex gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
+        <div id="bannerCarousel" class="flex gap-2.5 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
 
-          <div id="livePromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-900 via-stone-800 to-amber-950 text-white p-3.5 flex items-center justify-between gap-3 border border-amber-400/20">
+          <div id="livePromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full sm:w-[460px] rounded-2xl bg-stone-900 text-white p-3.5 flex items-center justify-between gap-3">
             <div class="space-y-1 flex-1 min-w-0">
-              <span class="inline-block text-[9px] font-bold uppercase tracking-widest bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full">
-                Announcement
+              <span class="inline-block text-[9px] font-bold uppercase tracking-wider bg-amber-500 text-stone-950 px-2 py-0.5 rounded-full">
+                Promo
               </span>
-              <p id="livePromoText" class="text-sm sm:text-base font-bold leading-snug line-clamp-2"></p>
-              <a href="#catalogSection" class="inline-flex items-center gap-1 bg-amber-500 text-stone-950 text-[11px] font-bold px-3 py-1 rounded-full mt-0.5">
-                Browse →
-              </a>
+              <p id="livePromoText" class="text-sm font-bold leading-snug line-clamp-2"></p>
+              <button type="button" onclick="jumpToAllItems()" class="inline-flex items-center gap-1 bg-white text-stone-900 text-[11px] font-bold px-3 py-1 rounded-full mt-0.5">
+                All Items →
+              </button>
             </div>
-            <img id="livePromoImg" src="" alt="Promo" class="hidden w-20 h-20 object-cover object-top rounded-xl border border-white/15 shrink-0" />
+            <img id="livePromoImg" src="" alt="Promo" class="hidden w-16 h-16 object-cover object-top rounded-xl shrink-0" />
           </div>
 
-          <div class="promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-950 via-stone-900 to-amber-950/80 text-white p-3.5 flex items-center justify-between gap-3 border border-amber-400/20">
+          <div class="promo-slide snap-start shrink-0 w-full sm:w-[460px] rounded-2xl bg-stone-900 text-white p-3.5 flex items-center justify-between gap-3">
             <div class="space-y-1 flex-1">
-              <span class="inline-block text-[9px] font-bold uppercase tracking-widest bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full">
-                Sekiflex Collections
+              <span class="inline-block text-[9px] font-bold uppercase tracking-wider bg-amber-500 text-stone-950 px-2 py-0.5 rounded-full">
+                New Picks
               </span>
-              <h2 class="font-editorial text-base sm:text-lg font-bold leading-tight">
-                Curated Style &amp; Accessories
+              <h2 class="text-sm sm:text-base font-extrabold leading-tight">
+                Fresh Arrivals &amp; Essentials
               </h2>
               <p class="text-[11px] text-stone-300">Apparel, footwear, watches &amp; bags</p>
-              <a href="#catalogSection" class="inline-flex items-center gap-1 bg-white text-stone-950 text-[11px] font-bold px-3 py-1 rounded-full mt-0.5">
-                Shop Now →
-              </a>
+              <button type="button" onclick="jumpToAllItems()" class="inline-flex items-center gap-1 bg-white text-stone-900 text-[11px] font-bold px-3 py-1 rounded-full mt-0.5">
+                All Items →
+              </button>
             </div>
             <img src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&w=400&q=80" alt="Sekiflex Fashion"
-              class="w-20 h-20 object-cover object-top rounded-xl border border-white/15 shrink-0" />
+              class="w-16 h-16 object-cover object-top rounded-xl shrink-0" />
           </div>
 
-          <div class="promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r from-stone-950 via-stone-900 to-stone-800 text-white p-3.5 flex items-center justify-between gap-3 border border-amber-400/20">
+          <div class="promo-slide snap-start shrink-0 w-full sm:w-[460px] rounded-2xl bg-amber-700 text-white p-3.5 flex items-center justify-between gap-3">
             <div class="space-y-1 flex-1">
-              <span class="inline-block text-[9px] font-bold uppercase tracking-widest bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded-full">
-                Dispatch &amp; Pickup
+              <span class="inline-block text-[9px] font-bold uppercase tracking-wider bg-white text-amber-900 px-2 py-0.5 rounded-full">
+                Dispatch
               </span>
-              <h2 class="font-editorial text-base sm:text-lg font-bold leading-tight">
-                Nationwide &amp; Global Delivery
+              <h2 class="text-sm sm:text-base font-extrabold leading-tight">
+                36 States &amp; Global Delivery
               </h2>
-              <p class="text-[11px] text-stone-300">Walk-in pickup at Urua Ekpa, Uyo</p>
-              <a href="track.html" class="inline-flex items-center gap-1 bg-amber-500 text-stone-950 text-[11px] font-bold px-3 py-1 rounded-full mt-0.5">
+              <p class="text-[11px] text-amber-100">Or walk-in pickup at Urua Ekpa, Uyo</p>
+              <a href="track.html" class="inline-flex items-center gap-1 bg-stone-950 text-white text-[11px] font-bold px-3 py-1 rounded-full mt-0.5">
                 Track Order →
               </a>
             </div>
@@ -333,28 +289,30 @@
         </div>
       </section>
 
-      <!-- FEATURED PICKS STRIP (AUTO-SCROLLING) -->
-      <section id="featuredStripSection" class="rounded-2xl overflow-hidden border border-stone-800 bg-stone-900/90">
-        <div class="px-3.5 py-2 border-b border-stone-800 flex items-center justify-between">
-          <h2 class="text-xs font-extrabold uppercase tracking-wider text-amber-300">Featured Picks</h2>
-          <a href="#catalogSection" class="text-[11px] font-semibold text-stone-400 hover:text-amber-300">All Items →</a>
+      <!-- FEATURED PICKS ROW WITH SIDE BUTTON TO ALL ITEMS -->
+      <section id="featuredStripSection" class="rounded-2xl overflow-hidden bg-white border border-stone-200/80 shadow-2xs">
+        <div class="px-3 py-2 border-b border-stone-100 flex items-center justify-between">
+          <h2 class="text-xs font-extrabold uppercase tracking-wider text-stone-900">Featured</h2>
+          <button type="button" onclick="jumpToAllItems()" class="text-[11px] font-bold text-amber-700 hover:text-amber-800">
+            All Items →
+          </button>
         </div>
         <div id="featuredHorizontalList" class="p-2.5 flex gap-2.5 overflow-x-auto scroll-smooth no-scrollbar">
         </div>
       </section>
 
-      <!-- CATEGORY FILTER PILLS & COMPACT 2-COLUMN PRODUCT GRID -->
-      <section id="catalogSection" class="pt-1 space-y-2.5 scroll-mt-28">
+      <!-- CATEGORY BAR & 2-COLUMN PRODUCT GRID -->
+      <section id="catalogSection" class="space-y-2.5 scroll-mt-24">
         <div class="flex items-center justify-between gap-2">
-          <h2 id="catalogHeading" class="font-bold text-sm sm:text-base text-amber-300">All Products</h2>
-          <span id="productResultCount" class="text-[11px] font-medium text-stone-400 shrink-0"></span>
+          <h2 id="catalogHeading" class="font-extrabold text-sm text-stone-900">All Items</h2>
+          <span id="productResultCount" class="text-[11px] font-medium text-stone-500 shrink-0"></span>
         </div>
 
-        <div class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1" id="categoryBar">
-          <button onclick="filterCategory('ALL', this)" class="cat-btn bg-amber-500 text-stone-950 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full whitespace-nowrap">All Items</button>
+        <div class="flex gap-1.5 overflow-x-auto no-scrollbar pb-0.5" id="categoryBar">
+          <button onclick="filterCategory('ALL', this)" class="cat-btn bg-amber-600 text-white text-[11px] font-extrabold px-3.5 py-1.5 rounded-full whitespace-nowrap">All Items</button>
         </div>
 
-        <!-- COMPACT 2-COLUMN PRODUCT GRID -->
+        <!-- 2-COLUMN PRODUCT GRID -->
         <div id="productsGrid" class="grid grid-cols-2 gap-2.5">
           <div class="bg-white rounded-2xl p-2.5 animate-pulse space-y-2">
             <div class="w-full h-36 bg-stone-200 rounded-xl"></div>
@@ -369,36 +327,162 @@
         </div>
       </section>
 
-      <!-- MINIMAL FOOTER WITH SMALL BUTTONS -->
-      <footer class="pt-4 pb-2 border-t border-stone-800/80 flex flex-wrap items-center justify-between gap-2 text-[11px] text-stone-400">
-        <span>&copy; 2026 Sekiflex Collections &bull; Uyo</span>
-        <div class="flex items-center gap-2">
-          <button type="button" onclick="openInfoModal('about')" class="px-2.5 py-1 rounded-full bg-stone-900 hover:bg-stone-800 border border-stone-800 text-stone-300">About</button>
-          <button type="button" onclick="openReviewsModal()" class="px-2.5 py-1 rounded-full bg-stone-900 hover:bg-stone-800 border border-stone-800 text-stone-300">Reviews</button>
-          <button type="button" onclick="openInfoModal('privacy')" class="px-2.5 py-1 rounded-full bg-stone-900 hover:bg-stone-800 border border-stone-800 text-stone-300">Privacy</button>
-        </div>
-      </footer>
-
     </div>
   </div>
 
-  <!-- REVIEWS & RATINGS MODAL (OPENED ON DEMAND) -->
-  <div id="reviewsModal" onclick="if(event.target === this) closeReviewsModal();" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-white w-full max-w-lg rounded-3xl p-5 space-y-4 shadow-2xl my-auto max-h-[85vh] overflow-y-auto">
-      <div class="flex items-center justify-between gap-2 border-b border-stone-100 pb-3">
+  <!-- PRODUCT DETAIL MODAL -->
+  <div id="productDetailModal" onclick="if(event.target === this) closeProductDetailModal();" class="fixed inset-0 z-50 hidden bg-black/65 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
+    <div class="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl my-auto">
+      <div class="relative bg-stone-100">
+        <img id="detailModalImg" src="" alt="" class="w-full max-h-72 object-contain object-top mx-auto bg-stone-100" />
+        <button type="button" onclick="closeProductDetailModal()"
+          class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white text-stone-800 font-bold text-base shadow-sm flex items-center justify-center">
+          &times;
+        </button>
+        <span id="detailModalCategory" class="hidden absolute bottom-3 left-3 bg-stone-900/85 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full"></span>
+      </div>
+
+      <div class="p-4 space-y-3">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <h3 id="detailModalName" class="text-base font-extrabold text-stone-900 leading-snug"></h3>
+            <p id="detailModalStock" class="text-[11px] font-semibold text-emerald-700 mt-0.5"></p>
+          </div>
+          <div id="detailModalPriceBlock" class="text-right shrink-0"></div>
+        </div>
+
+        <p id="detailModalDesc" class="text-xs text-stone-600 leading-relaxed whitespace-pre-line border-t border-stone-100 pt-2.5"></p>
+
+        <div class="flex gap-2 pt-1">
+          <button type="button" onclick="closeProductDetailModal()"
+            class="px-4 py-2.5 rounded-xl border border-stone-200 text-xs font-bold text-stone-700 hover:bg-stone-50 transition">
+            Close
+          </button>
+          <button type="button" id="detailAddToCartBtn"
+            class="flex-1 bg-amber-600 hover:bg-amber-700 text-white py-2.5 rounded-xl text-xs font-extrabold transition shadow-xs">
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIXED BOTTOM NAVIGATION BAR -->
+  <nav id="bottomFixedNav" class="fixed bottom-0 inset-x-0 z-40 bg-white border-t border-stone-200 shadow-[0_-2px_10px_rgba(0,0,0,0.06)]">
+    <div class="max-w-5xl mx-auto grid grid-cols-4 h-14">
+      <button type="button" id="navHomeBtn" onclick="switchBottomTab('home')"
+        class="flex flex-col items-center justify-center gap-0.5 text-amber-700 font-bold text-[10px] transition">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3 2 12h3v8h6v-6h2v6h6v-8h3L12 3z"/></svg>
+        <span>Home</span>
+      </button>
+
+      <button type="button" id="navCatBtn" onclick="switchBottomTab('categories')"
+        class="flex flex-col items-center justify-center gap-0.5 text-stone-500 hover:text-stone-900 font-semibold text-[10px] transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span>Categories</span>
+      </button>
+
+      <button type="button" id="navCartBtn" onclick="switchBottomTab('cart')"
+        class="relative flex flex-col items-center justify-center gap-0.5 text-stone-500 hover:text-stone-900 font-semibold text-[10px] transition">
+        <div class="relative">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span id="cartCount" class="absolute -top-1.5 -right-2.5 bg-amber-600 text-white text-[9px] font-extrabold min-w-[16px] h-[16px] px-1 rounded-full flex items-center justify-center">0</span>
+        </div>
+        <span>Cart</span>
+      </button>
+
+      <button type="button" id="navAccountBtn" onclick="switchBottomTab('account')"
+        class="flex flex-col items-center justify-center gap-0.5 text-stone-500 hover:text-stone-900 font-semibold text-[10px] transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Account</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- CLEAN ACCOUNT SHEET WITH SMALL SIDE BUTTONS -->
+  <div id="accountDrawer" onclick="if(event.target === this) closeAllDrawers();" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-white w-full max-w-sm rounded-t-3xl sm:rounded-3xl p-4 space-y-3 shadow-2xl border border-stone-200">
+      <div class="flex items-center justify-between gap-2 border-b border-stone-100 pb-2.5">
+        <div class="min-w-0">
+          <h3 id="menuCustomerName" class="font-extrabold text-sm text-stone-900 truncate">Welcome</h3>
+          <p id="menuCustomerEmail" class="text-[11px] text-stone-500 truncate">Sign in or register before checkout</p>
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button type="button" onclick="openStoreSettingsModal()"
+            class="bg-stone-100 hover:bg-stone-200 text-stone-800 text-[11px] font-bold px-2.5 py-1 rounded-full transition">
+            Settings
+          </button>
+          <button type="button" onclick="closeAllDrawers()" class="w-7 h-7 rounded-full bg-stone-100 text-stone-600 font-bold text-base">&times;</button>
+        </div>
+      </div>
+
+      <div class="divide-y divide-stone-100 text-xs font-semibold text-stone-800">
+        <div class="py-2 flex items-center justify-between">
+          <span>Track My Orders</span>
+          <a href="track.html" class="bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 px-3 py-1 rounded-full text-[11px] font-bold">
+            Open →
+          </a>
+        </div>
+        <div class="py-2 flex items-center justify-between">
+          <span>Reviews &amp; Rating</span>
+          <button type="button" onclick="closeAllDrawers(); openReviewsModal();" class="bg-stone-100 hover:bg-stone-200 text-stone-800 px-3 py-1 rounded-full text-[11px] font-bold">
+            Open →
+          </button>
+        </div>
+        <div class="py-2 flex items-center justify-between">
+          <span>Delivery &amp; Pickup</span>
+          <button type="button" onclick="closeAllDrawers(); openInfoModal('delivery');" class="bg-stone-100 hover:bg-stone-200 text-stone-800 px-3 py-1 rounded-full text-[11px] font-bold">
+            Open →
+          </button>
+        </div>
+        <div class="py-2 flex items-center justify-between">
+          <span>Privacy Policy</span>
+          <button type="button" onclick="closeAllDrawers(); openInfoModal('privacy');" class="bg-stone-100 hover:bg-stone-200 text-stone-800 px-3 py-1 rounded-full text-[11px] font-bold">
+            Open →
+          </button>
+        </div>
+        <div class="py-2 flex items-center justify-between">
+          <span>About Sekiflex</span>
+          <button type="button" onclick="closeAllDrawers(); openInfoModal('about');" class="bg-stone-100 hover:bg-stone-200 text-stone-800 px-3 py-1 rounded-full text-[11px] font-bold">
+            Open →
+          </button>
+        </div>
+        <div class="py-2 flex items-center justify-between">
+          <span>Support (WhatsApp / Call)</span>
+          <a href="https://wa.me/2349069037617" target="_blank" rel="noopener" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 px-3 py-1 rounded-full text-[11px] font-bold">
+            Chat →
+          </a>
+        </div>
+      </div>
+
+      <button type="button" id="accountSignInActionBtn" onclick="closeAllDrawers(); openAuthGate('signup', false);"
+        class="w-full py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-extrabold text-center transition">
+        Register / Sign In
+      </button>
+      <button type="button" id="accountSignOutActionBtn" onclick="customerLogout()"
+        class="hidden w-full py-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-extrabold text-center transition">
+        Sign Out
+      </button>
+    </div>
+  </div>
+
+  <!-- REVIEWS MODAL (OPENED ON DEMAND) -->
+  <div id="reviewsModal" onclick="if(event.target === this) closeReviewsModal();" class="fixed inset-0 z-50 hidden bg-black/65 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
+    <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-3.5 shadow-2xl my-auto max-h-[85vh] overflow-y-auto">
+      <div class="flex items-center justify-between gap-2 border-b border-stone-100 pb-2.5">
         <div>
-          <h3 class="font-editorial text-lg font-bold text-stone-900">Ratings &amp; Reviews</h3>
+          <h3 class="text-base font-extrabold text-stone-900">Ratings &amp; Reviews</h3>
           <p id="reviewCountText" class="text-[11px] text-stone-500">0 reviews</p>
         </div>
         <div class="flex items-center gap-2">
           <span class="text-xs font-extrabold text-amber-600">★ <span id="avgRatingText" class="text-stone-900">5.0</span></span>
-          <button type="button" onclick="closeReviewsModal()" class="w-8 h-8 rounded-full bg-stone-100 text-stone-600 font-bold text-lg">&times;</button>
+          <button type="button" onclick="closeReviewsModal()" class="w-7 h-7 rounded-full bg-stone-100 text-stone-600 font-bold text-base">&times;</button>
         </div>
       </div>
 
-      <form onsubmit="submitCustomerReview(event)" class="bg-stone-50 border border-stone-200/80 rounded-2xl p-3 space-y-2.5">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <span class="text-xs font-bold text-stone-900">Your Rating:</span>
+      <form onsubmit="submitCustomerReview(event)" class="bg-stone-50 border border-stone-200 rounded-2xl p-3 space-y-2">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-xs font-bold text-stone-800">Rating:</span>
           <div id="starSelectorRow" class="flex items-center gap-1" role="group" aria-label="Select 1 to 5 stars">
             <button type="button" data-star="1" onclick="selectStarRating(1)" class="star-btn text-lg text-amber-500 leading-none">★</button>
             <button type="button" data-star="2" onclick="selectStarRating(2)" class="star-btn text-lg text-amber-500 leading-none">★</button>
@@ -408,14 +492,12 @@
             <span id="selectedStarLabel" class="ml-1 text-[11px] font-bold text-amber-800">5 / 5</span>
           </div>
         </div>
-
         <input id="reviewAuthorInput" type="text" placeholder="Your Name (optional)"
-          class="w-full border border-stone-300 bg-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
-        <textarea required id="reviewCommentInput" rows="2" placeholder="Share your feedback..."
-          class="w-full border border-stone-300 bg-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600"></textarea>
-
+          class="w-full border border-stone-200 bg-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
+        <textarea required id="reviewCommentInput" rows="2" placeholder="Write your review..."
+          class="w-full border border-stone-200 bg-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600"></textarea>
         <button type="submit"
-          class="w-full bg-stone-900 hover:bg-amber-600 text-white font-bold py-2.5 rounded-xl text-xs transition">
+          class="w-full bg-stone-900 hover:bg-amber-700 text-white font-bold py-2 rounded-xl text-xs transition">
           Post Review
         </button>
       </form>
@@ -424,175 +506,46 @@
     </div>
   </div>
 
-  <!-- PRODUCT DETAIL MODAL -->
-  <div id="productDetailModal" onclick="if(event.target === this) closeProductDetailModal();" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl my-auto">
-      <div class="relative bg-stone-100">
-        <img id="detailModalImg" src="" alt="" class="w-full max-h-80 object-contain object-top mx-auto bg-stone-100" />
-        <button type="button" onclick="closeProductDetailModal()"
-          class="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/95 hover:bg-white text-stone-800 font-bold text-lg shadow-md flex items-center justify-center">
-          &times;
-        </button>
-        <span id="detailModalCategory" class="hidden absolute bottom-3 left-3 bg-stone-900/85 text-amber-300 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"></span>
-      </div>
-
-      <div class="p-5 space-y-4">
-        <div class="flex items-start justify-between gap-3">
-          <div>
-            <h3 id="detailModalName" class="font-editorial text-xl font-bold text-stone-900 leading-snug"></h3>
-            <p id="detailModalStock" class="text-xs font-semibold text-emerald-700 mt-0.5"></p>
-          </div>
-          <div id="detailModalPriceBlock" class="text-right shrink-0"></div>
-        </div>
-
-        <div class="border-t border-stone-100 pt-3 space-y-1.5">
-          <p class="text-[11px] font-extrabold uppercase tracking-wider text-stone-400">Product Details</p>
-          <p id="detailModalDesc" class="text-xs sm:text-sm text-stone-700 leading-relaxed whitespace-pre-line"></p>
-        </div>
-
-        <div class="flex gap-2.5 pt-1">
-          <button type="button" onclick="closeProductDetailModal()"
-            class="px-4 py-3 rounded-xl border border-stone-300 text-xs font-bold text-stone-700 hover:bg-stone-50 transition">
-            Close
-          </button>
-          <button type="button" id="detailAddToCartBtn"
-            class="flex-1 bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-xl text-xs font-extrabold transition shadow-md">
-            Add to Cart
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FIXED BOTTOM NAVIGATION BAR -->
-  <nav id="bottomFixedNav" class="fixed bottom-0 inset-x-0 z-40 bg-stone-950/95 backdrop-blur-md border-t border-amber-500/20 shadow-[0_-4px_16px_rgba(0,0,0,0.35)]">
-    <div class="max-w-5xl mx-auto grid grid-cols-4 h-14">
-      <button type="button" id="navHomeBtn" onclick="switchBottomTab('home')"
-        class="flex flex-col items-center justify-center gap-0.5 text-amber-400 font-bold text-[10px] transition">
-        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3 2 12h3v8h6v-6h2v6h6v-8h3L12 3z"/></svg>
-        <span>Home</span>
-      </button>
-
-      <button type="button" id="navCatBtn" onclick="switchBottomTab('categories')"
-        class="flex flex-col items-center justify-center gap-0.5 text-stone-300 hover:text-amber-300 font-semibold text-[10px] transition">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        <span>Categories</span>
-      </button>
-
-      <button type="button" id="navCartBtn" onclick="switchBottomTab('cart')"
-        class="relative flex flex-col items-center justify-center gap-0.5 text-stone-300 hover:text-amber-300 font-semibold text-[10px] transition">
-        <div class="relative">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-          <span id="cartCount" class="absolute -top-1.5 -right-2.5 bg-amber-500 text-stone-950 text-[9px] font-extrabold min-w-[16px] h-[16px] px-1 rounded-full flex items-center justify-center">0</span>
-        </div>
-        <span>Cart</span>
-      </button>
-
-      <button type="button" id="navAccountBtn" onclick="switchBottomTab('account')"
-        class="flex flex-col items-center justify-center gap-0.5 text-stone-300 hover:text-amber-300 font-semibold text-[10px] transition">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <span>Account</span>
-      </button>
-    </div>
-  </nav>
-
-  <!-- ACCOUNT & PROFILE SHEET -->
-  <div id="accountDrawer" onclick="if(event.target === this) closeAllDrawers();" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center">
-    <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 space-y-4 shadow-2xl">
-      <div class="flex items-center justify-between gap-2 border-b border-stone-200 pb-3">
-        <div class="min-w-0">
-          <h3 id="menuCustomerName" class="font-extrabold text-base text-stone-900 truncate">Welcome</h3>
-          <p id="menuCustomerEmail" class="text-xs text-stone-500 truncate">Sign in or register before checkout</p>
-        </div>
-        <div class="flex items-center gap-2 shrink-0">
-          <button type="button" onclick="openStoreSettingsModal()"
-            class="inline-flex items-center gap-1 bg-stone-900 hover:bg-amber-600 text-white text-xs font-bold px-3 py-1.5 rounded-full transition">
-            <span>Settings</span>
-          </button>
-          <button type="button" onclick="closeAllDrawers()" class="w-8 h-8 rounded-full bg-stone-100 text-stone-600 font-bold text-lg">&times;</button>
-        </div>
-      </div>
-
-      <div class="space-y-2 text-xs font-bold">
-        <a href="track.html" class="flex items-center justify-between p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-950">
-          <span>Track My Orders</span>
-          <span>→</span>
-        </a>
-        <button type="button" onclick="closeAllDrawers(); openReviewsModal();"
-          class="w-full flex items-center justify-between p-3 rounded-xl bg-stone-100 text-stone-800">
-          <span>Rate &amp; Review Store</span>
-          <span>→</span>
-        </button>
-        <button type="button" onclick="closeAllDrawers(); openInfoModal('delivery')" class="w-full flex items-center justify-between p-3 rounded-xl bg-stone-100 text-stone-800">
-          <span>Delivery &amp; Pickup Info</span>
-          <span>→</span>
-        </button>
-        <button type="button" onclick="closeAllDrawers(); openInfoModal('privacy')" class="w-full flex items-center justify-between p-3 rounded-xl bg-stone-100 text-stone-800">
-          <span>Privacy Policy</span>
-          <span>→</span>
-        </button>
-        <button type="button" onclick="closeAllDrawers(); openInfoModal('about')" class="w-full flex items-center justify-between p-3 rounded-xl bg-stone-100 text-stone-800">
-          <span>About Sekiflex Collections</span>
-          <span>→</span>
-        </button>
-        <button type="button" id="accountSignInActionBtn" onclick="closeAllDrawers(); openAuthGate('signup', false);"
-          class="w-full p-3 rounded-xl bg-amber-600 text-white text-center mt-2">
-          Register / Sign In
-        </button>
-        <button type="button" id="accountSignOutActionBtn" onclick="customerLogout()"
-          class="hidden w-full p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-center mt-2">
-          Sign Out of Account
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- STORE SETTINGS MODAL -->
-  <div id="storeSettingsModal" onclick="if(event.target === this) closeStoreSettingsModal();" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl my-auto">
-      <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+  <div id="storeSettingsModal" onclick="if(event.target === this) closeStoreSettingsModal();" class="fixed inset-0 z-50 hidden bg-black/65 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
+    <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-3.5 shadow-2xl my-auto">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-2.5">
         <div>
-          <h3 class="font-editorial text-lg font-bold text-stone-900">Account &amp; Store Settings</h3>
-          <p class="text-xs text-stone-500">Password, social pages &amp; preferences</p>
+          <h3 class="text-base font-extrabold text-stone-900">Account Settings</h3>
+          <p class="text-[11px] text-stone-500">Password, social links &amp; preferences</p>
         </div>
-        <button type="button" onclick="closeStoreSettingsModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 font-bold text-lg">&times;</button>
+        <button type="button" onclick="closeStoreSettingsModal()" class="w-7 h-7 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 font-bold text-base">&times;</button>
       </div>
 
-      <div class="bg-amber-50/70 border border-amber-200 rounded-2xl p-3.5 space-y-2">
-        <p class="text-xs font-extrabold text-stone-900">Social Channels</p>
-        <div class="grid grid-cols-2 gap-2 text-xs font-bold">
-          <a id="settingsTikTokLink" href="https://www.tiktok.com/@sekiflex_collections?_r=1&_t=ZS-9BbSAFjxrZW" target="_blank" rel="noopener"
-            class="flex items-center justify-center gap-1.5 bg-stone-950 hover:bg-stone-800 text-white py-2.5 px-3 rounded-xl transition">
-            <span>TikTok →</span>
-          </a>
-          <a id="settingsFacebookLink" href="https://www.facebook.com/share/1G3ErASdHa/" target="_blank" rel="noopener"
-            class="flex items-center justify-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-3 rounded-xl transition">
-            <span>Facebook →</span>
-          </a>
-        </div>
+      <div class="grid grid-cols-2 gap-2 text-xs font-bold">
+        <a id="settingsTikTokLink" href="https://www.tiktok.com/@sekiflex_collections?_r=1&_t=ZS-9BbSAFjxrZW" target="_blank" rel="noopener"
+          class="flex items-center justify-center bg-stone-900 hover:bg-stone-800 text-white py-2 px-3 rounded-xl transition">
+          TikTok →
+        </a>
+        <a id="settingsFacebookLink" href="https://www.facebook.com/share/1G3ErASdHa/" target="_blank" rel="noopener"
+          class="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-xl transition">
+          Facebook →
+        </a>
       </div>
 
-      <form onsubmit="handleAccountPasswordChange(event)" class="bg-stone-50 border border-stone-200 rounded-2xl p-3.5 space-y-2.5">
-        <p class="text-xs font-extrabold text-stone-900">Change Account Password</p>
+      <form onsubmit="handleAccountPasswordChange(event)" class="bg-stone-50 border border-stone-200 rounded-2xl p-3 space-y-2">
+        <p class="text-xs font-bold text-stone-900">Change Password</p>
         <p id="changePasswordMsg" class="hidden text-[11px] font-semibold p-2 rounded-xl"></p>
-        <input required id="accountNewPassword" type="password" minlength="6" placeholder="New Password (min. 6 characters)"
-          class="w-full border border-stone-300 bg-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
+        <input required id="accountNewPassword" type="password" minlength="6" placeholder="New Password (min. 6 chars)"
+          class="w-full border border-stone-200 bg-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
         <input required id="accountConfirmPassword" type="password" minlength="6" placeholder="Confirm New Password"
-          class="w-full border border-stone-300 bg-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
+          class="w-full border border-stone-200 bg-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
         <button type="submit" id="saveNewPasswordBtn"
           class="w-full bg-amber-600 hover:bg-amber-700 text-white py-2 rounded-xl text-xs font-bold transition">
           Update Password
         </button>
       </form>
 
-      <label class="flex items-center justify-between p-3.5 rounded-2xl bg-stone-50 border border-stone-200 text-stone-800 cursor-pointer text-xs font-bold">
-        <div>
-          <p class="font-bold text-stone-900">Sound Alerts</p>
-          <p class="text-[11px] font-normal text-stone-500">Alert tone for store updates</p>
-        </div>
+      <label class="flex items-center justify-between p-3 rounded-2xl bg-stone-50 border border-stone-200 text-stone-800 cursor-pointer text-xs font-bold">
+        <span>Sound Alerts</span>
         <input type="checkbox" id="prefSoundToggle"
           onchange="localStorage.setItem('sekiflex_sound_enabled', this.checked ? '1' : '0')"
-          class="w-5 h-5 accent-amber-600 rounded" />
+          class="w-4 h-4 accent-amber-600 rounded" />
       </label>
 
       <button type="button" onclick="closeStoreSettingsModal()" class="w-full bg-stone-900 hover:bg-stone-800 text-white py-2.5 rounded-xl text-xs font-bold">
@@ -602,24 +555,24 @@
   </div>
 
   <!-- CATEGORIES SHEET -->
-  <div id="categoriesDrawer" onclick="if(event.target === this) closeAllDrawers();" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-end sm:items-center justify-center">
-    <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 max-h-[82vh] overflow-y-auto space-y-4 shadow-2xl">
-      <div class="flex items-center justify-between border-b border-stone-200 pb-3">
-        <h3 class="font-extrabold text-base text-stone-900">Categories</h3>
-        <button type="button" onclick="closeAllDrawers()" class="w-8 h-8 rounded-full bg-stone-100 text-stone-600 font-bold text-lg">&times;</button>
+  <div id="categoriesDrawer" onclick="if(event.target === this) closeAllDrawers();" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-white w-full max-w-sm rounded-t-3xl sm:rounded-3xl p-4 max-h-[82vh] overflow-y-auto space-y-3 shadow-2xl border border-stone-200">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-2.5">
+        <h3 class="font-extrabold text-sm text-stone-900">Categories</h3>
+        <button type="button" onclick="closeAllDrawers()" class="w-7 h-7 rounded-full bg-stone-100 text-stone-600 font-bold text-base">&times;</button>
       </div>
       <div id="drawerCategoriesList" class="grid grid-cols-2 gap-2"></div>
     </div>
   </div>
 
   <!-- ABOUT US / DELIVERY / PRIVACY POLICY MODAL -->
-  <div id="infoModal" onclick="if(event.target === this) this.classList.add('hidden');" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl my-auto max-h-[85vh] overflow-y-auto">
+  <div id="infoModal" onclick="if(event.target === this) this.classList.add('hidden');" class="fixed inset-0 z-50 hidden bg-black/65 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-md w-full p-5 space-y-3.5 shadow-2xl my-auto max-h-[85vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-stone-100 pb-2.5">
-        <h3 id="infoModalTitle" class="font-editorial text-xl font-bold text-stone-900">About Sekiflex</h3>
-        <button type="button" onclick="document.getElementById('infoModal').classList.add('hidden')" class="w-8 h-8 rounded-full bg-stone-100 font-bold">&times;</button>
+        <h3 id="infoModalTitle" class="text-base font-extrabold text-stone-900">About Sekiflex</h3>
+        <button type="button" onclick="document.getElementById('infoModal').classList.add('hidden')" class="w-7 h-7 rounded-full bg-stone-100 font-bold">&times;</button>
       </div>
-      <div id="infoModalBody" class="text-xs sm:text-sm text-stone-600 space-y-2.5 leading-relaxed"></div>
+      <div id="infoModalBody" class="text-xs text-stone-600 space-y-2 leading-relaxed"></div>
       <button type="button" onclick="document.getElementById('infoModal').classList.add('hidden')" class="w-full bg-stone-900 text-white py-2.5 rounded-xl text-xs font-bold">
         Close
       </button>
@@ -627,58 +580,58 @@
   </div>
 
   <!-- Added-to-Bag Toast Notification -->
-  <div id="bagToast" class="fixed bottom-16 left-1/2 -translate-x-1/2 z-40 hidden bg-stone-950 text-white px-4 py-2 rounded-full shadow-2xl border border-amber-400/35 flex items-center gap-3 text-xs whitespace-nowrap">
+  <div id="bagToast" class="fixed bottom-16 left-1/2 -translate-x-1/2 z-40 hidden bg-stone-900 text-white px-4 py-2 rounded-full shadow-xl flex items-center gap-3 text-xs whitespace-nowrap">
     <span class="text-emerald-400 font-bold">&#10003;</span>
     <span id="bagToastText">Added to cart</span>
-    <button type="button" onclick="hideBagToast(); openCartReview();" class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-3 py-1 rounded-full text-[11px] transition">
+    <button type="button" onclick="hideBagToast(); openCartReview();" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-3 py-1 rounded-full text-[11px] transition">
       View Cart
     </button>
   </div>
 
-  <!-- MODERATE CART & CHECKOUT DRAWER (CART REVIEW FIRST, WAYBILL ON DEMAND) -->
-  <div id="cartDrawer" onclick="if(event.target === this) toggleCart(false);" class="fixed inset-0 z-50 hidden bg-black/65 backdrop-blur-xs flex justify-end p-0 sm:p-3">
-    <div class="bg-white w-full max-w-sm h-full sm:h-auto sm:max-h-[90vh] sm:my-auto sm:rounded-3xl border border-stone-200 overflow-y-auto p-4 sm:p-5 flex flex-col justify-between shadow-2xl space-y-4">
-      <div class="space-y-4">
-        <div class="flex items-center justify-between border-b border-stone-200/80 pb-3">
+  <!-- CLEAN LIGHT CART & CHECKOUT SHEET (CART FIRST, WAYBILL ON TAP) -->
+  <div id="cartDrawer" onclick="if(event.target === this) toggleCart(false);" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex justify-end p-0 sm:p-3">
+    <div class="bg-[#f8f9fa] w-full max-w-sm h-full sm:h-auto sm:max-h-[90vh] sm:my-auto sm:rounded-3xl border border-stone-200 overflow-y-auto p-4 flex flex-col justify-between shadow-2xl space-y-3.5">
+      <div class="space-y-3.5">
+        <div class="flex items-center justify-between bg-white border border-stone-200/80 rounded-2xl px-3.5 py-2.5">
           <div>
-            <p class="text-[10px] font-bold uppercase tracking-widest text-amber-700">Sekiflex Bag</p>
-            <h2 id="cartDrawerHeading" class="font-editorial font-bold text-lg text-stone-900">Your Shopping Cart</h2>
+            <p class="text-[10px] font-bold uppercase tracking-wider text-amber-700">Sekiflex Bag</p>
+            <h2 id="cartDrawerHeading" class="font-extrabold text-sm text-stone-900">Your Shopping Cart</h2>
           </div>
-          <button type="button" onclick="toggleCart(false)" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 text-lg font-bold">&times;</button>
+          <button type="button" onclick="toggleCart(false)" class="w-7 h-7 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 text-base font-bold">&times;</button>
         </div>
 
-        <!-- Step A: Cart Items List (Shown First So Shoppers Can Recheck Items) -->
-        <div id="cartItems" class="space-y-2.5"></div>
+        <!-- Step A: Cart Items List -->
+        <div id="cartItems" class="space-y-2"></div>
 
-        <!-- Cart Subtotal & Action Buttons (Shown Before Opening Waybill Form) -->
-        <div id="cartSummaryActions" class="space-y-3 pt-2 border-t border-stone-200/80">
-          <div class="bg-stone-950 text-white rounded-2xl p-3.5 flex items-center justify-between border border-amber-500/20">
-            <div>
-              <p class="text-[10px] uppercase tracking-wider text-stone-400">Items Subtotal</p>
-              <p id="cartReviewSubTotal" class="text-base font-extrabold text-amber-400">₦0</p>
-            </div>
+        <!-- Cart Subtotal & Proceed Button -->
+        <div id="cartSummaryActions" class="space-y-2.5 bg-white border border-stone-200/80 rounded-2xl p-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-stone-500">Items Subtotal</span>
+            <strong id="cartReviewSubTotal" class="text-sm font-extrabold text-stone-900">₦0</strong>
+          </div>
+
+          <div class="flex gap-2">
             <button type="button" onclick="toggleCart(false)"
-              class="px-3 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-bold transition">
+              class="px-3 py-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-bold transition">
               ← Keep Shopping
             </button>
+            <button type="button" id="openWaybillBtn" onclick="openWaybillSection()"
+              class="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-2.5 rounded-xl text-xs transition shadow-2xs">
+              Proceed to Checkout →
+            </button>
           </div>
-
-          <button type="button" id="openWaybillBtn" onclick="openWaybillSection()"
-            class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3 rounded-2xl text-xs transition shadow-sm">
-            Proceed to Waybill &amp; Payment →
-          </button>
         </div>
 
-        <!-- Step B: Waybill & Payment Form (Hidden Until Shopper Taps Proceed) -->
-        <form id="checkoutForm" autocomplete="off" onsubmit="placeOrder(event)" class="hidden space-y-3 border-t border-stone-200 pt-3.5">
-          <div class="flex items-center justify-between">
-            <h3 class="font-bold text-[11px] uppercase tracking-wider text-stone-600">Waybill &amp; Dispatch Details</h3>
+        <!-- Step B: Waybill & Payment Form (Shown Only After Tapping Proceed) -->
+        <form id="checkoutForm" autocomplete="off" onsubmit="placeOrder(event)" class="hidden space-y-2.5 bg-white border border-stone-200/80 rounded-2xl p-3">
+          <div class="flex items-center justify-between pb-1 border-b border-stone-100">
+            <h3 class="font-bold text-[11px] uppercase tracking-wider text-stone-600">Waybill &amp; Payment</h3>
             <button type="button" onclick="backToCartReviewOnly()" class="text-[11px] font-bold text-amber-700 hover:underline">
-              ← Recheck Items
+              ← Recheck Cart
             </button>
           </div>
 
-          <div class="grid grid-cols-2 gap-1.5 bg-stone-100 p-1 rounded-xl border border-stone-200/80">
+          <div class="grid grid-cols-2 gap-1.5 bg-stone-100 p-1 rounded-xl">
             <button type="button" id="btnDeliveryMode" onclick="setFulfillmentMode('delivery')"
               class="py-1.5 px-2.5 rounded-lg text-xs font-bold bg-stone-900 text-white transition">
               Courier Delivery
@@ -689,13 +642,13 @@
             </button>
           </div>
 
-          <input required id="custName" name="sekiflex_order_recipient" autocomplete="off" type="text" placeholder="Recipient Full Name" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
-          <input required id="custEmail" name="sekiflex_order_email" autocomplete="off" type="email" placeholder="Email Address (for tracking receipt)" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
-          <input required id="custPhone" name="sekiflex_order_phone" autocomplete="off" type="tel" placeholder="Phone / WhatsApp Number" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
+          <input required id="custName" name="sekiflex_order_recipient" autocomplete="off" type="text" placeholder="Recipient Full Name" class="w-full border border-stone-200 bg-stone-50 focus:bg-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
+          <input required id="custEmail" name="sekiflex_order_email" autocomplete="off" type="email" placeholder="Email Address (for tracking receipt)" class="w-full border border-stone-200 bg-stone-50 focus:bg-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
+          <input required id="custPhone" name="sekiflex_order_phone" autocomplete="off" type="tel" placeholder="Phone / WhatsApp Number" class="w-full border border-stone-200 bg-stone-50 focus:bg-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
 
-          <div id="deliveryFields" class="space-y-2.5">
+          <div id="deliveryFields" class="space-y-2">
             <div class="grid grid-cols-2 gap-2">
-              <select required id="custCountry" onchange="handleCountryChange()" class="w-full border border-stone-300 rounded-xl px-2.5 py-2 text-xs bg-white focus:outline-none focus:border-amber-600">
+              <select required id="custCountry" onchange="handleCountryChange()" class="w-full border border-stone-200 rounded-xl px-2.5 py-2 text-xs bg-white focus:outline-none focus:border-amber-600">
                 <option value="Nigeria">Nigeria</option>
                 <option value="United Kingdom">United Kingdom</option>
                 <option value="United States">United States</option>
@@ -703,47 +656,44 @@
                 <option value="Ghana">Ghana</option>
               </select>
 
-              <select required id="custStateSelect" onchange="updateShippingFee()" class="w-full border border-stone-300 rounded-xl px-2.5 py-2 text-xs bg-white focus:outline-none focus:border-amber-600">
+              <select required id="custStateSelect" onchange="updateShippingFee()" class="w-full border border-stone-200 rounded-xl px-2.5 py-2 text-xs bg-white focus:outline-none focus:border-amber-600">
                 <option value="">Select State...</option>
               </select>
 
-              <input id="custStateText" oninput="updateShippingFee()" type="text" placeholder="State / Province" class="hidden w-full border border-stone-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
+              <input id="custStateText" oninput="updateShippingFee()" type="text" placeholder="State / Province" class="hidden w-full border border-stone-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
             </div>
 
-            <input required id="custCity" type="text" placeholder="City" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
-            <input required id="custAddress" type="text" placeholder="Full Street Delivery Address" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
+            <input required id="custCity" type="text" placeholder="City" class="w-full border border-stone-200 bg-stone-50 focus:bg-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
+            <input required id="custAddress" type="text" placeholder="Full Street Delivery Address" class="w-full border border-stone-200 bg-stone-50 focus:bg-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
           </div>
 
-          <div id="pickupInfoBox" class="hidden bg-amber-50/90 border border-amber-200 rounded-xl p-3 text-xs space-y-1.5">
-            <p class="font-bold text-amber-950 text-xs">Walk-In Store Pickup — Uyo HQ (FREE)</p>
-            <p class="text-stone-700 text-[11px]"><span class="font-semibold">Location:</span> Urua Ekpa, Uyo, Akwa Ibom State</p>
-            <p class="text-stone-700 text-[11px]"><span class="font-semibold">Mon – Sat:</span> 7:30 AM – 9:00 PM &bull; <span class="font-semibold">Sun:</span> 2:00 PM – 9:00 PM</p>
+          <div id="pickupInfoBox" class="hidden bg-amber-50 border border-amber-200 rounded-xl p-2.5 text-xs space-y-1">
+            <p class="font-bold text-amber-950 text-xs">Store Pickup — Uyo HQ (FREE)</p>
+            <p class="text-stone-700 text-[11px]">Urua Ekpa, Uyo, Akwa Ibom State</p>
+            <p class="text-stone-600 text-[11px]">Mon–Sat: 7:30 AM – 9:00 PM &bull; Sun: 2:00 PM – 9:00 PM</p>
           </div>
 
-          <input id="custNotes" type="text" placeholder="Delivery/pickup note or size preference (optional)" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
+          <input id="custNotes" type="text" placeholder="Delivery/pickup note or size preference (optional)" class="w-full border border-stone-200 bg-stone-50 focus:bg-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-600" />
 
           <!-- Totals -->
-          <div class="bg-stone-100 rounded-xl p-3 text-xs space-y-1 border border-stone-200">
+          <div class="bg-stone-50 rounded-xl p-2.5 text-xs space-y-1 border border-stone-200/80">
             <div class="flex justify-between text-stone-600"><span>Items Subtotal:</span><span id="subTotalText" class="font-semibold text-stone-900">₦0</span></div>
             <div class="flex justify-between text-stone-600"><span>Delivery (<span id="estDaysText">select state</span>):</span><span id="shipFeeText" class="font-semibold text-stone-900">—</span></div>
-            <div class="flex justify-between font-bold text-sm border-t border-stone-300 pt-1.5"><span>Total to Pay:</span><span id="grandTotalText" class="text-amber-800">₦0</span></div>
+            <div class="flex justify-between font-bold text-sm border-t border-stone-200 pt-1"><span>Total to Pay:</span><span id="grandTotalText" class="text-amber-700">₦0</span></div>
           </div>
 
           <!-- Payment Transfer Box -->
-          <div class="border border-amber-300/80 bg-amber-50/60 rounded-2xl p-3 space-y-2.5">
-            <div>
-              <h3 class="font-bold text-[11px] uppercase tracking-wider text-amber-950">Payment Details</h3>
-              <p class="text-[11px] text-stone-600 mt-0.5">Transfer <span class="font-bold text-stone-900" id="payBoxAmountText">₦0</span> to either account:</p>
-            </div>
+          <div class="border border-stone-200 bg-stone-50 rounded-xl p-2.5 space-y-2">
+            <p class="text-[11px] text-stone-600">Transfer <span class="font-bold text-stone-900" id="payBoxAmountText">₦0</span> to:</p>
 
             <div class="bg-white border border-stone-200 rounded-xl p-2 flex items-center justify-between gap-2">
               <div class="text-xs">
                 <p class="font-bold text-stone-900">Stanbic IBTC</p>
-                <p class="font-mono font-bold text-xs text-amber-800">0084620625</p>
+                <p class="font-mono font-bold text-xs text-amber-700">0084620625</p>
                 <p class="text-[10px] text-stone-500">Sekiflex Collections</p>
               </div>
               <button type="button" onclick="copyAcct('0084620625', 'Stanbic IBTC', this)"
-                class="bg-stone-900 hover:bg-amber-800 text-white text-[10px] font-semibold px-2.5 py-1.5 rounded-lg shrink-0 transition">
+                class="bg-stone-900 hover:bg-amber-700 text-white text-[10px] font-semibold px-2.5 py-1.5 rounded-lg shrink-0 transition">
                 Copy
               </button>
             </div>
@@ -751,31 +701,31 @@
             <div class="bg-white border border-stone-200 rounded-xl p-2 flex items-center justify-between gap-2">
               <div class="text-xs">
                 <p class="font-bold text-stone-900">OPay</p>
-                <p class="font-mono font-bold text-xs text-amber-800">9163755234</p>
+                <p class="font-mono font-bold text-xs text-amber-700">9163755234</p>
                 <p class="text-[10px] text-stone-500">Sekiflex Collections</p>
               </div>
               <button type="button" onclick="copyAcct('9163755234', 'OPay', this)"
-                class="bg-stone-900 hover:bg-amber-800 text-white text-[10px] font-semibold px-2.5 py-1.5 rounded-lg shrink-0 transition">
+                class="bg-stone-900 hover:bg-amber-700 text-white text-[10px] font-semibold px-2.5 py-1.5 rounded-lg shrink-0 transition">
                 Copy
               </button>
             </div>
 
-            <select required id="paidBankSelect" class="w-full border border-stone-300 rounded-xl px-2.5 py-2 text-xs bg-white focus:outline-none focus:border-amber-600">
+            <select required id="paidBankSelect" class="w-full border border-stone-200 rounded-xl px-2.5 py-2 text-xs bg-white focus:outline-none focus:border-amber-600">
               <option value="">Select Account You Transferred To...</option>
               <option value="Stanbic IBTC (0084620625)">Paid to Stanbic IBTC — 0084620625</option>
               <option value="OPay (9163755234)">Paid to OPay — 9163755234</option>
             </select>
 
-            <input required id="senderRefInput" type="text" placeholder="Sender Account Name or Transfer Reference" class="w-full border border-stone-300 rounded-xl px-2.5 py-2 text-xs bg-white focus:outline-none focus:border-amber-600" />
+            <input required id="senderRefInput" type="text" placeholder="Sender Account Name or Transfer Reference" class="w-full border border-stone-200 bg-white rounded-xl px-2.5 py-2 text-xs focus:outline-none focus:border-amber-600" />
 
-            <label class="flex items-start gap-2 text-[11px] text-stone-700 cursor-pointer">
+            <label class="flex items-start gap-2 text-[11px] text-stone-600 cursor-pointer">
               <input required id="paymentConfirmCheck" type="checkbox" class="mt-0.5 accent-amber-700" />
-              <span>I have completed the bank transfer for the order total and accept the <button type="button" onclick="event.preventDefault(); openInfoModal('privacy');" class="underline font-semibold text-amber-800">Privacy Policy</button>.</span>
+              <span>I have completed the bank transfer and accept the <button type="button" onclick="event.preventDefault(); openInfoModal('privacy');" class="underline font-semibold text-amber-700">Privacy Policy</button>.</span>
             </label>
           </div>
 
-          <button type="submit" id="submitBtn" class="w-full bg-stone-900 hover:bg-amber-800 text-white font-bold py-3 rounded-xl text-xs transition shadow-md">
-            I Have Paid — Confirm Order &amp; Get Tracking Code
+          <button type="submit" id="submitBtn" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-2.5 rounded-xl text-xs transition shadow-2xs">
+            I Have Paid — Confirm Order
           </button>
         </form>
       </div>
@@ -783,29 +733,29 @@
   </div>
 
   <!-- Success Modal -->
-  <div id="successModal" onclick="if(event.target === this) closeSuccessModalToStore();" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl relative">
+  <div id="successModal" onclick="if(event.target === this) closeSuccessModalToStore();" class="fixed inset-0 z-50 hidden bg-black/65 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-5 text-center space-y-3.5 shadow-2xl relative">
       <button type="button" onclick="closeSuccessModalToStore()" aria-label="Back to store"
-        class="absolute top-3.5 left-3.5 inline-flex items-center gap-1 text-xs font-bold text-stone-600 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-full transition">
+        class="absolute top-3.5 left-3.5 inline-flex items-center gap-1 text-xs font-bold text-stone-600 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 px-3 py-1 rounded-full transition">
         ← Back
       </button>
-      <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto text-2xl font-bold mt-2">&#10003;</div>
-      <h2 class="font-editorial text-2xl font-bold">Order &amp; Payment Submitted!</h2>
-      <p id="successOrderStatusBadge" class="inline-block text-xs font-extrabold px-3 py-1 rounded-full bg-amber-100 text-amber-800">
+      <div class="w-11 h-11 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto text-xl font-bold mt-2">&#10003;</div>
+      <h2 class="text-lg font-extrabold text-stone-900">Order Submitted</h2>
+      <p id="successOrderStatusBadge" class="inline-block text-xs font-bold px-3 py-1 rounded-full bg-amber-100 text-amber-800">
         Order processing • Awaiting payment
       </p>
-      <p class="text-xs text-stone-600">Save your tracking number below to monitor your dispatch or present at our Uyo HQ counter:</p>
-      <div class="bg-stone-100 border border-dashed border-stone-400 rounded-xl py-3 px-4 font-mono text-lg font-bold text-amber-700" id="newTrackingCode"></div>
+      <p class="text-xs text-stone-600">Save your tracking code below:</p>
+      <div class="bg-stone-100 border border-dashed border-stone-300 rounded-xl py-2.5 px-4 font-mono text-base font-bold text-amber-700" id="newTrackingCode"></div>
       <a id="orderWhatsappConfirmBtn" href="https://wa.me/2349069037617" target="_blank" rel="noopener"
          class="block w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl text-xs font-bold transition">
-        Send Payment Receipt &amp; Tracking Code on WhatsApp
+        Send Receipt on WhatsApp
       </a>
       <div class="flex gap-2">
-        <button type="button" onclick="copyTracking()" class="flex-1 border border-stone-300 py-2.5 rounded-xl text-xs font-semibold hover:bg-stone-50">Copy Code</button>
-        <a id="trackNowLink" href="track.html" class="flex-1 bg-stone-900 text-white py-2.5 rounded-xl text-xs font-semibold hover:bg-stone-800">Track Now</a>
+        <button type="button" onclick="copyTracking()" class="flex-1 border border-stone-200 py-2 rounded-xl text-xs font-bold hover:bg-stone-50">Copy Code</button>
+        <a id="trackNowLink" href="track.html" class="flex-1 bg-stone-900 text-white py-2 rounded-xl text-xs font-bold hover:bg-stone-800">Track Order</a>
       </div>
       <button type="button" onclick="closeSuccessModalToStore()"
-        class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 py-3 rounded-xl text-xs font-extrabold transition shadow-xs">
+        class="w-full bg-amber-600 hover:bg-amber-700 text-white py-2.5 rounded-xl text-xs font-extrabold transition">
         ← Back to Store
       </button>
     </div>
@@ -982,6 +932,12 @@
           </div>`;
       }
       return `<p class="font-extrabold text-stone-900 ${sizeClass}">₦${effectivePrice.toLocaleString()}</p>`;
+    }
+
+    function jumpToAllItems() {
+      filterCategory('ALL');
+      const sec = document.getElementById('catalogSection');
+      if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function startBannerAutoShift() {
@@ -1259,13 +1215,11 @@
     function renderReviews() {
       const container = document.getElementById('reviewsListContainer');
       const avgEl = document.getElementById('avgRatingText');
-      const headerAvgEl = document.getElementById('headerAvgRating');
       const countEl = document.getElementById('reviewCountText');
       if (!container) return;
 
       if (!storeReviews.length) {
         avgEl.textContent = '5.0';
-        if (headerAvgEl) headerAvgEl.textContent = '5.0';
         countEl.textContent = 'No reviews yet';
         container.innerHTML = '<p class="text-xs text-stone-400 text-center py-2">No reviews yet. Be the first to leave one.</p>';
         return;
@@ -1274,7 +1228,6 @@
       const sum = storeReviews.reduce((acc, r) => acc + (Number(r.rating) || 5), 0);
       const avg = (sum / storeReviews.length).toFixed(1);
       avgEl.textContent = avg;
-      if (headerAvgEl) headerAvgEl.textContent = avg;
       countEl.textContent = `${storeReviews.length} review${storeReviews.length === 1 ? '' : 's'}`;
 
       container.innerHTML = storeReviews.map(r => {
@@ -1327,7 +1280,7 @@
       document.getElementById('detailModalImg').src = img;
       document.getElementById('detailModalImg').alt = prod.name || 'Product';
       document.getElementById('detailModalName').textContent = prod.name || 'Product';
-      document.getElementById('detailModalPriceBlock').innerHTML = formatPriceHtml(prod, 'text-lg');
+      document.getElementById('detailModalPriceBlock').innerHTML = formatPriceHtml(prod, 'text-base');
       document.getElementById('detailModalDesc').textContent = prod.description || 'Quality item from Sekiflex Collections.';
 
       const catBadge = document.getElementById('detailModalCategory');
@@ -1341,21 +1294,21 @@
       const stockEl = document.getElementById('detailModalStock');
       if (out) {
         stockEl.textContent = 'Currently Sold Out';
-        stockEl.className = 'text-xs font-semibold text-rose-600 mt-0.5';
+        stockEl.className = 'text-[11px] font-semibold text-rose-600 mt-0.5';
       } else if (prod.stock_quantity !== null && prod.stock_quantity !== undefined) {
         stockEl.textContent = `In Stock (${prod.stock_quantity} available)`;
-        stockEl.className = 'text-xs font-semibold text-emerald-700 mt-0.5';
+        stockEl.className = 'text-[11px] font-semibold text-emerald-700 mt-0.5';
       } else {
         stockEl.textContent = 'In Stock';
-        stockEl.className = 'text-xs font-semibold text-emerald-700 mt-0.5';
+        stockEl.className = 'text-[11px] font-semibold text-emerald-700 mt-0.5';
       }
 
       const addBtn = document.getElementById('detailAddToCartBtn');
       addBtn.disabled = out;
       addBtn.textContent = out ? 'Sold Out' : 'Add to Cart';
       addBtn.className = out
-        ? 'flex-1 bg-stone-200 text-stone-500 py-3 rounded-xl text-xs font-extrabold cursor-not-allowed'
-        : 'flex-1 bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-xl text-xs font-extrabold transition shadow-md';
+        ? 'flex-1 bg-stone-200 text-stone-500 py-2.5 rounded-xl text-xs font-extrabold cursor-not-allowed'
+        : 'flex-1 bg-amber-600 hover:bg-amber-700 text-white py-2.5 rounded-xl text-xs font-extrabold transition shadow-xs';
       addBtn.onclick = () => {
         addToCart(prod.id, addBtn);
         closeProductDetailModal();
@@ -1449,8 +1402,8 @@
         const el = document.getElementById(elId);
         if (!el) return;
         el.className = key === tab
-          ? 'relative flex flex-col items-center justify-center gap-0.5 text-amber-400 font-bold text-[10px] transition'
-          : 'relative flex flex-col items-center justify-center gap-0.5 text-stone-300 hover:text-amber-300 font-semibold text-[10px] transition';
+          ? 'relative flex flex-col items-center justify-center gap-0.5 text-amber-700 font-bold text-[10px] transition'
+          : 'relative flex flex-col items-center justify-center gap-0.5 text-stone-500 hover:text-stone-900 font-semibold text-[10px] transition';
       });
     }
 
@@ -1602,7 +1555,7 @@
         const catObj = allCategories.find(c => c.id === activeCategory);
         heading.textContent = catObj ? catObj.name : 'Filtered Products';
       } else {
-        heading.textContent = 'All Products';
+        heading.textContent = 'All Items';
       }
 
       document.getElementById('productResultCount').textContent = `${filtered.length} item${filtered.length === 1 ? '' : 's'}`;
@@ -1638,12 +1591,12 @@
         tabsRow.classList.remove('hidden');
         if (view === 'signup') {
           document.getElementById('customerSignUpForm').classList.remove('hidden');
-          upBtn.className = 'py-2.5 rounded-xl text-xs font-extrabold bg-amber-600 text-white shadow-xs transition';
-          inBtn.className = 'py-2.5 rounded-xl text-xs font-extrabold text-stone-600 hover:text-stone-900 transition';
+          upBtn.className = 'py-2 rounded-xl text-xs font-extrabold bg-amber-600 text-white shadow-2xs transition';
+          inBtn.className = 'py-2 rounded-xl text-xs font-extrabold text-stone-600 hover:text-stone-900 transition';
         } else {
           document.getElementById('customerSignInForm').classList.remove('hidden');
-          inBtn.className = 'py-2.5 rounded-xl text-xs font-extrabold bg-amber-600 text-white shadow-xs transition';
-          upBtn.className = 'py-2.5 rounded-xl text-xs font-extrabold text-stone-600 hover:text-stone-900 transition';
+          inBtn.className = 'py-2 rounded-xl text-xs font-extrabold bg-amber-600 text-white shadow-2xs transition';
+          upBtn.className = 'py-2 rounded-xl text-xs font-extrabold text-stone-600 hover:text-stone-900 transition';
         }
       } else {
         tabsRow.classList.add('hidden');
@@ -1912,12 +1865,12 @@
       }
 
       const colorMap = {
-        gold: 'from-amber-950 via-stone-900 to-stone-800',
-        green: 'from-emerald-950 via-stone-900 to-stone-800',
-        red: 'from-stone-950 via-stone-900 to-rose-950',
-        dark: 'from-stone-950 via-stone-900 to-amber-950'
+        gold: 'bg-amber-800',
+        green: 'bg-emerald-800',
+        red: 'bg-rose-800',
+        dark: 'bg-stone-900'
       };
-      card.className = `promo-slide snap-start shrink-0 w-full sm:w-[480px] rounded-2xl bg-gradient-to-r ${colorMap[banner.banner_color] || colorMap.dark} text-white p-3.5 flex items-center justify-between gap-3 border border-amber-400/20`;
+      card.className = `promo-slide snap-start shrink-0 w-full sm:w-[460px] rounded-2xl ${colorMap[banner.banner_color] || 'bg-stone-900'} text-white p-3.5 flex items-center justify-between gap-3`;
       txt.textContent = banner.banner_text;
 
       if (banner.banner_image_url) {
@@ -2021,18 +1974,23 @@
       const bar = document.getElementById('categoryBar');
       const drawerList = document.getElementById('drawerCategoriesList');
 
-      bar.innerHTML = `<button onclick="filterCategory('ALL', this)" class="cat-btn ${activeCategory === 'ALL' ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-stone-900 border border-stone-800 text-stone-300 font-semibold'} text-[11px] px-3.5 py-1.5 rounded-full whitespace-nowrap">All Items</button>`;
-      drawerList.innerHTML = `<button onclick="filterCategory('ALL'); closeAllDrawers(); document.getElementById('catalogSection').scrollIntoView({behavior:'smooth'});" class="p-3 rounded-xl bg-amber-600 text-white text-xs font-bold text-left">All Products</button>`;
+      bar.innerHTML = `<button type="button" onclick="filterCategory('ALL', this); document.getElementById('catalogSection').scrollIntoView({behavior:'smooth'});" class="cat-btn ${activeCategory === 'ALL' ? 'bg-amber-600 text-white font-extrabold' : 'bg-white border border-stone-200 text-stone-700 font-semibold'} text-[11px] px-3.5 py-1.5 rounded-full whitespace-nowrap">All Items</button>`;
+      drawerList.innerHTML = `<button type="button" onclick="filterCategory('ALL'); closeAllDrawers(); document.getElementById('catalogSection').scrollIntoView({behavior:'smooth'});" class="p-2.5 rounded-xl bg-amber-600 text-white text-xs font-bold text-left">All Items</button>`;
 
       allCategories.forEach(c => {
         const btn = document.createElement('button');
-        btn.className = `cat-btn ${activeCategory === c.id ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-stone-900 border border-stone-800 text-stone-300 font-semibold'} text-[11px] px-3.5 py-1.5 rounded-full whitespace-nowrap`;
+        btn.type = 'button';
+        btn.className = `cat-btn ${activeCategory === c.id ? 'bg-amber-600 text-white font-extrabold' : 'bg-white border border-stone-200 text-stone-700 font-semibold'} text-[11px] px-3.5 py-1.5 rounded-full whitespace-nowrap`;
         btn.textContent = c.name;
-        btn.onclick = () => filterCategory(c.id, btn);
+        btn.onclick = () => {
+          filterCategory(c.id, btn);
+          document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
+        };
         bar.appendChild(btn);
 
         const dBtn = document.createElement('button');
-        dBtn.className = 'p-3 rounded-xl bg-stone-100 hover:bg-amber-50 text-stone-800 text-xs font-bold text-left truncate';
+        dBtn.type = 'button';
+        dBtn.className = 'p-2.5 rounded-xl bg-stone-100 hover:bg-amber-50 text-stone-800 text-xs font-bold text-left truncate';
         dBtn.textContent = c.name;
         dBtn.onclick = () => {
           filterCategory(c.id);
@@ -2125,10 +2083,10 @@
       activeCategory = catId;
       if (catId !== 'ALL') armStoreBackGuard();
       document.querySelectorAll('.cat-btn').forEach(b => {
-        b.className = 'cat-btn bg-stone-900 border border-stone-800 text-stone-300 text-[11px] font-semibold px-3.5 py-1.5 rounded-full whitespace-nowrap';
+        b.className = 'cat-btn bg-white border border-stone-200 text-stone-700 text-[11px] font-semibold px-3.5 py-1.5 rounded-full whitespace-nowrap';
       });
       if (activeBtn) {
-        activeBtn.className = 'cat-btn bg-amber-500 text-stone-950 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full whitespace-nowrap';
+        activeBtn.className = 'cat-btn bg-amber-600 text-white text-[11px] font-extrabold px-3.5 py-1.5 rounded-full whitespace-nowrap';
       } else {
         renderCategoryButtons(allCategories);
       }
@@ -2158,13 +2116,13 @@
           ? `<div class="flex items-baseline gap-1 mt-0.5 flex-wrap"><span class="text-xs font-extrabold text-amber-700">₦${effectivePrice.toLocaleString()}</span><span class="text-[10px] text-stone-400 line-through">₦${originalPrice.toLocaleString()}</span></div>`
           : `<p class="text-xs font-extrabold text-amber-700 mt-0.5">₦${effectivePrice.toLocaleString()}</p>`;
         return `
-          <div onclick="openProductDetail('${p.id}')" class="shrink-0 w-36 sm:w-44 bg-white rounded-xl overflow-hidden shadow-xs flex flex-col justify-between cursor-pointer">
-            <div class="img-skeleton-box w-full h-36 sm:h-40">
+          <div onclick="openProductDetail('${p.id}')" class="shrink-0 w-36 sm:w-40 bg-stone-50 rounded-xl overflow-hidden border border-stone-200/70 flex flex-col justify-between cursor-pointer">
+            <div class="img-skeleton-box w-full h-36">
               <img src="${img}" alt="${p.name}" loading="${idx < 4 ? 'eager' : 'lazy'}" decoding="async"
                 onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgLoad(this)"
-                class="catalog-img-smooth w-full h-36 sm:h-40 object-cover object-top" />
+                class="catalog-img-smooth w-full h-36 object-cover object-top" />
             </div>
-            <div class="p-2.5">
+            <div class="p-2 bg-white">
               <p class="text-xs font-semibold text-stone-900 truncate">${p.name}</p>
               ${priceDisplay}
             </div>
@@ -2176,7 +2134,7 @@
     function renderProducts(list) {
       const grid = document.getElementById('productsGrid');
       if (!list.length) {
-        grid.innerHTML = '<p class="col-span-full text-center text-stone-400 py-12 text-xs">No matching products found.</p>';
+        grid.innerHTML = '<p class="col-span-full text-center text-stone-500 py-12 text-xs">No matching products found.</p>';
         return;
       }
       grid.innerHTML = list.map((p, idx) => {
@@ -2184,7 +2142,7 @@
         const out = (p.stock_quantity !== null && p.stock_quantity <= 0);
         const isAboveFold = idx < 8;
         return `
-          <div onclick="openProductDetail('${p.id}')" class="bg-white rounded-2xl border border-stone-200/80 overflow-hidden flex flex-col justify-between shadow-sm cursor-pointer hover:border-amber-500 transition">
+          <div onclick="openProductDetail('${p.id}')" class="bg-white rounded-2xl border border-stone-200/80 overflow-hidden flex flex-col justify-between shadow-2xs cursor-pointer hover:border-amber-500 transition">
             <div class="img-skeleton-box w-full h-36 sm:h-40">
               <img src="${img}" alt="${p.name}"
                 loading="${isAboveFold ? 'eager' : 'lazy'}"
@@ -2202,7 +2160,7 @@
               <div class="mt-2">
                 ${formatPriceHtml(p, 'text-xs sm:text-sm')}
                 <button type="button" ${out ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart('${p.id}', this)"
-                  class="mt-1.5 w-full ${out ? 'bg-stone-200 text-stone-500' : 'bg-stone-900 hover:bg-amber-600 text-white'} text-[11px] font-bold py-1.5 rounded-xl transition">
+                  class="mt-1.5 w-full ${out ? 'bg-stone-200 text-stone-500' : 'bg-amber-600 hover:bg-amber-700 text-white'} text-[11px] font-bold py-1.5 rounded-xl transition">
                   ${out ? 'Sold Out' : 'Add to Cart'}
                 </button>
               </div>
@@ -2314,15 +2272,15 @@
       }
 
       box.innerHTML = cart.map((item, i) => `
-        <div class="flex items-center justify-between gap-2 bg-stone-50 p-2.5 rounded-xl border border-stone-200/90">
+        <div class="flex items-center justify-between gap-2 bg-white p-2.5 rounded-xl border border-stone-200/80">
           <div class="min-w-0">
             <p class="text-xs font-bold text-stone-900 truncate">${item.name}</p>
-            <p class="text-xs text-amber-800 font-extrabold mt-0.5">₦${(item.price * item.qty).toLocaleString()}</p>
+            <p class="text-xs text-amber-700 font-extrabold mt-0.5">₦${(item.price * item.qty).toLocaleString()}</p>
           </div>
           <div class="flex items-center gap-1.5 shrink-0">
-            <button type="button" onclick="changeQty(${i}, -1)" class="w-6 h-6 bg-stone-200 hover:bg-stone-300 rounded-lg font-bold text-xs">-</button>
+            <button type="button" onclick="changeQty(${i}, -1)" class="w-6 h-6 bg-stone-100 hover:bg-stone-200 rounded-lg font-bold text-xs">-</button>
             <span class="text-xs font-bold w-4 text-center">${item.qty}</span>
-            <button type="button" onclick="changeQty(${i}, 1)" class="w-6 h-6 bg-stone-200 hover:bg-stone-300 rounded-lg font-bold text-xs">+</button>
+            <button type="button" onclick="changeQty(${i}, 1)" class="w-6 h-6 bg-stone-100 hover:bg-stone-200 rounded-lg font-bold text-xs">+</button>
           </div>
         </div>`).join('');
     }
@@ -2436,7 +2394,7 @@
 
       if (error) {
         btn.disabled = false;
-        btn.textContent = 'I Have Paid — Confirm Order & Get Tracking Code';
+        btn.textContent = 'I Have Paid — Confirm Order';
         return alert('Error placing order: ' + error.message);
       }
 
@@ -2491,7 +2449,7 @@
       setFulfillmentMode('delivery');
       toggleCart(false);
       btn.disabled = false;
-      btn.textContent = 'I Have Paid — Confirm Order & Get Tracking Code';
+      btn.textContent = 'I Have Paid — Confirm Order';
 
       applyStatusBadgeStyle(
         document.getElementById('successOrderStatusBadge'),
