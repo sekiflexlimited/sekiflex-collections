@@ -69,6 +69,26 @@
     .track-zoom-btn:active {
       transform: scale(0.96);
     }
+
+    /* Distinct Category Storefront Arrangement (Different from Home 2-Col Grid) */
+    .products-grid-home {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.625rem;
+    }
+
+    .products-grid-category-mode {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    @media (min-width: 640px) {
+      .products-grid-category-mode {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.875rem;
+      }
+    }
   </style>
 </head>
 <body class="sekiflex-luxury-bg text-stone-100 antialiased pb-20">
@@ -85,7 +105,7 @@
           Sekiflex <span class="text-amber-400 italic font-semibold">Collections</span>
         </h2>
         <p id="authSubtitle" class="text-xs text-stone-300 leading-relaxed">
-          Please register or log in an account to continue to checkout.
+          Please register an account or log in first to continue to checkout.
         </p>
       </div>
 
@@ -269,7 +289,7 @@
 
     <div class="max-w-5xl mx-auto px-3 pt-2.5 space-y-3">
 
-      <!-- LUXURY PROMO CAROUSEL (LARGE FULL-BOX PICTURES + CLICKABLE DISPATCH RIDER TRACKER) -->
+      <!-- LUXURY PROMO CAROUSEL (LARGE FULL-BOX PICTURES + CLICKABLE SEKIFLEX DISPATCH RIDER TRACKER) -->
       <section id="heroCarouselSection">
         <div id="bannerCarousel" class="flex gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
 
@@ -313,18 +333,18 @@
               class="w-36 sm:w-44 h-36 sm:h-40 object-cover object-center rounded-xl border border-amber-400/35 shrink-0 shadow-md" />
           </div>
 
-          <!-- Slide 3: Clickable Nationwide Delivery with Dispatch Rider, Bike & Cargo Visuals -->
+          <!-- Slide 3: Clickable Nationwide Delivery with Sekiflex Collections Dispatch Rider & Cargo Visuals -->
           <div onclick="window.location.href='track.html'" role="button" tabindex="0"
             class="promo-slide cursor-pointer snap-start shrink-0 w-full sm:w-[490px] min-h-[168px] rounded-2xl bg-gradient-to-r from-[#14161e] via-[#1a1812] to-amber-950/75 text-white p-3 flex items-stretch justify-between gap-3 border border-amber-400/35 hover:border-amber-400 transition shadow-lg overflow-hidden">
             <div class="space-y-1.5 flex-1 min-w-0 flex flex-col justify-between py-0.5">
               <div class="space-y-1">
                 <span class="inline-block text-[9px] font-bold uppercase tracking-widest bg-emerald-500/20 text-emerald-300 border border-emerald-400/35 px-2.5 py-0.5 rounded-full">
-                  🏍️ Express Rider &amp; Cargo
+                  🏍️ Sekiflex Collections Dispatch
                 </span>
                 <h2 class="font-editorial text-base sm:text-lg font-bold leading-tight">
                   Nationwide &amp; Global Delivery
                 </h2>
-                <p class="text-[11px] text-stone-300">Fast dispatch riders &amp; cargo shipping from Uyo</p>
+                <p class="text-[11px] text-stone-300">Sekiflex Collections dispatch riders &amp; cargo from Uyo</p>
               </div>
               <div>
                 <a href="track.html" onclick="event.stopPropagation();"
@@ -335,13 +355,13 @@
               </div>
             </div>
 
-            <!-- Dispatch Rider Machine + Cargo Visual Box -->
+            <!-- Sekiflex Collections Dispatch Rider Machine + Cargo Visual Box -->
             <div class="relative w-36 sm:w-44 h-36 sm:h-40 rounded-xl overflow-hidden border border-amber-400/35 shrink-0 shadow-md bg-stone-950">
               <img src="https://images.unsplash.com/photo-1617347454431-f49d7ff5c3b1?auto=format&fit=crop&w=600&q=85"
-                alt="Dispatch Rider Machine and Cargo Delivery"
+                alt="Sekiflex Collections Dispatch Rider and Cargo"
                 class="w-full h-full object-cover object-center" />
               <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/55 to-transparent px-2 py-1.5 flex items-center justify-between text-[10px] font-extrabold text-amber-300">
-                <span>🏍️ Rider</span>
+                <span>🏍️ Sekiflex Rider</span>
                 <span>📦 Cargo</span>
               </div>
             </div>
@@ -362,8 +382,18 @@
         </div>
       </section>
 
-      <!-- CATEGORY BAR & 2-COLUMN LUXURY PRODUCT GRID -->
+      <!-- CATEGORY BAR & PRODUCT SHOWCASE (2-COL ON HOME, SEPARATE CATEGORY ARRANGEMENT IN CATEGORIES VIEW) -->
       <section id="catalogSection" class="space-y-2.5 scroll-mt-24">
+        <div id="categoryViewBanner" class="hidden rounded-2xl bg-gradient-to-r from-[#171511] via-[#1d1912] to-amber-950/60 border border-amber-400/35 px-3.5 py-2.5 flex items-center justify-between gap-2">
+          <div class="min-w-0">
+            <p class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Sekiflex Store Categories</p>
+            <p id="categoryViewSubtitle" class="text-xs text-stone-200 truncate">Curated category showcase layout</p>
+          </div>
+          <button type="button" onclick="filterCategory('ALL')" class="text-[11px] font-extrabold bg-stone-900 hover:bg-stone-800 text-amber-300 border border-amber-400/30 px-2.5 py-1 rounded-full shrink-0">
+            Home Grid
+          </button>
+        </div>
+
         <div class="flex items-center justify-between gap-2">
           <h2 id="catalogHeading" class="font-editorial font-bold text-base sm:text-lg text-amber-300">All Items</h2>
           <span id="productResultCount" class="text-[11px] font-medium text-stone-400 shrink-0"></span>
@@ -373,8 +403,8 @@
           <button type="button" onclick="filterCategory('ALL', this)" class="cat-btn bg-amber-500 text-stone-950 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full whitespace-nowrap">All Items</button>
         </div>
 
-        <!-- 2-COLUMN PRODUCT GRID -->
-        <div id="productsGrid" class="grid grid-cols-2 gap-2.5">
+        <!-- PRODUCT GRID -->
+        <div id="productsGrid" class="products-grid-home">
           <div class="bg-[#12141a] border border-stone-800 rounded-2xl p-2.5 animate-pulse space-y-2">
             <div class="w-full h-40 bg-stone-800 rounded-xl"></div>
             <div class="h-3.5 bg-stone-800 rounded w-3/4"></div>
@@ -615,7 +645,7 @@
     </div>
   </div>
 
-  <!-- CATEGORIES SHEET -->
+  <!-- CATEGORIES SHEET (KEPT FOR OPTIONAL BROWSING) -->
   <div id="categoriesDrawer" onclick="if(event.target === this) closeAllDrawers();" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-[#12141a] text-white w-full max-w-sm rounded-t-3xl sm:rounded-3xl p-4 max-h-[82vh] overflow-y-auto space-y-3 shadow-2xl border border-amber-400/25">
       <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
@@ -847,6 +877,8 @@
     let storeReviews = JSON.parse(localStorage.getItem('sekiflex_reviews_v1') || '[]');
     let selectedStarRating = 5;
     let activeCategory = 'ALL';
+    let categoryBrowseMode = false;
+    let categoryCycleIdx = 0;
     let searchQuery = '';
     let pictureSearchScores = null;
     let pictureSearchFileName = '';
@@ -902,6 +934,7 @@
       const modal = document.getElementById('successModal');
       if (modal) modal.classList.add('hidden');
       closeAllDrawers();
+      categoryBrowseMode = false;
       setActiveBottomTab('home');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       armStoreBackGuard();
@@ -915,7 +948,8 @@
         return;
       }
 
-      if (activeCategory !== 'ALL' || searchQuery || pictureSearchScores || window.scrollY > 180) {
+      if (activeCategory !== 'ALL' || categoryBrowseMode || searchQuery || pictureSearchScores || window.scrollY > 180) {
+        categoryBrowseMode = false;
         clearPictureSearch();
         clearSearch();
         filterCategory('ALL');
@@ -999,6 +1033,7 @@
     }
 
     function jumpToAllItems() {
+      categoryBrowseMode = false;
       filterCategory('ALL');
       const sec = document.getElementById('catalogSection');
       if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1471,16 +1506,38 @@
       });
     }
 
+    function openStoreCategoriesView() {
+      closeAllDrawers();
+      armStoreBackGuard();
+      categoryBrowseMode = true;
+      setActiveBottomTab('categories');
+
+      if (allCategories.length) {
+        const catObj = allCategories[categoryCycleIdx % allCategories.length];
+        categoryCycleIdx += 1;
+        activeCategory = catObj.id;
+      } else {
+        activeCategory = 'ALL';
+      }
+
+      renderCategoryButtons(allCategories);
+      applyCatalogFilters();
+      const sec = document.getElementById('catalogSection');
+      if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
     function switchBottomTab(tab) {
       closeAllDrawers();
       setActiveBottomTab(tab);
 
       if (tab === 'home') {
+        categoryBrowseMode = false;
+        activeCategory = 'ALL';
+        renderCategoryButtons(allCategories);
+        applyCatalogFilters();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (tab === 'categories') {
-        armStoreBackGuard();
-        renderCategoryButtons(allCategories);
-        document.getElementById('categoriesDrawer').classList.remove('hidden');
+        openStoreCategoriesView();
       } else if (tab === 'cart') {
         openCartReview();
       } else if (tab === 'account') {
@@ -1491,6 +1548,7 @@
 
     function resetToHome(e) {
       if (e) e.preventDefault();
+      categoryBrowseMode = false;
       clearPictureSearch();
       clearSearch();
       filterCategory('ALL');
@@ -1505,7 +1563,7 @@
         title.textContent = 'Delivery & Walk-In Store Pickup';
         body.innerHTML = `
           <p><strong class="text-white">Free Walk-In Pickup (Uyo HQ):</strong><br/>Urua Ekpa, Uyo, Akwa Ibom State (Mon–Sat: 7:30 AM – 9:00 PM, Sun: 2:00 PM – 9:00 PM).</p>
-          <p><strong class="text-white">Nationwide &amp; Global Dispatch:</strong><br/>Delivery across all 36 states in Nigeria (2–4 business days) and internationally to the UK, USA, Canada, and Ghana (5–10 business days).</p>
+          <p><strong class="text-white">Sekiflex Collections Dispatch &amp; Cargo:</strong><br/>Delivery across all 36 states in Nigeria (2–4 business days) and internationally to the UK, USA, Canada, and Ghana (5–10 business days).</p>
           <p><strong class="text-white">Order Tracking:</strong><br/>Every order gets a tracking code (<code class="text-amber-300">SC-2026-XXXXXX</code>) usable on the Track Order page.</p>
         `;
       } else if (type === 'privacy') {
@@ -1609,7 +1667,28 @@
         filtered.sort((a, b) => (pictureSearchScores[String(b.id)] ?? -1) - (pictureSearchScores[String(a.id)] ?? -1));
       }
 
+      const grid = document.getElementById('productsGrid');
+      const catBanner = document.getElementById('categoryViewBanner');
+      const catSubtitle = document.getElementById('categoryViewSubtitle');
       const heading = document.getElementById('catalogHeading');
+      const catObj = allCategories.find(c => String(c.id) === String(activeCategory));
+
+      const isCategoryArrangement = categoryBrowseMode || (activeCategory !== 'ALL' && !searchQuery && !pictureSearchScores);
+      if (grid) {
+        grid.className = isCategoryArrangement ? 'products-grid-category-mode' : 'products-grid-home';
+      }
+
+      if (catBanner && catSubtitle) {
+        if (isCategoryArrangement) {
+          catBanner.classList.remove('hidden');
+          catSubtitle.textContent = catObj
+            ? `${catObj.name} • Dedicated category card showcase`
+            : 'Dedicated category card showcase';
+        } else {
+          catBanner.classList.add('hidden');
+        }
+      }
+
       if (pictureSearchScores && searchQuery) {
         heading.textContent = `Photo & "${document.getElementById('storeSearchInput').value.trim()}" Matches`;
       } else if (pictureSearchScores) {
@@ -1617,21 +1696,20 @@
       } else if (searchQuery) {
         heading.textContent = `Search results for "${document.getElementById('storeSearchInput').value.trim()}"`;
       } else if (activeCategory !== 'ALL') {
-        const catObj = allCategories.find(c => String(c.id) === String(activeCategory));
-        heading.textContent = catObj ? catObj.name : 'Filtered Products';
+        heading.textContent = catObj ? `${catObj.name} Collection` : 'Category Collection';
       } else {
         heading.textContent = 'All Items';
       }
 
       document.getElementById('productResultCount').textContent = `${filtered.length} item${filtered.length === 1 ? '' : 's'}`;
-      renderProducts(filtered);
+      renderProducts(filtered, isCategoryArrangement);
     }
 
     function openAuthGate(defaultTab = 'signup', returnToCheckout = false, noticeText = '') {
       returnToCheckoutAfterAuth = Boolean(returnToCheckout);
       armStoreBackGuard();
       document.getElementById('authSubtitle').textContent = returnToCheckoutAfterAuth
-        ? 'You must register or sign in first before entering delivery details and payment.'
+        ? 'You do not have an active account session yet — please register or log in to continue to checkout.'
         : 'Sign in or register to your Sekiflex Collections account.';
 
       switchAuthView(defaultTab);
@@ -2042,8 +2120,8 @@
       const bar = document.getElementById('categoryBar');
       const drawerList = document.getElementById('drawerCategoriesList');
 
-      bar.innerHTML = `<button type="button" onclick="filterCategory('ALL', this); document.getElementById('catalogSection').scrollIntoView({behavior:'smooth'});" class="cat-btn ${activeCategory === 'ALL' ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-[#12141a] border border-stone-800 text-stone-300 font-semibold'} text-[11px] px-3.5 py-1.5 rounded-full whitespace-nowrap">All Items (${allProducts.length})</button>`;
-      drawerList.innerHTML = `<button type="button" onclick="filterCategory('ALL'); closeAllDrawers(); setActiveBottomTab('home'); document.getElementById('catalogSection').scrollIntoView({behavior:'smooth'});" class="p-3 rounded-xl bg-amber-500 text-stone-950 text-xs font-extrabold text-left flex items-center justify-between"><span>All Store Items</span><span>(${allProducts.length})</span></button>`;
+      bar.innerHTML = `<button type="button" onclick="categoryBrowseMode = false; filterCategory('ALL', this); document.getElementById('catalogSection').scrollIntoView({behavior:'smooth'});" class="cat-btn ${activeCategory === 'ALL' ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-[#12141a] border border-stone-800 text-stone-300 font-semibold'} text-[11px] px-3.5 py-1.5 rounded-full whitespace-nowrap">All Items (${allProducts.length})</button>`;
+      drawerList.innerHTML = `<button type="button" onclick="categoryBrowseMode = false; filterCategory('ALL'); closeAllDrawers(); setActiveBottomTab('home'); document.getElementById('catalogSection').scrollIntoView({behavior:'smooth'});" class="p-3 rounded-xl bg-amber-500 text-stone-950 text-xs font-extrabold text-left flex items-center justify-between"><span>All Store Items</span><span>(${allProducts.length})</span></button>`;
 
       allCategories.forEach(c => {
         const countInCat = allProducts.filter(p => String(p.category_id) === String(c.id)).length;
@@ -2052,6 +2130,7 @@
         btn.className = `cat-btn ${String(activeCategory) === String(c.id) ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-[#12141a] border border-stone-800 text-stone-300 font-semibold'} text-[11px] px-3.5 py-1.5 rounded-full whitespace-nowrap`;
         btn.textContent = `${c.name} (${countInCat})`;
         btn.onclick = () => {
+          categoryBrowseMode = true;
           filterCategory(c.id, btn);
           document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
         };
@@ -2062,9 +2141,10 @@
         dBtn.className = 'p-3 rounded-xl bg-stone-950 hover:bg-stone-800 border border-amber-400/20 text-stone-100 text-xs font-bold text-left flex items-center justify-between gap-1.5 transition';
         dBtn.innerHTML = `<span class="truncate">${c.name}</span><span class="text-[10px] font-extrabold text-amber-400 shrink-0">(${countInCat})</span>`;
         dBtn.onclick = () => {
+          categoryBrowseMode = true;
           filterCategory(c.id);
           closeAllDrawers();
-          setActiveBottomTab('home');
+          setActiveBottomTab('categories');
           document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
         };
         drawerList.appendChild(dBtn);
@@ -2151,6 +2231,7 @@
 
     function filterCategory(catId, activeBtn) {
       activeCategory = catId;
+      if (catId === 'ALL') categoryBrowseMode = false;
       if (catId !== 'ALL') armStoreBackGuard();
       document.querySelectorAll('.cat-btn').forEach(b => {
         b.className = 'cat-btn bg-[#12141a] border border-stone-800 text-stone-300 text-[11px] font-semibold px-3.5 py-1.5 rounded-full whitespace-nowrap';
@@ -2201,12 +2282,48 @@
       startFeaturedAutoScroll();
     }
 
-    function renderProducts(list) {
+    function renderProducts(list, isCategoryArrangement = false) {
       const grid = document.getElementById('productsGrid');
       if (!list.length) {
         grid.innerHTML = '<p class="col-span-full text-center text-stone-400 py-12 text-xs">No matching products found.</p>';
         return;
       }
+
+      if (isCategoryArrangement) {
+        grid.innerHTML = list.map((p, idx) => {
+          const img = (p.images && p.images[0]) || p.image_url || 'https://placehold.co/400x500?text=Sekiflex';
+          const out = (p.stock_quantity !== null && p.stock_quantity <= 0);
+          const catObj = allCategories.find(c => String(c.id) === String(p.category_id));
+          const catTag = catObj ? catObj.name : 'Category Edit';
+          return `
+            <div onclick="openProductDetail('${p.id}')" class="bg-[#12141a] rounded-2xl border border-amber-400/25 overflow-hidden flex items-stretch gap-3 p-2.5 shadow-md cursor-pointer hover:border-amber-400/60 transition">
+              <div class="img-skeleton-box w-28 sm:w-32 h-32 bg-stone-950 flex items-center justify-center p-1 rounded-xl shrink-0">
+                <img src="${img}" alt="${p.name}"
+                  loading="${idx < 4 ? 'eager' : 'lazy'}"
+                  decoding="async"
+                  onload="handleCatalogImgLoad(this)"
+                  onerror="handleCatalogImgLoad(this)"
+                  class="catalog-img-smooth w-full h-full object-contain object-center rounded-lg" />
+              </div>
+              <div class="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                <div>
+                  <span class="inline-block text-[9px] font-extrabold uppercase tracking-wider bg-amber-500/15 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full mb-1">${catTag}</span>
+                  <h3 class="font-bold text-sm text-white truncate">${p.name}</h3>
+                  <p class="text-[11px] text-stone-400 line-clamp-2 mt-0.5">${p.description || 'Tap to view details'}</p>
+                </div>
+                <div class="mt-2 flex items-center justify-between gap-2">
+                  <div>${formatPriceHtml(p, 'text-sm')}</div>
+                  <button type="button" ${out ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart('${p.id}', this)"
+                    class="${out ? 'bg-stone-800 text-stone-500' : 'bg-amber-500 hover:bg-amber-400 text-stone-950'} text-[11px] font-extrabold px-3 py-1.5 rounded-xl transition shrink-0">
+                    ${out ? 'Sold Out' : 'Add to Cart'}
+                  </button>
+                </div>
+              </div>
+            </div>`;
+        }).join('');
+        return;
+      }
+
       grid.innerHTML = list.map((p, idx) => {
         const img = (p.images && p.images[0]) || p.image_url || 'https://placehold.co/400x500?text=Sekiflex';
         const out = (p.stock_quantity !== null && p.stock_quantity <= 0);
@@ -2390,7 +2507,7 @@
         openAuthGate(
           'signup',
           true,
-          'Please register an account or log in first so you can enter your delivery details and complete payment.'
+          'You haven’t signed in yet. Please register an account or log in to continue to checkout.'
         );
         return;
       }
@@ -2423,7 +2540,7 @@
         openAuthGate(
           'signup',
           true,
-          'Please register an account or log in first so you can enter your delivery details and complete payment.'
+          'You haven’t signed in yet. Please register an account or log in to continue to checkout.'
         );
         return;
       }
@@ -2477,7 +2594,7 @@
         order_amount: sub,
         delivery_amount: currentShippingFee,
         status: orderStatus,
-        courier_name: fulfillmentMode === 'pickup' ? 'Walk-In Store Pickup (Uyo HQ)' : 'Sekiflex Dispatch',
+        courier_name: fulfillmentMode === 'pickup' ? 'Walk-In Store Pickup (Uyo HQ)' : 'Sekiflex Collections Dispatch',
         estimate_delivery: currentEstDays,
         country,
         currency: 'NGN',
