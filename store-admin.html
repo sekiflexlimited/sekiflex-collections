@@ -132,6 +132,11 @@
           </button>
         </div>
 
+        <label class="md:col-span-2 flex items-center gap-2 text-xs font-semibold text-purple-800 bg-purple-50 border border-purple-200 rounded-xl px-3 py-2 cursor-pointer">
+          <input id="banner1AutoPush" type="checkbox" checked class="accent-purple-700 w-4 h-4" />
+          <span>🔔 Automatically send Push Notification to all subscribed customers when I update Banner 1</span>
+        </label>
+
         <button type="submit" id="saveBannerBtn" class="md:col-span-2 bg-stone-900 hover:bg-amber-700 text-white rounded-xl text-xs font-bold py-3 transition">
           Update Banner 1
         </button>
@@ -175,6 +180,11 @@
             Remove Picture
           </button>
         </div>
+
+        <label class="md:col-span-2 flex items-center gap-2 text-xs font-semibold text-purple-800 bg-purple-50 border border-purple-200 rounded-xl px-3 py-2 cursor-pointer">
+          <input id="banner2AutoPush" type="checkbox" checked class="accent-purple-700 w-4 h-4" />
+          <span>🔔 Automatically send Push Notification to all subscribed customers when I update Banner 2</span>
+        </label>
 
         <button type="submit" id="saveBanner2Btn" class="md:col-span-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold py-3 transition">
           Update Banner 2
@@ -227,6 +237,12 @@
         </div>
 
         <textarea id="pDesc" rows="2" placeholder="Product description (sizes, fabric, details)" class="md:col-span-2 border rounded-lg px-3 py-2 text-sm"></textarea>
+
+        <label class="md:col-span-2 flex items-center gap-2 text-xs font-semibold text-purple-800 bg-purple-50 border border-purple-200 rounded-xl px-3 py-2 cursor-pointer">
+          <input id="prodAutoPush" type="checkbox" checked class="accent-purple-700 w-4 h-4" />
+          <span>🔔 Automatically notify all subscribed customers via Push Notification when published</span>
+        </label>
+
         <button type="submit" id="saveProdBtn" class="md:col-span-2 bg-stone-900 text-white py-2.5 rounded-xl text-sm font-semibold">
           Publish Product to Store
         </button>
@@ -340,6 +356,28 @@
         categoryKey: 'ALL'
       }
     ];
+
+    async function triggerAutoCustomerPush({ title, body, url = 'https://sekiflexcollections.com/' }) {
+      if (typeof window.sendSekiflexPushBroadcast !== 'function') return 0;
+      try {
+        const { data } = await window.sendSekiflexPushBroadcast({
+          title,
+          body,
+          url,
+          target: 'customers'
+        });
+        await sb.from('push_broadcasts').insert({
+          title,
+          body,
+          url,
+          created_by: 'store-admin-auto'
+        });
+        return data?.sent ?? 0;
+      } catch (err) {
+        console.warn('Auto push skipped:', err);
+        return 0;
+      }
+    }
 
     async function handlePushBroadcast(e) {
       e.preventDefault();
@@ -544,6 +582,10 @@
       btn.disabled = true;
       btn.textContent = 'Saving Banner 1...';
 
+      const bannerActive = document.getElementById('bannerActive').checked;
+      const bannerText = document.getElementById('bannerText').value.trim();
+      const shouldPush = document.getElementById('banner1AutoPush')?.checked;
+
       let bannerImgUrl = document.getElementById('bannerImgUrl').value.trim() || null;
       const file = document.getElementById('bannerImgFile').files[0];
 
@@ -561,12 +603,21 @@
 
       const { error } = await sb.from('store_settings').upsert({
         id: 'main',
-        banner_active: document.getElementById('bannerActive').checked,
-        banner_text: document.getElementById('bannerText').value.trim(),
+        banner_active: bannerActive,
+        banner_text: bannerText,
         banner_color: document.getElementById('bannerColor').value,
         banner_image_url: bannerImgUrl,
         updated_at: new Date().toISOString()
       });
+
+      let sentCount = 0;
+      if (!error && bannerActive && bannerText && shouldPush) {
+        sentCount = await triggerAutoCustomerPush({
+          title: 'Sekiflex Promo Announcement',
+          body: bannerText,
+          url: 'https://sekiflexcollections.com/'
+        });
+      }
 
       btn.disabled = false;
       btn.textContent = 'Update Banner 1';
@@ -574,7 +625,11 @@
 
       document.getElementById('bannerImgFile').value = '';
       loadData();
-      alert('Announcement Banner #1 updated!');
+      alert(
+        shouldPush && bannerActive
+          ? `Announcement Banner #1 updated & push alert sent to ${sentCount} customer device(s)!`
+          : 'Announcement Banner #1 updated!'
+      );
     }
 
     async function saveSecondBanner(e) {
@@ -582,6 +637,10 @@
       const btn = document.getElementById('saveBanner2Btn');
       btn.disabled = true;
       btn.textContent = 'Saving Banner 2...';
+
+      const banner2Active = document.getElementById('banner2Active').checked;
+      const banner2Text = document.getElementById('banner2Text').value.trim();
+      const shouldPush = document.getElementById('banner2AutoPush')?.checked;
 
       let banner2ImgUrl = document.getElementById('banner2ImgUrl').value.trim() || null;
       const file = document.getElementById('banner2ImgFile').files[0];
@@ -600,12 +659,21 @@
 
       const { error } = await sb.from('store_settings').upsert({
         id: 'second',
-        banner_active: document.getElementById('banner2Active').checked,
-        banner_text: document.getElementById('banner2Text').value.trim(),
+        banner_active: banner2Active,
+        banner_text: banner2Text,
         banner_color: document.getElementById('banner2Color').value,
         banner_image_url: banner2ImgUrl,
         updated_at: new Date().toISOString()
       });
+
+      let sentCount = 0;
+      if (!error && banner2Active && banner2Text && shouldPush) {
+        sentCount = await triggerAutoCustomerPush({
+          title: 'Sekiflex Store Notice',
+          body: banner2Text,
+          url: 'https://sekiflexcollections.com/'
+        });
+      }
 
       btn.disabled = false;
       btn.textContent = 'Update Banner 2';
@@ -613,7 +681,11 @@
 
       document.getElementById('banner2ImgFile').value = '';
       loadData();
-      alert('Announcement Banner #2 updated!');
+      alert(
+        shouldPush && banner2Active
+          ? `Announcement Banner #2 updated & push alert sent to ${sentCount} customer device(s)!`
+          : 'Announcement Banner #2 updated!'
+      );
     }
 
     async function addProduct(e) {
@@ -622,6 +694,7 @@
       btn.disabled = true;
       btn.textContent = 'Saving...';
 
+      const shouldPush = document.getElementById('prodAutoPush')?.checked;
       let imageUrl = document.getElementById('pImgUrl').value.trim();
       const imgFile = document.getElementById('pImgFile').files[0];
 
@@ -655,10 +728,11 @@
       const rawCompare = document.getElementById('pComparePrice').value.trim();
       const compareVal = rawCompare === '' ? null : Number(rawCompare);
       const prodName = document.getElementById('pName').value.trim();
+      const prodPrice = Number(document.getElementById('pPrice').value);
 
       const payload = {
         name: prodName,
-        base_price: Number(document.getElementById('pPrice').value),
+        base_price: prodPrice,
         stock_quantity: Number(document.getElementById('pStock').value || 10),
         description: document.getElementById('pDesc').value.trim(),
         images: imageUrl ? [imageUrl] : [],
@@ -673,9 +747,11 @@
 
       const { data: inserted, error } = await sb.from('products').insert(payload).select().maybeSingle();
 
-      btn.disabled = false;
-      btn.textContent = 'Publish Product to Store';
-      if (error) return alert(error.message);
+      if (error) {
+        btn.disabled = false;
+        btn.textContent = 'Publish Product to Store';
+        return alert(error.message);
+      }
 
       if (videoUrl) {
         const vidMap = JSON.parse(localStorage.getItem('sekiflex_product_videos_v1') || '{}');
@@ -684,9 +760,28 @@
         localStorage.setItem('sekiflex_product_videos_v1', JSON.stringify(vidMap));
       }
 
+      let sentCount = 0;
+      if (shouldPush) {
+        const productLink = inserted?.id
+          ? `https://sekiflexcollections.com/index.html?product=${encodeURIComponent(String(inserted.id))}`
+          : 'https://sekiflexcollections.com/';
+        sentCount = await triggerAutoCustomerPush({
+          title: `New Arrival: ${prodName}`,
+          body: `Now available for ₦${prodPrice.toLocaleString()} — Tap to view & order before it sells out!`,
+          url: productLink
+        });
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Publish Product to Store';
       e.target.reset();
+      if (document.getElementById('prodAutoPush')) document.getElementById('prodAutoPush').checked = true;
       loadData();
-      alert('Product added to store!');
+      alert(
+        shouldPush
+          ? `Product published & push notification sent to ${sentCount} customer device(s)!`
+          : 'Product added to store!'
+      );
     }
 
     function getProductPicture(prod) {
