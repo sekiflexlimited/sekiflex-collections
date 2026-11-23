@@ -90,38 +90,92 @@
       }
     }
 
-    /* Split-Screen Category Store View (Left Rail + 3-Column Visual Grid) */
+    /* Split-Screen Category Store View (Left Wall-Hung Promo Cards + Category Tabs + 3-Col Grid) */
     .skf-cat-layout {
       display: flex;
       min-height: calc(100vh - 115px);
       background: #0c0d10;
     }
     .skf-cat-sidebar {
-      width: 112px;
+      width: 124px;
       flex-shrink: 0;
       background: #101218;
-      border-right: 1px solid rgba(245, 158, 11, 0.2);
+      border-right: 1px solid rgba(245, 158, 11, 0.22);
       overflow-y: auto;
-      padding-bottom: 84px;
+      padding: 8px 6px 88px;
     }
     .skf-cat-tab {
       width: 100%;
       text-align: left;
-      padding: 12px 10px;
+      padding: 9px 8px;
       font-size: 11px;
       line-height: 1.25;
+      border-radius: 10px;
       border-left: 3px solid transparent;
       color: #a8a29e;
       background: transparent;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
+      margin-bottom: 4px;
       transition: all 0.15s ease;
     }
     .skf-cat-tab.is-active {
-      background: #181a22;
+      background: #1b1d26;
       color: #f59e0b;
       font-weight: 800;
       border-left-color: #f59e0b;
     }
+
+    /* Wall-Hung / Framed Promo Cards Column on Left */
+    .skf-wall-section {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(245, 158, 11, 0.25);
+    }
+    .skf-wall-card {
+      position: relative;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      background: #17181f;
+      border: 2px solid rgba(245, 158, 11, 0.45);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.65), inset 0 0 0 2px #0c0d10;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .skf-wall-card:nth-child(odd) {
+      transform: rotate(-1.2deg);
+    }
+    .skf-wall-card:nth-child(even) {
+      transform: rotate(1.2deg);
+    }
+    .skf-wall-card:hover, .skf-wall-card:active {
+      transform: rotate(0deg) scale(1.03);
+      border-color: #f59e0b;
+    }
+    .skf-wall-pin {
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+      background: #f59e0b;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+    }
+    .skf-wall-card img {
+      width: 100%;
+      height: 78px;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+    .skf-wall-caption {
+      padding: 5px 6px;
+      background: linear-gradient(180deg, rgba(16,17,22,0.96), rgba(10,11,14,0.99));
+      text-align: center;
+    }
+
     .skf-cat-main {
       flex: 1;
       min-width: 0;
@@ -496,7 +550,7 @@
     </div>
   </div>
 
-  <!-- SPLIT-SCREEN CATEGORY STORE VIEW (LEFT RAIL + 3-COLUMN VISUAL GRID) -->
+  <!-- SPLIT-SCREEN CATEGORY STORE VIEW (LEFT RAIL + 5 WALL-HUNG PROMO CARDS + 3-COLUMN VISUAL GRID) -->
   <div id="splitCategoryStoreView" class="hidden">
     <header class="sticky top-0 z-40 bg-[#0c0d10]/95 backdrop-blur-md border-b border-amber-400/20 px-3 py-2.5 shadow-lg">
       <div class="max-w-5xl mx-auto flex items-center gap-2">
@@ -512,15 +566,29 @@
             Search
           </button>
         </form>
-        <a href="track.html" class="track-zoom-btn bg-amber-500 text-stone-950 text-[11px] font-extrabold px-2.5 py-1.5 rounded-full shrink-0">
-          📦 Track
-        </a>
+        <button type="button" onclick="openAdminPromoCardsModal()"
+          class="bg-stone-900 hover:bg-stone-800 border border-amber-400/35 text-amber-300 text-[11px] font-bold px-2.5 py-1.5 rounded-full shrink-0">
+          🖼️ Edit Wall
+        </button>
       </div>
     </header>
 
     <div class="max-w-5xl mx-auto skf-cat-layout">
-      <!-- Left Category Sidebar Rail -->
-      <aside id="splitCategorySidebar" class="skf-cat-sidebar no-scrollbar"></aside>
+      <!-- Left Category Sidebar Rail + 5 Wall-Hung Promo Cards -->
+      <aside class="skf-cat-sidebar no-scrollbar">
+        <div id="splitCategorySidebar"></div>
+
+        <!-- 5 Wall-Hung / Framed Promo Cards -->
+        <div class="skf-wall-section">
+          <div class="flex items-center justify-between px-1 mb-2">
+            <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-400">Wall Promos</span>
+            <button type="button" onclick="openAdminPromoCardsModal()" class="text-[9px] font-bold text-stone-400 hover:text-amber-300 underline">
+              Admin
+            </button>
+          </div>
+          <div id="wallHungPromoCardsList"></div>
+        </div>
+      </aside>
 
       <!-- Right Category Showcase Grid -->
       <main class="skf-cat-main">
@@ -537,6 +605,32 @@
 
         <div id="splitCategoryGrid" class="skf-cat-grid"></div>
       </main>
+    </div>
+  </div>
+
+  <!-- ADMIN PROMO CARDS PICTURE MANAGER MODAL -->
+  <div id="adminPromoCardsModal" onclick="if(event.target === this) closeAdminPromoCardsModal();" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-xs flex items-center justify-center p-3 overflow-y-auto">
+    <div class="bg-[#12141a] border border-amber-400/35 rounded-3xl max-w-lg w-full p-5 space-y-3.5 shadow-2xl my-auto max-h-[88vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
+        <div>
+          <h3 class="font-editorial text-lg font-bold text-amber-300">Wall-Hung Promo Cards Admin</h3>
+          <p class="text-[11px] text-stone-400">Add or change pictures &amp; promo labels for the 5 wall-hung cards</p>
+        </div>
+        <button type="button" onclick="closeAdminPromoCardsModal()" class="w-7 h-7 rounded-full bg-stone-900 text-stone-400 hover:text-white font-bold">&times;</button>
+      </div>
+
+      <div id="adminPromoCardsFormList" class="space-y-3"></div>
+
+      <div class="flex gap-2 pt-2">
+        <button type="button" onclick="resetDefaultWallPromoCards()"
+          class="px-3.5 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 border border-stone-700 text-xs font-bold text-stone-300">
+          Reset Defaults
+        </button>
+        <button type="button" onclick="saveAdminWallPromoCards()"
+          class="flex-1 bg-amber-500 hover:bg-amber-400 text-stone-950 py-2.5 rounded-xl text-xs font-extrabold transition">
+          Save &amp; Update Wall Cards ✓
+        </button>
+      </div>
     </div>
   </div>
 
@@ -627,6 +721,12 @@
       </div>
 
       <div class="divide-y divide-stone-800/90 text-xs font-semibold text-stone-200">
+        <div class="py-2 flex items-center justify-between">
+          <span>Wall Promo Cards Admin</span>
+          <button type="button" onclick="closeAllDrawers(); openAdminPromoCardsModal();" class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-400/35 px-3 py-1 rounded-full text-[11px] font-bold transition">
+            Edit →
+          </button>
+        </div>
         <div class="py-2 flex items-center justify-between">
           <span>Track My Orders</span>
           <a href="track.html" class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-400/35 px-3 py-1 rounded-full text-[11px] font-bold transition">
@@ -802,15 +902,15 @@
   </div>
 
   <!-- LUXURY MODERATE CART & CHECKOUT SHEET (CART FIRST, WAYBILL ON TAP) -->
-  <div id="cartDrawer" onclick="if(event.target === this) toggleCart(false);" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex justify-end p-0 sm:p-3">
-    <div class="bg-[#12141a] text-white w-full max-w-sm h-full sm:h-auto sm:max-h-[90vh] sm:my-auto sm:rounded-3xl border border-amber-400/25 overflow-y-auto p-4 flex flex-col justify-between shadow-2xl space-y-3.5">
+  <div id="cartDrawer" onclick="if(event.target === this) skfHandleKeepShopping(event);" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex justify-end p-0 sm:p-3">
+    <div onclick="event.stopPropagation();" class="bg-[#12141a] text-white w-full max-w-sm h-full sm:h-auto sm:max-h-[90vh] sm:my-auto sm:rounded-3xl border border-amber-400/25 overflow-y-auto p-4 flex flex-col justify-between shadow-2xl space-y-3.5">
       <div class="space-y-3.5">
         <div class="flex items-center justify-between bg-stone-950 border border-amber-400/20 rounded-2xl px-3.5 py-2.5">
           <div>
             <p class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Sekiflex Bag</p>
             <h2 id="cartDrawerHeading" class="font-editorial font-bold text-base text-white">Your Shopping Cart</h2>
           </div>
-          <button type="button" onclick="toggleCart(false)" class="w-7 h-7 rounded-full bg-stone-900 hover:bg-stone-800 text-stone-400 hover:text-white text-base font-bold">&times;</button>
+          <button type="button" onclick="skfHandleKeepShopping(event)" class="w-7 h-7 rounded-full bg-stone-900 hover:bg-stone-800 text-stone-400 hover:text-white text-base font-bold">&times;</button>
         </div>
 
         <!-- Step A: Cart Items List -->
@@ -824,11 +924,11 @@
           </div>
 
           <div class="flex gap-2">
-            <button type="button" onclick="toggleCart(false)"
+            <button type="button" id="skfKeepShoppingBtn"
               class="px-3 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 text-xs font-bold transition">
               ← Keep Shopping
             </button>
-            <button type="button" id="openWaybillBtn" onclick="openWaybillSection()"
+            <button type="button" id="openWaybillBtn"
               class="flex-1 bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-2.5 rounded-xl text-xs transition shadow-2xs">
               Proceed to Checkout →
             </button>
@@ -980,6 +1080,44 @@
     const FACEBOOK_URL = 'https://www.facebook.com/share/1G3ErASdHa/';
     const ROTATION_MINUTES = 2;
 
+    const DEFAULT_WALL_PROMO_CARDS = [
+      {
+        id: 'wall_1',
+        title: 'Hot Drops',
+        tag: 'NEW IN',
+        image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=400&q=80',
+        categoryKey: 'ALL'
+      },
+      {
+        id: 'wall_2',
+        title: 'Luxury Fits',
+        tag: 'PROMO',
+        image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=400&q=80',
+        categoryKey: 'ALL'
+      },
+      {
+        id: 'wall_3',
+        title: 'Footwear Edit',
+        tag: 'HOT',
+        image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400&q=80',
+        categoryKey: 'ALL'
+      },
+      {
+        id: 'wall_4',
+        title: 'Watches & Bags',
+        tag: 'LUXURY',
+        image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80',
+        categoryKey: 'ALL'
+      },
+      {
+        id: 'wall_5',
+        title: 'Uyo Dispatch',
+        tag: 'FAST',
+        image: 'https://images.unsplash.com/photo-1617347454431-f49d7ff5c3b1?auto=format&fit=crop&w=400&q=80',
+        categoryKey: 'ALL'
+      }
+    ];
+
     const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
     const NIGERIA_STATES = [
       'Abia', 'Abuja (FCT)', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa',
@@ -994,6 +1132,7 @@
     let shippingZones = JSON.parse(localStorage.getItem('sekiflex_zones_cache') || '[]');
     let cart = JSON.parse(localStorage.getItem('sekiflex_cart') || '[]');
     let storeReviews = JSON.parse(localStorage.getItem('sekiflex_reviews_v1') || '[]');
+    let wallPromoCards = JSON.parse(localStorage.getItem('sekiflex_wall_promo_cards_v1') || 'null') || [...DEFAULT_WALL_PROMO_CARDS];
     let selectedStarRating = 5;
     let activeCategory = 'ALL';
     let categoryBrowseMode = false;
@@ -1027,7 +1166,8 @@
         'infoModal',
         'cartDrawer',
         'successModal',
-        'reviewsModal'
+        'reviewsModal',
+        'adminPromoCardsModal'
       ];
       return overlayIds.some(id => {
         const el = document.getElementById(id);
@@ -1624,6 +1764,7 @@
       document.getElementById('reviewsModal').classList.add('hidden');
       document.getElementById('infoModal').classList.add('hidden');
       document.getElementById('customerAuthGate').classList.add('hidden');
+      document.getElementById('adminPromoCardsModal').classList.add('hidden');
     }
 
     function setActiveBottomTab(tab) {
@@ -1637,6 +1778,118 @@
       });
     }
 
+    /* WALL-HUNG PROMO CARDS + ADMIN MANAGER */
+    function renderWallHungPromoCards() {
+      const wrap = document.getElementById('wallHungPromoCardsList');
+      if (!wrap) return;
+
+      const cardsToRender = (Array.isArray(wallPromoCards) && wallPromoCards.length)
+        ? wallPromoCards.slice(0, 5)
+        : DEFAULT_WALL_PROMO_CARDS;
+
+      wrap.innerHTML = cardsToRender.map((card, idx) => {
+        const safeImg = card.image || DEFAULT_WALL_PROMO_CARDS[idx % DEFAULT_WALL_PROMO_CARDS.length].image;
+        const safeTitle = card.title || `Promo ${idx + 1}`;
+        const safeTag = card.tag || 'PROMO';
+        const targetCat = card.categoryKey || 'ALL';
+        return `
+          <div onclick="shopSpecificCategoryFromSplit('${String(targetCat).replace(/'/g, "\\'")}')"
+            class="skf-wall-card" title="${safeTitle}">
+            <span class="skf-wall-pin"></span>
+            <span class="absolute top-2 right-1.5 z-10 bg-amber-500 text-stone-950 text-[8px] font-black px-1.5 py-0.5 rounded-full shadow">
+              ${safeTag}
+            </span>
+            <img src="${safeImg}" alt="${safeTitle}" loading="lazy" />
+            <div class="skf-wall-caption">
+              <p class="text-[10px] font-extrabold text-amber-300 truncate">${safeTitle}</p>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function openAdminPromoCardsModal() {
+      armStoreBackGuard();
+      const formList = document.getElementById('adminPromoCardsFormList');
+      const catOptions = `<option value="ALL">All Store Items</option>` +
+        allCategories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+
+      formList.innerHTML = wallPromoCards.slice(0, 5).map((card, idx) => `
+        <div class="bg-stone-950 border border-stone-800 rounded-2xl p-3 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold text-amber-400">Wall Card #${idx + 1}</span>
+            <img src="${card.image || ''}" alt="Preview" class="w-10 h-10 rounded-lg object-cover border border-amber-400/30 bg-stone-900" />
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" data-wall-title="${idx}" value="${card.title || ''}" placeholder="Card Title (e.g. Hot Drops)"
+              class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-amber-400" />
+            <input type="text" data-wall-tag="${idx}" value="${card.tag || 'PROMO'}" placeholder="Badge (e.g. HOT)"
+              class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-amber-400" />
+          </div>
+          <input type="url" data-wall-img="${idx}" value="${card.image || ''}" placeholder="Paste Image URL (https://...)"
+            class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-amber-400" />
+          <div class="flex items-center justify-between gap-2">
+            <label class="text-[10px] font-bold text-amber-300 bg-amber-500/15 border border-amber-400/30 px-2.5 py-1 rounded-lg cursor-pointer">
+              Upload Photo
+              <input type="file" accept="image/*" class="hidden" onchange="handleWallCardFileUpload(event, ${idx})" />
+            </label>
+            <select data-wall-cat="${idx}" class="flex-1 border border-stone-800 bg-[#12141a] text-white rounded-xl px-2 py-1.5 text-[11px]">
+              ${catOptions}
+            </select>
+          </div>
+        </div>
+      `).join('');
+
+      wallPromoCards.slice(0, 5).forEach((card, idx) => {
+        const sel = formList.querySelector(`[data-wall-cat="${idx}"]`);
+        if (sel && card.categoryKey) sel.value = String(card.categoryKey);
+      });
+
+      document.getElementById('adminPromoCardsModal').classList.remove('hidden');
+    }
+
+    function handleWallCardFileUpload(event, idx) {
+      const file = event?.target?.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const input = document.querySelector(`[data-wall-img="${idx}"]`);
+        if (input) input.value = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function saveAdminWallPromoCards() {
+      const updated = wallPromoCards.slice(0, 5).map((card, idx) => {
+        const title = (document.querySelector(`[data-wall-title="${idx}"]`)?.value || '').trim() || `Promo ${idx + 1}`;
+        const tag = (document.querySelector(`[data-wall-tag="${idx}"]`)?.value || '').trim() || 'PROMO';
+        const image = (document.querySelector(`[data-wall-img="${idx}"]`)?.value || '').trim() || DEFAULT_WALL_PROMO_CARDS[idx].image;
+        const categoryKey = document.querySelector(`[data-wall-cat="${idx}"]`)?.value || 'ALL';
+        return {
+          id: card.id || `wall_${idx + 1}`,
+          title,
+          tag,
+          image,
+          categoryKey
+        };
+      });
+
+      wallPromoCards = updated;
+      localStorage.setItem('sekiflex_wall_promo_cards_v1', JSON.stringify(wallPromoCards));
+      renderWallHungPromoCards();
+      closeAdminPromoCardsModal();
+    }
+
+    function resetDefaultWallPromoCards() {
+      wallPromoCards = [...DEFAULT_WALL_PROMO_CARDS];
+      localStorage.setItem('sekiflex_wall_promo_cards_v1', JSON.stringify(wallPromoCards));
+      renderWallHungPromoCards();
+      openAdminPromoCardsModal();
+    }
+
+    function closeAdminPromoCardsModal() {
+      document.getElementById('adminPromoCardsModal').classList.add('hidden');
+    }
+
     /* SPLIT-SCREEN CATEGORY STORE VIEW FUNCTIONS */
     function openSplitCategoryStore() {
       closeAllDrawers();
@@ -1645,6 +1898,7 @@
       document.getElementById('storeMainWrapper').classList.add('hidden');
       document.getElementById('splitCategoryStoreView').classList.remove('hidden');
       renderSplitCategorySidebar();
+      renderWallHungPromoCards();
       renderSplitCategoryPanel();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -1729,7 +1983,6 @@
             </div>`;
         });
 
-        // Also show featured products below category circles if few categories exist
         const featuredTiles = allProducts.slice(0, 6).map((p, idx) => {
           const img = (p.images && p.images[0]) || p.image_url || 'https://placehold.co/200x200?text=Sekiflex';
           const { effectivePrice } = getProductPricing(p);
@@ -1987,7 +2240,7 @@
       returnToCheckoutAfterAuth = Boolean(returnToCheckout);
       armStoreBackGuard();
       document.getElementById('authSubtitle').textContent = returnToCheckoutAfterAuth
-        ? 'You do not have an active account session yet — please register or log in to continue to checkout.'
+        ? 'You do not have an account or are not signed in yet — please register or log in to continue to checkout.'
         : 'Sign in or register to your Sekiflex Collections account.';
 
       switchAuthView(defaultTab);
@@ -2430,6 +2683,7 @@
 
       if (!document.getElementById('splitCategoryStoreView').classList.contains('hidden')) {
         renderSplitCategorySidebar();
+        renderWallHungPromoCards();
         renderSplitCategoryPanel();
       }
     }
@@ -2451,13 +2705,30 @@
       } catch (e) {}
     }
 
+    function bindCartActionButtons() {
+      const keepBtn = document.getElementById('skfKeepShoppingBtn');
+      const checkoutBtn = document.getElementById('openWaybillBtn');
+
+      if (keepBtn && !keepBtn.dataset.skfBound) {
+        keepBtn.dataset.skfBound = '1';
+        keepBtn.addEventListener('click', skfHandleKeepShopping);
+      }
+
+      if (checkoutBtn && !checkoutBtn.dataset.skfBound) {
+        checkoutBtn.dataset.skfBound = '1';
+        checkoutBtn.addEventListener('click', skfHandleProceedToCheckout);
+      }
+    }
+
     async function init() {
       armStoreBackGuard();
+      bindCartActionButtons();
       trackLiveVisitorHeartbeat();
       lastRotationSlot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000));
       applySocialLinks();
       selectStarRating(5);
       renderReviews();
+      renderWallHungPromoCards();
       populateNigeriaStates();
       renderCart();
       startBannerAutoShift();
@@ -2760,6 +3031,7 @@
       backToCartReviewOnly();
       setActiveBottomTab('cart');
       document.getElementById('cartDrawer').classList.remove('hidden');
+      bindCartActionButtons();
     }
 
     function backToCartReviewOnly() {
@@ -2769,28 +3041,52 @@
         document.getElementById('openWaybillBtn').classList.remove('hidden');
       }
       document.getElementById('cartDrawerHeading').textContent = 'Your Shopping Cart';
+      bindCartActionButtons();
     }
 
-    async function openWaybillSection() {
-      if (!cart.length) return alert('Add at least one item to your cart first.');
+    function skfHandleKeepShopping(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      document.getElementById('checkoutForm').classList.add('hidden');
+      document.getElementById('cartDrawer').classList.add('hidden');
+      setActiveBottomTab('home');
+    }
 
-      if (!currentCustomer) {
-        const { data: { session } } = await sb.auth.getSession();
-        if (session?.user) {
-          const { data: profile } = await sb
-            .from('customer_profiles')
-            .select('*')
-            .eq('id', session.user.id)
-            .maybeSingle();
-          applySignedInCustomerState(session.user, profile);
-        }
+    function skfHandleProceedToCheckout(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (!cart.length) {
+        alert('Add at least one item to your cart first.');
+        return;
       }
 
       if (!currentCustomer) {
         openAuthGate(
           'signup',
           true,
-          'You haven’t signed in yet. Please register an account or log in to continue to checkout.'
+          'You do not have an account or are not signed in yet — please register or log in to continue to checkout.'
+        );
+        return;
+      }
+
+      openWaybillSection();
+    }
+
+    async function openWaybillSection() {
+      if (!cart.length) {
+        alert('Add at least one item to your cart first.');
+        return;
+      }
+
+      if (!currentCustomer) {
+        openAuthGate(
+          'signup',
+          true,
+          'You do not have an account or are not signed in yet — please register or log in to continue to checkout.'
         );
         return;
       }
@@ -2806,14 +3102,14 @@
         armStoreBackGuard();
         setActiveBottomTab('cart');
         document.getElementById('cartDrawer').classList.remove('hidden');
+        bindCartActionButtons();
         if (showWaybillImmediately) {
           openWaybillSection();
         } else {
           backToCartReviewOnly();
         }
       } else {
-        setActiveBottomTab('home');
-        document.getElementById('cartDrawer').classList.add('hidden');
+        skfHandleKeepShopping();
       }
     }
 
@@ -2823,7 +3119,7 @@
         openAuthGate(
           'signup',
           true,
-          'You haven’t signed in yet. Please register an account or log in to continue to checkout.'
+          'You do not have an account or are not signed in yet — please register or log in to continue to checkout.'
         );
         return;
       }
