@@ -26,10 +26,15 @@
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
     body.sekiflex-luxury-bg {
-      background-color: #0e0d0b;
+      background-color: #0d0c0a;
       background-image:
-        radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.22) 0%, rgba(16, 13, 10, 0.97) 50%, #090807 100%);
+        radial-gradient(ellipse at 50% 0%, rgba(245, 158, 11, 0.25) 0%, rgba(22, 18, 13, 0.96) 46%, #080706 100%);
       background-attachment: fixed;
+    }
+
+    .luxury-glass-card {
+      background: linear-gradient(160deg, rgba(31, 25, 17, 0.92) 0%, rgba(18, 15, 11, 0.96) 100%);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(251, 191, 36, 0.14);
     }
 
     @keyframes imgShimmer {
@@ -38,14 +43,14 @@
     }
 
     .img-skeleton-box {
-      background: linear-gradient(90deg, #191510 25%, #272017 50%, #191510 75%);
+      background: linear-gradient(90deg, #1a150f 25%, #2c2318 50%, #1a150f 75%);
       background-size: 200% 100%;
       animation: imgShimmer 1.2s infinite linear;
     }
 
     .catalog-img-smooth {
       opacity: 1;
-      transition: transform 0.2s ease;
+      transition: transform 0.28s ease;
     }
 
     @keyframes trackZoomPulse {
@@ -70,7 +75,7 @@
     .products-grid-home {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.625rem;
+      gap: 0.7rem;
     }
 
     .products-grid-category-mode {
@@ -90,12 +95,12 @@
       display: flex;
       align-items: flex-start;
       min-height: calc(100vh - 115px);
-      background: #0e0d0b;
+      background: #0d0c0a;
     }
     .skf-cat-sidebar {
-      width: 124px;
+      width: 132px;
       flex-shrink: 0;
-      background: #13110e;
+      background: #14110c;
       border-right: 1px solid rgba(245, 158, 11, 0.25);
       overflow-y: auto;
       padding: 8px 6px 88px;
@@ -114,7 +119,7 @@
       transition: all 0.15s ease;
     }
     .skf-cat-tab.is-active {
-      background: #211c14;
+      background: #231c12;
       color: #fbbf24;
       font-weight: 800;
       border-left-color: #f59e0b;
@@ -128,22 +133,22 @@
     .skf-wall-card {
       position: relative;
       margin-bottom: 12px;
-      border-radius: 12px;
-      background: #1a1611;
-      border: 2px solid rgba(245, 158, 11, 0.48);
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.65), inset 0 0 0 2px #0e0d0b;
+      border-radius: 14px;
+      background: linear-gradient(165deg, #211a10 0%, #14100b 100%);
+      border: 1.5px solid rgba(251, 191, 36, 0.45);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
       overflow: hidden;
       cursor: pointer;
       transition: transform 0.2s ease, border-color 0.2s ease;
     }
     .skf-wall-card:nth-child(odd) {
-      transform: rotate(-1.2deg);
+      transform: rotate(-1deg);
     }
     .skf-wall-card:nth-child(even) {
-      transform: rotate(1.2deg);
+      transform: rotate(1deg);
     }
     .skf-wall-card:hover, .skf-wall-card:active {
-      transform: rotate(0deg) scale(1.03);
+      transform: rotate(0deg) scale(1.02);
       border-color: #fbbf24;
     }
     .skf-wall-pin {
@@ -158,16 +163,35 @@
       transform: translateX(-50%);
       z-index: 3;
     }
+    .skf-wall-upload-btn {
+      position: absolute;
+      bottom: 28px;
+      right: 5px;
+      z-index: 4;
+      background: rgba(12, 11, 9, 0.88);
+      color: #fbbf24;
+      border: 1px solid rgba(251, 191, 36, 0.55);
+      border-radius: 9999px;
+      padding: 2px 7px;
+      font-size: 8px;
+      font-weight: 800;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+    }
+    .skf-wall-upload-btn:hover {
+      background: #f59e0b;
+      color: #0d0c0a;
+    }
     .skf-wall-card img {
       width: 100%;
-      height: 78px;
+      height: 82px;
       object-fit: cover;
       object-position: top;
       display: block;
     }
     .skf-wall-caption {
       padding: 5px 6px;
-      background: linear-gradient(180deg, rgba(24,20,14,0.97), rgba(12,10,8,0.99));
+      background: linear-gradient(180deg, rgba(26,21,14,0.97), rgba(12,10,8,0.99));
       text-align: center;
     }
 
@@ -357,20 +381,20 @@
   <div id="storeMainWrapper">
 
     <!-- LUXURY STICKY HEADER -->
-    <header class="sticky top-0 z-40 bg-[#0e0d0b]/95 backdrop-blur-md border-b border-amber-400/25 px-3 pt-2.5 pb-2 shadow-lg">
+    <header class="sticky top-0 z-40 bg-[#0d0c0a]/95 backdrop-blur-md border-b border-amber-400/25 px-3 pt-2.5 pb-2 shadow-xl">
       <div class="max-w-5xl mx-auto space-y-2">
         <div class="flex items-center justify-between gap-2">
-          <a href="index.html" onclick="resetToHome(event)" class="font-editorial text-lg sm:text-xl font-bold tracking-wide text-white shrink-0">
+          <a href="index.html" onclick="resetToHome(event)" class="font-editorial text-lg sm:text-xl font-bold tracking-wide text-amber-50 shrink-0">
             Sekiflex <span class="text-amber-400 italic font-semibold">Collections</span>
           </a>
 
           <div class="flex items-center gap-2 min-w-0">
             <a href="track.html"
-              class="track-zoom-btn inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-400 text-stone-950 text-[11px] sm:text-xs font-extrabold px-3 py-1.5 rounded-full shadow-md shrink-0">
+              class="track-zoom-btn inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-300 text-stone-950 text-[11px] sm:text-xs font-extrabold px-3 py-1.5 rounded-full shadow-md shrink-0">
               <span>📦</span>
               <span>Track Order</span>
             </a>
-            <span id="topWelcomeGreeting" class="hidden sm:inline text-[11px] font-medium text-amber-200/80 truncate max-w-[110px]">
+            <span id="topWelcomeGreeting" class="hidden sm:inline text-[11px] font-medium text-amber-200/85 truncate max-w-[110px]">
               Welcome
             </span>
           </div>
@@ -378,12 +402,12 @@
 
         <form onsubmit="submitSearch(event)" class="relative flex items-center gap-1.5">
           <div class="relative flex-1 flex items-center">
-            <svg class="w-4 h-4 text-stone-400 absolute left-3.5 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 text-amber-400/75 absolute left-3.5 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
             </svg>
             <input id="storeSearchInput" type="search" enterkeyhint="search" oninput="handleSearchInput(false)"
               placeholder="Search Sekiflex Collections..."
-              class="w-full bg-[#181511] focus:bg-[#1f1b15] border border-amber-400/25 focus:border-amber-400 rounded-full pl-10 pr-8 py-2 text-xs sm:text-sm text-white placeholder:text-stone-500 focus:outline-none transition" />
+              class="w-full bg-[#19150f] focus:bg-[#221c14] border border-amber-400/25 focus:border-amber-400 rounded-full pl-10 pr-8 py-2 text-xs sm:text-sm text-white placeholder:text-stone-400 focus:outline-none transition" />
             <button type="button" id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 text-stone-400 hover:text-white text-base font-bold">
               &times;
             </button>
@@ -393,7 +417,7 @@
           <button type="button" id="pictureSearchBtn" onclick="triggerPictureSearch()"
             aria-label="Search product by picture"
             title="Search by Picture"
-            class="bg-[#181511] hover:bg-stone-800 border border-amber-400/25 text-amber-300 p-2 rounded-full shrink-0 transition flex items-center justify-center">
+            class="bg-[#19150f] hover:bg-[#241e15] border border-amber-400/30 text-amber-300 p-2 rounded-full shrink-0 transition flex items-center justify-center">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 0 1 2-2h.93a2 2 0 0 0 1.664-.89l.812-1.22A2 2 0 0 1 10.07 4h3.86a2 2 0 0 1 1.664.89l.812 1.22A2 2 0 0 0 18.07 7H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
               <circle cx="12" cy="13" r="3"/>
@@ -401,7 +425,7 @@
           </button>
 
           <button type="submit" id="searchSubmitBtn"
-            class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-extrabold px-3.5 py-2 rounded-full shrink-0 transition">
+            class="bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950 text-xs font-extrabold px-3.5 py-2 rounded-full shrink-0 transition shadow-sm">
             Search
           </button>
         </form>
@@ -434,25 +458,25 @@
         <div id="bannerCarousel" class="flex gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
 
           <!-- Slide 1: Live Admin Promo Announcement #1 -->
-          <div id="livePromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full min-h-[164px] rounded-2xl bg-gradient-to-br from-[#2a1d0b] via-[#1c150c] to-[#120f0a] text-white p-3 flex items-stretch justify-between gap-3 border border-amber-400/45 shadow-lg overflow-hidden">
+          <div id="livePromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full min-h-[164px] rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-3.5 flex items-stretch justify-between gap-3 border border-amber-400/50 shadow-xl overflow-hidden">
             <div class="space-y-1.5 flex-1 min-w-0 flex flex-col justify-between py-0.5">
               <div class="space-y-1">
-                <span class="inline-block text-[9px] font-extrabold uppercase tracking-widest bg-amber-400 text-stone-950 px-2.5 py-0.5 rounded-full">
+                <span class="inline-block text-[9px] font-extrabold uppercase tracking-widest bg-gradient-to-r from-amber-400 to-yellow-300 text-stone-950 px-2.5 py-0.5 rounded-full">
                   ✦ Featured Promo
                 </span>
                 <p id="livePromoText" class="font-editorial text-sm sm:text-base font-bold leading-snug line-clamp-3 text-amber-50"></p>
               </div>
               <div>
-                <button type="button" onclick="jumpToAllItems()" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full transition">
+                <button type="button" onclick="jumpToAllItems()" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full transition shadow-sm">
                   Shop Now →
                 </button>
               </div>
             </div>
-            <img id="livePromoImg" src="" alt="" onerror="this.classList.add('hidden')" class="hidden w-36 sm:w-44 h-36 sm:h-38 object-cover object-top rounded-xl border-2 border-amber-400/45 shrink-0 shadow-md" />
+            <img id="livePromoImg" src="" alt="" onerror="this.classList.add('hidden')" class="hidden w-36 sm:w-44 h-36 sm:h-38 object-cover object-top rounded-xl border-2 border-amber-400/50 shrink-0 shadow-md" />
           </div>
 
           <!-- Slide 2: Live Admin Promo Announcement #2 -->
-          <div id="livePromoBanner2Card" class="promo-slide hidden snap-start shrink-0 w-full min-h-[164px] rounded-2xl bg-gradient-to-br from-[#2b1e0c] via-[#1d160d] to-[#120f0a] text-white p-3 flex items-stretch justify-between gap-3 border border-amber-400/40 shadow-lg overflow-hidden">
+          <div id="livePromoBanner2Card" class="promo-slide hidden snap-start shrink-0 w-full min-h-[164px] rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-3.5 flex items-stretch justify-between gap-3 border border-amber-400/45 shadow-xl overflow-hidden">
             <div class="space-y-1.5 flex-1 min-w-0 flex flex-col justify-between py-0.5">
               <div class="space-y-1">
                 <span class="inline-block text-[9px] font-extrabold uppercase tracking-widest bg-amber-500/25 text-amber-300 border border-amber-400/40 px-2.5 py-0.5 rounded-full">
@@ -461,41 +485,41 @@
                 <p id="livePromo2Text" class="font-editorial text-sm sm:text-base font-bold leading-snug line-clamp-3 text-amber-50"></p>
               </div>
               <div>
-                <button type="button" onclick="jumpToAllItems()" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full transition">
+                <button type="button" onclick="jumpToAllItems()" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full transition shadow-sm">
                   Explore Picks →
                 </button>
               </div>
             </div>
-            <img id="livePromo2Img" src="" alt="" onerror="this.classList.add('hidden')" class="hidden w-36 sm:w-44 h-36 sm:h-38 object-cover object-top rounded-xl border-2 border-amber-400/45 shrink-0 shadow-md" />
+            <img id="livePromo2Img" src="" alt="" onerror="this.classList.add('hidden')" class="hidden w-36 sm:w-44 h-36 sm:h-38 object-cover object-top rounded-xl border-2 border-amber-400/50 shrink-0 shadow-md" />
           </div>
 
           <!-- Slide 3: Luxury Apparel Edit -->
-          <div onclick="jumpToAllItems()" class="promo-slide cursor-pointer snap-start shrink-0 w-full min-h-[164px] rounded-2xl bg-gradient-to-br from-[#2b1d0b] via-[#1d150c] to-[#120f0a] text-white p-3 flex items-stretch justify-between gap-3 border border-amber-400/45 shadow-lg overflow-hidden">
+          <div onclick="jumpToAllItems()" class="promo-slide cursor-pointer snap-start shrink-0 w-full min-h-[164px] rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-3.5 flex items-stretch justify-between gap-3 border border-amber-400/50 shadow-xl overflow-hidden">
             <div class="space-y-1.5 flex-1 min-w-0 flex flex-col justify-between py-0.5">
               <div class="space-y-1">
-                <span class="inline-block text-[9px] font-extrabold uppercase tracking-widest bg-amber-400 text-stone-950 px-2.5 py-0.5 rounded-full">
+                <span class="inline-block text-[9px] font-extrabold uppercase tracking-widest bg-gradient-to-r from-amber-400 to-yellow-300 text-stone-950 px-2.5 py-0.5 rounded-full">
                   ✦ Luxury Apparel
                 </span>
                 <h2 class="font-editorial text-base sm:text-lg font-bold leading-tight text-amber-50">
                   Dresses, Knits &amp; Denim
                 </h2>
-                <p class="text-[11px] text-amber-100/80">Fresh chic styles curated for daily glam</p>
+                <p class="text-[11px] text-amber-100/85">Fresh chic styles curated for daily glam</p>
               </div>
               <div>
-                <button type="button" onclick="event.stopPropagation(); jumpToAllItems();" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full transition">
+                <button type="button" onclick="event.stopPropagation(); jumpToAllItems();" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full transition shadow-sm">
                   Shop Apparel →
                 </button>
               </div>
             </div>
-            <div class="w-36 sm:w-44 h-36 sm:h-38 rounded-xl border-2 border-amber-400/45 shrink-0 shadow-md bg-gradient-to-br from-[#2c1f0c] to-[#141009] flex flex-col items-center justify-center p-2 text-center">
+            <div class="w-36 sm:w-44 h-36 sm:h-38 rounded-xl border-2 border-amber-400/50 shrink-0 shadow-md bg-gradient-to-br from-[#33230c] via-[#1c150c] to-[#110d08] flex flex-col items-center justify-center p-2 text-center">
               <span class="text-2xl font-editorial font-extrabold text-amber-400">SC</span>
               <span class="text-[9px] font-extrabold tracking-widest uppercase text-amber-100 mt-0.5">SEKIFLEX</span>
-              <span class="text-[8px] text-amber-300/80">COLLECTIONS</span>
+              <span class="text-[8px] text-amber-300/85">COLLECTIONS</span>
             </div>
           </div>
 
           <!-- Slide 4: Footwear, Watches & Designer Accessories -->
-          <div onclick="openSplitCategoryStore()" class="promo-slide cursor-pointer snap-start shrink-0 w-full min-h-[164px] rounded-2xl bg-gradient-to-br from-[#2b1d0b] via-[#1d150c] to-[#120f0a] text-white p-3 flex items-stretch justify-between gap-3 border border-amber-400/45 shadow-lg overflow-hidden">
+          <div onclick="openSplitCategoryStore()" class="promo-slide cursor-pointer snap-start shrink-0 w-full min-h-[164px] rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-3.5 flex items-stretch justify-between gap-3 border border-amber-400/50 shadow-xl overflow-hidden">
             <div class="space-y-1.5 flex-1 min-w-0 flex flex-col justify-between py-0.5">
               <div class="space-y-1">
                 <span class="inline-block text-[9px] font-extrabold uppercase tracking-widest bg-amber-500/25 text-amber-300 border border-amber-400/40 px-2.5 py-0.5 rounded-full">
@@ -504,33 +528,33 @@
                 <h2 class="font-editorial text-base sm:text-lg font-bold leading-tight text-amber-50">
                   Shoes, Bags &amp; Watches
                 </h2>
-                <p class="text-[11px] text-amber-100/80">Statement pieces to finish every outfit</p>
+                <p class="text-[11px] text-amber-100/85">Statement pieces to finish every outfit</p>
               </div>
               <div>
-                <button type="button" onclick="event.stopPropagation(); openSplitCategoryStore();" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full transition">
+                <button type="button" onclick="event.stopPropagation(); openSplitCategoryStore();" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full transition shadow-sm">
                   Browse Categories →
                 </button>
               </div>
             </div>
-            <div class="w-36 sm:w-44 h-36 sm:h-38 rounded-xl border-2 border-amber-400/45 shrink-0 shadow-md bg-gradient-to-br from-[#2c1f0c] to-[#141009] flex flex-col items-center justify-center p-2 text-center">
+            <div class="w-36 sm:w-44 h-36 sm:h-38 rounded-xl border-2 border-amber-400/50 shrink-0 shadow-md bg-gradient-to-br from-[#33230c] via-[#1c150c] to-[#110d08] flex flex-col items-center justify-center p-2 text-center">
               <span class="text-amber-400 text-lg">♛</span>
               <span class="text-[10px] font-extrabold tracking-wider uppercase text-amber-100 mt-0.5">CURATED EDIT</span>
-              <span class="text-[8px] text-amber-300/80 mt-0.5">Uyo • Nationwide</span>
+              <span class="text-[8px] text-amber-300/85 mt-0.5">Uyo • Nationwide</span>
             </div>
           </div>
 
           <!-- Slide 5: Clickable Nationwide Delivery with BIG Custom Sekiflex Collections Bike + Cargo Truck -->
           <div onclick="window.location.href='track.html'" role="button" tabindex="0"
-            class="promo-slide cursor-pointer snap-start shrink-0 w-full min-h-[168px] rounded-2xl bg-gradient-to-br from-[#2b1d0b] via-[#1c150c] to-[#120f0a] text-white p-3 flex items-stretch justify-between gap-2.5 border border-amber-400/45 hover:border-amber-300 transition shadow-lg overflow-hidden">
+            class="promo-slide cursor-pointer snap-start shrink-0 w-full min-h-[168px] rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-3.5 flex items-stretch justify-between gap-2.5 border border-amber-400/50 hover:border-amber-300 transition shadow-xl overflow-hidden">
             <div class="space-y-1.5 flex-1 min-w-0 flex flex-col justify-between py-0.5">
               <div class="space-y-1">
-                <span class="inline-block text-[9px] font-extrabold uppercase tracking-widest bg-amber-400 text-stone-950 px-2.5 py-0.5 rounded-full">
+                <span class="inline-block text-[9px] font-extrabold uppercase tracking-widest bg-gradient-to-r from-amber-400 to-yellow-300 text-stone-950 px-2.5 py-0.5 rounded-full">
                   SEKIFLEX COLLECTIONS FLEET
                 </span>
                 <h2 class="font-editorial text-base sm:text-lg font-bold leading-tight text-amber-50">
                   Bike Rider &amp; Cargo Truck Delivery
                 </h2>
-                <p class="text-[11px] text-amber-100/80">Fast dispatch bike &amp; cargo truck from Uyo</p>
+                <p class="text-[11px] text-amber-100/85">Fast dispatch bike &amp; cargo truck from Uyo</p>
               </div>
               <div>
                 <a href="track.html" onclick="event.stopPropagation();"
@@ -542,7 +566,7 @@
             </div>
 
             <!-- Big Customized Sekiflex Collections Bike + Cargo Truck Showcase -->
-            <div class="relative w-44 sm:w-56 h-38 sm:h-40 rounded-xl overflow-hidden border-2 border-amber-400/50 shrink-0 shadow-lg bg-gradient-to-b from-[#231a0d] via-[#17120b] to-[#0d0a07] flex flex-col justify-between p-1.5">
+            <div class="relative w-44 sm:w-56 h-38 sm:h-40 rounded-xl overflow-hidden border-2 border-amber-400/50 shrink-0 shadow-lg bg-gradient-to-b from-[#281e0e] via-[#18120b] to-[#0d0a07] flex flex-col justify-between p-1.5">
               <div class="flex items-center justify-between gap-1 px-1">
                 <span class="text-[8px] font-black tracking-wider uppercase text-amber-300 truncate">
                   SEKIFLEX COLLECTIONS
@@ -559,22 +583,22 @@
                     <stop offset="100%" stop-color="#fbbf24" />
                   </linearGradient>
                   <linearGradient id="skfDarkGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stop-color="#2a2217" />
+                    <stop offset="0%" stop-color="#2e2418" />
                     <stop offset="100%" stop-color="#14100b" />
                   </linearGradient>
                 </defs>
 
-                <line x1="0" y1="101" x2="240" y2="101" stroke="#f59e0b" stroke-opacity="0.4" stroke-width="2" />
-                <line x1="8" y1="106" x2="26" y2="106" stroke="#fbbf24" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round" />
-                <line x1="42" y1="106" x2="64" y2="106" stroke="#fbbf24" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round" />
-                <line x1="82" y1="106" x2="106" y2="106" stroke="#fbbf24" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round" />
-                <line x1="126" y1="106" x2="152" y2="106" stroke="#fbbf24" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round" />
-                <line x1="170" y1="106" x2="198" y2="106" stroke="#fbbf24" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round" />
+                <line x1="0" y1="101" x2="240" y2="101" stroke="#f59e0b" stroke-opacity="0.45" stroke-width="2" />
+                <line x1="8" y1="106" x2="26" y2="106" stroke="#fbbf24" stroke-opacity="0.55" stroke-width="2" stroke-linecap="round" />
+                <line x1="42" y1="106" x2="64" y2="106" stroke="#fbbf24" stroke-opacity="0.55" stroke-width="2" stroke-linecap="round" />
+                <line x1="82" y1="106" x2="106" y2="106" stroke="#fbbf24" stroke-opacity="0.55" stroke-width="2" stroke-linecap="round" />
+                <line x1="126" y1="106" x2="152" y2="106" stroke="#fbbf24" stroke-opacity="0.55" stroke-width="2" stroke-linecap="round" />
+                <line x1="170" y1="106" x2="198" y2="106" stroke="#fbbf24" stroke-opacity="0.55" stroke-width="2" stroke-linecap="round" />
 
                 <!-- CARGO TRUCK -->
                 <g transform="translate(116, 30)">
                   <rect x="0" y="6" width="76" height="48" rx="6" fill="url(#skfDarkGrad)" stroke="#f59e0b" stroke-width="1.8" />
-                  <rect x="4" y="14" width="68" height="22" rx="3" fill="#f59e0b" fill-opacity="0.18" />
+                  <rect x="4" y="14" width="68" height="22" rx="3" fill="#f59e0b" fill-opacity="0.2" />
                   <text x="38" y="24" text-anchor="middle" fill="#fbbf24" font-size="6.8" font-weight="900" letter-spacing="0.4">SEKIFLEX</text>
                   <text x="38" y="33" text-anchor="middle" fill="#ffffff" font-size="5.6" font-weight="800" letter-spacing="0.4">COLLECTIONS</text>
                   <text x="38" y="46" text-anchor="middle" fill="#fde68a" font-size="5" font-weight="700">CARGO EXPRESS</text>
@@ -594,7 +618,7 @@
                   <path d="M56 26 L70 33" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round" />
 
                   <rect x="6" y="22" width="38" height="27" rx="5" fill="url(#skfGoldGrad)" stroke="#14100b" stroke-width="1.5" />
-                  <text x="25" y="33" text-anchor="middle" fill="#0e0d0b" font-size="6.4" font-weight="900">SEKIFLEX</text>
+                  <text x="25" y="33" text-anchor="middle" fill="#0d0c0a" font-size="6.4" font-weight="900">SEKIFLEX</text>
                   <text x="25" y="42" text-anchor="middle" fill="#17191d" font-size="4.8" font-weight="900">COLLECTIONS</text>
 
                   <path d="M36 47 L56 45 L71 33 L76 58" fill="none" stroke="#fbbf24" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
@@ -619,20 +643,20 @@
       </section>
 
       <!-- REFINED TOP SCROLLING SHOWCASE STRIP -->
-      <section id="featuredStripSection" class="rounded-2xl overflow-hidden bg-gradient-to-r from-[#1e170d] via-[#17120b] to-[#1e170d] border border-amber-400/35 shadow-md">
+      <section id="featuredStripSection" class="luxury-glass-card rounded-2xl overflow-hidden border border-amber-400/35">
         <div class="px-3 py-2 border-b border-amber-400/20 flex items-center justify-between bg-amber-500/10">
           <h2 class="text-[11px] font-extrabold uppercase tracking-widest text-amber-300">✦ Featured</h2>
           <button type="button" onclick="jumpToAllItems()" class="text-[11px] font-extrabold text-amber-300 hover:text-amber-200">
             All Items →
           </button>
         </div>
-        <div id="featuredHorizontalList" class="p-2 flex gap-2.5 overflow-x-auto scroll-smooth no-scrollbar">
+        <div id="featuredHorizontalList" class="p-2.5 flex gap-2.5 overflow-x-auto scroll-smooth no-scrollbar">
         </div>
       </section>
 
       <!-- CATEGORY BAR & PRODUCT SHOWCASE -->
       <section id="catalogSection" class="space-y-2.5 scroll-mt-24">
-        <div id="categoryViewBanner" class="hidden rounded-2xl bg-gradient-to-r from-[#22190c] via-[#1a140b] to-amber-950/60 border border-amber-400/35 px-3.5 py-2.5 flex items-center justify-between gap-2">
+        <div id="categoryViewBanner" class="hidden rounded-2xl bg-gradient-to-r from-[#281d0d] via-[#1c150c] to-amber-950/60 border border-amber-400/40 px-3.5 py-2.5 flex items-center justify-between gap-2">
           <div class="min-w-0">
             <p class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Sekiflex Store Categories</p>
             <p id="categoryViewSubtitle" class="text-xs text-stone-200 truncate">Curated category showcase layout</p>
@@ -649,7 +673,7 @@
 
         <div class="flex items-center justify-between gap-2">
           <h2 id="catalogHeading" class="font-editorial font-bold text-base sm:text-lg text-amber-300">All Items</h2>
-          <span id="productResultCount" class="text-[11px] font-medium text-stone-400 shrink-0"></span>
+          <span id="productResultCount" class="text-[11px] font-medium text-amber-100/70 shrink-0"></span>
         </div>
 
         <div class="flex gap-1.5 overflow-x-auto no-scrollbar pb-0.5" id="categoryBar">
@@ -658,12 +682,12 @@
 
         <!-- PRODUCT GRID -->
         <div id="productsGrid" class="products-grid-home">
-          <div class="bg-[#16130f] border border-amber-400/20 rounded-2xl p-2 animate-pulse space-y-2">
+          <div class="luxury-glass-card border border-amber-400/20 rounded-2xl p-2 animate-pulse space-y-2">
             <div class="w-full h-44 bg-stone-800 rounded-xl"></div>
             <div class="h-3 bg-stone-800 rounded w-3/4"></div>
             <div class="h-7 bg-stone-800 rounded-xl w-full"></div>
           </div>
-          <div class="bg-[#16130f] border border-amber-400/20 rounded-2xl p-2 animate-pulse space-y-2">
+          <div class="luxury-glass-card border border-amber-400/20 rounded-2xl p-2 animate-pulse space-y-2">
             <div class="w-full h-44 bg-stone-800 rounded-xl"></div>
             <div class="h-3 bg-stone-800 rounded w-3/4"></div>
             <div class="h-7 bg-stone-800 rounded-xl w-full"></div>
@@ -676,16 +700,16 @@
 
   <!-- SPLIT-SCREEN CATEGORY STORE VIEW -->
   <div id="splitCategoryStoreView" class="hidden">
-    <header class="sticky top-0 z-40 bg-[#0e0d0b]/95 backdrop-blur-md border-b border-amber-400/25 px-3 py-2.5 shadow-lg">
+    <header class="sticky top-0 z-40 bg-[#0d0c0a]/95 backdrop-blur-md border-b border-amber-400/25 px-3 py-2.5 shadow-lg">
       <div class="max-w-5xl mx-auto flex items-center gap-2">
         <button type="button" onclick="switchBottomTab('home')"
-          class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-amber-300 text-xs font-bold px-3 py-1.5 rounded-full shrink-0">
+          class="bg-stone-900 hover:bg-stone-800 border border-amber-400/25 text-amber-300 text-xs font-bold px-3 py-1.5 rounded-full shrink-0">
           ← Home
         </button>
         <form onsubmit="submitSplitCategorySearch(event)" class="flex-1 flex items-center gap-1.5">
           <input id="splitCategorySearchInput" type="search" placeholder="Search Sekiflex categories..."
             oninput="renderSplitCategoryPanel()"
-            class="w-full bg-[#181511] border border-amber-400/25 focus:border-amber-400 rounded-full px-3.5 py-1.5 text-xs text-white placeholder:text-stone-500 focus:outline-none" />
+            class="w-full bg-[#19150f] border border-amber-400/25 focus:border-amber-400 rounded-full px-3.5 py-1.5 text-xs text-white placeholder:text-stone-400 focus:outline-none" />
           <button type="submit" class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-extrabold px-3 py-1.5 rounded-full shrink-0">
             Search
           </button>
@@ -701,6 +725,7 @@
           <div class="flex items-center justify-between px-1 mb-2">
             <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-400">Wall Promos</span>
           </div>
+          <input type="file" id="inlineWallCardFileInput" accept="image/*" class="hidden" onchange="handleInlineWallCardUpload(event)" />
           <div id="wallHungPromoCardsList"></div>
         </div>
       </aside>
@@ -750,7 +775,7 @@
 
   <!-- PRODUCT DETAIL MODAL -->
   <div id="productDetailModal" onclick="if(event.target === this) closeProductDetailModal();" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-[#12141a] border border-amber-400/25 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
+    <div class="bg-[#14110c] border border-amber-400/35 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
       <div class="relative bg-stone-950">
         <img id="detailModalImg" src="" alt="" onerror="handleCatalogImgError(this, this.alt)" class="w-full max-h-72 object-contain object-top mx-auto bg-stone-950" />
         <button type="button" onclick="closeProductDetailModal()"
@@ -790,7 +815,7 @@
   </div>
 
   <!-- FIXED BOTTOM NAVIGATION BAR -->
-  <nav id="bottomFixedNav" class="fixed bottom-0 inset-x-0 z-40 bg-[#0e0d0b]/95 backdrop-blur-md border-t border-amber-400/25 shadow-[0_-4px_16px_rgba(0,0,0,0.45)]">
+  <nav id="bottomFixedNav" class="fixed bottom-0 inset-x-0 z-40 bg-[#0d0c0a]/95 backdrop-blur-md border-t border-amber-400/25 shadow-[0_-4px_16px_rgba(0,0,0,0.45)]">
     <div class="max-w-5xl mx-auto grid grid-cols-4 h-14">
       <button type="button" id="navHomeBtn" onclick="switchBottomTab('home')"
         class="flex flex-col items-center justify-center gap-0.5 text-amber-400 font-bold text-[10px] transition">
@@ -1202,41 +1227,11 @@
     const ROTATION_MINUTES = 2;
 
     const DEFAULT_WALL_PROMO_CARDS = [
-      {
-        id: 'wall_1',
-        title: 'Hot Drops',
-        tag: 'NEW IN',
-        image: '',
-        categoryKey: 'ALL'
-      },
-      {
-        id: 'wall_2',
-        title: 'Luxury Fits',
-        tag: 'PROMO',
-        image: '',
-        categoryKey: 'ALL'
-      },
-      {
-        id: 'wall_3',
-        title: 'Footwear Edit',
-        tag: 'HOT',
-        image: '',
-        categoryKey: 'ALL'
-      },
-      {
-        id: 'wall_4',
-        title: 'Watches & Bags',
-        tag: 'LUXURY',
-        image: '',
-        categoryKey: 'ALL'
-      },
-      {
-        id: 'wall_5',
-        title: 'Uyo Dispatch',
-        tag: 'FAST',
-        image: '',
-        categoryKey: 'ALL'
-      }
+      { id: 'wall_1', title: 'Hot Drops', tag: 'NEW IN', image: '', categoryKey: 'ALL' },
+      { id: 'wall_2', title: 'Luxury Fits', tag: 'PROMO', image: '', categoryKey: 'ALL' },
+      { id: 'wall_3', title: 'Footwear Edit', tag: 'HOT', image: '', categoryKey: 'ALL' },
+      { id: 'wall_4', title: 'Watches & Bags', tag: 'LUXURY', image: '', categoryKey: 'ALL' },
+      { id: 'wall_5', title: 'Uyo Dispatch', tag: 'FAST', image: '', categoryKey: 'ALL' }
     ];
 
     const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
@@ -1258,6 +1253,7 @@
     let activeCategory = 'ALL';
     let categoryBrowseMode = false;
     let splitSelectedCatKey = 'FEATURED';
+    let activeWallUploadIndex = 0;
     let searchQuery = '';
     let pictureSearchScores = null;
     let pictureSearchFileName = '';
@@ -1277,7 +1273,6 @@
     let lastRotationSlot = -1;
     let allowWebsiteExit = false;
 
-    /* MULTI-TRIGGER BACK BUTTON GUARD (WORKS FOR INSTAGRAM / FACEBOOK / DIRECT LINKS) */
     function pushBackTrapState() {
       if (allowWebsiteExit) return;
       try {
@@ -1358,7 +1353,7 @@
 
     function renderBrandedPlaceholderHtml(labelText = 'Sekiflex') {
       const safeLabel = String(labelText || 'Sekiflex').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      return `<div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#1d170f] via-[#14100b] to-[#0e0c09] text-amber-300/90 p-2 text-center select-none"><span class="font-editorial text-sm font-extrabold tracking-wider text-amber-400">SC</span><span class="text-[9px] font-bold text-stone-300 line-clamp-2 mt-0.5">${safeLabel}</span></div>`;
+      return `<div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#231b10] via-[#16120c] to-[#0e0c09] text-amber-300/90 p-2 text-center select-none"><span class="font-editorial text-sm font-extrabold tracking-wider text-amber-400">SC</span><span class="text-[9px] font-bold text-stone-300 line-clamp-2 mt-0.5">${safeLabel}</span></div>`;
     }
 
     function handleCatalogImgLoad(imgEl) {
@@ -2079,7 +2074,60 @@
       });
     }
 
-    const PINNED_WALL_COUNT = 4;
+    const PINNED_WALL_COUNT = 5;
+
+    function triggerInlineWallUpload(ev, idx) {
+      if (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+      }
+      activeWallUploadIndex = idx;
+      const input = document.getElementById('inlineWallCardFileInput');
+      if (input) {
+        input.value = '';
+        input.click();
+      }
+    }
+
+    async function handleInlineWallCardUpload(event) {
+      const file = event?.target?.files?.[0];
+      if (!file) return;
+      const idx = activeWallUploadIndex;
+
+      let chosenUrl = '';
+      try {
+        const fileName = `wall-card-${idx + 1}-${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
+        const { error: upErr } = await sb.storage.from('product-images').upload(fileName, file);
+        if (!upErr) {
+          const { data: pub } = sb.storage.from('product-images').getPublicUrl(fileName);
+          if (pub?.publicUrl) chosenUrl = pub.publicUrl;
+        }
+      } catch (e) {}
+
+      if (!chosenUrl) {
+        chosenUrl = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result || '');
+          reader.onerror = () => resolve('');
+          reader.readAsDataURL(file);
+        });
+      }
+
+      if (!chosenUrl) return;
+
+      const updated = DEFAULT_WALL_PROMO_CARDS.map((def, i) => ({
+        ...def,
+        ...(Array.isArray(wallPromoCards) && wallPromoCards[i] ? wallPromoCards[i] : {})
+      }));
+      updated[idx] = {
+        ...updated[idx],
+        image: chosenUrl
+      };
+
+      wallPromoCards = updated;
+      localStorage.setItem('sekiflex_wall_promo_cards_v1', JSON.stringify(wallPromoCards));
+      renderWallHungPromoCards();
+    }
 
     function getRightGridTileCount() {
       const q = (document.getElementById('splitCategorySearchInput')?.value || '').trim().toLowerCase();
@@ -2115,7 +2163,7 @@
         const targetCat = card.categoryKey || 'ALL';
         const mediaHtml = safeImg
           ? `<img src="${safeImg}" alt="" onerror="this.parentElement.innerHTML = renderBrandedPlaceholderHtml('${safeTitle.replace(/'/g, "\\'")}')" />`
-          : `<div class="w-full h-[78px]">${renderBrandedPlaceholderHtml(safeTitle)}</div>`;
+          : `<div class="w-full h-[82px]">${renderBrandedPlaceholderHtml(safeTitle)}</div>`;
         return `
           <div onclick="shopSpecificCategoryFromSplit('${String(targetCat).replace(/'/g, "\\'")}')"
             class="skf-wall-card" title="${safeTitle}">
@@ -2124,6 +2172,9 @@
               ${safeTag}
             </span>
             ${mediaHtml}
+            <button type="button" onclick="triggerInlineWallUpload(event, ${idx})" class="skf-wall-upload-btn" title="Upload picture for this wall card">
+              + Photo
+            </button>
             <div class="skf-wall-caption">
               <p class="text-[10px] font-extrabold text-amber-300 truncate">${safeTitle}</p>
             </div>
@@ -2132,7 +2183,7 @@
 
       const rightTiles = getRightGridTileCount();
       const rightRows = Math.max(1, Math.ceil(rightTiles / 3));
-      const targetLeftCards = Math.max(pinnedCards.length, Math.round((rightRows * 128) / 114));
+      const targetLeftCards = Math.max(pinnedCards.length, Math.round((rightRows * 128) / 118));
       const neededCatalogCards = Math.max(0, targetLeftCards - pinnedCards.length);
 
       const rotatedPool = getRotatedProducts(allProducts);
@@ -2144,7 +2195,7 @@
         const safeProdName = String(prod.name || 'Store Pick').replace(/'/g, "\\'");
         const mediaHtml = img
           ? `<img src="${img}" alt="" onerror="this.parentElement.innerHTML = renderBrandedPlaceholderHtml('${safeProdName}')" />`
-          : `<div class="w-full h-[78px]">${renderBrandedPlaceholderHtml(safeProdName)}</div>`;
+          : `<div class="w-full h-[82px]">${renderBrandedPlaceholderHtml(safeProdName)}</div>`;
         extraHTML.push(`
           <div onclick="openProductDetail('${prod.id}')"
             class="skf-wall-card" title="${prod.name || 'Store Item'}">
@@ -2917,13 +2968,13 @@
       }
 
       const colorMap = {
-        gold: 'from-[#2b1d0b] via-[#1d150c] to-[#120f0a]',
-        green: 'from-[#241d0b] via-[#18160c] to-[#110f0a]',
-        red: 'from-[#2b150e] via-[#1d120d] to-[#120d0a]',
-        dark: 'from-[#2b1d0b] via-[#1d150c] to-[#120f0a]'
+        gold: 'from-[#33220a] via-[#1f160b] to-[#120e09]',
+        green: 'from-[#28200b] via-[#1a160c] to-[#110f0a]',
+        red: 'from-[#30170e] via-[#1e120d] to-[#120d0a]',
+        dark: 'from-[#33220a] via-[#1f160b] to-[#120e09]'
       };
       const chosenGradient = colorMap[banner.banner_color] || colorMap[defaultColor] || colorMap.gold;
-      cardEl.className = `promo-slide snap-start shrink-0 w-full min-h-[164px] rounded-2xl bg-gradient-to-br ${chosenGradient} text-white p-3 flex items-stretch justify-between gap-3 border border-amber-400/45 shadow-lg overflow-hidden`;
+      cardEl.className = `promo-slide snap-start shrink-0 w-full min-h-[164px] rounded-2xl bg-gradient-to-br ${chosenGradient} text-white p-3.5 flex items-stretch justify-between gap-3 border border-amber-400/50 shadow-xl overflow-hidden`;
       textEl.textContent = banner.banner_text;
 
       if (banner.banner_image_url) {
@@ -3225,7 +3276,7 @@
           ? `<img src="${img}" alt="" data-prod-label="${safeName}" loading="eager" decoding="async" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
           : renderBrandedPlaceholderHtml(p.name);
         return `
-          <div onclick="openProductDetail('${p.id}')" class="shrink-0 w-36 sm:w-40 bg-[#18140e] rounded-xl overflow-hidden border border-amber-400/25 flex flex-col justify-between cursor-pointer hover:border-amber-400 transition">
+          <div onclick="openProductDetail('${p.id}')" class="shrink-0 w-36 sm:w-40 bg-[#18140e] rounded-xl overflow-hidden border border-amber-400/25 flex flex-col justify-between cursor-pointer hover:border-amber-400 transition shadow-sm">
             <div class="${img ? 'img-skeleton-box' : ''} w-full h-36 bg-stone-950 flex items-center justify-center overflow-hidden">
               ${mediaInner}
             </div>
@@ -3257,7 +3308,7 @@
             ? `<img src="${img}" alt="" data-prod-label="${safeName}" loading="${idx < 6 ? 'eager' : 'lazy'}" decoding="async" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
             : renderBrandedPlaceholderHtml(p.name);
           return `
-            <div onclick="openProductDetail('${p.id}')" class="bg-[#16130f] rounded-2xl border border-amber-400/30 overflow-hidden flex items-stretch gap-3 p-2.5 shadow-md cursor-pointer hover:border-amber-400/60 transition">
+            <div onclick="openProductDetail('${p.id}')" class="luxury-glass-card rounded-2xl border border-amber-400/30 overflow-hidden flex items-stretch gap-3 p-2.5 cursor-pointer hover:border-amber-400/70 transition">
               <div class="${img ? 'img-skeleton-box' : ''} w-28 sm:w-32 h-32 bg-stone-950 flex items-center justify-center rounded-xl overflow-hidden shrink-0">
                 ${mediaInner}
               </div>
@@ -3270,7 +3321,7 @@
                 <div class="mt-2 flex items-center justify-between gap-2">
                   <div>${formatPriceHtml(p, 'text-sm')}</div>
                   <button type="button" ${out ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart('${p.id}', this)"
-                    class="${out ? 'bg-stone-800 text-stone-500' : 'bg-amber-500 hover:bg-amber-400 text-stone-950'} text-[11px] font-extrabold px-3 py-1.5 rounded-xl transition shrink-0">
+                    class="${out ? 'bg-stone-800 text-stone-500' : 'bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950'} text-[11px] font-extrabold px-3 py-1.5 rounded-xl transition shrink-0">
                     ${out ? 'Sold Out' : 'Add to Cart'}
                   </button>
                 </div>
@@ -3290,7 +3341,7 @@
           ? `<img src="${img}" alt="" data-prod-label="${safeName}" loading="${isAboveFold ? 'eager' : 'lazy'}" fetchpriority="${idx < 4 ? 'high' : 'auto'}" decoding="async" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
           : renderBrandedPlaceholderHtml(p.name);
         return `
-          <div onclick="openProductDetail('${p.id}')" class="bg-[#16130f] rounded-2xl border border-amber-400/20 overflow-hidden flex flex-col justify-between shadow-md cursor-pointer hover:border-amber-400/50 transition">
+          <div onclick="openProductDetail('${p.id}')" class="luxury-glass-card rounded-2xl border border-amber-400/25 overflow-hidden flex flex-col justify-between cursor-pointer hover:border-amber-400/60 transition">
             <div class="${img ? 'img-skeleton-box' : ''} w-full h-44 sm:h-48 bg-stone-950 flex items-center justify-center overflow-hidden">
               ${mediaInner}
             </div>
@@ -3302,7 +3353,7 @@
               <div class="mt-2">
                 ${formatPriceHtml(p, 'text-xs sm:text-sm')}
                 <button type="button" ${out ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart('${p.id}', this)"
-                  class="mt-1.5 w-full ${out ? 'bg-stone-800 text-stone-500' : 'bg-amber-500 hover:bg-amber-400 text-stone-950'} text-[11px] font-extrabold py-1.5 rounded-xl transition">
+                  class="mt-1.5 w-full ${out ? 'bg-stone-800 text-stone-500' : 'bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950'} text-[11px] font-extrabold py-1.5 rounded-xl transition shadow-xs">
                   ${out ? 'Sold Out' : 'Add to Cart'}
                 </button>
               </div>
