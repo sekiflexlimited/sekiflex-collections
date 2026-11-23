@@ -80,10 +80,39 @@
     .skf-promo-shake-card {
       animation: skfPromoShake 3.2s infinite ease-in-out;
       transform-origin: center center;
+      cursor: pointer;
+      overflow: hidden;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.65);
     }
     .skf-promo-shake-card:nth-child(2) { animation-delay: 0.7s; }
     .skf-promo-shake-card:nth-child(3) { animation-delay: 1.4s; }
     .skf-promo-shake-card:nth-child(4) { animation-delay: 2.1s; }
+
+    /* 4 distinct designs for the side promo cards */
+    .skf-side-promo-0 {
+      border-radius: 14px;
+      background: linear-gradient(155deg, #3a2208 0%, #171008 100%);
+      border: 1.5px solid rgba(251, 191, 36, 0.7);
+      padding: 6px;
+    }
+    .skf-side-promo-1 {
+      border-radius: 18px 6px 18px 6px;
+      background: linear-gradient(155deg, #102a24 0%, #0b1513 100%);
+      border: 1.5px solid rgba(52, 211, 153, 0.65);
+      padding: 6px;
+    }
+    .skf-side-promo-2 {
+      border-radius: 8px 18px 8px 18px;
+      background: linear-gradient(155deg, #331222 0%, #160910 100%);
+      border: 1.5px dashed rgba(251, 113, 133, 0.75);
+      padding: 6px;
+    }
+    .skf-side-promo-3 {
+      border-radius: 12px;
+      background: linear-gradient(155deg, #132238 0%, #0a101a 100%);
+      border: 2px solid rgba(250, 204, 21, 0.55);
+      padding: 6px;
+    }
 
     .skf-hero-slide {
       width: 88%;
@@ -198,12 +227,19 @@
       margin: 0 auto 6px;
       border-radius: 9999px;
       background: #1b1712;
-      border: 1.5px solid rgba(245, 158, 11, 0.42);
+      border: 1.5px solid rgba(245, 158, 11, 0.45);
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+    }
+    .skf-cat-thumb-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      display: block;
     }
     .skf-cat-hot {
       position: absolute;
@@ -217,6 +253,7 @@
       border-radius: 9999px;
       letter-spacing: 0.03em;
       z-index: 2;
+      pointer-events: none;
     }
   </style>
 </head>
@@ -639,7 +676,7 @@
           <div class="px-1 flex items-center justify-between">
             <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-400">🔥 Hot Promos</span>
           </div>
-          <div id="wallHungPromoCardsList" class="space-y-2"></div>
+          <div id="wallHungPromoCardsList" class="space-y-2.5"></div>
         </div>
       </aside>
 
@@ -1143,8 +1180,8 @@
     const ROTATION_MINUTES = 1;
 
     const DEFAULT_WALL_PROMO_CARDS = [
-      { id: 'wall_1', title: 'Hot Drops', tag: 'NEW IN', badgeBg: 'bg-amber-400 text-stone-950', image: '', categoryKey: 'ALL' },
-      { id: 'wall_2', title: 'Luxury Fits', tag: 'DEAL', badgeBg: 'bg-emerald-400 text-stone-950', image: '', categoryKey: 'ALL' },
+      { id: 'wall_1', title: 'Hot Drops', tag: 'NEW IN', badgeBg: 'bg-amber-400 text-stone-950', titleColor: 'text-amber-300', image: '', categoryKey: 'ALL' },
+      { id: 'wall_2', title: 'Luxury Fits', tag: 'DEAL', badgeBg: 'bg-emerald-400 text-stone-950', titleColor: 'text-emerald-300', image: '', categoryKey: 'ALL' },
       { id: 'wall_3', title: 'Footwear Edit', tag: 'HOT', badgeBg: 'bg-rose-500 text-white', image: '', categoryKey: 'ALL' },
       { id: 'wall_4', title: 'Watches & Bags', tag: 'VIP', badgeBg: 'bg-yellow-300 text-stone-950', image: '', categoryKey: 'ALL' }
     ];
@@ -1269,7 +1306,7 @@
 
     function renderBrandedPlaceholderHtml(labelText = 'Sekiflex') {
       const safeLabel = String(labelText || 'Sekiflex').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      return `<div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#231b10] via-[#16120c] to-[#0e0c09] text-amber-300/90 p-2 text-center select-none"><span class="font-editorial text-sm font-extrabold tracking-wider text-amber-400">SC</span><span class="text-[9px] font-bold text-stone-300 line-clamp-2 mt-0.5">${safeLabel}</span></div>`;
+      return `<div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#231b10] via-[#16120c] to-[#0e0c09] text-amber-300/90 p-1.5 text-center select-none"><span class="font-editorial text-xs font-extrabold tracking-wider text-amber-400">SC</span><span class="text-[8px] font-bold text-stone-300 line-clamp-2 mt-0.5">${safeLabel}</span></div>`;
     }
 
     function handleCatalogImgLoad(imgEl) {
@@ -2049,12 +2086,14 @@
         const title = card.title || def.title;
         const tag = card.tag || def.tag;
         const badgeBg = card.badgeBg || def.badgeBg;
+        const titleColor = card.titleColor || def.titleColor;
+        const styleClass = `skf-side-promo-${idx % 4}`;
         const targetCat = card.categoryKey || 'ALL';
         const { effectivePrice } = fallbackProd ? getProductPricing(fallbackProd) : { effectivePrice: 0 };
 
         return `
           <div onclick="shopSpecificCategoryFromSplit('${String(targetCat).replace(/'/g, "\\'")}')"
-            class="skf-promo-shake-card cursor-pointer rounded-xl bg-gradient-to-br from-[#2a1d0d] via-[#18130c] to-[#100d09] border border-amber-400/50 p-1.5 shadow-md overflow-hidden">
+            class="skf-promo-shake-card ${styleClass}" title="${title}">
             <div class="relative w-full h-14 rounded-lg overflow-hidden bg-stone-950">
               <span class="absolute top-1 left-1 z-10 ${badgeBg} text-[7px] font-black px-1.5 py-0.2 rounded-full uppercase shadow">
                 ${tag}
@@ -2064,7 +2103,7 @@
                 : renderBrandedPlaceholderHtml(title)}
             </div>
             <div class="pt-1 text-center">
-              <p class="text-[9px] font-extrabold text-amber-300 truncate">${title}</p>
+              <p class="text-[9px] font-extrabold ${titleColor} truncate">${title}</p>
               ${effectivePrice > 0 ? `<p class="text-[9px] font-bold text-white">₦${effectivePrice.toLocaleString()}</p>` : ''}
             </div>
           </div>`;
@@ -2077,7 +2116,7 @@
       if (!img) {
         return `${renderBrandedPlaceholderHtml(labelText)}${hotBadge}`;
       }
-      return `<img src="${img}" alt="" onerror="this.parentElement.innerHTML = renderBrandedPlaceholderHtml('${safeLabel}') + '${hotBadge.replace(/'/g, "\\'")}';" class="w-full h-full object-cover object-top" />${hotBadge}`;
+      return `<img src="${img}" alt="" onerror="this.parentElement.innerHTML = renderBrandedPlaceholderHtml('${safeLabel}') + '${hotBadge.replace(/'/g, "\\'")}';" />${hotBadge}`;
     }
 
     function openSplitCategoryStore() {
@@ -2171,7 +2210,7 @@
             </div>`;
         });
 
-        const featuredTiles = rotatedAll.map((p, idx) => {
+        let poolTiles = rotatedAll.map((p, idx) => {
           const img = (p.images && p.images[0]) || p.image_url || '';
           const { effectivePrice } = getProductPricing(p);
           return `
@@ -2184,7 +2223,26 @@
             </div>`;
         });
 
-        grid.innerHTML = [...catTiles, ...featuredTiles].join('');
+        /* Pad right grid so there are never empty trailing spaces at the bottom */
+        const combined = [...catTiles, ...poolTiles];
+        const minFillCount = Math.max(12, combined.length);
+        let fillIdx = 0;
+        while (combined.length < minFillCount && rotatedAll.length > 0) {
+          const p = rotatedAll[fillIdx % rotatedAll.length];
+          const img = (p.images && p.images[0]) || p.image_url || '';
+          const { effectivePrice } = getProductPricing(p);
+          combined.push(`
+            <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="skf-cat-cell group">
+              <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
+                ${renderSplitThumbInner(img, p.name, false)}
+              </div>
+              <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
+              <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
+            </div>`);
+          fillIdx++;
+        }
+
+        grid.innerHTML = combined.join('');
         return;
       }
 
@@ -2193,23 +2251,28 @@
       const items = rotatedAll.filter(p => String(p.category_id) === String(splitSelectedCatKey));
       countEl.textContent = `${items.length} item${items.length === 1 ? '' : 's'}`;
 
-      if (!items.length) {
-        grid.innerHTML = '<p class="col-span-3 text-center text-xs text-stone-400 py-8">No items in this category yet.</p>';
+      const sourcePool = items.length ? items : rotatedAll;
+      if (!sourcePool.length) {
+        grid.innerHTML = '<p class="col-span-3 text-center text-xs text-stone-400 py-8">No items available yet.</p>';
         return;
       }
 
-      grid.innerHTML = items.map((p, idx) => {
+      const catRows = [];
+      const targetLen = Math.max(9, sourcePool.length);
+      for (let i = 0; i < targetLen; i++) {
+        const p = sourcePool[i % sourcePool.length];
         const img = (p.images && p.images[0]) || p.image_url || '';
         const { effectivePrice } = getProductPricing(p);
-        return `
+        catRows.push(`
           <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="skf-cat-cell group">
             <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-              ${renderSplitThumbInner(img, p.name, idx < 2)}
+              ${renderSplitThumbInner(img, p.name, i < 2)}
             </div>
             <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
             <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
-          </div>`;
-      }).join('');
+          </div>`);
+      }
+      grid.innerHTML = catRows.join('');
     }
 
     function submitSplitCategorySearch(e) {
