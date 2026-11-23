@@ -413,11 +413,17 @@
 
     <div class="max-w-5xl mx-auto px-3 pt-2.5 space-y-3">
 
-      <!-- LUXURY PROMO CAROUSEL (FULL-WIDTH / MULTI-BANNER CAROUSEL + CLICKABLE SEKIFLEX DISPATCH RIDER TRACKER) -->
+      <!-- HERO SECTION VIDEO BANNER (SHOWN WHEN ENABLED IN ADMIN) -->
+      <section id="heroVideoSection" class="hidden rounded-2xl overflow-hidden bg-[#12141a] border border-amber-400/30 shadow-lg">
+        <video id="heroVideoPlayer" controls autoplay muted loop playsinline
+          class="w-full max-h-64 sm:max-h-80 object-cover bg-black"></video>
+      </section>
+
+      <!-- LUXURY PROMO CAROUSEL (MULTI-BANNER CAROUSEL + CLICKABLE SEKIFLEX DISPATCH RIDER TRACKER) -->
       <section id="heroCarouselSection">
         <div id="bannerCarousel" class="flex gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
 
-          <!-- Slide 1: Live Admin Promo Announcement (Full-Box Image) -->
+          <!-- Slide 1: Live Admin Promo Announcement #1 (Full-Box Image) -->
           <div id="livePromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full min-h-[168px] rounded-2xl bg-gradient-to-r from-[#14161e] via-[#1c1914] to-amber-950/80 text-white p-3 flex items-stretch justify-between gap-3 border border-amber-400/30 shadow-lg overflow-hidden">
             <div class="space-y-1.5 flex-1 min-w-0 flex flex-col justify-between py-0.5">
               <div class="space-y-1">
@@ -435,7 +441,25 @@
             <img id="livePromoImg" src="" alt="Promo" class="hidden w-36 sm:w-44 h-36 sm:h-40 object-cover object-center rounded-xl border border-amber-400/35 shrink-0 shadow-md" />
           </div>
 
-          <!-- Slide 2: Luxury Fashion & Accessories Edit (Full-Box Image) -->
+          <!-- Slide 2: Live Admin Promo Announcement #2 (Full-Box Image) -->
+          <div id="livePromoBanner2Card" class="promo-slide hidden snap-start shrink-0 w-full min-h-[168px] rounded-2xl bg-gradient-to-r from-[#14161e] via-[#111f1a] to-emerald-950/85 text-white p-3 flex items-stretch justify-between gap-3 border border-emerald-400/30 shadow-lg overflow-hidden">
+            <div class="space-y-1.5 flex-1 min-w-0 flex flex-col justify-between py-0.5">
+              <div class="space-y-1">
+                <span class="inline-block text-[9px] font-bold uppercase tracking-widest bg-emerald-400/20 text-emerald-300 border border-emerald-400/35 px-2.5 py-0.5 rounded-full">
+                  Store Notice
+                </span>
+                <p id="livePromo2Text" class="font-editorial text-sm sm:text-base font-bold leading-snug line-clamp-3"></p>
+              </div>
+              <div>
+                <button type="button" onclick="jumpToAllItems()" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full transition">
+                  Shop Collection →
+                </button>
+              </div>
+            </div>
+            <img id="livePromo2Img" src="" alt="Promo 2" class="hidden w-36 sm:w-44 h-36 sm:h-40 object-cover object-center rounded-xl border border-emerald-400/35 shrink-0 shadow-md" />
+          </div>
+
+          <!-- Slide 3: Luxury Fashion & Accessories Edit (Full-Box Image) -->
           <div onclick="jumpToAllItems()" class="promo-slide cursor-pointer snap-start shrink-0 w-full min-h-[168px] rounded-2xl bg-gradient-to-r from-[#14161e] via-[#1c1914] to-amber-950/80 text-white p-3 flex items-stretch justify-between gap-3 border border-amber-400/30 shadow-lg overflow-hidden">
             <div class="space-y-1.5 flex-1 min-w-0 flex flex-col justify-between py-0.5">
               <div class="space-y-1">
@@ -457,7 +481,7 @@
               class="w-36 sm:w-44 h-36 sm:h-40 object-cover object-center rounded-xl border border-amber-400/35 shrink-0 shadow-md" />
           </div>
 
-          <!-- Slide 3: Clickable Nationwide Delivery with Sekiflex Collections Dispatch Rider & Cargo Visuals -->
+          <!-- Slide 4: Clickable Nationwide Delivery with Sekiflex Collections Dispatch Rider & Cargo Visuals -->
           <div onclick="window.location.href='track.html'" role="button" tabindex="0"
             class="promo-slide cursor-pointer snap-start shrink-0 w-full min-h-[168px] rounded-2xl bg-gradient-to-r from-[#14161e] via-[#1a1812] to-amber-950/75 text-white p-3 flex items-stretch justify-between gap-3 border border-amber-400/35 hover:border-amber-400 transition shadow-lg overflow-hidden">
             <div class="space-y-1.5 flex-1 min-w-0 flex flex-col justify-between py-0.5">
@@ -2541,19 +2565,10 @@
       location.reload();
     }
 
-    async function loadStoreBanner() {
-      const { data: banner } = await sb
-        .from('store_settings')
-        .select('*')
-        .eq('id', 'main')
-        .maybeSingle();
-
-      const card = document.getElementById('livePromoBannerCard');
-      const txt = document.getElementById('livePromoText');
-      const img = document.getElementById('livePromoImg');
-
+    function applySingleBannerSlot(banner, cardEl, textEl, imgEl, defaultColor) {
+      if (!cardEl || !textEl || !imgEl) return;
       if (!banner || !banner.banner_active || !banner.banner_text) {
-        card.classList.add('hidden');
+        cardEl.classList.add('hidden');
         return;
       }
 
@@ -2563,17 +2578,60 @@
         red: 'from-[#14161e] via-[#1f1215] to-rose-950/85',
         dark: 'from-[#14161e] via-[#1c1914] to-amber-950/80'
       };
-      card.className = `promo-slide snap-start shrink-0 w-full min-h-[168px] rounded-2xl bg-gradient-to-r ${colorMap[banner.banner_color] || colorMap.dark} text-white p-3 flex items-stretch justify-between gap-3 border border-amber-400/30 shadow-lg overflow-hidden`;
-      txt.textContent = banner.banner_text;
+      const chosenGradient = colorMap[banner.banner_color] || colorMap[defaultColor] || colorMap.dark;
+      cardEl.className = `promo-slide snap-start shrink-0 w-full min-h-[168px] rounded-2xl bg-gradient-to-r ${chosenGradient} text-white p-3 flex items-stretch justify-between gap-3 border border-amber-400/30 shadow-lg overflow-hidden`;
+      textEl.textContent = banner.banner_text;
 
       if (banner.banner_image_url) {
-        img.src = banner.banner_image_url;
-        img.classList.remove('hidden');
+        imgEl.src = banner.banner_image_url;
+        imgEl.classList.remove('hidden');
       } else {
-        img.classList.add('hidden');
+        imgEl.classList.add('hidden');
       }
 
-      card.classList.remove('hidden');
+      cardEl.classList.remove('hidden');
+    }
+
+    async function loadStoreBanner() {
+      const [{ data: banner }, { data: banner2 }] = await Promise.all([
+        sb.from('store_settings').select('*').eq('id', 'main').maybeSingle(),
+        sb.from('store_settings').select('*').eq('id', 'second').maybeSingle()
+      ]);
+
+      applySingleBannerSlot(
+        banner,
+        document.getElementById('livePromoBannerCard'),
+        document.getElementById('livePromoText'),
+        document.getElementById('livePromoImg'),
+        'dark'
+      );
+
+      applySingleBannerSlot(
+        banner2,
+        document.getElementById('livePromoBanner2Card'),
+        document.getElementById('livePromo2Text'),
+        document.getElementById('livePromo2Img'),
+        'green'
+      );
+
+      const heroSec = document.getElementById('heroVideoSection');
+      const heroPlayer = document.getElementById('heroVideoPlayer');
+      const localHero = JSON.parse(localStorage.getItem('sekiflex_hero_video_v1') || 'null');
+      const heroActive = banner?.hero_video_active ?? localHero?.active ?? false;
+      const heroUrl = banner?.hero_video_url || localHero?.url || '';
+
+      if (heroSec && heroPlayer) {
+        if (heroActive && heroUrl) {
+          if (heroPlayer.src !== heroUrl) {
+            heroPlayer.src = heroUrl;
+          }
+          heroSec.classList.remove('hidden');
+        } else {
+          heroPlayer.pause();
+          heroSec.classList.add('hidden');
+        }
+      }
+
       currentBannerSlideIdx = 0;
       const carousel = document.getElementById('bannerCarousel');
       if (carousel) carousel.scrollLeft = 0;
