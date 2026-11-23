@@ -3,14 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XST92KJTKT"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-XST92KJTKT');
-  </script>
   <title>Sekiflex Collections | Luxury Fashion, Footwear, Watches &amp; Accessories</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,91 +10,97 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
-  <script src="app.js"></script>
   <style>
-    html, body { max-width: 100%; overflow-x: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
-    .font-editorial { font-family: 'Playfair Display', serif; }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .font-editorial {
+      font-family: 'Playfair Display', serif;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
 
     body.sekiflex-luxury-bg {
       background-color: #0d0c0a;
       background-image:
-        radial-gradient(ellipse at 50% 0%, rgba(245, 158, 11, 0.25) 0%, rgba(22, 18, 13, 0.96) 46%, #080706 100%);
+        radial-gradient(ellipse at 50% 0%, rgba(245, 158, 11, 0.22) 0%, rgba(22, 18, 13, 0.96) 46%, #080706 100%);
       background-attachment: fixed;
     }
 
-    .luxury-glass-card {
-      background: linear-gradient(160deg, rgba(31, 25, 17, 0.92) 0%, rgba(18, 15, 11, 0.96) 100%);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(251, 191, 36, 0.14);
-    }
-
-    @keyframes imgShimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-
-    .img-skeleton-box {
-      background: linear-gradient(90deg, #1a150f 25%, #2c2318 50%, #1a150f 75%);
-      background-size: 200% 100%;
-      animation: imgShimmer 1.2s infinite linear;
-    }
-
-    .catalog-img-smooth {
-      opacity: 1;
-      transition: transform 0.28s ease;
-    }
-
-    @keyframes trackZoomPulse {
-      0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.55);
-      }
-      50% {
-        transform: scale(1.07);
-        box-shadow: 0 0 0 8px rgba(245, 158, 11, 0);
-      }
-    }
-
-    .track-zoom-btn {
-      animation: trackZoomPulse 2.1s infinite ease-in-out;
-    }
-
-    .track-zoom-btn:active {
-      transform: scale(0.96);
-    }
-
-    /* Compact 2-column catalog grid with snug bottom fit */
-    .products-grid-home,
-    .products-grid-category-mode {
+    /* Frameless catalog item: transparent background, no dark card box, only yellow Add to Cart button below */
+    .skf-catalog-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.55rem;
+      gap: 0.75rem;
       align-items: start;
     }
-
     @media (min-width: 640px) {
-      .products-grid-home,
-      .products-grid-category-mode {
+      .skf-catalog-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 0.75rem;
-        align-items: start;
+        gap: 0.85rem;
       }
     }
 
+    .skf-item-card {
+      background: transparent !important;
+      background-color: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .skf-item-photo-box {
+      width: 100%;
+      height: 152px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: transparent !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    @media (min-width: 640px) {
+      .skf-item-photo-box {
+        height: 182px;
+      }
+    }
+
+    .skf-item-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: top;
+      display: block;
+      transition: transform 0.2s ease;
+    }
+    .skf-item-card:hover .skf-item-photo {
+      transform: scale(1.02);
+    }
+
+    /* Split-screen category view */
     .skf-cat-layout {
       display: flex;
       align-items: flex-start;
-      min-height: calc(100vh - 115px);
+      min-height: calc(100vh - 110px);
       background: #0d0c0a;
     }
     .skf-cat-sidebar {
-      width: 126px;
+      width: 128px;
       flex-shrink: 0;
       background: #14110c;
       border-right: 1px solid rgba(245, 158, 11, 0.25);
       overflow-y: auto;
-      padding: 8px 6px 88px;
+      padding: 8px 6px 84px;
     }
     .skf-cat-tab {
       width: 100%;
@@ -124,7 +122,7 @@
       border-left-color: #f59e0b;
     }
 
-    /* Boutique hanging wall promo rack */
+    /* Boutique hanging wall promo rack with distinct card designs */
     .skf-wall-section {
       margin-top: 10px;
       padding-top: 8px;
@@ -158,14 +156,11 @@
       margin-top: 12px;
       margin-bottom: 10px;
       border-radius: 10px;
-      background: linear-gradient(165deg, #211a10 0%, #14100b 100%);
-      border: 1.5px solid rgba(251, 191, 36, 0.5);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.72), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.72);
       overflow: visible;
       cursor: pointer;
-      transition: transform 0.2s ease, border-color 0.2s ease;
+      transition: transform 0.2s ease;
     }
-    /* Hanging cords connecting card to rail */
     .skf-wall-card::before,
     .skf-wall-card::after {
       content: "";
@@ -176,18 +171,39 @@
       background: rgba(251, 191, 36, 0.75);
       z-index: 2;
     }
-    .skf-wall-card::before { left: 16px; transform: rotate(12deg); }
-    .skf-wall-card::after { right: 16px; transform: rotate(-12deg); }
+    .skf-wall-card::before { left: 14px; transform: rotate(12deg); }
+    .skf-wall-card::after { right: 14px; transform: rotate(-12deg); }
 
-    .skf-wall-card:nth-child(odd) {
-      transform: rotate(-1.2deg);
+    .skf-wall-style-0 {
+      background: linear-gradient(155deg, #3b1d0a 0%, #170e07 100%);
+      border: 1.5px solid rgba(251, 191, 36, 0.65);
+      transform: rotate(-1.5deg);
     }
-    .skf-wall-card:nth-child(even) {
+    .skf-wall-style-1 {
+      background: linear-gradient(155deg, #102a24 0%, #0b1614 100%);
+      border: 1.5px solid rgba(52, 211, 153, 0.55);
+      border-radius: 16px 6px 16px 6px;
+      transform: rotate(1.5deg);
+    }
+    .skf-wall-style-2 {
+      background: linear-gradient(155deg, #2c1024 0%, #140912 100%);
+      border: 1.5px dashed rgba(244, 114, 182, 0.65);
+      transform: rotate(-1deg);
+    }
+    .skf-wall-style-3 {
+      background: linear-gradient(155deg, #122138 0%, #0a111c 100%);
+      border: 1.5px solid rgba(96, 165, 250, 0.55);
+      border-radius: 6px 16px 6px 16px;
       transform: rotate(1.2deg);
     }
+    .skf-wall-style-4 {
+      background: linear-gradient(155deg, #331313 0%, #170909 100%);
+      border: 1.5px solid rgba(248, 113, 113, 0.6);
+      transform: rotate(-0.8deg);
+    }
+
     .skf-wall-card:hover, .skf-wall-card:active {
       transform: rotate(0deg) scale(1.02);
-      border-color: #fbbf24;
     }
     .skf-wall-pin {
       width: 8px;
@@ -203,7 +219,7 @@
       z-index: 4;
     }
     .skf-wall-frame {
-      border-radius: 9px;
+      border-radius: 8px;
       overflow: hidden;
     }
     .skf-wall-card img {
@@ -215,17 +231,17 @@
     }
     .skf-wall-caption {
       padding: 4px 5px;
-      background: linear-gradient(180deg, rgba(26,21,14,0.97), rgba(12,10,8,0.99));
+      background: rgba(10, 9, 8, 0.78);
       text-align: center;
-      border-bottom-left-radius: 9px;
-      border-bottom-right-radius: 9px;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
     }
 
     .skf-cat-main {
       flex: 1;
       min-width: 0;
       padding: 10px;
-      padding-bottom: 88px;
+      padding-bottom: 84px;
       overflow-y: auto;
     }
     .skf-cat-grid {
@@ -262,280 +278,78 @@
 </head>
 <body class="sekiflex-luxury-bg text-stone-100 antialiased pb-20">
 
-  <!-- LEAVE WEBSITE CONFIRMATION MODAL (YES / NO) -->
-  <div id="leaveConfirmModal" class="fixed inset-0 z-[70] hidden bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-[#16130f] border border-amber-400/45 rounded-3xl max-w-xs w-full p-5 text-center space-y-4 shadow-2xl">
-      <div class="space-y-1.5">
-        <p class="text-[10px] font-extrabold uppercase tracking-widest text-amber-400">Sekiflex Collections</p>
-        <h3 class="font-editorial text-lg font-bold text-white">Leaving Sekiflex Collections?</h3>
-        <p class="text-xs text-stone-300 leading-relaxed">Do you want to leave the website?</p>
-      </div>
-      <div class="grid grid-cols-2 gap-2.5">
-        <button type="button" onclick="confirmLeaveWebsiteNo()"
-          class="py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-extrabold transition">
-          No
-        </button>
-        <button type="button" onclick="confirmLeaveWebsiteYes()"
-          class="py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 border border-amber-400/25 text-stone-200 text-xs font-bold transition">
-          Yes
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- REGISTER / SIGN IN MODAL (FOR CHECKOUT OR ACCOUNT) -->
-  <div id="customerAuthGate" class="fixed inset-0 z-[60] hidden bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-[#12141a] border border-amber-400/35 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
-      <div class="bg-gradient-to-r from-stone-950 via-[#181510] to-amber-950/80 text-white px-6 py-4 text-center space-y-1 relative border-b border-amber-400/20">
-        <button type="button" onclick="closeAuthGate()" aria-label="Close sign in window"
-          class="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold text-lg flex items-center justify-center">
-          &times;
-        </button>
-        <h2 class="font-editorial text-xl font-bold tracking-wide">
-          Sekiflex <span class="text-amber-400 italic font-semibold">Collections</span>
-        </h2>
-        <p id="authSubtitle" class="text-xs text-stone-300 leading-relaxed">
-          Please register an account or log in first to continue to checkout.
-        </p>
-      </div>
-
-      <div class="p-5 space-y-4">
-        <div id="authTabsRow" class="grid grid-cols-2 gap-1.5 bg-stone-950 border border-stone-800 p-1 rounded-2xl">
-          <button type="button" id="tabSignUpBtn" onclick="switchAuthView('signup')"
-            class="py-2 rounded-xl text-xs font-extrabold bg-amber-500 text-stone-950 shadow-2xs transition">
-            Register
-          </button>
-          <button type="button" id="tabSignInBtn" onclick="switchAuthView('signin')"
-            class="py-2 rounded-xl text-xs font-extrabold text-stone-400 hover:text-white transition">
-            Sign In
-          </button>
-        </div>
-
-        <p id="authGateMsg" class="hidden text-xs font-semibold text-center p-2.5 rounded-xl"></p>
-
-        <form id="customerSignUpForm" autocomplete="off" onsubmit="handleCustomerSignUp(event)" class="space-y-2.5">
-          <input required id="regName" name="sekiflex_reg_fullname" autocomplete="new-password" type="text" placeholder="Your Full Name (e.g. Daniel Okafor)"
-            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400 transition" />
-          <input required id="regEmail" name="sekiflex_reg_email" autocomplete="off" type="email" placeholder="Email Address"
-            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400 transition" />
-          <input required id="regPhone" name="sekiflex_reg_phone" autocomplete="off" type="tel" placeholder="Phone / WhatsApp Number (e.g. 08012345678)"
-            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400 transition" />
-          <input required id="regPassword" name="sekiflex_reg_pass" autocomplete="new-password" type="password" minlength="6" placeholder="Create Password (min. 6 characters)"
-            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400 transition" />
-          <button type="submit" id="regSubmitBtn"
-            class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-3 rounded-2xl text-sm transition shadow-xs">
-            Register &amp; Go to Checkout →
-          </button>
-        </form>
-
-        <form id="verifyOtpForm" autocomplete="off" onsubmit="handleVerifySignupOtp(event)" class="hidden space-y-3">
-          <div class="bg-amber-500/10 border border-amber-400/30 rounded-2xl p-3 text-center text-xs text-stone-200">
-            We sent an 8-digit registration code to <strong id="otpTargetEmail" class="text-amber-300"></strong>
-          </div>
-          <input required id="signupOtpCode" type="text" inputmode="numeric" maxlength="8" pattern="[0-9]{6,8}"
-            placeholder="Enter 8-digit code"
-            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-3 text-center font-mono text-lg tracking-[0.3em] font-bold text-white focus:outline-none focus:border-amber-400" />
-          <button type="submit" id="verifyOtpBtn"
-            class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-3 rounded-2xl text-sm transition shadow-xs">
-            Verify &amp; Go to Checkout →
-          </button>
-          <div class="flex items-center justify-between text-xs pt-1">
-            <button type="button" onclick="resendSignupCode()" class="font-bold text-amber-400 hover:underline">
-              Resend Code
-            </button>
-            <button type="button" onclick="switchAuthView('signup')" class="text-stone-400 hover:underline">
-              Change Email
-            </button>
-          </div>
-        </form>
-
-        <form id="customerSignInForm" onsubmit="handleCustomerSignIn(event)" class="hidden space-y-2.5">
-          <input required id="loginEmail" type="email" placeholder="Customer Email Address"
-            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400 transition" />
-          <input required id="loginPassword" type="password" placeholder="Password"
-            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400 transition" />
-          <div class="text-right">
-            <button type="button" onclick="switchAuthView('forgot')" class="text-xs font-bold text-amber-400 hover:underline">
-              Forgot Password?
-            </button>
-          </div>
-          <button type="submit" id="loginSubmitBtn"
-            class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-3 rounded-2xl text-sm transition shadow-xs">
-            Sign In &amp; Go to Checkout →
-          </button>
-        </form>
-
-        <form id="forgotRequestForm" onsubmit="handleSendResetCode(event)" class="hidden space-y-3">
-          <p class="text-xs text-stone-300 text-center">Enter your registered email to receive an 8-digit password reset code.</p>
-          <input required id="forgotEmail" type="email" placeholder="Registered Email Address"
-            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400 transition" />
-          <button type="submit" id="sendResetBtn"
-            class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-3 rounded-2xl text-sm transition shadow-xs">
-            Send Reset Code →
-          </button>
-          <button type="button" onclick="switchAuthView('signin')" class="w-full text-xs text-stone-400 hover:underline">
-            ← Back to Sign In
-          </button>
-        </form>
-
-        <form id="forgotVerifyForm" autocomplete="off" onsubmit="handleCompletePasswordReset(event)" class="hidden space-y-3">
-          <div class="bg-amber-500/10 border border-amber-400/30 rounded-2xl p-2.5 text-center text-xs text-stone-200">
-            Enter the 8-digit code sent to <strong id="resetTargetEmail" class="text-amber-300"></strong>
-          </div>
-          <input required id="resetOtpCode" type="text" inputmode="numeric" maxlength="8" pattern="[0-9]{6,8}"
-            placeholder="8-digit reset code"
-            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-center font-mono text-base tracking-[0.25em] font-bold text-white focus:outline-none focus:border-amber-400" />
-          <input required id="resetNewPassword" type="password" minlength="6" placeholder="New Password (min. 6 characters)"
-            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400" />
-          <button type="submit" id="completeResetBtn"
-            class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-3 rounded-2xl text-sm transition shadow-xs">
-            Update Password &amp; Go to Checkout →
-          </button>
-          <button type="button" onclick="switchAuthView('signin')" class="w-full text-xs text-stone-400 hover:underline">
-            ← Back to Sign In
-          </button>
-        </form>
-
-        <div class="pt-2 border-t border-stone-800 flex items-center justify-center text-[11px] text-stone-400">
-          <button type="button" onclick="closeAuthGate()" class="font-bold text-amber-400 hover:underline">← Back to Storefront</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MAIN STOREFRONT -->
+  <!-- MAIN STOREFRONT VIEW -->
   <div id="storeMainWrapper">
-
-    <!-- LUXURY STICKY HEADER -->
     <header class="sticky top-0 z-40 bg-[#0d0c0a]/95 backdrop-blur-md border-b border-amber-400/25 px-3 pt-2.5 pb-2 shadow-xl">
       <div class="max-w-5xl mx-auto space-y-2">
         <div class="flex items-center justify-between gap-2">
           <a href="index.html" onclick="resetToHome(event)" class="font-editorial text-lg sm:text-xl font-bold tracking-wide text-amber-50 shrink-0">
             Sekiflex <span class="text-amber-400 italic font-semibold">Collections</span>
           </a>
-
-          <div class="flex items-center gap-2 min-w-0">
-            <a href="track.html"
-              class="track-zoom-btn inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-300 text-stone-950 text-[11px] sm:text-xs font-extrabold px-3 py-1.5 rounded-full shadow-md shrink-0">
-              <span>📦</span>
-              <span>Track Order</span>
-            </a>
-            <span id="topWelcomeGreeting" class="hidden sm:inline text-[11px] font-medium text-amber-200/85 truncate max-w-[110px]">
-              Welcome
-            </span>
-          </div>
+          <a href="track.html"
+            class="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-300 text-stone-950 text-[11px] sm:text-xs font-extrabold px-3 py-1.5 rounded-full shadow-md shrink-0">
+            <span>📦</span>
+            <span>Track Order</span>
+          </a>
         </div>
 
         <form onsubmit="submitSearch(event)" class="relative flex items-center gap-1.5">
           <div class="relative flex-1 flex items-center">
-            <svg class="w-4 h-4 text-amber-400/75 absolute left-3.5 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
-            </svg>
-            <input id="storeSearchInput" type="search" enterkeyhint="search" oninput="handleSearchInput(false)"
+            <input id="storeSearchInput" type="search" enterkeyhint="search" oninput="handleSearchInput()"
               placeholder="Search Sekiflex Collections..."
-              class="w-full bg-[#19150f] focus:bg-[#221c14] border border-amber-400/25 focus:border-amber-400 rounded-full pl-10 pr-8 py-2 text-xs sm:text-sm text-white placeholder:text-stone-400 focus:outline-none transition" />
+              class="w-full bg-[#19150f] focus:bg-[#221c14] border border-amber-400/25 focus:border-amber-400 rounded-full pl-3.5 pr-8 py-2 text-xs sm:text-sm text-white placeholder:text-stone-400 focus:outline-none transition" />
             <button type="button" id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 text-stone-400 hover:text-white text-base font-bold">
               &times;
             </button>
           </div>
-
-          <input type="file" id="pictureSearchInput" accept="image/*" class="hidden" onchange="handlePictureSearch(event)" />
-          <button type="button" id="pictureSearchBtn" onclick="triggerPictureSearch()"
-            aria-label="Search product by picture"
-            title="Search by Picture"
-            class="bg-[#19150f] hover:bg-[#241e15] border border-amber-400/30 text-amber-300 p-2 rounded-full shrink-0 transition flex items-center justify-center">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 0 1 2-2h.93a2 2 0 0 0 1.664-.89l.812-1.22A2 2 0 0 1 10.07 4h3.86a2 2 0 0 1 1.664.89l.812 1.22A2 2 0 0 0 18.07 7H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
-              <circle cx="12" cy="13" r="3"/>
-            </svg>
-          </button>
-
-          <button type="submit" id="searchSubmitBtn"
+          <button type="submit"
             class="bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950 text-xs font-extrabold px-3.5 py-2 rounded-full shrink-0 transition shadow-sm">
             Search
           </button>
         </form>
-
-        <div id="pictureSearchBanner" class="hidden items-center justify-between gap-2 bg-[#1a1611] border border-amber-400/35 rounded-2xl px-3 py-1.5 text-xs">
-          <div class="flex items-center gap-2 min-w-0">
-            <img id="pictureSearchPreviewImg" src="" alt="Uploaded search photo" class="w-8 h-8 rounded-lg object-cover object-top border border-amber-400/40 shrink-0" />
-            <div class="min-w-0">
-              <p class="font-bold text-white truncate">Photo Match</p>
-              <p id="pictureSearchStatusText" class="text-[10px] text-amber-300 truncate">Showing closest products</p>
-            </div>
-          </div>
-          <button type="button" onclick="clearPictureSearch()" class="bg-amber-500 text-stone-950 text-[10px] font-extrabold px-2.5 py-1 rounded-full shrink-0">
-            Clear
-          </button>
-        </div>
       </div>
     </header>
 
     <div class="max-w-5xl mx-auto px-3 pt-2 space-y-2.5">
-
-      <!-- HERO SECTION VIDEO BANNER -->
-      <section id="heroVideoSection" class="hidden rounded-2xl overflow-hidden bg-[#16130f] border border-amber-400/35 shadow-lg">
-        <video id="heroVideoPlayer" controls autoplay muted loop playsinline
-          class="w-full max-h-48 sm:max-h-60 object-cover object-top bg-black"></video>
-      </section>
-
       <!-- COMPACT SCROLLING HERO ANNOUNCEMENT & SHOWCASE SLIDES -->
       <section id="heroCarouselSection">
         <div id="bannerCarousel" class="flex gap-2.5 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
 
-          <!-- Slide 1: Live Admin Promo Announcement #1 -->
           <div id="livePromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full min-h-[120px] rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-2.5 flex items-center justify-between gap-2.5 border border-amber-400/50 shadow-lg overflow-hidden">
             <div class="space-y-1 flex-1 min-w-0 flex flex-col justify-between">
-              <div class="space-y-0.5">
-                <span class="inline-block text-[8px] font-extrabold uppercase tracking-widest bg-gradient-to-r from-amber-400 to-yellow-300 text-stone-950 px-2 py-0.5 rounded-full">
-                  ✦ Featured Promo
-                </span>
-                <p id="livePromoText" class="font-editorial text-xs sm:text-sm font-bold leading-snug line-clamp-2 text-amber-50"></p>
-              </div>
-              <div>
-                <button type="button" onclick="jumpToAllItems()" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-3 py-1 rounded-full transition shadow-sm">
-                  Shop Now →
-                </button>
-              </div>
+              <span class="inline-block text-[8px] font-extrabold uppercase tracking-widest bg-gradient-to-r from-amber-400 to-yellow-300 text-stone-950 px-2 py-0.5 rounded-full w-fit">
+                ✦ Featured Promo
+              </span>
+              <p id="livePromoText" class="font-editorial text-xs sm:text-sm font-bold leading-snug line-clamp-2 text-amber-50"></p>
+              <button type="button" onclick="jumpToAllItems()" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-3 py-1 rounded-full transition shadow-sm w-fit">
+                Shop Now →
+              </button>
             </div>
             <img id="livePromoImg" src="" alt="" onerror="this.classList.add('hidden')" class="hidden w-24 sm:w-28 h-24 sm:h-28 object-cover object-top rounded-xl border border-amber-400/50 shrink-0 shadow-md" />
           </div>
 
-          <!-- Slide 2: Live Admin Promo Announcement #2 -->
           <div id="livePromoBanner2Card" class="promo-slide hidden snap-start shrink-0 w-full min-h-[120px] rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-2.5 flex items-center justify-between gap-2.5 border border-amber-400/45 shadow-lg overflow-hidden">
             <div class="space-y-1 flex-1 min-w-0 flex flex-col justify-between">
-              <div class="space-y-0.5">
-                <span class="inline-block text-[8px] font-extrabold uppercase tracking-widest bg-amber-500/25 text-amber-300 border border-amber-400/40 px-2 py-0.5 rounded-full">
-                  ✦ Store Announcement
-                </span>
-                <p id="livePromo2Text" class="font-editorial text-xs sm:text-sm font-bold leading-snug line-clamp-2 text-amber-50"></p>
-              </div>
-              <div>
-                <button type="button" onclick="jumpToAllItems()" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-3 py-1 rounded-full transition shadow-sm">
-                  Explore Picks →
-                </button>
-              </div>
+              <span class="inline-block text-[8px] font-extrabold uppercase tracking-widest bg-amber-500/25 text-amber-300 border border-amber-400/40 px-2 py-0.5 rounded-full w-fit">
+                ✦ Store Announcement
+              </span>
+              <p id="livePromo2Text" class="font-editorial text-xs sm:text-sm font-bold leading-snug line-clamp-2 text-amber-50"></p>
+              <button type="button" onclick="jumpToAllItems()" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-3 py-1 rounded-full transition shadow-sm w-fit">
+                Explore Picks →
+              </button>
             </div>
             <img id="livePromo2Img" src="" alt="" onerror="this.classList.add('hidden')" class="hidden w-24 sm:w-28 h-24 sm:h-28 object-cover object-top rounded-xl border border-amber-400/50 shrink-0 shadow-md" />
           </div>
 
-          <!-- Slide 3: Luxury Apparel Edit -->
           <div onclick="jumpToAllItems()" class="promo-slide cursor-pointer snap-start shrink-0 w-full min-h-[120px] rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-2.5 flex items-center justify-between gap-2.5 border border-amber-400/50 shadow-lg overflow-hidden">
-            <div class="space-y-1 flex-1 min-w-0 flex flex-col justify-between">
-              <div class="space-y-0.5">
-                <span class="inline-block text-[8px] font-extrabold uppercase tracking-widest bg-gradient-to-r from-amber-400 to-yellow-300 text-stone-950 px-2 py-0.5 rounded-full">
-                  ✦ Luxury Apparel
-                </span>
-                <h2 class="font-editorial text-sm sm:text-base font-bold leading-tight text-amber-50">
-                  Dresses, Knits &amp; Denim
-                </h2>
-                <p class="text-[10px] text-amber-100/85 line-clamp-1">Fresh chic styles curated for daily glam</p>
-              </div>
-              <div>
-                <button type="button" onclick="event.stopPropagation(); jumpToAllItems();" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-3 py-1 rounded-full transition shadow-sm">
-                  Shop Apparel →
-                </button>
-              </div>
+            <div class="space-y-1 flex-1 min-w-0">
+              <span class="inline-block text-[8px] font-extrabold uppercase tracking-widest bg-gradient-to-r from-amber-400 to-yellow-300 text-stone-950 px-2 py-0.5 rounded-full">
+                ✦ Luxury Apparel
+              </span>
+              <h2 class="font-editorial text-sm sm:text-base font-bold leading-tight text-amber-50">
+                Dresses, Knits &amp; Denim
+              </h2>
+              <p class="text-[10px] text-amber-100/85 line-clamp-1">Fresh chic styles curated for daily glam</p>
             </div>
             <div id="heroApparelMediaBox" class="w-24 sm:w-28 h-24 sm:h-28 rounded-xl border border-amber-400/50 shrink-0 shadow-md bg-gradient-to-br from-[#33230c] via-[#1c150c] to-[#110d08] overflow-hidden flex flex-col items-center justify-center p-1.5 text-center">
               <span class="text-lg font-editorial font-extrabold text-amber-400">SC</span>
@@ -543,23 +357,15 @@
             </div>
           </div>
 
-          <!-- Slide 4: Footwear, Watches & Designer Accessories -->
           <div onclick="openSplitCategoryStore()" class="promo-slide cursor-pointer snap-start shrink-0 w-full min-h-[120px] rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-2.5 flex items-center justify-between gap-2.5 border border-amber-400/50 shadow-lg overflow-hidden">
-            <div class="space-y-1 flex-1 min-w-0 flex flex-col justify-between">
-              <div class="space-y-0.5">
-                <span class="inline-block text-[8px] font-extrabold uppercase tracking-widest bg-amber-500/25 text-amber-300 border border-amber-400/40 px-2 py-0.5 rounded-full">
-                  ✦ Complete The Look
-                </span>
-                <h2 class="font-editorial text-sm sm:text-base font-bold leading-tight text-amber-50">
-                  Shoes, Bags &amp; Watches
-                </h2>
-                <p class="text-[10px] text-amber-100/85 line-clamp-1">Statement pieces to finish every outfit</p>
-              </div>
-              <div>
-                <button type="button" onclick="event.stopPropagation(); openSplitCategoryStore();" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-3 py-1 rounded-full transition shadow-sm">
-                  Browse Categories →
-                </button>
-              </div>
+            <div class="space-y-1 flex-1 min-w-0">
+              <span class="inline-block text-[8px] font-extrabold uppercase tracking-widest bg-amber-500/25 text-amber-300 border border-amber-400/40 px-2 py-0.5 rounded-full">
+                ✦ Complete The Look
+              </span>
+              <h2 class="font-editorial text-sm sm:text-base font-bold leading-tight text-amber-50">
+                Shoes, Bags &amp; Watches
+              </h2>
+              <p class="text-[10px] text-amber-100/85 line-clamp-1">Statement pieces to finish every outfit</p>
             </div>
             <div id="heroAccessoriesMediaBox" class="w-24 sm:w-28 h-24 sm:h-28 rounded-xl border border-amber-400/50 shrink-0 shadow-md bg-gradient-to-br from-[#33230c] via-[#1c150c] to-[#110d08] overflow-hidden flex flex-col items-center justify-center p-1.5 text-center">
               <span class="text-amber-400 text-base">♛</span>
@@ -567,90 +373,11 @@
             </div>
           </div>
 
-          <!-- Slide 5: Nationwide Delivery Fleet -->
-          <div onclick="window.location.href='track.html'" role="button" tabindex="0"
-            class="promo-slide cursor-pointer snap-start shrink-0 w-full min-h-[120px] rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-2.5 flex items-center justify-between gap-2 border border-amber-400/50 hover:border-amber-300 transition shadow-lg overflow-hidden">
-            <div class="space-y-1 flex-1 min-w-0 flex flex-col justify-between">
-              <div class="space-y-0.5">
-                <span class="inline-block text-[8px] font-extrabold uppercase tracking-widest bg-gradient-to-r from-amber-400 to-yellow-300 text-stone-950 px-2 py-0.5 rounded-full">
-                  SEKIFLEX FLEET
-                </span>
-                <h2 class="font-editorial text-sm sm:text-base font-bold leading-tight text-amber-50">
-                  Bike &amp; Cargo Delivery
-                </h2>
-                <p class="text-[10px] text-amber-100/85 line-clamp-1">Fast dispatch across Nigeria from Uyo</p>
-              </div>
-              <div>
-                <a href="track.html" onclick="event.stopPropagation();"
-                  class="track-zoom-btn inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-3 py-1 rounded-full transition">
-                  <span>📦</span>
-                  <span>Track Order →</span>
-                </a>
-              </div>
-            </div>
-
-            <div class="relative w-32 sm:w-40 h-24 sm:h-28 rounded-xl overflow-hidden border border-amber-400/50 shrink-0 shadow-md bg-gradient-to-b from-[#281e0e] via-[#18120b] to-[#0d0a07] flex flex-col justify-between p-1">
-              <div class="flex items-center justify-between gap-1 px-1">
-                <span class="text-[7px] font-black tracking-wider uppercase text-amber-300 truncate">SEKIFLEX</span>
-                <span class="text-[7px] font-extrabold bg-emerald-500/20 text-emerald-300 px-1 rounded-full shrink-0">LIVE</span>
-              </div>
-              <svg viewBox="0 0 240 112" class="w-full h-14 overflow-visible" role="img" aria-label="Sekiflex dispatch bike and cargo truck">
-                <line x1="0" y1="101" x2="240" y2="101" stroke="#f59e0b" stroke-opacity="0.45" stroke-width="2" />
-                <g transform="translate(116, 30)">
-                  <rect x="0" y="6" width="76" height="48" rx="6" fill="#1c160e" stroke="#f59e0b" stroke-width="2" />
-                  <text x="38" y="27" text-anchor="middle" fill="#fbbf24" font-size="8" font-weight="900">SEKIFLEX</text>
-                  <text x="38" y="42" text-anchor="middle" fill="#fde68a" font-size="6" font-weight="700">CARGO</text>
-                  <path d="M76 22 L98 22 L106 36 L106 54 L76 54 Z" fill="#231c12" stroke="#fbbf24" stroke-width="1.8" />
-                  <circle cx="18" cy="57" r="10" fill="#0d0a07" stroke="#fbbf24" stroke-width="2.2" />
-                  <circle cx="89" cy="57" r="10" fill="#0d0a07" stroke="#fbbf24" stroke-width="2.2" />
-                </g>
-                <g transform="translate(8, 22)">
-                  <circle cx="52" cy="14" r="7.5" fill="#fbbf24" />
-                  <rect x="6" y="22" width="38" height="27" rx="5" fill="#f59e0b" />
-                  <path d="M36 47 L56 45 L71 33 L76 58" fill="none" stroke="#fbbf24" stroke-width="3.2" stroke-linecap="round" />
-                  <circle cx="24" cy="61" r="14.5" fill="none" stroke="#fbbf24" stroke-width="3" />
-                  <circle cx="77" cy="61" r="14.5" fill="none" stroke="#fbbf24" stroke-width="3" />
-                </g>
-              </svg>
-              <div class="px-1 py-0.5 bg-amber-500/15 rounded flex items-center justify-between text-[8px] font-extrabold text-amber-300">
-                <span>🏍️ Bike</span>
-                <span>🚚 Cargo</span>
-              </div>
-            </div>
-          </div>
-
         </div>
       </section>
 
-      <!-- COMPACT TOP SCROLLING SHOWCASE STRIP -->
-      <section id="featuredStripSection" class="luxury-glass-card rounded-2xl overflow-hidden border border-amber-400/35">
-        <div class="px-3 py-1.5 border-b border-amber-400/20 flex items-center justify-between bg-amber-500/10">
-          <h2 class="text-[10px] font-extrabold uppercase tracking-widest text-amber-300">✦ Featured</h2>
-          <button type="button" onclick="jumpToAllItems()" class="text-[10px] font-extrabold text-amber-300 hover:text-amber-200">
-            All Items →
-          </button>
-        </div>
-        <div id="featuredHorizontalList" class="p-2 flex gap-2 overflow-x-auto scroll-smooth no-scrollbar">
-        </div>
-      </section>
-
-      <!-- CATEGORY BAR & PRODUCT SHOWCASE -->
+      <!-- CATEGORY BAR & FRAMELESS PRODUCT SHOWCASE -->
       <section id="catalogSection" class="space-y-2 scroll-mt-24">
-        <div id="categoryViewBanner" class="hidden rounded-2xl bg-gradient-to-r from-[#281d0d] via-[#1c150c] to-amber-950/60 border border-amber-400/40 px-3 py-2 flex items-center justify-between gap-2">
-          <div class="min-w-0">
-            <p class="text-[9px] font-bold uppercase tracking-widest text-amber-400">Sekiflex Category</p>
-            <p id="categoryViewSubtitle" class="text-xs text-stone-200 truncate">Category catalog photos</p>
-          </div>
-          <div class="flex items-center gap-1.5 shrink-0">
-            <button type="button" onclick="openSplitCategoryStore()" class="text-[10px] font-extrabold bg-amber-500 text-stone-950 px-2.5 py-1 rounded-full">
-              All Categories
-            </button>
-            <button type="button" onclick="filterCategory('ALL')" class="text-[10px] font-extrabold bg-stone-900 hover:bg-stone-800 text-amber-300 border border-amber-400/30 px-2.5 py-1 rounded-full">
-              Show All
-            </button>
-          </div>
-        </div>
-
         <div class="flex items-center justify-between gap-2">
           <h2 id="catalogHeading" class="font-editorial font-bold text-sm sm:text-base text-amber-300">All Items</h2>
           <span id="productResultCount" class="text-[10px] font-medium text-amber-100/70 shrink-0"></span>
@@ -660,21 +387,8 @@
           <button type="button" onclick="filterCategory('ALL', this)" class="cat-btn bg-amber-500 text-stone-950 text-[11px] font-extrabold px-3 py-1 rounded-full whitespace-nowrap">All Items</button>
         </div>
 
-        <!-- COMPACT 2-COLUMN PRODUCT GRID -->
-        <div id="productsGrid" class="products-grid-home">
-          <div class="luxury-glass-card border border-amber-400/20 rounded-xl p-2 animate-pulse space-y-1.5">
-            <div class="w-full h-32 bg-stone-800 rounded-lg"></div>
-            <div class="h-2.5 bg-stone-800 rounded w-3/4"></div>
-            <div class="h-6 bg-stone-800 rounded-lg w-full"></div>
-          </div>
-          <div class="luxury-glass-card border border-amber-400/20 rounded-xl p-2 animate-pulse space-y-1.5">
-            <div class="w-full h-32 bg-stone-800 rounded-lg"></div>
-            <div class="h-2.5 bg-stone-800 rounded w-3/4"></div>
-            <div class="h-6 bg-stone-800 rounded-lg w-full"></div>
-          </div>
-        </div>
+        <div id="productsGrid" class="skf-catalog-grid"></div>
       </section>
-
     </div>
   </div>
 
@@ -686,14 +400,9 @@
           class="bg-stone-900 hover:bg-stone-800 border border-amber-400/25 text-amber-300 text-xs font-bold px-3 py-1.5 rounded-full shrink-0">
           ← Home
         </button>
-        <form onsubmit="submitSplitCategorySearch(event)" class="flex-1 flex items-center gap-1.5">
-          <input id="splitCategorySearchInput" type="search" placeholder="Search Sekiflex categories..."
-            oninput="renderSplitCategoryPanel()"
-            class="w-full bg-[#19150f] border border-amber-400/25 focus:border-amber-400 rounded-full px-3.5 py-1.5 text-xs text-white placeholder:text-stone-400 focus:outline-none" />
-          <button type="submit" class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-extrabold px-3 py-1.5 rounded-full shrink-0">
-            Search
-          </button>
-        </form>
+        <input id="splitCategorySearchInput" type="search" placeholder="Search Sekiflex categories..."
+          oninput="renderSplitCategoryPanel()"
+          class="flex-1 bg-[#19150f] border border-amber-400/25 focus:border-amber-400 rounded-full px-3.5 py-1.5 text-xs text-white placeholder:text-stone-400 focus:outline-none" />
       </div>
     </header>
 
@@ -701,7 +410,7 @@
       <aside class="skf-cat-sidebar no-scrollbar">
         <div id="splitCategorySidebar"></div>
 
-        <!-- HANGING BOUTIQUE WALL PROMO RACK -->
+        <!-- BOUTIQUE HANGING WALL PROMO RACK -->
         <div class="skf-wall-section">
           <div class="flex items-center justify-between px-1 mb-1">
             <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-400">Wall Promos</span>
@@ -717,48 +426,35 @@
             <h2 id="splitActiveCategoryTitle" class="font-editorial text-sm font-bold text-white truncate">Shop by Category</h2>
             <p id="splitActiveCategoryCount" class="text-[10px] text-amber-300"></p>
           </div>
-          <button type="button" id="splitShopAllInCatBtn" onclick="shopSelectedSplitCategory()"
-            class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-2.5 py-1 rounded-full transition shrink-0">
-            Catalog Photos →
-          </button>
         </div>
-
         <div id="splitCategoryGrid" class="skf-cat-grid"></div>
       </main>
     </div>
   </div>
 
   <!-- PRODUCT DETAIL MODAL -->
-  <div id="productDetailModal" onclick="if(event.target === this) closeProductDetailModal();" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
+  <div id="productDetailModal" onclick="if(event.target === this) closeProductDetailModal();" class="fixed inset-0 z-[80] hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
     <div class="bg-[#14110c] border border-amber-400/35 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
       <div class="relative bg-stone-950">
-        <img id="detailModalImg" src="" alt="" onerror="handleCatalogImgError(this, this.alt)" class="w-full max-h-64 object-contain object-top mx-auto bg-stone-950" />
+        <img id="detailModalImg" src="" alt="" class="w-full max-h-64 object-contain object-top mx-auto bg-stone-950" />
         <button type="button" onclick="closeProductDetailModal()"
           class="absolute top-3 right-3 w-8 h-8 rounded-full bg-stone-900/90 hover:bg-stone-800 text-white font-bold text-base border border-white/15 flex items-center justify-center">
           &times;
         </button>
-        <span id="detailModalCategory" class="hidden absolute bottom-3 left-3 bg-stone-950/90 text-amber-300 border border-amber-400/30 text-[10px] font-bold px-2.5 py-0.5 rounded-full"></span>
       </div>
-
       <div class="p-4 space-y-3">
         <div class="flex items-start justify-between gap-3">
           <div>
             <h3 id="detailModalName" class="font-editorial text-lg font-bold text-white leading-snug"></h3>
-            <p id="detailModalStock" class="text-[11px] font-semibold text-emerald-400 mt-0.5"></p>
+            <p id="detailModalStock" class="text-[11px] font-semibold text-emerald-400 mt-0.5">In Stock</p>
           </div>
           <div id="detailModalPriceBlock" class="text-right shrink-0"></div>
         </div>
-
         <p id="detailModalDesc" class="text-xs text-stone-300 leading-relaxed whitespace-pre-line border-t border-stone-800 pt-2.5"></p>
-
         <div class="flex gap-2 pt-1">
           <button type="button" onclick="closeProductDetailModal()"
             class="px-3.5 py-2.5 rounded-xl border border-stone-700 text-xs font-bold text-stone-300 hover:bg-stone-800 transition">
             Close
-          </button>
-          <button type="button" id="detailShareBtn"
-            class="px-3.5 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 border border-amber-400/35 text-xs font-extrabold text-amber-300 transition">
-            Share
           </button>
           <button type="button" id="detailAddToCartBtn"
             class="flex-1 bg-amber-500 hover:bg-amber-400 text-stone-950 py-2.5 rounded-xl text-xs font-extrabold transition shadow-xs">
@@ -769,1167 +465,113 @@
     </div>
   </div>
 
+  <!-- CART DRAWER -->
+  <div id="cartDrawer" onclick="if(event.target === this) toggleCart(false);" class="fixed inset-0 z-[75] hidden bg-black/75 backdrop-blur-xs flex justify-end p-0 sm:p-3">
+    <div class="bg-[#12141a] text-white w-full max-w-sm h-full sm:h-auto sm:max-h-[90vh] sm:my-auto sm:rounded-3xl border border-amber-400/25 overflow-y-auto p-4 space-y-3 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
+        <h2 class="font-editorial font-bold text-base text-white">Your Shopping Cart</h2>
+        <button type="button" onclick="toggleCart(false)" class="w-7 h-7 rounded-full bg-stone-900 text-stone-400 hover:text-white font-bold">&times;</button>
+      </div>
+      <div id="cartItems" class="space-y-2"></div>
+      <div class="flex items-center justify-between border-t border-stone-800 pt-2.5">
+        <span class="text-xs text-stone-400">Subtotal</span>
+        <strong id="cartReviewSubTotal" class="text-sm font-extrabold text-amber-400">₦0</strong>
+      </div>
+    </div>
+  </div>
+
   <!-- FIXED BOTTOM NAVIGATION BAR -->
   <nav id="bottomFixedNav" class="fixed bottom-0 inset-x-0 z-40 bg-[#0d0c0a]/95 backdrop-blur-md border-t border-amber-400/25 shadow-[0_-4px_16px_rgba(0,0,0,0.45)]">
-    <div class="max-w-5xl mx-auto grid grid-cols-4 h-14">
+    <div class="max-w-5xl mx-auto grid grid-cols-3 h-14">
       <button type="button" id="navHomeBtn" onclick="switchBottomTab('home')"
-        class="flex flex-col items-center justify-center gap-0.5 text-amber-400 font-bold text-[10px] transition">
-        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3 2 12h3v8h6v-6h2v6h6v-8h3L12 3z"/></svg>
+        class="flex flex-col items-center justify-center gap-0.5 text-amber-400 font-bold text-[10px]">
+        <span>🏠</span>
         <span>Home</span>
       </button>
-
       <button type="button" id="navCatBtn" onclick="switchBottomTab('categories')"
-        class="flex flex-col items-center justify-center gap-0.5 text-stone-400 hover:text-amber-300 font-semibold text-[10px] transition">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        class="flex flex-col items-center justify-center gap-0.5 text-stone-400 hover:text-amber-300 font-semibold text-[10px]">
+        <span>🗂️</span>
         <span>Categories</span>
       </button>
-
       <button type="button" id="navCartBtn" onclick="switchBottomTab('cart')"
-        class="relative flex flex-col items-center justify-center gap-0.5 text-stone-400 hover:text-amber-300 font-semibold text-[10px] transition">
-        <div class="relative">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-          <span id="cartCount" class="absolute -top-1.5 -right-2.5 bg-amber-500 text-stone-950 text-[9px] font-extrabold min-w-[16px] h-[16px] px-1 rounded-full flex items-center justify-center">0</span>
-        </div>
-        <span>Cart</span>
-      </button>
-
-      <button type="button" id="navAccountBtn" onclick="switchBottomTab('account')"
-        class="flex flex-col items-center justify-center gap-0.5 text-stone-400 hover:text-amber-300 font-semibold text-[10px] transition">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <span>Account</span>
+        class="relative flex flex-col items-center justify-center gap-0.5 text-stone-400 hover:text-amber-300 font-semibold text-[10px]">
+        <span>🛒 Cart (<span id="cartCount">0</span>)</span>
       </button>
     </div>
   </nav>
 
-  <!-- LUXURY ACCOUNT SHEET -->
-  <div id="accountDrawer" onclick="if(event.target === this) closeAllDrawers();" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-[#12141a] text-white w-full max-w-sm rounded-t-3xl sm:rounded-3xl p-4 space-y-3 shadow-2xl border border-amber-400/25">
-      <div class="flex items-center justify-between gap-2 border-b border-stone-800 pb-2.5">
-        <div class="min-w-0">
-          <h3 id="menuCustomerName" class="font-editorial font-bold text-base text-white truncate">Welcome</h3>
-          <p id="menuCustomerEmail" class="text-[11px] text-stone-400 truncate">Sign in or register before checkout</p>
-        </div>
-        <div class="flex items-center gap-1.5 shrink-0">
-          <button type="button" onclick="openStoreSettingsModal()"
-            class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-amber-300 text-[11px] font-bold px-2.5 py-1 rounded-full transition">
-            Settings
-          </button>
-          <button type="button" onclick="closeAllDrawers()" class="w-7 h-7 rounded-full bg-stone-900 text-stone-400 hover:text-white font-bold text-base">&times;</button>
-        </div>
-      </div>
-
-      <div class="divide-y divide-stone-800/90 text-xs font-semibold text-stone-200">
-        <div class="py-2 flex items-center justify-between">
-          <span>Promo &amp; Order Alerts</span>
-          <button type="button" onclick="enableSekiflexPush({ customerEmail: currentCustomer?.email || null, customerPhone: currentCustomer?.phone || null, isAdmin: false })"
-            class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-400/35 px-3 py-1 rounded-full text-[11px] font-bold transition">
-            Enable 🔔
-          </button>
-        </div>
-        <div class="py-2 flex items-center justify-between">
-          <span>Track My Orders</span>
-          <a href="track.html" class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-400/35 px-3 py-1 rounded-full text-[11px] font-bold transition">
-            Open →
-          </a>
-        </div>
-        <div class="py-2 flex items-center justify-between">
-          <span>Reviews &amp; Rating</span>
-          <button type="button" onclick="closeAllDrawers(); openReviewsModal();" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 px-3 py-1 rounded-full text-[11px] font-bold transition">
-            Open →
-          </button>
-        </div>
-        <div class="py-2 flex items-center justify-between">
-          <span>Delivery &amp; Pickup</span>
-          <button type="button" onclick="closeAllDrawers(); openInfoModal('delivery');" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 px-3 py-1 rounded-full text-[11px] font-bold transition">
-            Open →
-          </button>
-        </div>
-        <div class="py-2 flex items-center justify-between">
-          <span>Privacy Policy</span>
-          <button type="button" onclick="closeAllDrawers(); openInfoModal('privacy');" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 px-3 py-1 rounded-full text-[11px] font-bold transition">
-            Open →
-          </button>
-        </div>
-        <div class="py-2 flex items-center justify-between">
-          <span>About Sekiflex</span>
-          <button type="button" onclick="closeAllDrawers(); openInfoModal('about');" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 px-3 py-1 rounded-full text-[11px] font-bold transition">
-            Open →
-          </button>
-        </div>
-        <div class="py-2 flex items-center justify-between">
-          <span>Support (WhatsApp / Call)</span>
-          <a href="https://wa.me/2349069037617" target="_blank" rel="noopener" class="bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-400/35 px-3 py-1 rounded-full text-[11px] font-bold transition">
-            Chat →
-          </a>
-        </div>
-      </div>
-
-      <button type="button" id="accountSignInActionBtn" onclick="closeAllDrawers(); openAuthGate('signup', false);"
-        class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-extrabold text-center transition">
-        Register / Sign In
-      </button>
-      <button type="button" id="accountSignOutActionBtn" onclick="customerLogout()"
-        class="hidden w-full py-2.5 rounded-xl bg-red-950/70 border border-red-500/30 text-red-200 text-xs font-extrabold text-center transition">
-        Sign Out
-      </button>
-    </div>
-  </div>
-
-  <!-- REVIEWS MODAL -->
-  <div id="reviewsModal" onclick="if(event.target === this) closeReviewsModal();" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-[#12141a] text-white border border-amber-400/25 w-full max-w-md rounded-3xl p-5 space-y-3.5 shadow-2xl my-auto max-h-[85vh] overflow-y-auto">
-      <div class="flex items-center justify-between gap-2 border-b border-stone-800 pb-2.5">
-        <div>
-          <h3 class="font-editorial text-lg font-bold text-white">Ratings &amp; Reviews</h3>
-          <p id="reviewCountText" class="text-[11px] text-stone-400">0 reviews</p>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="text-xs font-extrabold text-amber-400">★ <span id="avgRatingText" class="text-white">5.0</span></span>
-          <button type="button" onclick="closeReviewsModal()" class="w-7 h-7 rounded-full bg-stone-900 text-stone-400 hover:text-white font-bold text-base">&times;</button>
-        </div>
-      </div>
-
-      <form onsubmit="submitCustomerReview(event)" class="bg-stone-950 border border-stone-800 rounded-2xl p-3 space-y-2">
-        <div class="flex items-center justify-between gap-2">
-          <span class="text-xs font-bold text-stone-200">Rating:</span>
-          <div id="starSelectorRow" class="flex items-center gap-1" role="group" aria-label="Select 1 to 5 stars">
-            <button type="button" data-star="1" onclick="selectStarRating(1)" class="star-btn text-lg text-amber-400 leading-none">★</button>
-            <button type="button" data-star="2" onclick="selectStarRating(2)" class="star-btn text-lg text-amber-400 leading-none">★</button>
-            <button type="button" data-star="3" onclick="selectStarRating(3)" class="star-btn text-lg text-amber-400 leading-none">★</button>
-            <button type="button" data-star="4" onclick="selectStarRating(4)" class="star-btn text-lg text-amber-400 leading-none">★</button>
-            <button type="button" data-star="5" onclick="selectStarRating(5)" class="star-btn text-lg text-amber-400 leading-none">★</button>
-            <span id="selectedStarLabel" class="ml-1 text-[11px] font-bold text-amber-300">5 / 5</span>
-          </div>
-        </div>
-        <input id="reviewAuthorInput" type="text" placeholder="Your Name (optional)"
-          class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
-        <textarea required id="reviewCommentInput" rows="2" placeholder="Write your review..."
-          class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400"></textarea>
-        <button type="submit"
-          class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-2 rounded-xl text-xs transition">
-          Post Review
-        </button>
-      </form>
-
-      <div id="reviewsListContainer" class="space-y-2"></div>
-    </div>
-  </div>
-
-  <!-- STORE SETTINGS MODAL -->
-  <div id="storeSettingsModal" onclick="if(event.target === this) closeStoreSettingsModal();" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-[#12141a] text-white border border-amber-400/25 w-full max-w-md rounded-3xl p-5 space-y-3.5 shadow-2xl my-auto">
-      <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
-        <div>
-          <h3 class="font-editorial text-lg font-bold text-white">Account Settings</h3>
-          <p class="text-[11px] text-stone-400">Password, social links &amp; preferences</p>
-        </div>
-        <button type="button" onclick="closeStoreSettingsModal()" class="w-7 h-7 rounded-full bg-stone-900 hover:bg-stone-800 text-stone-400 hover:text-white font-bold text-base">&times;</button>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2 text-xs font-bold">
-        <a id="settingsTikTokLink" href="https://www.tiktok.com/@sekiflex_collections?_r=1&_t=ZS-9BbSAFjxrZW" target="_blank" rel="noopener"
-          class="flex items-center justify-center bg-stone-950 hover:bg-stone-800 border border-stone-700 text-white py-2 px-3 rounded-xl transition">
-          TikTok →
-        </a>
-        <a id="settingsFacebookLink" href="https://www.facebook.com/share/1G3ErASdHa/" target="_blank" rel="noopener"
-          class="flex items-center justify-center bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/35 text-amber-300 py-2 px-3 rounded-xl transition">
-          Facebook →
-        </a>
-      </div>
-
-      <form onsubmit="handleAccountPasswordChange(event)" class="bg-stone-950 border border-stone-800 rounded-2xl p-3 space-y-2">
-        <p class="text-xs font-bold text-amber-300">Change Password</p>
-        <p id="changePasswordMsg" class="hidden text-[11px] font-semibold p-2 rounded-xl"></p>
-        <input required id="accountNewPassword" type="password" minlength="6" placeholder="New Password (min. 6 chars)"
-          class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
-        <input required id="accountConfirmPassword" type="password" minlength="6" placeholder="Confirm New Password"
-          class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
-        <button type="submit" id="saveNewPasswordBtn"
-          class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 py-2 rounded-xl text-xs font-extrabold transition">
-          Update Password
-        </button>
-      </form>
-
-      <label class="flex items-center justify-between p-3 rounded-2xl bg-stone-950 border border-stone-800 text-stone-200 cursor-pointer text-xs font-bold">
-        <span>Sound Alerts</span>
-        <input type="checkbox" id="prefSoundToggle"
-          onchange="localStorage.setItem('sekiflex_sound_enabled', this.checked ? '1' : '0')"
-          class="w-4 h-4 accent-amber-500 rounded" />
-      </label>
-
-      <button type="button" onclick="closeStoreSettingsModal()" class="w-full bg-stone-800 hover:bg-stone-700 text-white py-2.5 rounded-xl text-xs font-bold">
-        Done
-      </button>
-    </div>
-  </div>
-
-  <!-- CATEGORIES SHEET -->
-  <div id="categoriesDrawer" onclick="if(event.target === this) closeAllDrawers();" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-[#12141a] text-white w-full max-w-sm rounded-t-3xl sm:rounded-3xl p-4 max-h-[82vh] overflow-y-auto space-y-3 shadow-2xl border border-amber-400/25">
-      <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
-        <div>
-          <h3 class="font-editorial font-bold text-base text-white">Store Categories</h3>
-          <p class="text-[11px] text-stone-400">Tap any category to view items</p>
-        </div>
-        <button type="button" onclick="closeAllDrawers()" class="w-7 h-7 rounded-full bg-stone-900 text-stone-400 hover:text-white font-bold text-base">&times;</button>
-      </div>
-      <div id="drawerCategoriesList" class="grid grid-cols-2 gap-2"></div>
-    </div>
-  </div>
-
-  <!-- ABOUT US / DELIVERY / PRIVACY POLICY MODAL -->
-  <div id="infoModal" onclick="if(event.target === this) this.classList.add('hidden');" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-[#12141a] text-white border border-amber-400/25 rounded-3xl max-w-md w-full p-5 space-y-3.5 shadow-2xl my-auto max-h-[85vh] overflow-y-auto">
-      <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
-        <h3 id="infoModalTitle" class="font-editorial text-lg font-bold text-amber-300">About Sekiflex</h3>
-        <button type="button" onclick="document.getElementById('infoModal').classList.add('hidden')" class="w-7 h-7 rounded-full bg-stone-900 text-stone-400 hover:text-white font-bold">&times;</button>
-      </div>
-      <div id="infoModalBody" class="text-xs text-stone-300 space-y-2 leading-relaxed"></div>
-      <button type="button" onclick="document.getElementById('infoModal').classList.add('hidden')" class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 py-2.5 rounded-xl text-xs font-extrabold">
-        Close
-      </button>
-    </div>
-  </div>
-
-  <!-- Added-to-Bag Toast Notification -->
-  <div id="bagToast" class="fixed bottom-16 left-1/2 -translate-x-1/2 z-40 hidden bg-[#12141a] text-white px-4 py-2 rounded-full shadow-2xl border border-amber-400/35 flex items-center gap-3 text-xs whitespace-nowrap">
-    <span class="text-emerald-400 font-bold">&#10003;</span>
-    <span id="bagToastText">Added to cart</span>
-    <button type="button" onclick="hideBagToast(); openCartReview();" class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold px-3 py-1 rounded-full text-[11px] transition">
-      View Cart
-    </button>
-  </div>
-
-  <!-- LUXURY MODERATE CART & CHECKOUT SHEET -->
-  <div id="cartDrawer" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex justify-end p-0 sm:p-3">
-    <div class="bg-[#12141a] text-white w-full max-w-sm h-full sm:h-auto sm:max-h-[90vh] sm:my-auto sm:rounded-3xl border border-amber-400/25 overflow-y-auto p-4 flex flex-col justify-between shadow-2xl space-y-3.5">
-      <div class="space-y-3.5">
-        <div class="flex items-center justify-between bg-stone-950 border border-amber-400/20 rounded-2xl px-3.5 py-2.5">
-          <div>
-            <p class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Sekiflex Bag</p>
-            <h2 id="cartDrawerHeading" class="font-editorial font-bold text-base text-white">Your Shopping Cart</h2>
-          </div>
-          <button type="button" onclick="skfHandleKeepShopping(event)" class="w-7 h-7 rounded-full bg-stone-900 hover:bg-stone-800 text-stone-400 hover:text-white text-base font-bold">&times;</button>
-        </div>
-
-        <div id="cartItems" class="space-y-2"></div>
-
-        <div id="cartSummaryActions" class="space-y-2.5 bg-stone-950 border border-stone-800 rounded-2xl p-3">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-medium text-stone-400">Items Subtotal</span>
-            <strong id="cartReviewSubTotal" class="text-sm font-extrabold text-amber-400">₦0</strong>
-          </div>
-
-          <div class="flex gap-2">
-            <button type="button" id="skfKeepShoppingBtn" onclick="skfHandleKeepShopping(event)"
-              class="px-3 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 text-xs font-bold transition">
-              ← Keep Shopping
-            </button>
-            <button type="button" id="openWaybillBtn" onclick="skfHandleProceedToCheckout(event)"
-              class="flex-1 bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-2.5 rounded-xl text-xs transition shadow-2xs">
-              Proceed to Checkout →
-            </button>
-          </div>
-        </div>
-
-        <form id="checkoutForm" autocomplete="off" onsubmit="placeOrder(event)" class="hidden space-y-2.5 bg-stone-950 border border-stone-800 rounded-2xl p-3">
-          <div class="flex items-center justify-between pb-1 border-b border-stone-800">
-            <h3 class="font-bold text-[11px] uppercase tracking-wider text-amber-300">Waybill &amp; Payment</h3>
-            <button type="button" onclick="backToCartReviewOnly()" class="text-[11px] font-bold text-amber-400 hover:underline">
-              ← Recheck Cart
-            </button>
-          </div>
-
-          <div class="grid grid-cols-2 gap-1.5 bg-[#12141a] p-1 rounded-xl border border-stone-800">
-            <button type="button" id="btnDeliveryMode" onclick="setFulfillmentMode('delivery')"
-              class="py-1.5 px-2.5 rounded-lg text-xs font-bold bg-amber-500 text-stone-950 transition">
-              Courier Delivery
-            </button>
-            <button type="button" id="btnPickupMode" onclick="setFulfillmentMode('pickup')"
-              class="py-1.5 px-2.5 rounded-lg text-xs font-bold text-stone-300 hover:text-white transition">
-              Store Pickup (Free)
-            </button>
-          </div>
-
-          <input required id="custName" name="sekiflex_order_recipient" autocomplete="off" type="text" placeholder="Recipient Full Name" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
-          <input required id="custEmail" name="sekiflex_order_email" autocomplete="off" type="email" placeholder="Email Address (for tracking receipt)" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
-          <input required id="custPhone" name="sekiflex_order_phone" autocomplete="off" type="tel" placeholder="Phone / WhatsApp Number" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
-
-          <div id="deliveryFields" class="space-y-2">
-            <div class="grid grid-cols-2 gap-2">
-              <select required id="custCountry" onchange="handleCountryChange()" class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-2.5 py-2 text-xs focus:outline-none focus:border-amber-400">
-                <option value="Nigeria">Nigeria</option>
-                <option value="United Kingdom">United Kingdom</option>
-                <option value="United States">United States</option>
-                <option value="Canada">Canada</option>
-                <option value="Ghana">Ghana</option>
-              </select>
-
-              <select required id="custStateSelect" onchange="updateShippingFee()" class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-2.5 py-2 text-xs focus:outline-none focus:border-amber-400">
-                <option value="">Select State...</option>
-              </select>
-
-              <input id="custStateText" oninput="updateShippingFee()" type="text" placeholder="State / Province" class="hidden w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
-            </div>
-
-            <input required id="custCity" type="text" placeholder="City" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
-            <input required id="custAddress" type="text" placeholder="Full Street Delivery Address" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
-          </div>
-
-          <div id="pickupInfoBox" class="hidden bg-amber-500/10 border border-amber-400/30 rounded-xl p-2.5 text-xs space-y-1">
-            <p class="font-bold text-amber-300 text-xs">Store Pickup — Uyo HQ (FREE)</p>
-            <p class="text-stone-200 text-[11px]">Urua Ekpa, Uyo, Akwa Ibom State</p>
-            <p class="text-stone-400 text-[11px]">Mon–Sat: 7:30 AM – 9:00 PM &bull; Sun: 2:00 PM – 9:00 PM</p>
-          </div>
-
-          <input id="custNotes" type="text" placeholder="Delivery/pickup note or size preference (optional)" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
-
-          <div class="bg-[#12141a] rounded-xl p-2.5 text-xs space-y-1 border border-stone-800">
-            <div class="flex justify-between text-stone-400"><span>Items Subtotal:</span><span id="subTotalText" class="font-semibold text-white">₦0</span></div>
-            <div class="flex justify-between text-stone-400"><span>Delivery (<span id="estDaysText">select state</span>):</span><span id="shipFeeText" class="font-semibold text-white">—</span></div>
-            <div class="flex justify-between font-bold text-sm border-t border-stone-800 pt-1"><span>Total to Pay:</span><span id="grandTotalText" class="text-amber-400">₦0</span></div>
-          </div>
-
-          <div class="border border-amber-400/25 bg-[#12141a] rounded-xl p-2.5 space-y-2">
-            <p class="text-[11px] text-stone-300">Transfer <span class="font-bold text-amber-400" id="payBoxAmountText">₦0</span> to:</p>
-
-            <div class="bg-stone-950 border border-stone-800 rounded-xl p-2 flex items-center justify-between gap-2">
-              <div class="text-xs">
-                <p class="font-bold text-white">Stanbic IBTC</p>
-                <p class="font-mono font-bold text-xs text-amber-400">0084620625</p>
-                <p class="text-[10px] text-stone-400">Sekiflex Collections</p>
-              </div>
-              <button type="button" onclick="copyAcct('0084620625', 'Stanbic IBTC', this)"
-                class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-2.5 py-1.5 rounded-lg shrink-0 transition">
-                Copy
-              </button>
-            </div>
-
-            <div class="bg-stone-950 border border-stone-800 rounded-xl p-2 flex items-center justify-between gap-2">
-              <div class="text-xs">
-                <p class="font-bold text-white">OPay</p>
-                <p class="font-mono font-bold text-xs text-amber-400">9163755234</p>
-                <p class="text-[10px] text-stone-400">Sekiflex Collections</p>
-              </div>
-              <button type="button" onclick="copyAcct('9163755234', 'OPay', this)"
-                class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-2.5 py-1.5 rounded-lg shrink-0 transition">
-                Copy
-              </button>
-            </div>
-
-            <select required id="paidBankSelect" class="w-full border border-stone-800 bg-stone-950 text-white rounded-xl px-2.5 py-2 text-xs focus:outline-none focus:border-amber-400">
-              <option value="">Select Account You Transferred To...</option>
-              <option value="Stanbic IBTC (0084620625)">Paid to Stanbic IBTC — 0084620625</option>
-              <option value="OPay (9163755234)">Paid to OPay — 9163755234</option>
-            </select>
-
-            <input required id="senderRefInput" type="text" placeholder="Sender Account Name or Transfer Reference" class="w-full border border-stone-800 bg-stone-950 text-white placeholder:text-stone-500 rounded-xl px-2.5 py-2 text-xs focus:outline-none focus:border-amber-400" />
-
-            <label class="flex items-start gap-2 text-[11px] text-stone-300 cursor-pointer">
-              <input required id="paymentConfirmCheck" type="checkbox" class="mt-0.5 accent-amber-500" />
-              <span>I have completed the bank transfer and accept the <button type="button" onclick="event.preventDefault(); openInfoModal('privacy');" class="underline font-semibold text-amber-400">Privacy Policy</button>.</span>
-            </label>
-          </div>
-
-          <button type="submit" id="submitBtn" class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-2.5 rounded-xl text-xs transition shadow-2xs">
-            I Have Paid — Confirm Order
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Success Modal -->
-  <div id="successModal" onclick="if(event.target === this) closeSuccessModalToStore();" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-[#12141a] text-white border border-amber-400/30 rounded-3xl max-w-sm w-full p-5 text-center space-y-3.5 shadow-2xl relative">
-      <button type="button" onclick="closeSuccessModalToStore()" aria-label="Back to store"
-        class="absolute top-3.5 left-3.5 inline-flex items-center gap-1 text-xs font-bold text-stone-300 hover:text-white bg-stone-900 hover:bg-stone-800 px-3 py-1 rounded-full transition">
-        ← Back
-      </button>
-      <div class="w-11 h-11 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-400/30 flex items-center justify-center mx-auto text-xl font-bold mt-2">&#10003;</div>
-      <h2 class="font-editorial text-xl font-bold text-white">Order Submitted</h2>
-      <p class="text-xs font-semibold text-amber-300 leading-relaxed">
-        Thank you for buying from Sekiflex Collections.
-      </p>
-      <p id="successOrderStatusBadge" class="inline-block text-xs font-bold px-3 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-400/30">
-        Order processing • Awaiting payment
-      </p>
-      <p class="text-xs text-stone-300">Save your tracking code below:</p>
-      <div class="bg-stone-950 border border-dashed border-amber-400/40 rounded-xl py-2.5 px-4 font-mono text-base font-bold text-amber-400" id="newTrackingCode"></div>
-      <div id="successProductLinksBox" class="hidden text-left bg-stone-950 border border-stone-800 rounded-xl p-2.5 space-y-1">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-amber-400">Share Ordered Product Links</p>
-        <div id="successProductLinksList" class="text-[11px] text-stone-200 space-y-1 break-all"></div>
-      </div>
-      <a id="orderWhatsappConfirmBtn" href="https://wa.me/2349069037617" target="_blank" rel="noopener"
-         class="block w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-xl text-xs font-bold transition">
-        Send Receipt on WhatsApp
-      </a>
-      <div class="flex gap-2">
-        <button type="button" onclick="copyTracking()" class="flex-1 border border-stone-700 py-2 rounded-xl text-xs font-bold text-stone-200 hover:bg-stone-800">Copy Code</button>
-        <a id="trackNowLink" href="track.html" class="flex-1 bg-stone-950 border border-amber-400/30 text-amber-300 py-2 rounded-xl text-xs font-bold hover:bg-stone-900">Track Order</a>
-      </div>
-      <button type="button" onclick="closeSuccessModalToStore()"
-        class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 py-2.5 rounded-xl text-xs font-extrabold transition">
-        ← Back to Store
-      </button>
-    </div>
-  </div>
-
   <script>
-    const STORE_WHATSAPP_NUMBER = '2349069037617';
-    const TIKTOK_URL = 'https://www.tiktok.com/@sekiflex_collections?_r=1&_t=ZS-9BbSAFjxrZW';
-    const FACEBOOK_URL = 'https://www.facebook.com/share/1G3ErASdHa/';
-    const ROTATION_MINUTES = 2;
-
     const DEFAULT_WALL_PROMO_CARDS = [
-      { id: 'wall_1', title: 'Hot Drops', tag: 'NEW IN', image: '', categoryKey: 'ALL' },
-      { id: 'wall_2', title: 'Luxury Fits', tag: 'PROMO', image: '', categoryKey: 'ALL' },
-      { id: 'wall_3', title: 'Footwear Edit', tag: 'HOT', image: '', categoryKey: 'ALL' },
-      { id: 'wall_4', title: 'Watches & Bags', tag: 'LUXURY', image: '', categoryKey: 'ALL' },
-      { id: 'wall_5', title: 'Uyo Dispatch', tag: 'FAST', image: '', categoryKey: 'ALL' }
+      { id: 'wall_1', title: 'Hot Drops', tag: 'NEW IN', badgeBg: 'bg-amber-400 text-stone-950', titleColor: 'text-amber-300', image: '', categoryKey: 'ALL' },
+      { id: 'wall_2', title: 'Luxury Fits', tag: 'SAVE', badgeBg: 'bg-emerald-400 text-stone-950', titleColor: 'text-emerald-300', image: '', categoryKey: 'ALL' },
+      { id: 'wall_3', title: 'Footwear Edit', tag: 'TREND', badgeBg: 'bg-pink-400 text-stone-950', titleColor: 'text-pink-300', image: '', categoryKey: 'ALL' },
+      { id: 'wall_4', title: 'Watches & Bags', tag: 'VIP', badgeBg: 'bg-sky-400 text-stone-950', titleColor: 'text-sky-300', image: '', categoryKey: 'ALL' },
+      { id: 'wall_5', title: 'Uyo Dispatch', tag: 'FAST', badgeBg: 'bg-rose-400 text-stone-950', titleColor: 'text-rose-300', image: '', categoryKey: 'ALL' }
     ];
 
     const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
-    const NIGERIA_STATES = [
-      'Abia', 'Abuja (FCT)', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa',
-      'Benue', 'Borno', 'Cross River', 'Delta', 'Ebonyi', 'Edo', 'Ekiti', 'Enugu',
-      'Gombe', 'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Kogi',
-      'Kwara', 'Lagos', 'Nasarawa', 'Niger', 'Ogun', 'Ondo', 'Osun', 'Oyo',
-      'Plateau', 'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara'
-    ];
-
     let allProducts = JSON.parse(localStorage.getItem('sekiflex_products_cache') || '[]');
     let allCategories = JSON.parse(localStorage.getItem('sekiflex_cats_cache') || '[]');
-    let shippingZones = JSON.parse(localStorage.getItem('sekiflex_zones_cache') || '[]');
     let cart = JSON.parse(localStorage.getItem('sekiflex_cart') || '[]');
-    let storeReviews = JSON.parse(localStorage.getItem('sekiflex_reviews_v1') || '[]');
     let wallPromoCards = JSON.parse(localStorage.getItem('sekiflex_wall_promo_cards_v1') || 'null') || [...DEFAULT_WALL_PROMO_CARDS];
     let liveBannerMediaUrls = [];
-    let selectedStarRating = 5;
     let activeCategory = 'ALL';
-    let categoryBrowseMode = false;
     let splitSelectedCatKey = 'FEATURED';
     let searchQuery = '';
-    let pictureSearchScores = null;
-    let pictureSearchFileName = '';
-    let fulfillmentMode = 'delivery';
-    let currentShippingFee = 0;
-    let currentEstDays = 'select state';
-    let toastTimer = null;
-    let currentCustomer = null;
-    let returnToCheckoutAfterAuth = false;
-    let pendingSignupData = { name: '', email: '', phone: '' };
-    let pendingResetEmail = '';
-    let bannerAutoTimer = null;
-    let bannerPauseUntil = 0;
-    let currentBannerSlideIdx = 0;
-    let featuredAutoTimer = null;
-    let featuredPauseUntil = 0;
-    let lastRotationSlot = -1;
-    let allowWebsiteExit = false;
 
-    function pushBackTrapState() {
-      if (allowWebsiteExit) return;
-      try {
-        if (!window.location.hash || window.location.hash !== '#sekiflex-store') {
-          window.history.pushState({ sekiflexStoreTrap: Date.now() }, '', window.location.pathname + window.location.search + '#sekiflex-store');
-        } else {
-          window.history.pushState({ sekiflexStoreTrap: Date.now() }, '', window.location.href);
-        }
-      } catch (e) {}
+    function getProductPrice(p) {
+      const base = Number(p?.base_price || 0);
+      const sale = Number(p?.discount_price ?? p?.sale_price);
+      if (!Number.isNaN(sale) && sale > 0 && sale < base) return sale;
+      return base;
     }
 
-    function armStoreBackGuard() {
-      if (allowWebsiteExit) return;
-      pushBackTrapState();
+    function getFallbackPhoto(seedIdx = 0) {
+      if (!Array.isArray(allProducts) || !allProducts.length) return '';
+      const validImgs = allProducts
+        .map(p => (p?.images && p.images[0]) || p?.image_url || '')
+        .filter(Boolean);
+      if (!validImgs.length) return '';
+      return validImgs[Math.abs(seedIdx) % validImgs.length];
     }
 
-    function bindBackButtonGuardsOnce() {
-      if (window.__skfBackGuardBound) return;
-      window.__skfBackGuardBound = true;
-
-      pushBackTrapState();
-
-      const reArmOnUserAction = () => {
-        if (!allowWebsiteExit) {
-          pushBackTrapState();
-        }
-      };
-      document.addEventListener('pointerdown', reArmOnUserAction, { passive: true });
-      document.addEventListener('touchstart', reArmOnUserAction, { passive: true });
-      document.addEventListener('keydown', reArmOnUserAction, { passive: true });
-
-      const handleBackPress = () => {
-        if (allowWebsiteExit) return;
-
-        const leaveModal = document.getElementById('leaveConfirmModal');
-        if (leaveModal && !leaveModal.classList.contains('hidden')) {
-          pushBackTrapState();
-          return;
-        }
-
-        if (hasAnyOverlayOpen()) {
-          closeAllDrawers();
-          pushBackTrapState();
-          return;
-        }
-
-        const splitView = document.getElementById('splitCategoryStoreView');
-        if (splitView && !splitView.classList.contains('hidden')) {
-          splitView.classList.add('hidden');
-          document.getElementById('storeMainWrapper').classList.remove('hidden');
-          setActiveBottomTab('home');
-          pushBackTrapState();
-          return;
-        }
-
-        if (activeCategory !== 'ALL' || categoryBrowseMode || searchQuery || pictureSearchScores) {
-          categoryBrowseMode = false;
-          clearPictureSearch();
-          clearSearch();
-          filterCategory('ALL');
-          setActiveBottomTab('home');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          pushBackTrapState();
-          return;
-        }
-
-        pushBackTrapState();
-        openLeaveConfirmModal();
-      };
-
-      window.addEventListener('popstate', handleBackPress);
-      window.addEventListener('hashchange', () => {
-        if (!allowWebsiteExit && window.location.hash !== '#sekiflex-store') {
-          handleBackPress();
+    function preloadProductImages(list) {
+      if (!Array.isArray(list)) return;
+      list.slice(0, 24).forEach(p => {
+        const src = (p?.images && p.images[0]) || p?.image_url;
+        if (src) {
+          const im = new Image();
+          im.decoding = 'async';
+          im.src = src;
         }
       });
     }
 
-    function renderBrandedPlaceholderHtml(labelText = 'Sekiflex') {
-      const safeLabel = String(labelText || 'Sekiflex').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      return `<div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#231b10] via-[#16120c] to-[#0e0c09] text-amber-300/90 p-1.5 text-center select-none"><span class="font-editorial text-xs font-extrabold tracking-wider text-amber-400">SC</span><span class="text-[8px] font-bold text-stone-300 line-clamp-2 mt-0.5">${safeLabel}</span></div>`;
-    }
-
-    function handleCatalogImgLoad(imgEl) {
-      if (!imgEl) return;
-      if (imgEl.dataset.timeoutId) {
-        clearTimeout(Number(imgEl.dataset.timeoutId));
-      }
-      imgEl.classList.add('is-loaded');
-      if (imgEl.parentElement) {
-        imgEl.parentElement.classList.remove('img-skeleton-box');
-      }
-    }
-
-    function handleCatalogImgError(imgEl, labelText = 'Sekiflex') {
-      if (!imgEl) return;
-      if (imgEl.dataset.timeoutId) {
-        clearTimeout(Number(imgEl.dataset.timeoutId));
-      }
-      imgEl.style.display = 'none';
-      if (imgEl.parentElement) {
-        imgEl.parentElement.classList.remove('img-skeleton-box');
-        imgEl.parentElement.innerHTML = renderBrandedPlaceholderHtml(labelText);
-      }
-    }
-
-    function armSlowImageGuard(imgEl, labelText = 'Sekiflex') {
-      if (!imgEl) return;
-      if (imgEl.complete && imgEl.naturalWidth > 0) {
-        handleCatalogImgLoad(imgEl);
-        return;
-      }
-      const tid = setTimeout(() => {
-        if (!imgEl.complete || imgEl.naturalWidth === 0) {
-          handleCatalogImgError(imgEl, labelText);
-        }
-      }, 3200);
-      imgEl.dataset.timeoutId = String(tid);
-    }
-
-    function activateSlowImageGuards() {
-      document.querySelectorAll('img.catalog-img-smooth').forEach(img => {
-        armSlowImageGuard(img, img.dataset.prodLabel || 'Sekiflex');
-      });
-    }
-
-    function warmUpTopImages(list) {
-      if (!Array.isArray(list) || !list.length) return;
-      list.slice(0, 6).forEach(p => {
-        const src = (p.images && p.images[0]) || p.image_url;
-        if (!src) return;
-        const pre = new Image();
-        pre.decoding = 'async';
-        pre.src = src;
-      });
-    }
-
-    function getProductShareUrl(productId) {
-      const base = `${window.location.origin}${window.location.pathname}`;
-      return `${base}?product=${encodeURIComponent(String(productId))}`;
-    }
-
-    async function shareProductLink(productId, productName) {
-      const url = getProductShareUrl(productId);
-      const text = `Check out ${productName || 'this item'} on Sekiflex Collections:`;
-      try {
-        if (navigator.share) {
-          await navigator.share({
-            title: productName || 'Sekiflex Collections',
-            text,
-            url
-          });
-          return;
-        }
-      } catch (err) {
-        if (err && err.name === 'AbortError') return;
-      }
-
-      try {
-        await navigator.clipboard.writeText(url);
-        alert('Product share link copied: ' + url);
-      } catch (e) {
-        prompt('Copy this product link:', url);
-      }
-    }
-
-    function openSharedProductFromUrl() {
-      try {
-        const params = new URLSearchParams(window.location.search);
-        const sharedId = params.get('product');
-        if (sharedId && allProducts.some(p => String(p.id) === String(sharedId))) {
-          openProductDetail(sharedId);
-        }
-      } catch (e) {}
-    }
-
-    function openLeaveConfirmModal() {
-      const modal = document.getElementById('leaveConfirmModal');
-      if (modal) modal.classList.remove('hidden');
-    }
-
-    function confirmLeaveWebsiteNo() {
-      const modal = document.getElementById('leaveConfirmModal');
-      if (modal) modal.classList.add('hidden');
-      pushBackTrapState();
-    }
-
-    function confirmLeaveWebsiteYes() {
-      const modal = document.getElementById('leaveConfirmModal');
-      if (modal) modal.classList.add('hidden');
-      allowWebsiteExit = true;
-      if (window.history.length > 1) {
-        window.history.go(-2);
-      } else {
-        window.close();
-      }
-    }
-
-    function hasAnyOverlayOpen() {
-      const overlayIds = [
-        'leaveConfirmModal',
-        'customerAuthGate',
-        'productDetailModal',
-        'accountDrawer',
-        'storeSettingsModal',
-        'categoriesDrawer',
-        'infoModal',
-        'cartDrawer',
-        'successModal',
-        'reviewsModal'
-      ];
-      return overlayIds.some(id => {
-        const el = document.getElementById(id);
-        return el && !el.classList.contains('hidden');
-      });
-    }
-
-    function openSuccessModalWithHistory() {
-      const modal = document.getElementById('successModal');
-      if (modal) modal.classList.remove('hidden');
-      armStoreBackGuard();
-    }
-
-    function closeSuccessModalToStore() {
-      const modal = document.getElementById('successModal');
-      if (modal) modal.classList.add('hidden');
-      closeAllDrawers();
-      document.getElementById('splitCategoryStoreView').classList.add('hidden');
-      document.getElementById('storeMainWrapper').classList.remove('hidden');
-      categoryBrowseMode = false;
-      setActiveBottomTab('home');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      armStoreBackGuard();
-    }
-
-    function getStatusColor(value) {
-      const status = String(value || '').toLowerCase();
-      if (
-        status.includes('delayed') ||
-        status.includes('returned') ||
-        status.includes('attempted') ||
-        status.includes('cancel')
-      ) return '#D93636';
-      if (
-        status.includes('delivered') ||
-        status.includes('arrived') ||
-        status.includes('confirmed') ||
-        status.includes('ready for collection') ||
-        status.includes('payment confirmed') ||
-        status.includes('payment received')
-      ) return '#239B59';
-      return '#D6A500';
-    }
-
-    function applyStatusBadgeStyle(el, statusText) {
-      if (!el) return;
-      const color = getStatusColor(statusText);
-      el.textContent = statusText;
-      el.style.color = color;
-      el.style.border = `1px solid ${color}`;
-      el.style.backgroundColor = color === '#239B59'
-        ? '#EAF7EF'
-        : color === '#D93636'
-          ? '#FDECEC'
-          : '#FFF8DB';
-    }
-
-    function getProductPricing(prod) {
-      const base = Number(prod?.base_price || 0);
-      const rawCompare = prod?.compare_at_price ?? prod?.original_price ?? prod?.old_price;
-      const rawSale = prod?.discount_price ?? prod?.sale_price;
-
-      let effectivePrice = base;
-      let originalPrice = null;
-
-      if (rawSale !== null && rawSale !== undefined && rawSale !== '') {
-        const saleNum = Number(rawSale);
-        if (!Number.isNaN(saleNum) && saleNum > 0 && saleNum < base) {
-          effectivePrice = saleNum;
-          originalPrice = base;
-        }
-      }
-
-      if (originalPrice === null && rawCompare !== null && rawCompare !== undefined && rawCompare !== '') {
-        const compareNum = Number(rawCompare);
-        if (!Number.isNaN(compareNum) && compareNum > effectivePrice) {
-          originalPrice = compareNum;
-        }
-      }
-
-      return { effectivePrice, originalPrice };
-    }
-
-    function formatPriceHtml(prod, sizeClass = 'text-xs') {
-      const { effectivePrice, originalPrice } = getProductPricing(prod);
-      if (originalPrice !== null) {
-        return `
-          <div class="flex items-baseline gap-1 flex-wrap">
-            <span class="font-extrabold text-amber-400 ${sizeClass}">₦${effectivePrice.toLocaleString()}</span>
-            <span class="text-[9px] font-semibold text-stone-400 line-through">₦${originalPrice.toLocaleString()}</span>
-          </div>`;
-      }
-      return `<p class="font-extrabold text-amber-400 ${sizeClass}">₦${effectivePrice.toLocaleString()}</p>`;
-    }
-
-    function jumpToAllItems() {
-      document.getElementById('splitCategoryStoreView').classList.add('hidden');
-      document.getElementById('storeMainWrapper').classList.remove('hidden');
-      categoryBrowseMode = false;
-      filterCategory('ALL');
-      const sec = document.getElementById('catalogSection');
-      if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    function startBannerAutoShift() {
-      const carousel = document.getElementById('bannerCarousel');
-      if (!carousel) return;
-
-      if (!carousel.dataset.autoBound) {
-        carousel.dataset.autoBound = '1';
-        const pauseAuto = () => {
-          bannerPauseUntil = Date.now() + 6000;
-        };
-        carousel.addEventListener('touchstart', pauseAuto, { passive: true });
-        carousel.addEventListener('pointerdown', pauseAuto, { passive: true });
-        carousel.addEventListener('mouseenter', pauseAuto);
-      }
-
-      if (bannerAutoTimer) clearInterval(bannerAutoTimer);
-
-      bannerAutoTimer = setInterval(() => {
-        if (Date.now() < bannerPauseUntil) return;
-        const heroSec = document.getElementById('heroCarouselSection');
-        if (!heroSec || heroSec.classList.contains('hidden')) return;
-
-        const visibleSlides = Array.from(carousel.querySelectorAll('.promo-slide'))
-          .filter(el => !el.classList.contains('hidden'));
-
-        if (visibleSlides.length <= 1) return;
-
-        currentBannerSlideIdx = (currentBannerSlideIdx + 1) % visibleSlides.length;
-        const target = visibleSlides[currentBannerSlideIdx];
-        carousel.scrollTo({
-          left: target.offsetLeft - carousel.offsetLeft,
-          behavior: 'smooth'
-        });
-      }, 3500);
-    }
-
-    function startFeaturedAutoScroll() {
-      const strip = document.getElementById('featuredHorizontalList');
-      if (!strip) return;
-
-      if (!strip.dataset.autoBound) {
-        strip.dataset.autoBound = '1';
-        const pauseFeatured = () => {
-          featuredPauseUntil = Date.now() + 5000;
-        };
-        strip.addEventListener('touchstart', pauseFeatured, { passive: true });
-        strip.addEventListener('pointerdown', pauseFeatured, { passive: true });
-        strip.addEventListener('mouseenter', pauseFeatured);
-      }
-
-      if (featuredAutoTimer) clearInterval(featuredAutoTimer);
-
-      featuredAutoTimer = setInterval(() => {
-        if (Date.now() < featuredPauseUntil) return;
-        const sec = document.getElementById('featuredStripSection');
-        if (!sec || sec.classList.contains('hidden')) return;
-
-        const maxScroll = strip.scrollWidth - strip.clientWidth;
-        if (maxScroll <= 4) return;
-
-        const step = 120;
-        if (strip.scrollLeft + step >= maxScroll - 4) {
-          strip.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          strip.scrollBy({ left: step, behavior: 'smooth' });
-        }
-      }, 2800);
-    }
-
-    function getRotatedProducts(list) {
-      if (!Array.isArray(list) || list.length <= 1) return list || [];
-      const slot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000));
-      const items = [...list];
-      const n = items.length;
-
-      let seed = (slot * 2654435761) >>> 0;
-      const nextRand = () => {
-        seed = (1664525 * seed + 1013904223) >>> 0;
-        return seed / 4294967296;
-      };
-
-      for (let i = n - 1; i > 0; i--) {
-        const j = Math.floor(nextRand() * (i + 1));
-        const tmp = items[i];
-        items[i] = items[j];
-        items[j] = tmp;
-      }
-      return items;
-    }
-
-    function refreshAllRotatedViews() {
-      applyCatalogFilters();
-      if (!document.getElementById('splitCategoryStoreView').classList.contains('hidden')) {
-        renderSplitCategoryPanel();
-        renderWallHungPromoCards();
-      }
-    }
-
-    function startProductRotation() {
-      setInterval(() => {
-        const slot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000));
-        if (slot !== lastRotationSlot && allProducts.length > 1) {
-          lastRotationSlot = slot;
-          refreshAllRotatedViews();
-        }
-      }, 10000);
-    }
-
-    function applySocialLinks() {
-      const tt = document.getElementById('settingsTikTokLink');
-      const fb = document.getElementById('settingsFacebookLink');
-      if (tt) tt.href = TIKTOK_URL;
-      if (fb) fb.href = FACEBOOK_URL;
-    }
-
-    function triggerPictureSearch() {
-      const input = document.getElementById('pictureSearchInput');
-      if (input) {
-        input.value = '';
-        input.click();
-      }
-    }
-
-    function computeImageSignature(imgEl) {
-      return new Promise((resolve) => {
-        try {
-          const canvas = document.createElement('canvas');
-          const size = 12;
-          canvas.width = size;
-          canvas.height = size;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(imgEl, 0, 0, size, size);
-          const data = ctx.getImageData(0, 0, size, size).data;
-          const vec = [];
-          for (let i = 0; i < data.length; i += 4) {
-            vec.push(data[i] / 255, data[i + 1] / 255, data[i + 2] / 255);
-          }
-          resolve(vec);
-        } catch (err) {
-          resolve(null);
-        }
-      });
-    }
-
-    function loadImageForVisualMatch(url) {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = async () => {
-          const sig = await computeImageSignature(img);
-          resolve(sig);
-        };
-        img.onerror = () => resolve(null);
-        img.src = url;
-      });
-    }
-
-    function signatureSimilarity(vecA, vecB) {
-      if (!vecA || !vecB || vecA.length !== vecB.length || !vecA.length) return -1;
-      let diffSum = 0;
-      for (let i = 0; i < vecA.length; i++) {
-        diffSum += Math.abs(vecA[i] - vecB[i]);
-      }
-      return 1 - (diffSum / vecA.length);
-    }
-
-    async function handlePictureSearch(event) {
-      const file = event?.target?.files?.[0];
-      if (!file) return;
-
-      armStoreBackGuard();
-      pictureSearchFileName = (file.name || '').toLowerCase();
-      const reader = new FileReader();
-
-      reader.onload = async (e) => {
-        const dataUrl = e.target.result;
-        const banner = document.getElementById('pictureSearchBanner');
-        const preview = document.getElementById('pictureSearchPreviewImg');
-        const statusEl = document.getElementById('pictureSearchStatusText');
-
-        preview.src = dataUrl;
-        statusEl.textContent = 'Scanning catalog photos...';
-        banner.classList.remove('hidden');
-        banner.classList.add('flex');
-
-        const queryImg = new Image();
-        queryImg.onload = async () => {
-          const querySig = await computeImageSignature(queryImg);
-          const scores = {};
-          let visualMatchedCount = 0;
-
-          const nameTokens = pictureSearchFileName
-            .replace(/\.[a-z0-9]+$/i, '')
-            .replace(/[^a-z0-9]+/gi, ' ')
-            .trim()
-            .toLowerCase()
-            .split(/\s+/)
-            .filter(w => w.length >= 3);
-
-          for (const prod of allProducts) {
-            const imgUrl = (prod.images && prod.images[0]) || prod.image_url || '';
-            let score = 0;
-
-            if (querySig && imgUrl) {
-              const prodSig = await loadImageForVisualMatch(imgUrl);
-              if (prodSig) {
-                score = signatureSimilarity(querySig, prodSig);
-                visualMatchedCount += 1;
-              }
-            }
-
-            if (nameTokens.length) {
-              const catObj = allCategories.find(c => c.id === prod.category_id);
-              const hay = `${prod.name || ''} ${prod.description || ''} ${catObj ? catObj.name : ''} ${imgUrl}`.toLowerCase();
-              const hits = nameTokens.filter(t => hay.includes(t)).length;
-              if (hits > 0) {
-                score = Math.max(score, 0.5 + hits * 0.15);
-              }
-            }
-
-            scores[String(prod.id)] = score;
-          }
-
-          pictureSearchScores = scores;
-          statusEl.textContent = visualMatchedCount > 0
-            ? `Matched against ${visualMatchedCount} photo${visualMatchedCount === 1 ? '' : 's'}`
-            : 'Showing catalog items for your photo';
-
-          document.getElementById('heroCarouselSection').classList.add('hidden');
-          document.getElementById('featuredStripSection').classList.add('hidden');
-
-          applyCatalogFilters();
-          document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        };
-        queryImg.src = dataUrl;
-      };
-
-      reader.readAsDataURL(file);
-    }
-
-    function clearPictureSearch() {
-      pictureSearchScores = null;
-      pictureSearchFileName = '';
-      const input = document.getElementById('pictureSearchInput');
-      if (input) input.value = '';
-      const banner = document.getElementById('pictureSearchBanner');
-      banner.classList.add('hidden');
-      banner.classList.remove('flex');
-
-      if (!searchQuery) {
-        document.getElementById('heroCarouselSection').classList.remove('hidden');
-        if (allProducts.length) {
-          document.getElementById('featuredStripSection').classList.remove('hidden');
-          startFeaturedAutoScroll();
-        }
-      }
-      applyCatalogFilters();
-    }
-
-    function openReviewsModal() {
-      renderReviews();
-      document.getElementById('reviewsModal').classList.remove('hidden');
-      armStoreBackGuard();
-    }
-
-    function closeReviewsModal() {
-      document.getElementById('reviewsModal').classList.add('hidden');
-    }
-
-    function selectStarRating(stars) {
-      selectedStarRating = Math.max(1, Math.min(5, Number(stars) || 5));
-      document.querySelectorAll('.star-btn').forEach(btn => {
-        const val = Number(btn.getAttribute('data-star'));
-        btn.className = val <= selectedStarRating
-          ? 'star-btn text-lg text-amber-400 leading-none'
-          : 'star-btn text-lg text-stone-700 leading-none';
-      });
-      const label = document.getElementById('selectedStarLabel');
-      if (label) label.textContent = `${selectedStarRating} / 5`;
-    }
-
-    function renderReviews() {
-      const container = document.getElementById('reviewsListContainer');
-      const avgEl = document.getElementById('avgRatingText');
-      const countEl = document.getElementById('reviewCountText');
-      if (!container) return;
-
-      if (!storeReviews.length) {
-        avgEl.textContent = '5.0';
-        countEl.textContent = 'No reviews yet';
-        container.innerHTML = '<p class="text-xs text-stone-500 text-center py-2">No reviews yet. Be the first to leave one.</p>';
-        return;
-      }
-
-      const sum = storeReviews.reduce((acc, r) => acc + (Number(r.rating) || 5), 0);
-      const avg = (sum / storeReviews.length).toFixed(1);
-      avgEl.textContent = avg;
-      countEl.textContent = `${storeReviews.length} review${storeReviews.length === 1 ? '' : 's'}`;
-
-      container.innerHTML = storeReviews.map(r => {
-        const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
-        return `
-          <div class="p-3 rounded-xl bg-stone-950 border border-stone-800 space-y-1">
-            <div class="flex items-center justify-between gap-2">
-              <span class="text-xs font-extrabold text-white">${r.name}</span>
-              <span class="text-xs text-amber-400 font-bold">${stars}</span>
-            </div>
-            <p class="text-xs text-stone-300 leading-relaxed">${r.comment}</p>
-            <p class="text-[10px] text-stone-500">${r.date}</p>
-          </div>`;
-      }).join('');
-    }
-
-    function submitCustomerReview(e) {
-      e.preventDefault();
-      const nameInput = document.getElementById('reviewAuthorInput');
-      const commentInput = document.getElementById('reviewCommentInput');
-      const comment = (commentInput.value || '').trim();
-      if (!comment) return;
-
-      const author = (nameInput.value || '').trim()
-        || (currentCustomer && currentCustomer.name)
-        || 'Verified Shopper';
-
-      storeReviews.unshift({
-        name: author,
-        rating: selectedStarRating,
-        comment,
-        date: new Date().toLocaleDateString()
-      });
-
-      localStorage.setItem('sekiflex_reviews_v1', JSON.stringify(storeReviews));
-      commentInput.value = '';
-      selectStarRating(5);
-      renderReviews();
+    function openProductDetailByIndex(idx) {
+      const prod = allProducts[idx];
+      if (!prod) return;
+      openProductDetail(prod.id);
     }
 
     function openProductDetail(productId) {
       const prod = allProducts.find(p => String(p.id) === String(productId));
       if (!prod) return;
 
-      armStoreBackGuard();
-      const img = (prod.images && prod.images[0]) || prod.image_url || '';
-      const out = (prod.stock_quantity !== null && prod.stock_quantity <= 0);
-      const catObj = allCategories.find(c => String(c.id) === String(prod.category_id));
+      document.getElementById('splitCategoryStoreView').classList.add('hidden');
+      document.getElementById('storeMainWrapper').classList.remove('hidden');
 
-      const detailImg = document.getElementById('detailModalImg');
-      detailImg.style.display = '';
-      detailImg.src = img;
-      detailImg.alt = prod.name || 'Product';
+      const img = (prod.images && prod.images[0]) || prod.image_url || getFallbackPhoto(0);
+      const price = getProductPrice(prod);
+
+      const modalImg = document.getElementById('detailModalImg');
+      modalImg.src = img;
+      modalImg.alt = prod.name || 'Product';
       document.getElementById('detailModalName').textContent = prod.name || 'Product';
-      document.getElementById('detailModalPriceBlock').innerHTML = formatPriceHtml(prod, 'text-base');
+      document.getElementById('detailModalPriceBlock').innerHTML = `<span class="font-extrabold text-amber-400 text-base">₦${price.toLocaleString()}</span>`;
       document.getElementById('detailModalDesc').textContent = prod.description || 'Quality item from Sekiflex Collections.';
 
-      const catBadge = document.getElementById('detailModalCategory');
-      if (catObj && catObj.name) {
-        catBadge.textContent = catObj.name;
-        catBadge.classList.remove('hidden');
-      } else {
-        catBadge.classList.add('hidden');
-      }
-
-      const stockEl = document.getElementById('detailModalStock');
-      if (out) {
-        stockEl.textContent = 'Currently Sold Out';
-        stockEl.className = 'text-[11px] font-semibold text-rose-400 mt-0.5';
-      } else if (prod.stock_quantity !== null && prod.stock_quantity !== undefined) {
-        stockEl.textContent = `In Stock (${prod.stock_quantity} available)`;
-        stockEl.className = 'text-[11px] font-semibold text-emerald-400 mt-0.5';
-      } else {
-        stockEl.textContent = 'In Stock';
-        stockEl.className = 'text-[11px] font-semibold text-emerald-400 mt-0.5';
-      }
-
-      const shareBtn = document.getElementById('detailShareBtn');
-      if (shareBtn) {
-        shareBtn.onclick = (ev) => {
-          ev.stopPropagation();
-          shareProductLink(prod.id, prod.name);
-        };
-      }
-
       const addBtn = document.getElementById('detailAddToCartBtn');
-      addBtn.disabled = out;
-      addBtn.textContent = out ? 'Sold Out' : 'Add to Cart';
-      addBtn.className = out
-        ? 'flex-1 bg-stone-800 text-stone-500 py-2.5 rounded-xl text-xs font-extrabold cursor-not-allowed'
-        : 'flex-1 bg-amber-500 hover:bg-amber-400 text-stone-950 py-2.5 rounded-xl text-xs font-extrabold transition shadow-xs';
-      addBtn.onclick = () => {
+      addBtn.onclick = function () {
         addToCart(prod.id, addBtn);
         closeProductDetailModal();
       };
@@ -1941,195 +583,89 @@
       document.getElementById('productDetailModal').classList.add('hidden');
     }
 
-    function openStoreSettingsModal() {
-      applySocialLinks();
-      armStoreBackGuard();
-      const toggle = document.getElementById('prefSoundToggle');
-      if (toggle) {
-        const saved = localStorage.getItem('sekiflex_sound_enabled');
-        toggle.checked = saved === null ? true : saved === '1';
-      }
-      const msg = document.getElementById('changePasswordMsg');
-      if (msg) msg.classList.add('hidden');
-      document.getElementById('accountNewPassword').value = '';
-      document.getElementById('accountConfirmPassword').value = '';
-      document.getElementById('storeSettingsModal').classList.remove('hidden');
-    }
-
-    function closeStoreSettingsModal() {
-      document.getElementById('storeSettingsModal').classList.add('hidden');
-    }
-
-    function showPasswordChangeStatus(text, isError = true) {
-      const box = document.getElementById('changePasswordMsg');
-      box.textContent = text;
-      box.className = `text-[11px] font-semibold p-2 rounded-xl ${
-        isError ? 'bg-red-950/80 text-red-200 border border-red-500/30' : 'bg-emerald-950/80 text-emerald-200 border border-emerald-500/30'
-      }`;
-      box.classList.remove('hidden');
-    }
-
-    async function handleAccountPasswordChange(e) {
-      e.preventDefault();
-      if (!currentCustomer) {
-        closeStoreSettingsModal();
-        openAuthGate('signin', false);
+    function renderProducts(list) {
+      const grid = document.getElementById('productsGrid');
+      if (!grid) return;
+      if (!list || !list.length) {
+        grid.innerHTML = '<p class="col-span-full text-center text-stone-400 py-8 text-xs">No matching products found.</p>';
         return;
       }
 
-      const newPass = document.getElementById('accountNewPassword').value;
-      const confirmPass = document.getElementById('accountConfirmPassword').value;
-      const btn = document.getElementById('saveNewPasswordBtn');
+      grid.innerHTML = list.map((p, idx) => {
+        const rawImg = (p.images && p.images[0]) || p.image_url || '';
+        const img = rawImg || getFallbackPhoto(idx);
+        const fallbackSrc = getFallbackPhoto(idx + 1);
+        const price = getProductPrice(p);
+        const globalIdx = allProducts.findIndex(item => String(item.id) === String(p.id));
+        const clickHandler = globalIdx >= 0
+          ? `openProductDetailByIndex(${globalIdx})`
+          : `openProductDetail('${String(p.id).replace(/'/g, "\\'")}')`;
 
-      if (newPass.length < 6) {
-        return showPasswordChangeStatus('Password must be at least 6 characters.', true);
-      }
-      if (newPass !== confirmPass) {
-        return showPasswordChangeStatus('New password and confirmation do not match.', true);
-      }
-
-      btn.disabled = true;
-      btn.textContent = 'Updating Password...';
-
-      const { error } = await sb.auth.updateUser({ password: newPass });
-
-      btn.disabled = false;
-      btn.textContent = 'Update Password';
-
-      if (error) {
-        return showPasswordChangeStatus(error.message, true);
-      }
-
-      document.getElementById('accountNewPassword').value = '';
-      document.getElementById('accountConfirmPassword').value = '';
-      showPasswordChangeStatus('Your password has been updated successfully!', false);
-    }
-
-    function closeAllDrawers() {
-      document.getElementById('categoriesDrawer').classList.add('hidden');
-      document.getElementById('accountDrawer').classList.add('hidden');
-      document.getElementById('cartDrawer').classList.add('hidden');
-      document.getElementById('storeSettingsModal').classList.add('hidden');
-      document.getElementById('productDetailModal').classList.add('hidden');
-      document.getElementById('reviewsModal').classList.add('hidden');
-      document.getElementById('infoModal').classList.add('hidden');
-      document.getElementById('customerAuthGate').classList.add('hidden');
-    }
-
-    function setActiveBottomTab(tab) {
-      const ids = { home: 'navHomeBtn', categories: 'navCatBtn', cart: 'navCartBtn', account: 'navAccountBtn' };
-      Object.entries(ids).forEach(([key, elId]) => {
-        const el = document.getElementById(elId);
-        if (!el) return;
-        el.className = key === tab
-          ? 'relative flex flex-col items-center justify-center gap-0.5 text-amber-400 font-bold text-[10px] transition'
-          : 'relative flex flex-col items-center justify-center gap-0.5 text-stone-400 hover:text-amber-300 font-semibold text-[10px] transition';
-      });
-    }
-
-    const PINNED_WALL_COUNT = 5;
-
-    function getRightGridTileCount() {
-      const q = (document.getElementById('splitCategorySearchInput')?.value || '').trim().toLowerCase();
-      if (q) {
-        return allProducts.filter(p => {
-          const catObj = allCategories.find(c => String(c.id) === String(p.category_id));
-          return `${p.name || ''} ${p.description || ''} ${catObj ? catObj.name : ''}`.toLowerCase().includes(q);
-        }).length;
-      }
-      if (splitSelectedCatKey === 'FEATURED') {
-        return allCategories.length + allProducts.length;
-      }
-      return allProducts.filter(p => String(p.category_id) === String(splitSelectedCatKey)).length;
-    }
-
-    function renderWallHungPromoCards() {
-      const wrap = document.getElementById('wallHungPromoCardsList');
-      if (!wrap) return;
-
-      const rotatedPool = getRotatedProducts(allProducts);
-      const baseList = (Array.isArray(wallPromoCards) && wallPromoCards.length >= PINNED_WALL_COUNT)
-        ? wallPromoCards
-        : DEFAULT_WALL_PROMO_CARDS.map((def, i) => ({
-            ...def,
-            ...(wallPromoCards && wallPromoCards[i] ? wallPromoCards[i] : {})
-          }));
-
-      const pinnedCards = baseList.slice(0, PINNED_WALL_COUNT);
-
-      const pinnedHTML = pinnedCards.map((card, idx) => {
-        const fallbackProd = rotatedPool[idx % Math.max(1, rotatedPool.length)];
-        const fallbackProdImg = fallbackProd ? ((fallbackProd.images && fallbackProd.images[0]) || fallbackProd.image_url || '') : '';
-        const bannerImg = liveBannerMediaUrls[idx % Math.max(1, liveBannerMediaUrls.length)] || '';
-        const safeImg = (card.image && card.image.trim()) || bannerImg || fallbackProdImg || '';
-        const safeTitle = card.title || DEFAULT_WALL_PROMO_CARDS[idx % DEFAULT_WALL_PROMO_CARDS.length].title;
-        const safeTag = card.tag || DEFAULT_WALL_PROMO_CARDS[idx % DEFAULT_WALL_PROMO_CARDS.length].tag;
-        const targetCat = card.categoryKey || 'ALL';
-        const mediaHtml = safeImg
-          ? `<img src="${safeImg}" alt="" onerror="this.parentElement.innerHTML = renderBrandedPlaceholderHtml('${safeTitle.replace(/'/g, "\\'")}')" />`
-          : `<div class="w-full h-[62px]">${renderBrandedPlaceholderHtml(safeTitle)}</div>`;
         return `
-          <div onclick="shopSpecificCategoryFromSplit('${String(targetCat).replace(/'/g, "\\'")}')"
-            class="skf-wall-card" title="${safeTitle}">
-            <span class="skf-wall-pin"></span>
-            <div class="skf-wall-frame relative">
-              <span class="absolute top-1.5 right-1 z-10 bg-amber-500 text-stone-950 text-[7px] font-black px-1.5 py-0.2 rounded-full shadow">
-                ${safeTag}
-              </span>
-              ${mediaHtml}
+          <div onclick="${clickHandler}" class="skf-item-card">
+            <div class="skf-item-photo-box">
+              ${img
+                ? `<img src="${img}" alt="" loading="eager" decoding="async" onerror="if('${fallbackSrc}' && this.src !== '${fallbackSrc}'){this.src='${fallbackSrc}';}else{this.style.display='none';}" class="skf-item-photo" />`
+                : ''}
             </div>
-            <div class="skf-wall-caption">
-              <p class="text-[9px] font-extrabold text-amber-300 truncate">${safeTitle}</p>
+            <div class="pt-1.5 flex flex-col gap-1">
+              <h3 class="font-bold text-[11px] text-white line-clamp-1">${p.name || 'Item'}</h3>
+              <p class="font-extrabold text-amber-400 text-xs">₦${price.toLocaleString()}</p>
+              <button type="button" onclick="event.stopPropagation(); addToCart('${String(p.id).replace(/'/g, "\\'")}', this);"
+                class="w-full bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950 text-[10px] font-extrabold py-1.5 rounded-lg transition shadow-xs">
+                Add to Cart
+              </button>
             </div>
           </div>`;
       }).join('');
-
-      const rightTiles = getRightGridTileCount();
-      const rightRows = Math.max(1, Math.ceil(rightTiles / 3));
-      const targetLeftCards = Math.max(pinnedCards.length, Math.round((rightRows * 110) / 108));
-      const neededCatalogCards = Math.max(0, targetLeftCards - pinnedCards.length);
-
-      const extraHTML = [];
-      for (let i = 0; i < neededCatalogCards && i < rotatedPool.length; i++) {
-        const prod = rotatedPool[i];
-        const img = (prod.images && prod.images[0]) || prod.image_url || '';
-        const badgeText = i % 2 === 0 ? 'PROMO' : 'HOT';
-        const safeProdName = String(prod.name || 'Store Pick').replace(/'/g, "\\'");
-        const mediaHtml = img
-          ? `<img src="${img}" alt="" onerror="this.parentElement.innerHTML = renderBrandedPlaceholderHtml('${safeProdName}')" />`
-          : `<div class="w-full h-[62px]">${renderBrandedPlaceholderHtml(safeProdName)}</div>`;
-        extraHTML.push(`
-          <div onclick="openProductDetail('${prod.id}')"
-            class="skf-wall-card" title="${prod.name || 'Store Item'}">
-            <span class="skf-wall-pin"></span>
-            <div class="skf-wall-frame relative">
-              <span class="absolute top-1.5 right-1 z-10 bg-amber-500 text-stone-950 text-[7px] font-black px-1.5 py-0.2 rounded-full shadow">
-                ${badgeText}
-              </span>
-              ${mediaHtml}
-            </div>
-            <div class="skf-wall-caption">
-              <p class="text-[9px] font-extrabold text-stone-100 truncate">${prod.name || 'Store Pick'}</p>
-            </div>
-          </div>`);
-      }
-
-      wrap.innerHTML = pinnedHTML + extraHTML.join('');
     }
 
-    function renderSplitThumbInner(img, labelText, isHot) {
-      const safeLabel = String(labelText || 'Sekiflex').replace(/'/g, "\\'");
-      const hotBadge = isHot ? '<span class="skf-cat-hot">HOT</span>' : '';
-      if (!img) {
-        return `${renderBrandedPlaceholderHtml(labelText)}${hotBadge}`;
+    function applyCatalogFilters() {
+      let filtered = [...allProducts];
+      if (activeCategory !== 'ALL') {
+        filtered = filtered.filter(p => String(p.category_id) === String(activeCategory));
       }
-      return `<img src="${img}" alt="" onerror="this.parentElement.innerHTML = renderBrandedPlaceholderHtml('${safeLabel}') + '${hotBadge.replace(/'/g, "\\'")}';" class="w-full h-full object-cover object-top" />${hotBadge}`;
+      if (searchQuery) {
+        filtered = filtered.filter(p => `${p.name || ''} ${p.description || ''}`.toLowerCase().includes(searchQuery));
+      }
+      const catObj = allCategories.find(c => String(c.id) === String(activeCategory));
+      document.getElementById('catalogHeading').textContent = activeCategory !== 'ALL' && catObj
+        ? `${catObj.name} Photos`
+        : 'All Items';
+      document.getElementById('productResultCount').textContent = `${filtered.length} item${filtered.length === 1 ? '' : 's'}`;
+      renderProducts(filtered);
+    }
+
+    function filterCategory(catId, btnEl) {
+      activeCategory = catId;
+      document.querySelectorAll('.cat-btn').forEach(b => {
+        b.className = 'cat-btn bg-[#16130f] border border-amber-400/20 text-stone-300 text-[11px] font-semibold px-3 py-1 rounded-full whitespace-nowrap';
+      });
+      if (btnEl) {
+        btnEl.className = 'cat-btn bg-amber-500 text-stone-950 text-[11px] font-extrabold px-3 py-1 rounded-full whitespace-nowrap';
+      } else {
+        renderCategoryButtons(allCategories);
+      }
+      applyCatalogFilters();
+    }
+
+    function renderCategoryButtons(cats) {
+      allCategories = cats || [];
+      const bar = document.getElementById('categoryBar');
+      if (!bar) return;
+      bar.innerHTML = `<button type="button" onclick="filterCategory('ALL', this)" class="cat-btn ${activeCategory === 'ALL' ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-[#16130f] border border-amber-400/20 text-stone-300 font-semibold'} text-[11px] px-3 py-1 rounded-full whitespace-nowrap">All Items (${allProducts.length})</button>`;
+      allCategories.forEach(c => {
+        const countInCat = allProducts.filter(p => String(p.category_id) === String(c.id)).length;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `cat-btn ${String(activeCategory) === String(c.id) ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-[#16130f] border border-amber-400/20 text-stone-300 font-semibold'} text-[11px] px-3 py-1 rounded-full whitespace-nowrap`;
+        btn.textContent = `${c.name} (${countInCat})`;
+        btn.onclick = () => filterCategory(c.id, btn);
+        bar.appendChild(btn);
+      });
     }
 
     function openSplitCategoryStore() {
-      closeAllDrawers();
-      armStoreBackGuard();
-      setActiveBottomTab('categories');
       document.getElementById('storeMainWrapper').classList.add('hidden');
       document.getElementById('splitCategoryStoreView').classList.remove('hidden');
       renderSplitCategorySidebar();
@@ -2141,19 +677,13 @@
     function renderSplitCategorySidebar() {
       const rail = document.getElementById('splitCategorySidebar');
       if (!rail) return;
-
       const tabs = [
         { key: 'FEATURED', label: 'Featured' },
         ...allCategories.map(c => ({ key: String(c.id), label: c.name }))
       ];
-
       rail.innerHTML = tabs.map(t => {
         const active = String(splitSelectedCatKey) === String(t.key);
-        return `
-          <button type="button" onclick="selectSplitCategory('${t.key.replace(/'/g, "\\'")}')"
-            class="skf-cat-tab ${active ? 'is-active' : ''}">
-            ${t.label}
-          </button>`;
+        return `<button type="button" onclick="selectSplitCategory('${String(t.key).replace(/'/g, "\\'")}')" class="skf-cat-tab ${active ? 'is-active' : ''}">${t.label}</button>`;
       }).join('');
     }
 
@@ -2164,118 +694,9 @@
       renderWallHungPromoCards();
     }
 
-    function renderSplitCategoryPanel() {
-      const grid = document.getElementById('splitCategoryGrid');
-      const titleEl = document.getElementById('splitActiveCategoryTitle');
-      const countEl = document.getElementById('splitActiveCategoryCount');
-      if (!grid) return;
-
-      const q = (document.getElementById('splitCategorySearchInput')?.value || '').trim().toLowerCase();
-      const rotatedAll = getRotatedProducts(allProducts);
-
-      if (q) {
-        titleEl.textContent = `Search: "${q}"`;
-        const matches = rotatedAll.filter(p => {
-          const catObj = allCategories.find(c => String(c.id) === String(p.category_id));
-          return `${p.name || ''} ${p.description || ''} ${catObj ? catObj.name : ''}`.toLowerCase().includes(q);
-        });
-        countEl.textContent = `${matches.length} item${matches.length === 1 ? '' : 's'}`;
-        if (!matches.length) {
-          grid.innerHTML = '<p class="col-span-3 text-center text-xs text-stone-400 py-8">No matching items found.</p>';
-          renderWallHungPromoCards();
-          return;
-        }
-        grid.innerHTML = matches.map((p, idx) => {
-          const img = (p.images && p.images[0]) || p.image_url || '';
-          const { effectivePrice } = getProductPricing(p);
-          return `
-            <div onclick="openProductDetail('${p.id}')" class="cursor-pointer text-center group">
-              <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-                ${renderSplitThumbInner(img, p.name, idx < 2)}
-              </div>
-              <p class="text-[10px] font-semibold text-stone-100 line-clamp-2 leading-tight">${p.name}</p>
-              <p class="text-[9px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
-            </div>`;
-        }).join('');
-        renderWallHungPromoCards();
-        return;
-      }
-
-      if (splitSelectedCatKey === 'FEATURED') {
-        titleEl.textContent = 'Shop by Category';
-        countEl.textContent = `${allCategories.length} categories • ${allProducts.length} items`;
-
-        const catTiles = allCategories.map((c, idx) => {
-          const sampleProd = rotatedAll.find(p => String(p.category_id) === String(c.id))
-            || allProducts.find(p => String(p.category_id) === String(c.id));
-          const img = (sampleProd?.images && sampleProd.images[0]) || sampleProd?.image_url || '';
-          const count = allProducts.filter(p => String(p.category_id) === String(c.id)).length;
-          return `
-            <div onclick="shopSpecificCategoryFromSplit('${String(c.id).replace(/'/g, "\\'")}')"
-              class="cursor-pointer text-center group">
-              <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-                ${renderSplitThumbInner(img, c.name, idx < 2)}
-              </div>
-              <p class="text-[10px] font-bold text-stone-100 line-clamp-2 leading-tight">${c.name}</p>
-              <p class="text-[9px] text-amber-400 font-semibold mt-0.5">${count} item${count === 1 ? '' : 's'}</p>
-            </div>`;
-        });
-
-        const featuredTiles = rotatedAll.map((p, idx) => {
-          const img = (p.images && p.images[0]) || p.image_url || '';
-          const { effectivePrice } = getProductPricing(p);
-          return `
-            <div onclick="openProductDetail('${p.id}')" class="cursor-pointer text-center group">
-              <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-                ${renderSplitThumbInner(img, p.name, idx === 0)}
-              </div>
-              <p class="text-[10px] font-semibold text-stone-100 line-clamp-2 leading-tight">${p.name}</p>
-              <p class="text-[9px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
-            </div>`;
-        });
-
-        grid.innerHTML = [...catTiles, ...featuredTiles].join('');
-        renderWallHungPromoCards();
-        return;
-      }
-
-      const catObj = allCategories.find(c => String(c.id) === String(splitSelectedCatKey));
-      titleEl.textContent = catObj ? catObj.name : 'Category Items';
-      const items = rotatedAll.filter(p => String(p.category_id) === String(splitSelectedCatKey));
-      countEl.textContent = `${items.length} item${items.length === 1 ? '' : 's'}`;
-
-      if (!items.length) {
-        grid.innerHTML = '<p class="col-span-3 text-center text-xs text-stone-400 py-8">No items in this category yet.</p>';
-        renderWallHungPromoCards();
-        return;
-      }
-
-      grid.innerHTML = items.map((p, idx) => {
-        const img = (p.images && p.images[0]) || p.image_url || '';
-        const { effectivePrice } = getProductPricing(p);
-        return `
-          <div onclick="openProductDetail('${p.id}')" class="cursor-pointer text-center group">
-            <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-              ${renderSplitThumbInner(img, p.name, idx < 2)}
-            </div>
-            <p class="text-[10px] font-semibold text-stone-100 line-clamp-2 leading-tight">${p.name}</p>
-            <p class="text-[9px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
-          </div>`;
-      }).join('');
-      renderWallHungPromoCards();
-    }
-
-    function submitSplitCategorySearch(e) {
-      if (e) e.preventDefault();
-      renderSplitCategoryPanel();
-    }
-
     function shopSpecificCategoryFromSplit(catId) {
-      closeAllDrawers();
       document.getElementById('splitCategoryStoreView').classList.add('hidden');
       document.getElementById('storeMainWrapper').classList.remove('hidden');
-      categoryBrowseMode = true;
-      setActiveBottomTab('home');
       filterCategory(catId);
       const sec = document.getElementById('catalogSection');
       if (sec) {
@@ -2285,22 +706,113 @@
       }
     }
 
-    function shopSelectedSplitCategory() {
-      if (splitSelectedCatKey === 'FEATURED') {
-        shopSpecificCategoryFromSplit('ALL');
-      } else {
-        shopSpecificCategoryFromSplit(splitSelectedCatKey);
+    function renderSplitCategoryPanel() {
+      const grid = document.getElementById('splitCategoryGrid');
+      const titleEl = document.getElementById('splitActiveCategoryTitle');
+      const countEl = document.getElementById('splitActiveCategoryCount');
+      if (!grid) return;
+
+      const q = (document.getElementById('splitCategorySearchInput')?.value || '').trim().toLowerCase();
+
+      if (splitSelectedCatKey === 'FEATURED' && !q) {
+        titleEl.textContent = 'Shop by Category';
+        countEl.textContent = `${allCategories.length} categories • ${allProducts.length} items`;
+
+        const catTiles = allCategories.map((c, idx) => {
+          const sampleProd = allProducts.find(p => String(p.category_id) === String(c.id));
+          const img = (sampleProd?.images && sampleProd.images[0]) || sampleProd?.image_url || getFallbackPhoto(idx);
+          const count = allProducts.filter(p => String(p.category_id) === String(c.id)).length;
+          return `
+            <div onclick="shopSpecificCategoryFromSplit('${String(c.id).replace(/'/g, "\\'")}')" class="cursor-pointer text-center group">
+              <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
+                ${img ? `<img src="${img}" alt="" class="w-full h-full object-cover object-top" />` : ''}
+                ${idx < 2 ? '<span class="skf-cat-hot">HOT</span>' : ''}
+              </div>
+              <p class="text-[10px] font-bold text-stone-100 line-clamp-2 leading-tight">${c.name}</p>
+              <p class="text-[9px] text-amber-400 font-semibold mt-0.5">${count} item${count === 1 ? '' : 's'}</p>
+            </div>`;
+        });
+
+        const prodTiles = allProducts.map((p, idx) => {
+          const img = (p.images && p.images[0]) || p.image_url || getFallbackPhoto(idx);
+          const price = getProductPrice(p);
+          return `
+            <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="cursor-pointer text-center group">
+              <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
+                ${img ? `<img src="${img}" alt="" class="w-full h-full object-cover object-top" />` : ''}
+              </div>
+              <p class="text-[10px] font-semibold text-stone-100 line-clamp-2 leading-tight">${p.name}</p>
+              <p class="text-[9px] font-extrabold text-amber-400 mt-0.5">₦${price.toLocaleString()}</p>
+            </div>`;
+        });
+
+        grid.innerHTML = [...catTiles, ...prodTiles].join('');
+        return;
       }
+
+      const items = allProducts.filter(p => {
+        const matchesCat = splitSelectedCatKey === 'FEATURED' || String(p.category_id) === String(splitSelectedCatKey);
+        const matchesQ = !q || `${p.name || ''} ${p.description || ''}`.toLowerCase().includes(q);
+        return matchesCat && matchesQ;
+      });
+
+      const catObj = allCategories.find(c => String(c.id) === String(splitSelectedCatKey));
+      titleEl.textContent = q ? `Search: "${q}"` : (catObj ? catObj.name : 'Category Items');
+      countEl.textContent = `${items.length} item${items.length === 1 ? '' : 's'}`;
+
+      grid.innerHTML = items.map((p, idx) => {
+        const img = (p.images && p.images[0]) || p.image_url || getFallbackPhoto(idx);
+        const price = getProductPrice(p);
+        return `
+          <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="cursor-pointer text-center group">
+            <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
+              ${img ? `<img src="${img}" alt="" class="w-full h-full object-cover object-top" />` : ''}
+            </div>
+            <p class="text-[10px] font-semibold text-stone-100 line-clamp-2 leading-tight">${p.name}</p>
+            <p class="text-[9px] font-extrabold text-amber-400 mt-0.5">₦${price.toLocaleString()}</p>
+          </div>`;
+      }).join('');
+    }
+
+    function renderWallHungPromoCards() {
+      const wrap = document.getElementById('wallHungPromoCardsList');
+      if (!wrap) return;
+
+      const pinnedCards = DEFAULT_WALL_PROMO_CARDS.map((def, i) => ({
+        ...def,
+        ...(Array.isArray(wallPromoCards) && wallPromoCards[i] ? wallPromoCards[i] : {})
+      }));
+
+      wrap.innerHTML = pinnedCards.map((card, idx) => {
+        const def = DEFAULT_WALL_PROMO_CARDS[idx % DEFAULT_WALL_PROMO_CARDS.length];
+        const img = (card.image && card.image.trim()) || liveBannerMediaUrls[idx % Math.max(1, liveBannerMediaUrls.length)] || getFallbackPhoto(idx + 2);
+        const title = card.title || def.title;
+        const tag = card.tag || def.tag;
+        const badgeBg = card.badgeBg || def.badgeBg;
+        const titleColor = card.titleColor || def.titleColor;
+        const targetCat = card.categoryKey || 'ALL';
+
+        return `
+          <div onclick="shopSpecificCategoryFromSplit('${String(targetCat).replace(/'/g, "\\'")}')"
+            class="skf-wall-card skf-wall-style-${idx % 5}" title="${title}">
+            <span class="skf-wall-pin"></span>
+            <div class="skf-wall-frame relative">
+              <span class="absolute top-1.5 right-1 z-10 ${badgeBg} text-[7px] font-black px-1.5 py-0.2 rounded-full shadow">
+                ${tag}
+              </span>
+              ${img ? `<img src="${img}" alt="" />` : ''}
+            </div>
+            <div class="skf-wall-caption">
+              <p class="text-[9px] font-extrabold ${titleColor} truncate">${title}</p>
+            </div>
+          </div>`;
+      }).join('');
     }
 
     function switchBottomTab(tab) {
-      closeAllDrawers();
-      setActiveBottomTab(tab);
-
       if (tab === 'home') {
         document.getElementById('splitCategoryStoreView').classList.add('hidden');
         document.getElementById('storeMainWrapper').classList.remove('hidden');
-        categoryBrowseMode = false;
         activeCategory = 'ALL';
         renderCategoryButtons(allCategories);
         applyCatalogFilters();
@@ -2310,1223 +822,153 @@
       } else if (tab === 'cart') {
         document.getElementById('splitCategoryStoreView').classList.add('hidden');
         document.getElementById('storeMainWrapper').classList.remove('hidden');
-        openCartReview();
-      } else if (tab === 'account') {
-        document.getElementById('splitCategoryStoreView').classList.add('hidden');
-        document.getElementById('storeMainWrapper').classList.remove('hidden');
-        armStoreBackGuard();
-        document.getElementById('accountDrawer').classList.remove('hidden');
+        toggleCart(true);
       }
     }
 
     function resetToHome(e) {
       if (e) e.preventDefault();
-      document.getElementById('splitCategoryStoreView').classList.add('hidden');
-      document.getElementById('storeMainWrapper').classList.remove('hidden');
-      categoryBrowseMode = false;
-      clearPictureSearch();
       clearSearch();
       filterCategory('ALL');
       switchBottomTab('home');
     }
 
-    function openInfoModal(type) {
-      armStoreBackGuard();
-      const title = document.getElementById('infoModalTitle');
-      const body = document.getElementById('infoModalBody');
-      if (type === 'delivery') {
-        title.textContent = 'Delivery & Walk-In Store Pickup';
-        body.innerHTML = `
-          <p><strong class="text-white">Free Walk-In Pickup (Uyo HQ):</strong><br/>Urua Ekpa, Uyo, Akwa Ibom State (Mon–Sat: 7:30 AM – 9:00 PM, Sun: 2:00 PM – 9:00 PM).</p>
-          <p><strong class="text-white">Sekiflex Collections Bike &amp; Cargo Fleet:</strong><br/>Dispatch bikes and cargo trucks across all 36 states in Nigeria (2–4 business days) and internationally to the UK, USA, Canada, and Ghana (5–10 business days).</p>
-          <p><strong class="text-white">Order Tracking:</strong><br/>Every order gets a tracking code (<code class="text-amber-300">SC-2026-XXXXXX</code>) usable on the Track Order page.</p>
-        `;
-      } else if (type === 'privacy') {
-        title.textContent = 'Privacy & Delivery Data Policy';
-        body.innerHTML = `
-          <p><strong class="text-white">Data Collected:</strong><br/>Name, email, phone/WhatsApp number, delivery address or Uyo pickup option, and payment transfer reference for fulfilling your order.</p>
-          <p><strong class="text-white">How It Is Used:</strong><br/>Used strictly to pack, dispatch, and track your order and share status updates. Customer data is never sold to third parties.</p>
-          <p><strong class="text-white">Support:</strong><br/>WhatsApp <code class="text-amber-300">09069037617</code> or call <code class="text-amber-300">09163755234</code> for assistance.</p>
-        `;
-      } else {
-        title.textContent = 'About Sekiflex Collections';
-        body.innerHTML = `
-          <p><strong class="text-white">Sekiflex Collections</strong> curates apparel, footwear, wristwatches, jewelry, and accessories with nationwide and global dispatch from Uyo, Akwa Ibom State.</p>
-          <p><strong class="text-white">Store Location:</strong> Urua Ekpa, Uyo, Akwa Ibom State</p>
-          <p><strong class="text-white">Hours:</strong> Mon–Sat: 7:30 AM – 9:00 PM &bull; Sun: 2:00 PM – 9:00 PM</p>
-        `;
-      }
-      document.getElementById('infoModal').classList.remove('hidden');
-    }
-
-    function dismissMobileKeyboard() {
-      const input = document.getElementById('storeSearchInput');
-      if (input) {
-        input.setAttribute('readonly', 'readonly');
-        input.blur();
-        if (document.activeElement && typeof document.activeElement.blur === 'function') {
-          document.activeElement.blur();
-        }
-        setTimeout(() => {
-          input.removeAttribute('readonly');
-        }, 120);
-      }
-    }
-
     function submitSearch(e) {
       if (e) e.preventDefault();
-      dismissMobileKeyboard();
-      handleSearchInput(true);
+      handleSearchInput();
     }
 
-    function handleSearchInput(shouldScroll = false) {
-      const input = document.getElementById('storeSearchInput');
-      searchQuery = (input.value || '').trim().toLowerCase();
+    function handleSearchInput() {
+      searchQuery = (document.getElementById('storeSearchInput').value || '').trim().toLowerCase();
       document.getElementById('clearSearchBtn').classList.toggle('hidden', !searchQuery);
-
-      if (searchQuery || pictureSearchScores) {
-        armStoreBackGuard();
-        document.getElementById('heroCarouselSection').classList.add('hidden');
-        document.getElementById('featuredStripSection').classList.add('hidden');
-      } else {
-        document.getElementById('heroCarouselSection').classList.remove('hidden');
-        if (allProducts.length) {
-          document.getElementById('featuredStripSection').classList.remove('hidden');
-          startFeaturedAutoScroll();
-        }
-        startBannerAutoShift();
-      }
-
       applyCatalogFilters();
-
-      if (shouldScroll) {
-        setTimeout(() => {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 80);
-      }
     }
 
     function clearSearch() {
-      const input = document.getElementById('storeSearchInput');
-      input.value = '';
+      document.getElementById('storeSearchInput').value = '';
       searchQuery = '';
       document.getElementById('clearSearchBtn').classList.add('hidden');
-      if (!pictureSearchScores) {
-        document.getElementById('heroCarouselSection').classList.remove('hidden');
-        if (allProducts.length) {
-          document.getElementById('featuredStripSection').classList.remove('hidden');
-          startFeaturedAutoScroll();
-        }
-        startBannerAutoShift();
-      }
       applyCatalogFilters();
     }
 
-    function applyCatalogFilters() {
-      let filtered = getRotatedProducts(allProducts);
-
-      if (activeCategory !== 'ALL') {
-        filtered = filtered.filter(p => String(p.category_id) === String(activeCategory));
-      }
-
-      if (searchQuery) {
-        const keywords = searchQuery.split(/\s+/).filter(Boolean);
-        filtered = filtered.filter(p => {
-          const catObj = allCategories.find(c => String(c.id) === String(p.category_id));
-          const haystack = `${p.name || ''} ${p.description || ''} ${catObj ? catObj.name : ''}`.toLowerCase();
-          return keywords.every(word => haystack.includes(word));
-        });
-      }
-
-      if (pictureSearchScores) {
-        filtered.sort((a, b) => (pictureSearchScores[String(b.id)] ?? -1) - (pictureSearchScores[String(a.id)] ?? -1));
-      }
-
-      const grid = document.getElementById('productsGrid');
-      const catBanner = document.getElementById('categoryViewBanner');
-      const catSubtitle = document.getElementById('categoryViewSubtitle');
-      const heading = document.getElementById('catalogHeading');
-      const catObj = allCategories.find(c => String(c.id) === String(activeCategory));
-
-      const isCategoryArrangement = categoryBrowseMode || (activeCategory !== 'ALL' && !searchQuery && !pictureSearchScores);
-      if (grid) {
-        grid.className = 'products-grid-home';
-      }
-
-      if (catBanner && catSubtitle) {
-        if (isCategoryArrangement) {
-          catBanner.classList.remove('hidden');
-          catSubtitle.textContent = catObj
-            ? `${catObj.name} • Showing category photos`
-            : 'Category catalog photos';
-        } else {
-          catBanner.classList.add('hidden');
-        }
-      }
-
-      if (pictureSearchScores && searchQuery) {
-        heading.textContent = `Photo & "${document.getElementById('storeSearchInput').value.trim()}" Matches`;
-      } else if (pictureSearchScores) {
-        heading.textContent = 'Closest Matches for Your Picture';
-      } else if (searchQuery) {
-        heading.textContent = `Search results for "${document.getElementById('storeSearchInput').value.trim()}"`;
-      } else if (activeCategory !== 'ALL') {
-        heading.textContent = catObj ? `${catObj.name} Photos` : 'Category Photos';
-      } else {
-        heading.textContent = 'All Items';
-      }
-
-      document.getElementById('productResultCount').textContent = `${filtered.length} item${filtered.length === 1 ? '' : 's'}`;
-      renderProducts(filtered);
-    }
-
-    function openAuthGate(defaultTab = 'signup', returnToCheckout = false, noticeText = '') {
-      returnToCheckoutAfterAuth = Boolean(returnToCheckout);
-      armStoreBackGuard();
-      document.getElementById('authSubtitle').textContent = returnToCheckoutAfterAuth
-        ? 'You do not have an account or are not signed in yet — please register or log in to continue to checkout.'
-        : 'Sign in or register to your Sekiflex Collections account.';
-
-      switchAuthView(defaultTab);
-      if (noticeText) {
-        showAuthMessage(noticeText, true);
-      }
-      document.getElementById('customerAuthGate').classList.remove('hidden');
-    }
-
-    function closeAuthGate() {
-      returnToCheckoutAfterAuth = false;
-      document.getElementById('customerAuthGate').classList.add('hidden');
-    }
-
-    function switchAuthView(view) {
-      const views = ['customerSignUpForm', 'verifyOtpForm', 'customerSignInForm', 'forgotRequestForm', 'forgotVerifyForm'];
-      views.forEach(id => document.getElementById(id).classList.add('hidden'));
-      document.getElementById('authGateMsg').classList.add('hidden');
-
-      const tabsRow = document.getElementById('authTabsRow');
-      const upBtn = document.getElementById('tabSignUpBtn');
-      const inBtn = document.getElementById('tabSignInBtn');
-
-      if (view === 'signup' || view === 'signin') {
-        tabsRow.classList.remove('hidden');
-        if (view === 'signup') {
-          document.getElementById('customerSignUpForm').classList.remove('hidden');
-          upBtn.className = 'py-2 rounded-xl text-xs font-extrabold bg-amber-500 text-stone-950 shadow-2xs transition';
-          inBtn.className = 'py-2 rounded-xl text-xs font-extrabold text-stone-400 hover:text-white transition';
-        } else {
-          document.getElementById('customerSignInForm').classList.remove('hidden');
-          inBtn.className = 'py-2 rounded-xl text-xs font-extrabold bg-amber-500 text-stone-950 shadow-2xs transition';
-          upBtn.className = 'py-2 rounded-xl text-xs font-extrabold text-stone-400 hover:text-white transition';
-        }
-      } else {
-        tabsRow.classList.add('hidden');
-        if (view === 'verify') document.getElementById('verifyOtpForm').classList.remove('hidden');
-        if (view === 'forgot') document.getElementById('forgotRequestForm').classList.remove('hidden');
-        if (view === 'reset') document.getElementById('forgotVerifyForm').classList.remove('hidden');
-      }
-    }
-
-    function showAuthMessage(text, isError = true) {
-      const box = document.getElementById('authGateMsg');
-      box.textContent = text;
-      box.className = `text-xs font-semibold text-center p-2.5 rounded-xl ${
-        isError ? 'bg-amber-500/15 text-amber-200 border border-amber-400/40' : 'bg-emerald-950/80 text-emerald-200 border border-emerald-500/30'
-      }`;
-      box.classList.remove('hidden');
-    }
-
-    async function handleCustomerSignUp(e) {
-      e.preventDefault();
-      const btn = document.getElementById('regSubmitBtn');
-      const fullName = document.getElementById('regName').value.trim();
-      const email = document.getElementById('regEmail').value.trim();
-      const phone = document.getElementById('regPhone').value.trim();
-      const password = document.getElementById('regPassword').value;
-
-      if (!fullName) return showAuthMessage('Please enter your full name.', true);
-
-      btn.disabled = true;
-      btn.textContent = 'Sending Registration Code...';
-
-      const { data, error } = await sb.auth.signUp({
-        email,
-        password,
-        options: { data: { full_name: fullName, display_name: fullName, phone } }
-      });
-
-      btn.disabled = false;
-      btn.textContent = 'Register & Go to Checkout →';
-
-      if (error) return showAuthMessage(error.message, true);
-
-      pendingSignupData = { name: fullName, email, phone };
-      document.getElementById('otpTargetEmail').textContent = email;
-
-      if (data?.session && data?.user) {
-        await sb.from('customer_profiles').upsert({
-          id: data.user.id,
-          full_name: fullName,
-          email,
-          phone
-        });
-        completeAuthAndBounceBack(data.user, { full_name: fullName, email, phone });
-        return;
-      }
-
-      switchAuthView('verify');
-      showAuthMessage('8-digit registration code sent to your email!', false);
-    }
-
-    async function handleVerifySignupOtp(e) {
-      e.preventDefault();
-      const btn = document.getElementById('verifyOtpBtn');
-      const token = document.getElementById('signupOtpCode').value.trim();
-
-      btn.disabled = true;
-      btn.textContent = 'Verifying Code...';
-
-      const { data, error } = await sb.auth.verifyOtp({
-        email: pendingSignupData.email,
-        token,
-        type: 'signup'
-      });
-
-      btn.disabled = false;
-      btn.textContent = 'Verify & Go to Checkout →';
-
-      if (error) return showAuthMessage(error.message, true);
-
-      if (data?.user) {
-        const chosenName = pendingSignupData.name || data.user.user_metadata?.full_name || '';
-        const chosenPhone = pendingSignupData.phone || data.user.user_metadata?.phone || '';
-
-        if (chosenName) {
-          await sb.auth.updateUser({ data: { full_name: chosenName, display_name: chosenName, phone: chosenPhone } });
-        }
-
-        await sb.from('customer_profiles').upsert({
-          id: data.user.id,
-          full_name: chosenName || data.user.email.split('@')[0],
-          email: pendingSignupData.email,
-          phone: chosenPhone
-        });
-
-        completeAuthAndBounceBack(data.user, {
-          full_name: chosenName,
-          email: pendingSignupData.email,
-          phone: chosenPhone
-        });
-      }
-    }
-
-    async function resendSignupCode() {
-      if (!pendingSignupData.email) return;
-      const { error } = await sb.auth.resend({
-        type: 'signup',
-        email: pendingSignupData.email
-      });
-      if (error) return showAuthMessage(error.message, true);
-      showAuthMessage('A fresh 8-digit code has been sent to ' + pendingSignupData.email, false);
-    }
-
-    async function handleCustomerSignIn(e) {
-      e.preventDefault();
-      const btn = document.getElementById('loginSubmitBtn');
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPassword').value;
-
-      btn.disabled = true;
-      btn.textContent = 'Signing In...';
-
-      const { data, error } = await sb.auth.signInWithPassword({ email, password });
-
-      btn.disabled = false;
-      btn.textContent = 'Sign In & Go to Checkout →';
-
-      if (error) return showAuthMessage(error.message, true);
-
-      const { data: profile } = await sb
-        .from('customer_profiles')
-        .select('*')
-        .eq('id', data.user.id)
-        .maybeSingle();
-
-      completeAuthAndBounceBack(data.user, profile);
-    }
-
-    async function handleSendResetCode(e) {
-      e.preventDefault();
-      const btn = document.getElementById('sendResetBtn');
-      const email = document.getElementById('forgotEmail').value.trim();
-
-      btn.disabled = true;
-      btn.textContent = 'Sending Reset Code...';
-
-      const { error } = await sb.auth.resetPasswordForEmail(email);
-
-      btn.disabled = false;
-      btn.textContent = 'Send Reset Code →';
-
-      if (error) return showAuthMessage(error.message, true);
-
-      pendingResetEmail = email;
-      document.getElementById('resetTargetEmail').textContent = email;
-      switchAuthView('reset');
-      showAuthMessage('8-digit password reset code sent to your email!', false);
-    }
-
-    async function handleCompletePasswordReset(e) {
-      e.preventDefault();
-      const btn = document.getElementById('completeResetBtn');
-      const token = document.getElementById('resetOtpCode').value.trim();
-      const newPassword = document.getElementById('resetNewPassword').value;
-
-      btn.disabled = true;
-      btn.textContent = 'Updating Password...';
-
-      const { data, error } = await sb.auth.verifyOtp({
-        email: pendingResetEmail,
-        token,
-        type: 'recovery'
-      });
-
-      if (error) {
-        btn.disabled = false;
-        btn.textContent = 'Update Password & Go to Checkout →';
-        return showAuthMessage(error.message, true);
-      }
-
-      const { error: pwErr } = await sb.auth.updateUser({ password: newPassword });
-
-      btn.disabled = false;
-      btn.textContent = 'Update Password & Go to Checkout →';
-
-      if (pwErr) return showAuthMessage(pwErr.message, true);
-
-      const { data: profile } = await sb
-        .from('customer_profiles')
-        .select('*')
-        .eq('id', data.user.id)
-        .maybeSingle();
-
-      completeAuthAndBounceBack(data.user, profile);
-    }
-
-    function applySignedInCustomerState(user, profile) {
-      const exactFullName = (
-        profile?.full_name ||
-        user.user_metadata?.full_name ||
-        user.user_metadata?.display_name ||
-        (user.email ? user.email.split('@')[0] : 'Shopper')
-      ).trim();
-
-      const firstName = exactFullName.split(/\s+/)[0] || exactFullName;
-
-      currentCustomer = {
-        id: user.id,
-        name: exactFullName,
-        firstName,
-        email: profile?.email || user.email || '',
-        phone: profile?.phone || user.user_metadata?.phone || ''
-      };
-
-      document.getElementById('topWelcomeGreeting').textContent = `Hello, ${firstName}`;
-      document.getElementById('menuCustomerName').textContent = exactFullName;
-      document.getElementById('menuCustomerEmail').textContent = currentCustomer.email;
-      document.getElementById('accountSignInActionBtn').classList.add('hidden');
-      document.getElementById('accountSignOutActionBtn').classList.remove('hidden');
-
-      prefillCustomerCheckout();
-
-      if ("Notification" in window && Notification.permission === "granted" && typeof window.enableSekiflexPush === "function") {
-        window.enableSekiflexPush({
-          customerEmail: currentCustomer.email,
-          customerPhone: currentCustomer.phone,
-          isAdmin: false,
-          silent: true
-        });
-      }
-    }
-
-    function completeAuthAndBounceBack(user, profile) {
-      const shouldReturnCheckout = returnToCheckoutAfterAuth;
-      returnToCheckoutAfterAuth = false;
-      applySignedInCustomerState(user, profile);
-      document.getElementById('customerAuthGate').classList.add('hidden');
-
-      if (shouldReturnCheckout) {
-        toggleCart(true, true);
-      }
-    }
-
-    function prefillCustomerCheckout() {
-      if (!currentCustomer) return;
-      if (currentCustomer.name && !document.getElementById('custName').value.trim()) {
-        document.getElementById('custName').value = currentCustomer.name;
-      }
-      if (currentCustomer.email && !document.getElementById('custEmail').value.trim()) {
-        document.getElementById('custEmail').value = currentCustomer.email;
-      }
-      if (currentCustomer.phone && !document.getElementById('custPhone').value.trim()) {
-        document.getElementById('custPhone').value = currentCustomer.phone;
-      }
-    }
-
-    async function customerLogout() {
-      await sb.auth.signOut();
-      location.reload();
-    }
-
-    function applySingleBannerSlot(banner, cardEl, textEl, imgEl, defaultColor) {
-      if (!cardEl || !textEl || !imgEl) return;
-      if (!banner || !banner.banner_active || !banner.banner_text) {
-        cardEl.classList.add('hidden');
-        return;
-      }
-
-      const colorMap = {
-        gold: 'from-[#33220a] via-[#1f160b] to-[#120e09]',
-        green: 'from-[#28200b] via-[#1a160c] to-[#110f0a]',
-        red: 'from-[#30170e] via-[#1e120d] to-[#120d0a]',
-        dark: 'from-[#33220a] via-[#1f160b] to-[#120e09]'
-      };
-      const chosenGradient = colorMap[banner.banner_color] || colorMap[defaultColor] || colorMap.gold;
-      cardEl.className = `promo-slide snap-start shrink-0 w-full min-h-[120px] rounded-2xl bg-gradient-to-br ${chosenGradient} text-white p-2.5 flex items-center justify-between gap-2.5 border border-amber-400/50 shadow-lg overflow-hidden`;
-      textEl.textContent = banner.banner_text;
-
-      if (banner.banner_image_url) {
-        imgEl.src = banner.banner_image_url;
-        imgEl.classList.remove('hidden');
-      } else {
-        imgEl.classList.add('hidden');
-      }
-
-      cardEl.classList.remove('hidden');
-    }
-
-    function refreshStaticHeroSlideImages() {
-      if (!Array.isArray(allProducts) || !allProducts.length) return;
-      const apparelBox = document.getElementById('heroApparelMediaBox');
-      const accBox = document.getElementById('heroAccessoriesMediaBox');
-
-      const firstImg = (allProducts[0]?.images && allProducts[0].images[0]) || allProducts[0]?.image_url || '';
-      const secondProd = allProducts[1] || allProducts[0];
-      const secondImg = (secondProd?.images && secondProd.images[0]) || secondProd?.image_url || '';
-
-      if (apparelBox && firstImg) {
-        apparelBox.innerHTML = `<img src="${firstImg}" alt="" class="w-full h-full object-cover object-top" />`;
-      }
-      if (accBox && secondImg) {
-        accBox.innerHTML = `<img src="${secondImg}" alt="" class="w-full h-full object-cover object-top" />`;
-      }
-    }
-
-    async function loadStoreBanner() {
-      const [{ data: banner }, { data: banner2 }] = await Promise.all([
-        sb.from('store_settings').select('*').eq('id', 'main').maybeSingle(),
-        sb.from('store_settings').select('*').eq('id', 'second').maybeSingle()
-      ]);
-
-      liveBannerMediaUrls = [banner?.banner_image_url, banner2?.banner_image_url].filter(Boolean);
-
-      applySingleBannerSlot(
-        banner,
-        document.getElementById('livePromoBannerCard'),
-        document.getElementById('livePromoText'),
-        document.getElementById('livePromoImg'),
-        'gold'
-      );
-
-      applySingleBannerSlot(
-        banner2,
-        document.getElementById('livePromoBanner2Card'),
-        document.getElementById('livePromo2Text'),
-        document.getElementById('livePromo2Img'),
-        'gold'
-      );
-
-      const heroSec = document.getElementById('heroVideoSection');
-      const heroPlayer = document.getElementById('heroVideoPlayer');
-      const localHero = JSON.parse(localStorage.getItem('sekiflex_hero_video_v1') || 'null');
-      const heroActive = banner?.hero_video_active ?? localHero?.active ?? false;
-      const heroUrl = banner?.hero_video_url || localHero?.url || '';
-
-      if (heroSec && heroPlayer) {
-        if (heroActive && heroUrl) {
-          if (heroPlayer.src !== heroUrl) {
-            heroPlayer.src = heroUrl;
-          }
-          heroSec.classList.remove('hidden');
-        } else {
-          heroPlayer.pause();
-          heroSec.classList.add('hidden');
-        }
-      }
-
-      renderWallHungPromoCards();
-      currentBannerSlideIdx = 0;
-      const carousel = document.getElementById('bannerCarousel');
-      if (carousel) carousel.scrollLeft = 0;
-    }
-
-    function copyAcct(acctNum, bankName, btnEl) {
-      navigator.clipboard.writeText(acctNum);
-      if (btnEl) {
-        const orig = btnEl.textContent;
-        btnEl.textContent = 'Copied!';
-        btnEl.classList.add('bg-emerald-500', 'text-white');
-        setTimeout(() => {
-          btnEl.textContent = orig;
-          btnEl.classList.remove('bg-emerald-500', 'text-white');
-        }, 1400);
-      }
-    }
-
-    function populateNigeriaStates() {
-      const sel = document.getElementById('custStateSelect');
-      sel.innerHTML = '<option value="">Select State...</option>' +
-        NIGERIA_STATES.map(st => `<option value="${st}">${st}</option>`).join('');
-    }
-
-    function setFulfillmentMode(mode) {
-      fulfillmentMode = mode;
-      const btnDel = document.getElementById('btnDeliveryMode');
-      const btnPick = document.getElementById('btnPickupMode');
-      const delFields = document.getElementById('deliveryFields');
-      const pickBox = document.getElementById('pickupInfoBox');
-      const cityEl = document.getElementById('custCity');
-      const addrEl = document.getElementById('custAddress');
-      const countryEl = document.getElementById('custCountry');
-
-      if (mode === 'pickup') {
-        btnPick.className = 'py-1.5 px-2.5 rounded-lg text-xs font-bold bg-amber-500 text-stone-950 transition';
-        btnDel.className = 'py-1.5 px-2.5 rounded-lg text-xs font-bold text-stone-300 hover:text-white transition';
-        delFields.classList.add('hidden');
-        pickBox.classList.remove('hidden');
-
-        countryEl.required = false;
-        document.getElementById('custStateSelect').required = false;
-        document.getElementById('custStateText').required = false;
-        cityEl.required = false;
-        addrEl.required = false;
-      } else {
-        btnDel.className = 'py-1.5 px-2.5 rounded-lg text-xs font-bold bg-amber-500 text-stone-950 transition';
-        btnPick.className = 'py-1.5 px-2.5 rounded-lg text-xs font-bold text-stone-300 hover:text-white transition';
-        delFields.classList.remove('hidden');
-        pickBox.classList.add('hidden');
-
-        countryEl.required = true;
-        cityEl.required = true;
-        addrEl.required = true;
-        handleCountryChange();
-        return;
-      }
-      updateShippingFee();
-    }
-
-    function handleCountryChange() {
-      const country = document.getElementById('custCountry').value;
-      const sel = document.getElementById('custStateSelect');
-      const txt = document.getElementById('custStateText');
-
-      if (country === 'Nigeria') {
-        sel.classList.remove('hidden');
-        sel.required = (fulfillmentMode === 'delivery');
-        txt.classList.add('hidden');
-        txt.required = false;
-        txt.value = '';
-      } else {
-        sel.classList.add('hidden');
-        sel.required = false;
-        sel.value = '';
-        txt.classList.remove('hidden');
-        txt.required = (fulfillmentMode === 'delivery');
-      }
-      updateShippingFee();
-    }
-
-    function getSelectedState() {
-      const country = document.getElementById('custCountry').value;
-      return country === 'Nigeria'
-        ? document.getElementById('custStateSelect').value.trim()
-        : document.getElementById('custStateText').value.trim();
-    }
-
-    function renderCategoryButtons(cats) {
-      allCategories = cats || [];
-      const bar = document.getElementById('categoryBar');
-      const drawerList = document.getElementById('drawerCategoriesList');
-
-      bar.innerHTML = `<button type="button" onclick="categoryBrowseMode = false; filterCategory('ALL', this); document.getElementById('catalogSection').scrollIntoView({behavior:'smooth'});" class="cat-btn ${activeCategory === 'ALL' ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-[#16130f] border border-amber-400/20 text-stone-300 font-semibold'} text-[11px] px-3 py-1 rounded-full whitespace-nowrap">All Items (${allProducts.length})</button>`;
-      drawerList.innerHTML = `<button type="button" onclick="categoryBrowseMode = false; filterCategory('ALL'); closeAllDrawers(); setActiveBottomTab('home'); document.getElementById('catalogSection').scrollIntoView({behavior:'smooth'});" class="p-3 rounded-xl bg-amber-500 text-stone-950 text-xs font-extrabold text-left flex items-center justify-between"><span>All Store Items</span><span>(${allProducts.length})</span></button>`;
-
-      allCategories.forEach(c => {
-        const countInCat = allProducts.filter(p => String(p.category_id) === String(c.id)).length;
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = `cat-btn ${String(activeCategory) === String(c.id) ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-[#16130f] border border-amber-400/20 text-stone-300 font-semibold'} text-[11px] px-3 py-1 rounded-full whitespace-nowrap`;
-        btn.textContent = `${c.name} (${countInCat})`;
-        btn.onclick = () => {
-          categoryBrowseMode = true;
-          filterCategory(c.id, btn);
-          document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
-        };
-        bar.appendChild(btn);
-
-        const dBtn = document.createElement('button');
-        dBtn.type = 'button';
-        dBtn.className = 'p-3 rounded-xl bg-stone-950 hover:bg-stone-800 border border-amber-400/20 text-stone-100 text-xs font-bold text-left flex items-center justify-between gap-1.5 transition';
-        dBtn.innerHTML = `<span class="truncate">${c.name}</span><span class="text-[10px] font-extrabold text-amber-400 shrink-0">(${countInCat})</span>`;
-        dBtn.onclick = () => {
-          categoryBrowseMode = true;
-          filterCategory(c.id);
-          closeAllDrawers();
-          setActiveBottomTab('categories');
-          document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
-        };
-        drawerList.appendChild(dBtn);
-      });
-
-      if (!document.getElementById('splitCategoryStoreView').classList.contains('hidden')) {
-        renderSplitCategorySidebar();
-        renderSplitCategoryPanel();
-        renderWallHungPromoCards();
-      }
-    }
-
-    function trackLiveVisitorHeartbeat() {
-      try {
-        let vid = localStorage.getItem('sekiflex_visitor_id');
-        if (!vid) {
-          vid = 'v_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
-          localStorage.setItem('sekiflex_visitor_id', vid);
-        }
-        const ping = () => {
-          sb.from('site_visits')
-            .upsert({ visitor_id: vid, page: 'index.html', last_seen: new Date().toISOString() }, { onConflict: 'visitor_id' })
-            .then(() => {});
-        };
-        ping();
-        setInterval(ping, 60000);
-      } catch (e) {}
-    }
-
-    async function init() {
-      bindBackButtonGuardsOnce();
-      trackLiveVisitorHeartbeat();
-      lastRotationSlot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000));
-      applySocialLinks();
-      selectStarRating(5);
-      renderReviews();
-      renderWallHungPromoCards();
-      populateNigeriaStates();
-      renderCart();
-      startBannerAutoShift();
-      startFeaturedAutoScroll();
-      startProductRotation();
-
-      if (allProducts.length) {
-        warmUpTopImages(allProducts);
-        refreshStaticHeroSlideImages();
-        renderFeaturedStrip(allProducts);
-        renderWallHungPromoCards();
-        applyCatalogFilters();
-        openSharedProductFromUrl();
-      }
-      if (allCategories.length) renderCategoryButtons(allCategories);
-      updateShippingFee();
-
-      const [{ data: products }, { data: zones }, { data: cats }] = await Promise.all([
-        sb.from('products').select('*').eq('is_active', true).order('created_at', { ascending: false }),
-        sb.from('shipping_zones').select('*').eq('is_active', true),
-        sb.from('categories').select('*').order('name')
-      ]);
-
-      if (products) {
-        allProducts = products;
-        localStorage.setItem('sekiflex_products_cache', JSON.stringify(products));
-        warmUpTopImages(allProducts);
-        refreshStaticHeroSlideImages();
-        renderFeaturedStrip(allProducts);
-        renderWallHungPromoCards();
-        applyCatalogFilters();
-        openSharedProductFromUrl();
-      } else if (!allProducts.length) {
-        renderProducts([]);
-      }
-
-      if (zones) {
-        shippingZones = zones;
-        localStorage.setItem('sekiflex_zones_cache', JSON.stringify(zones));
-        updateShippingFee();
-      }
-
-      if (cats) {
-        localStorage.setItem('sekiflex_cats_cache', JSON.stringify(cats));
-        renderCategoryButtons(cats);
-      }
-
-      await loadStoreBanner();
-      startBannerAutoShift();
-      startFeaturedAutoScroll();
-
-      const { data: { session } } = await sb.auth.getSession();
-      if (session?.user) {
-        const { data: profile } = await sb
-          .from('customer_profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .maybeSingle();
-        applySignedInCustomerState(session.user, profile);
-      }
-    }
-
-    function filterCategory(catId, activeBtn) {
-      activeCategory = catId;
-      if (catId === 'ALL') categoryBrowseMode = false;
-      if (catId !== 'ALL') armStoreBackGuard();
-      document.querySelectorAll('.cat-btn').forEach(b => {
-        b.className = 'cat-btn bg-[#16130f] border border-amber-400/20 text-stone-300 text-[11px] font-semibold px-3 py-1 rounded-full whitespace-nowrap';
-      });
-      if (activeBtn) {
-        activeBtn.className = 'cat-btn bg-amber-500 text-stone-950 text-[11px] font-extrabold px-3 py-1 rounded-full whitespace-nowrap';
-      } else {
-        renderCategoryButtons(allCategories);
-      }
-      applyCatalogFilters();
-    }
-
-    function renderFeaturedStrip(list) {
-      const strip = document.getElementById('featuredHorizontalList');
-      const sec = document.getElementById('featuredStripSection');
-      if (!list || !list.length || searchQuery || pictureSearchScores) {
-        sec.classList.add('hidden');
-        return;
-      }
-      sec.classList.remove('hidden');
-      strip.innerHTML = list.slice(0, 8).map((p) => {
-        const img = (p.images && p.images[0]) || p.image_url || '';
-        const { effectivePrice, originalPrice } = getProductPricing(p);
-        const safeName = String(p.name || 'Product').replace(/"/g, '&quot;').replace(/'/g, "\\'");
-        const priceDisplay = originalPrice !== null
-          ? `<div class="flex items-baseline gap-1 mt-0.5 flex-wrap"><span class="text-[11px] font-extrabold text-amber-400">₦${effectivePrice.toLocaleString()}</span><span class="text-[9px] text-stone-400 line-through">₦${originalPrice.toLocaleString()}</span></div>`
-          : `<p class="text-[11px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>`;
-        const mediaInner = img
-          ? `<img src="${img}" alt="" data-prod-label="${safeName}" loading="eager" decoding="async" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
-          : renderBrandedPlaceholderHtml(p.name);
-        return `
-          <div onclick="openProductDetail('${p.id}')" class="shrink-0 w-28 sm:w-32 bg-[#18140e] rounded-xl overflow-hidden border border-amber-400/25 flex flex-col justify-between cursor-pointer hover:border-amber-400 transition shadow-sm">
-            <div class="${img ? 'img-skeleton-box' : ''} w-full h-24 bg-stone-950 flex items-center justify-center overflow-hidden">
-              ${mediaInner}
-            </div>
-            <div class="p-1.5 bg-[#16130f]">
-              <p class="text-[11px] font-semibold text-white truncate">${p.name}</p>
-              ${priceDisplay}
-            </div>
-          </div>`;
-      }).join('');
-      activateSlowImageGuards();
-      startFeaturedAutoScroll();
-    }
-
-    function renderProducts(list) {
-      const grid = document.getElementById('productsGrid');
-      if (!list.length) {
-        grid.innerHTML = '<p class="col-span-full text-center text-stone-400 py-10 text-xs">No matching products found.</p>';
-        return;
-      }
-
-      grid.innerHTML = list.map((p, idx) => {
-        const img = (p.images && p.images[0]) || p.image_url || '';
-        const out = (p.stock_quantity !== null && p.stock_quantity <= 0);
-        const isAboveFold = idx < 10;
-        const safeName = String(p.name || 'Product').replace(/"/g, '&quot;').replace(/'/g, "\\'");
-        const mediaInner = img
-          ? `<img src="${img}" alt="" data-prod-label="${safeName}" loading="${isAboveFold ? 'eager' : 'lazy'}" fetchpriority="${idx < 4 ? 'high' : 'auto'}" decoding="async" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
-          : renderBrandedPlaceholderHtml(p.name);
-        return `
-          <div onclick="openProductDetail('${p.id}')" class="luxury-glass-card rounded-xl border border-amber-400/25 overflow-hidden flex flex-col cursor-pointer hover:border-amber-400/60 transition">
-            <div class="${img ? 'img-skeleton-box' : ''} w-full h-32 sm:h-36 bg-stone-950 flex items-center justify-center overflow-hidden">
-              ${mediaInner}
-            </div>
-            <div class="p-2 flex flex-col gap-1">
-              <h3 class="font-bold text-[11px] text-white line-clamp-1">${p.name}</h3>
-              <p class="text-[9px] text-stone-400 line-clamp-1">${p.description || 'Tap to view details'}</p>
-              ${formatPriceHtml(p, 'text-xs')}
-              <button type="button" ${out ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart('${p.id}', this)"
-                class="w-full ${out ? 'bg-stone-800 text-stone-500' : 'bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950'} text-[10px] font-extrabold py-1 rounded-lg transition shadow-xs">
-                ${out ? 'Sold Out' : 'Add to Cart'}
-              </button>
-            </div>
-          </div>`;
-      }).join('');
-      activateSlowImageGuards();
-    }
-
-    function showBagToast(itemName) {
-      const toast = document.getElementById('bagToast');
-      const totalItems = cart.reduce((s, i) => s + i.qty, 0);
-      document.getElementById('bagToastText').textContent = `${itemName} added (${totalItems} in cart)`;
-      toast.classList.remove('hidden');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(hideBagToast, 3000);
-    }
-
-    function hideBagToast() {
-      document.getElementById('bagToast').classList.add('hidden');
+    function jumpToAllItems() {
+      document.getElementById('splitCategoryStoreView').classList.add('hidden');
+      document.getElementById('storeMainWrapper').classList.remove('hidden');
+      filterCategory('ALL');
+      const sec = document.getElementById('catalogSection');
+      if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function addToCart(productId, btnEl) {
       const prod = allProducts.find(p => String(p.id) === String(productId));
       if (!prod) return;
-      const { effectivePrice } = getProductPricing(prod);
+      const price = getProductPrice(prod);
       const existing = cart.find(i => String(i.id) === String(productId));
       if (existing) existing.qty += 1;
-      else cart.push({ id: prod.id, name: prod.name, price: effectivePrice, qty: 1 });
-      saveCart();
+      else cart.push({ id: prod.id, name: prod.name, price, qty: 1 });
+      localStorage.setItem('sekiflex_cart', JSON.stringify(cart));
+      renderCart();
 
       if (btnEl) {
-        const originalText = btnEl.textContent.trim();
+        const prev = btnEl.textContent;
         btnEl.textContent = '✓';
-        btnEl.classList.add('bg-emerald-500', 'text-white');
-        setTimeout(() => {
-          btnEl.textContent = originalText;
-          btnEl.classList.remove('bg-emerald-500', 'text-white');
-        }, 900);
+        setTimeout(() => { btnEl.textContent = prev; }, 800);
       }
-
-      showBagToast(prod.name);
     }
 
     function changeQty(idx, delta) {
       cart[idx].qty += delta;
       if (cart[idx].qty <= 0) cart.splice(idx, 1);
-      saveCart();
-    }
-
-    function saveCart() {
       localStorage.setItem('sekiflex_cart', JSON.stringify(cart));
-      renderCart();
-    }
-
-    function updateShippingFee() {
-      if (fulfillmentMode === 'pickup') {
-        currentShippingFee = 0;
-        currentEstDays = 'Uyo HQ Pickup';
-        renderCart();
-        return;
-      }
-
-      const country = (document.getElementById('custCountry').value || '').trim().toLowerCase();
-      const state = getSelectedState().toLowerCase();
-
-      if (country === 'nigeria' && !state) {
-        currentShippingFee = 0;
-        currentEstDays = 'select state';
-        renderCart();
-        return;
-      }
-
-      const match = shippingZones.find(z => z.country_name.toLowerCase() === country && z.state_name && z.state_name.toLowerCase() === state)
-                 || shippingZones.find(z => z.country_name.toLowerCase() === country && !z.state_name);
-
-      currentShippingFee = match ? Number(match.delivery_fee_ngn) : (country === 'nigeria' ? 5500 : 60000);
-      currentEstDays = match ? match.estimated_days : (country === 'nigeria' ? '2-4 business days' : '5-10 business days');
       renderCart();
     }
 
     function renderCart() {
       const count = cart.reduce((s, i) => s + i.qty, 0);
       const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
-      const grandTotal = sub + currentShippingFee;
       document.getElementById('cartCount').textContent = count;
       document.getElementById('cartReviewSubTotal').textContent = '₦' + sub.toLocaleString();
-      document.getElementById('subTotalText').textContent = '₦' + sub.toLocaleString();
-
-      if (fulfillmentMode === 'pickup') {
-        document.getElementById('shipFeeText').textContent = 'FREE (₦0)';
-      } else {
-        document.getElementById('shipFeeText').textContent = currentShippingFee > 0 ? '₦' + currentShippingFee.toLocaleString() : '—';
-      }
-
-      document.getElementById('estDaysText').textContent = currentEstDays;
-      document.getElementById('grandTotalText').textContent = '₦' + grandTotal.toLocaleString();
-      document.getElementById('payBoxAmountText').textContent = '₦' + grandTotal.toLocaleString();
-
-      const waybillBtn = document.getElementById('openWaybillBtn');
       const box = document.getElementById('cartItems');
       if (!cart.length) {
-        box.innerHTML = '<p class="text-xs text-stone-400 text-center py-5">Your shopping cart is empty.</p>';
-        if (waybillBtn) waybillBtn.classList.add('hidden');
-        document.getElementById('checkoutForm').classList.add('hidden');
+        box.innerHTML = '<p class="text-xs text-stone-400 text-center py-4">Your shopping cart is empty.</p>';
         return;
       }
-      if (waybillBtn && document.getElementById('checkoutForm').classList.contains('hidden')) {
-        waybillBtn.classList.remove('hidden');
-      }
-
       box.innerHTML = cart.map((item, i) => `
-        <div class="flex items-center justify-between gap-2 bg-stone-950 p-2.5 rounded-xl border border-stone-800/90">
+        <div class="flex items-center justify-between gap-2 bg-stone-950 p-2.5 rounded-xl border border-stone-800">
           <div class="min-w-0">
             <p class="text-xs font-bold text-white truncate">${item.name}</p>
-            <p class="text-xs text-amber-400 font-extrabold mt-0.5">₦${(item.price * item.qty).toLocaleString()}</p>
+            <p class="text-xs text-amber-400 font-extrabold">₦${(item.price * item.qty).toLocaleString()}</p>
           </div>
           <div class="flex items-center gap-1.5 shrink-0">
-            <button type="button" onclick="changeQty(${i}, -1)" class="w-6 h-6 bg-stone-800 hover:bg-stone-700 text-white rounded-lg font-bold text-xs">-</button>
-            <span class="text-xs font-bold w-4 text-center text-white">${item.qty}</span>
-            <button type="button" onclick="changeQty(${i}, 1)" class="w-6 h-6 bg-stone-800 hover:bg-stone-700 text-white rounded-lg font-bold text-xs">+</button>
+            <button type="button" onclick="changeQty(${i}, -1)" class="w-6 h-6 bg-stone-800 text-white rounded-lg font-bold text-xs">-</button>
+            <span class="text-xs font-bold w-4 text-center">${item.qty}</span>
+            <button type="button" onclick="changeQty(${i}, 1)" class="w-6 h-6 bg-stone-800 text-white rounded-lg font-bold text-xs">+</button>
           </div>
         </div>`).join('');
     }
 
-    function openCartReview() {
-      armStoreBackGuard();
-      backToCartReviewOnly();
-      setActiveBottomTab('cart');
-      document.getElementById('cartDrawer').classList.remove('hidden');
+    function toggleCart(show) {
+      document.getElementById('cartDrawer').classList.toggle('hidden', !show);
     }
 
-    function backToCartReviewOnly() {
-      document.getElementById('checkoutForm').classList.add('hidden');
-      document.getElementById('cartSummaryActions').classList.remove('hidden');
-      if (cart.length) {
-        document.getElementById('openWaybillBtn').classList.remove('hidden');
-      }
-      document.getElementById('cartDrawerHeading').textContent = 'Your Shopping Cart';
-    }
+    async function loadStoreBanner() {
+      try {
+        const [{ data: b1 }, { data: b2 }] = await Promise.all([
+          sb.from('store_settings').select('*').eq('id', 'main').maybeSingle(),
+          sb.from('store_settings').select('*').eq('id', 'second').maybeSingle()
+        ]);
+        liveBannerMediaUrls = [b1?.banner_image_url, b2?.banner_image_url].filter(Boolean);
 
-    function skfHandleKeepShopping(e) {
-      if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-      document.getElementById('checkoutForm').classList.add('hidden');
-      document.getElementById('cartSummaryActions').classList.remove('hidden');
-      document.getElementById('cartDrawer').classList.add('hidden');
-      setActiveBottomTab('home');
-    }
-
-    async function skfHandleProceedToCheckout(e) {
-      if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-      if (!cart.length) {
-        alert('Add at least one item to your cart first.');
-        return;
-      }
-
-      if (!currentCustomer) {
-        try {
-          const { data: { session } } = await sb.auth.getSession();
-          if (session?.user) {
-            const { data: profile } = await sb
-              .from('customer_profiles')
-              .select('*')
-              .eq('id', session.user.id)
-              .maybeSingle();
-            applySignedInCustomerState(session.user, profile);
+        if (b1 && b1.banner_active && b1.banner_text) {
+          document.getElementById('livePromoText').textContent = b1.banner_text;
+          if (b1.banner_image_url) {
+            const im = document.getElementById('livePromoImg');
+            im.src = b1.banner_image_url;
+            im.classList.remove('hidden');
           }
-        } catch (err) {}
-      }
-
-      if (!currentCustomer) {
-        openAuthGate(
-          'signup',
-          true,
-          'You do not have an account or are not signed in yet — please register an account or log in to continue to checkout.'
-        );
-        return;
-      }
-
-      prefillCustomerCheckout();
-      document.getElementById('cartSummaryActions').classList.add('hidden');
-      document.getElementById('checkoutForm').classList.remove('hidden');
-      document.getElementById('cartDrawerHeading').textContent = 'Waybill & Checkout';
-    }
-
-    async function openWaybillSection() {
-      return skfHandleProceedToCheckout();
-    }
-
-    function toggleCart(show, showWaybillImmediately = false) {
-      if (show) {
-        armStoreBackGuard();
-        setActiveBottomTab('cart');
-        document.getElementById('cartDrawer').classList.remove('hidden');
-        if (showWaybillImmediately) {
-          skfHandleProceedToCheckout();
-        } else {
-          backToCartReviewOnly();
+          document.getElementById('livePromoBannerCard').classList.remove('hidden');
         }
-      } else {
-        skfHandleKeepShopping();
-      }
+        if (b2 && b2.banner_active && b2.banner_text) {
+          document.getElementById('livePromo2Text').textContent = b2.banner_text;
+          if (b2.banner_image_url) {
+            const im2 = document.getElementById('livePromo2Img');
+            im2.src = b2.banner_image_url;
+            im2.classList.remove('hidden');
+          }
+          document.getElementById('livePromoBanner2Card').classList.remove('hidden');
+        }
+        renderWallHungPromoCards();
+      } catch (e) {}
     }
 
-    async function placeOrder(e) {
-      e.preventDefault();
-      if (!currentCustomer) {
-        openAuthGate(
-          'signup',
-          true,
-          'You do not have an account or are not signed in yet — please register an account or log in to continue to checkout.'
-        );
-        return;
+    async function init() {
+      renderCart();
+      if (allProducts.length) {
+        preloadProductImages(allProducts);
+        applyCatalogFilters();
+        renderWallHungPromoCards();
       }
-      if (!cart.length) return alert('Add at least one item to your cart first.');
-
-      let country = 'Nigeria';
-      let destination = 'Store Pickup — Sekiflex HQ, Urua Ekpa, Uyo, Akwa Ibom State';
-
-      if (fulfillmentMode === 'delivery') {
-        country = document.getElementById('custCountry').value.trim();
-        const state = getSelectedState();
-        if (country === 'Nigeria' && !state) {
-          return alert('Please select your delivery state first.');
-        }
-        const city = document.getElementById('custCity').value.trim();
-        const address = document.getElementById('custAddress').value.trim();
-        destination = `${address}, ${city}, ${state}, ${country}`;
-      }
-
-      const paidBank = document.getElementById('paidBankSelect').value.trim();
-      const senderRef = document.getElementById('senderRefInput').value.trim();
-      if (!paidBank || !senderRef) {
-        return alert('Please select the Sekiflex bank account you transferred to and enter the sender name/reference.');
-      }
-
-      const btn = document.getElementById('submitBtn');
-      btn.disabled = true;
-      btn.textContent = 'Verifying & Registering Order...';
-
-      const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
-      const total = sub + currentShippingFee;
-      const tracking = 'SC-2026-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-      const summary = cart.map(i => `${i.qty}x ${i.name}`).join('; ');
-      const productLinksEntries = cart.map(i => ({
-        id: i.id,
-        name: i.name,
-        url: getProductShareUrl(i.id)
-      }));
-      const productLinksText = productLinksEntries.map(x => `${x.name}: ${x.url}`).join('\n');
-      const custName = document.getElementById('custName').value.trim() || currentCustomer.name;
-      const custEmail = document.getElementById('custEmail').value.trim() || currentCustomer.email;
-      const custPhone = document.getElementById('custPhone').value.trim() || currentCustomer.phone;
-      const paymentNote = `${paidBank} | Sender/Ref: ${senderRef}`;
-      const orderStatus = 'Order processing';
-      const payStatus = 'Awaiting payment';
-
-      const { data: order, error } = await sb.from('orders').insert({
-        tracking_number: tracking,
-        customer_name: custName,
-        customer_email: custEmail,
-        customer_phone: custPhone,
-        destination,
-        package_description: summary,
-        order_source: 'Sekiflex Store',
-        payment_status: payStatus,
-        payment_reference: paymentNote,
-        order_amount: sub,
-        delivery_amount: currentShippingFee,
-        status: orderStatus,
-        courier_name: fulfillmentMode === 'pickup' ? 'Walk-In Store Pickup (Uyo HQ)' : 'Sekiflex Collections Dispatch',
-        estimate_delivery: currentEstDays,
-        country,
-        currency: 'NGN',
-        delivery_instructions: document.getElementById('custNotes').value.trim()
-      }).select().single();
-
-      if (error) {
-        btn.disabled = false;
-        btn.textContent = 'I Have Paid — Confirm Order';
-        return alert('Error placing order: ' + error.message);
-      }
-
-      await sb.from('store_order_items').insert(
-        cart.map(i => ({
-          order_id: order.id,
-          product_id: i.id,
-          product_name: i.name,
-          quantity: i.qty,
-          unit_price: i.price,
-          subtotal: i.price * i.qty
-        }))
-      );
+      if (allCategories.length) renderCategoryButtons(allCategories);
 
       try {
-        await sb.functions.invoke('sekiflex-order-notifications', {
-          body: {
-            event_type: 'new_order',
-            tracking_number: tracking,
-            customer_name: custName,
-            customer_email: custEmail,
-            customer_phone: custPhone,
-            destination,
-            items: summary,
-            product_links: productLinksText,
-            product_links_list: productLinksEntries,
-            total_amount: total,
-            payment_method: paymentNote,
-            status: orderStatus,
-            payment_status: payStatus
-          }
-        });
-      } catch (notifyErr) {
-        console.warn('Notification trigger skipped:', notifyErr);
-      }
-
-      const waOrderText = encodeURIComponent(
-        `Hello Sekiflex Collections! I have completed payment for my order.\n` +
-        `Tracking Code: ${tracking}\n` +
-        `Status: ${orderStatus} (${payStatus})\n` +
-        `Name: ${custName}\n` +
-        `Items: ${summary}\n` +
-        `Product Links:\n${productLinksText}\n` +
-        `Method: ${fulfillmentMode === 'pickup' ? 'Walk-In Store Pickup (Urua Ekpa, Uyo)' : destination}\n` +
-        `Amount Paid: ₦${total.toLocaleString()}\n` +
-        `Paid To: ${paidBank}\n` +
-        `Sender/Ref: ${senderRef}`
-      );
-      document.getElementById('orderWhatsappConfirmBtn').href = `https://wa.me/${STORE_WHATSAPP_NUMBER}?text=${waOrderText}`;
-
-      const linksBox = document.getElementById('successProductLinksBox');
-      const linksList = document.getElementById('successProductLinksList');
-      if (linksBox && linksList && productLinksEntries.length) {
-        linksList.innerHTML = productLinksEntries.map(x => `
-          <div class="flex items-center justify-between gap-2">
-            <span class="truncate font-semibold text-white">${x.name}</span>
-            <button type="button" onclick="navigator.clipboard.writeText('${x.url.replace(/'/g, "\\'")}'); alert('Product link copied!');"
-              class="text-[10px] font-extrabold text-amber-300 hover:underline shrink-0">Copy Link</button>
-          </div>
-          <a href="${x.url}" class="block text-[10px] text-amber-400/90 underline truncate">${x.url}</a>
-        `).join('');
-        linksBox.classList.remove('hidden');
-      }
-
-      cart = [];
-      saveCart();
-      document.getElementById('checkoutForm').reset();
-      prefillCustomerCheckout();
-      setFulfillmentMode('delivery');
-      toggleCart(false);
-      btn.disabled = false;
-      btn.textContent = 'I Have Paid — Confirm Order';
-
-      applyStatusBadgeStyle(
-        document.getElementById('successOrderStatusBadge'),
-        `${orderStatus} • ${payStatus}`
-      );
-      document.getElementById('newTrackingCode').textContent = tracking;
-      document.getElementById('trackNowLink').href = `track.html?tracking=${tracking}`;
-      openSuccessModalWithHistory();
-    }
-
-    function copyTracking() {
-      const code = document.getElementById('newTrackingCode').textContent;
-      navigator.clipboard.writeText(code);
-      alert('Tracking code copied: ' + code);
+        const [{ data: products }, { data: cats }] = await Promise.all([
+          sb.from('products').select('*').eq('is_active', true).order('created_at', { ascending: false }),
+          sb.from('categories').select('*').order('name')
+        ]);
+        if (products) {
+          allProducts = products;
+          localStorage.setItem('sekiflex_products_cache', JSON.stringify(products));
+          preloadProductImages(allProducts);
+          applyCatalogFilters();
+          renderWallHungPromoCards();
+        }
+        if (cats) {
+          allCategories = cats;
+          localStorage.setItem('sekiflex_cats_cache', JSON.stringify(cats));
+          renderCategoryButtons(cats);
+        }
+        await loadStoreBanner();
+      } catch (e) {}
     }
 
     init();
