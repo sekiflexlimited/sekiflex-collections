@@ -72,12 +72,13 @@
       transform: scale(0.96);
     }
 
-    /* Compact 2-column catalog grid */
+    /* Compact 2-column catalog grid with snug bottom fit */
     .products-grid-home,
     .products-grid-category-mode {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 0.55rem;
+      align-items: start;
     }
 
     @media (min-width: 640px) {
@@ -85,6 +86,7 @@
       .products-grid-category-mode {
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 0.75rem;
+        align-items: start;
       }
     }
 
@@ -95,7 +97,7 @@
       background: #0d0c0a;
     }
     .skf-cat-sidebar {
-      width: 124px;
+      width: 126px;
       flex-shrink: 0;
       background: #14110c;
       border-right: 1px solid rgba(245, 158, 11, 0.25);
@@ -122,45 +124,87 @@
       border-left-color: #f59e0b;
     }
 
-    /* Read-only compact wall promo cards */
+    /* Boutique hanging wall promo rack */
     .skf-wall-section {
       margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px dashed rgba(245, 158, 11, 0.28);
+      padding-top: 8px;
+      border-top: 1px dashed rgba(245, 158, 11, 0.3);
       user-select: none;
     }
+    .skf-wall-rail {
+      position: relative;
+      height: 5px;
+      margin: 0 2px 10px;
+      border-radius: 9999px;
+      background: linear-gradient(90deg, #78350f 0%, #fbbf24 50%, #78350f 100%);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+    }
+    .skf-wall-rail::before,
+    .skf-wall-rail::after {
+      content: "";
+      position: absolute;
+      top: -2px;
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+      background: #fbbf24;
+      border: 1px solid #0d0c0a;
+    }
+    .skf-wall-rail::before { left: 2px; }
+    .skf-wall-rail::after { right: 2px; }
+
     .skf-wall-card {
       position: relative;
+      margin-top: 12px;
       margin-bottom: 10px;
-      border-radius: 12px;
+      border-radius: 10px;
       background: linear-gradient(165deg, #211a10 0%, #14100b 100%);
-      border: 1.5px solid rgba(251, 191, 36, 0.45);
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-      overflow: hidden;
+      border: 1.5px solid rgba(251, 191, 36, 0.5);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.72), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      overflow: visible;
       cursor: pointer;
       transition: transform 0.2s ease, border-color 0.2s ease;
     }
+    /* Hanging cords connecting card to rail */
+    .skf-wall-card::before,
+    .skf-wall-card::after {
+      content: "";
+      position: absolute;
+      top: -9px;
+      width: 1.5px;
+      height: 9px;
+      background: rgba(251, 191, 36, 0.75);
+      z-index: 2;
+    }
+    .skf-wall-card::before { left: 16px; transform: rotate(12deg); }
+    .skf-wall-card::after { right: 16px; transform: rotate(-12deg); }
+
     .skf-wall-card:nth-child(odd) {
-      transform: rotate(-1deg);
+      transform: rotate(-1.2deg);
     }
     .skf-wall-card:nth-child(even) {
-      transform: rotate(1deg);
+      transform: rotate(1.2deg);
     }
     .skf-wall-card:hover, .skf-wall-card:active {
       transform: rotate(0deg) scale(1.02);
       border-color: #fbbf24;
     }
     .skf-wall-pin {
-      width: 7px;
-      height: 7px;
+      width: 8px;
+      height: 8px;
       border-radius: 9999px;
       background: #fbbf24;
+      border: 1.5px solid #0d0c0a;
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
       position: absolute;
-      top: 4px;
+      top: -4px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 3;
+      z-index: 4;
+    }
+    .skf-wall-frame {
+      border-radius: 9px;
+      overflow: hidden;
     }
     .skf-wall-card img {
       width: 100%;
@@ -173,6 +217,8 @@
       padding: 4px 5px;
       background: linear-gradient(180deg, rgba(26,21,14,0.97), rgba(12,10,8,0.99));
       text-align: center;
+      border-bottom-left-radius: 9px;
+      border-bottom-right-radius: 9px;
     }
 
     .skf-cat-main {
@@ -655,11 +701,12 @@
       <aside class="skf-cat-sidebar no-scrollbar">
         <div id="splitCategorySidebar"></div>
 
-        <!-- READ-ONLY WALL PROMOS (NO PUBLIC UPLOAD BUTTON) -->
+        <!-- HANGING BOUTIQUE WALL PROMO RACK -->
         <div class="skf-wall-section">
-          <div class="flex items-center justify-between px-1 mb-1.5">
+          <div class="flex items-center justify-between px-1 mb-1">
             <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-400">Wall Promos</span>
           </div>
+          <div class="skf-wall-rail"></div>
           <div id="wallHungPromoCardsList"></div>
         </div>
       </aside>
@@ -2025,10 +2072,12 @@
           <div onclick="shopSpecificCategoryFromSplit('${String(targetCat).replace(/'/g, "\\'")}')"
             class="skf-wall-card" title="${safeTitle}">
             <span class="skf-wall-pin"></span>
-            <span class="absolute top-1.5 right-1 z-10 bg-amber-500 text-stone-950 text-[7px] font-black px-1.5 py-0.2 rounded-full shadow">
-              ${safeTag}
-            </span>
-            ${mediaHtml}
+            <div class="skf-wall-frame relative">
+              <span class="absolute top-1.5 right-1 z-10 bg-amber-500 text-stone-950 text-[7px] font-black px-1.5 py-0.2 rounded-full shadow">
+                ${safeTag}
+              </span>
+              ${mediaHtml}
+            </div>
             <div class="skf-wall-caption">
               <p class="text-[9px] font-extrabold text-amber-300 truncate">${safeTitle}</p>
             </div>
@@ -2037,7 +2086,7 @@
 
       const rightTiles = getRightGridTileCount();
       const rightRows = Math.max(1, Math.ceil(rightTiles / 3));
-      const targetLeftCards = Math.max(pinnedCards.length, Math.round((rightRows * 110) / 96));
+      const targetLeftCards = Math.max(pinnedCards.length, Math.round((rightRows * 110) / 108));
       const neededCatalogCards = Math.max(0, targetLeftCards - pinnedCards.length);
 
       const extraHTML = [];
@@ -2053,10 +2102,12 @@
           <div onclick="openProductDetail('${prod.id}')"
             class="skf-wall-card" title="${prod.name || 'Store Item'}">
             <span class="skf-wall-pin"></span>
-            <span class="absolute top-1.5 right-1 z-10 bg-amber-500 text-stone-950 text-[7px] font-black px-1.5 py-0.2 rounded-full shadow">
-              ${badgeText}
-            </span>
-            ${mediaHtml}
+            <div class="skf-wall-frame relative">
+              <span class="absolute top-1.5 right-1 z-10 bg-amber-500 text-stone-950 text-[7px] font-black px-1.5 py-0.2 rounded-full shadow">
+                ${badgeText}
+              </span>
+              ${mediaHtml}
+            </div>
             <div class="skf-wall-caption">
               <p class="text-[9px] font-extrabold text-stone-100 truncate">${prod.name || 'Store Pick'}</p>
             </div>
@@ -2220,13 +2271,18 @@
     }
 
     function shopSpecificCategoryFromSplit(catId) {
+      closeAllDrawers();
       document.getElementById('splitCategoryStoreView').classList.add('hidden');
       document.getElementById('storeMainWrapper').classList.remove('hidden');
       categoryBrowseMode = true;
-      setActiveBottomTab('categories');
+      setActiveBottomTab('home');
       filterCategory(catId);
       const sec = document.getElementById('catalogSection');
-      if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (sec) {
+        sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
 
     function shopSelectedSplitCategory() {
@@ -3090,22 +3146,18 @@
           ? `<img src="${img}" alt="" data-prod-label="${safeName}" loading="${isAboveFold ? 'eager' : 'lazy'}" fetchpriority="${idx < 4 ? 'high' : 'auto'}" decoding="async" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
           : renderBrandedPlaceholderHtml(p.name);
         return `
-          <div onclick="openProductDetail('${p.id}')" class="luxury-glass-card rounded-xl border border-amber-400/25 overflow-hidden flex flex-col justify-between cursor-pointer hover:border-amber-400/60 transition">
+          <div onclick="openProductDetail('${p.id}')" class="luxury-glass-card rounded-xl border border-amber-400/25 overflow-hidden flex flex-col cursor-pointer hover:border-amber-400/60 transition">
             <div class="${img ? 'img-skeleton-box' : ''} w-full h-32 sm:h-36 bg-stone-950 flex items-center justify-center overflow-hidden">
               ${mediaInner}
             </div>
-            <div class="p-2 flex-1 flex flex-col justify-between">
-              <div>
-                <h3 class="font-bold text-[11px] text-white line-clamp-1">${p.name}</h3>
-                <p class="text-[9px] text-stone-400 line-clamp-1 mt-0.5">${p.description || 'Tap to view details'}</p>
-              </div>
-              <div class="mt-1.5">
-                ${formatPriceHtml(p, 'text-xs')}
-                <button type="button" ${out ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart('${p.id}', this)"
-                  class="mt-1 w-full ${out ? 'bg-stone-800 text-stone-500' : 'bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950'} text-[10px] font-extrabold py-1 rounded-lg transition shadow-xs">
-                  ${out ? 'Sold Out' : 'Add to Cart'}
-                </button>
-              </div>
+            <div class="p-2 flex flex-col gap-1">
+              <h3 class="font-bold text-[11px] text-white line-clamp-1">${p.name}</h3>
+              <p class="text-[9px] text-stone-400 line-clamp-1">${p.description || 'Tap to view details'}</p>
+              ${formatPriceHtml(p, 'text-xs')}
+              <button type="button" ${out ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart('${p.id}', this)"
+                class="w-full ${out ? 'bg-stone-800 text-stone-500' : 'bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950'} text-[10px] font-extrabold py-1 rounded-lg transition shadow-xs">
+                ${out ? 'Sold Out' : 'Add to Cart'}
+              </button>
             </div>
           </div>`;
       }).join('');
