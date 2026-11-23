@@ -2387,9 +2387,39 @@
       }
     }
 
-    function showAuthMessage(text, isError = true) {
+    function openForgotPasswordForEmail(prefilledEmail = '') {
+      const cleanEmail = (prefilledEmail || '').trim();
+      const forgotInput = document.getElementById('forgotEmail');
+      if (forgotInput && cleanEmail) {
+        forgotInput.value = cleanEmail;
+      }
+      switchAuthView('forgot');
+      if (cleanEmail) {
+        showAuthMessage(`Click "Send Reset Code" to receive a code for ${cleanEmail} and set a new password.`, false);
+      }
+    }
+
+    function showAuthMessage(text, isError = true, existingEmail = '') {
       const box = document.getElementById('authGateMsg');
-      box.textContent = text;
+      const safeEmail = String(existingEmail || '').replace(/'/g, "\\'");
+
+      if (existingEmail) {
+        box.innerHTML = `
+          <span>${text}</span>
+          <div class="mt-2 flex items-center justify-center gap-2 flex-wrap">
+            <button type="button" onclick="openForgotPasswordForEmail('${safeEmail}')"
+              class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold px-3 py-1.5 rounded-xl text-[11px] transition">
+              Change / Reset Password →
+            </button>
+            <button type="button" onclick="switchAuthView('signin')"
+              class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-amber-300 font-bold px-3 py-1.5 rounded-xl text-[11px] transition">
+              Sign In
+            </button>
+          </div>`;
+      } else {
+        box.textContent = text;
+      }
+
       box.className = `text-xs font-semibold text-center p-2.5 rounded-xl ${
         isError ? 'bg-amber-500/15 text-amber-200 border border-amber-400/40' : 'bg-emerald-950/80 text-emerald-200 border border-emerald-500/30'
       }`;
@@ -2407,7 +2437,23 @@
       if (!fullName) return showAuthMessage('Please enter your full name.', true);
 
       btn.disabled = true;
-      btn.textContent = 'Sending Registration Code...';
+      btn.textContent = 'Checking Account & Sending Code...';
+
+      const { data: existingProfile } = await sb
+        .from('customer_profiles')
+        .select('id, email')
+        .ilike('email', email)
+        .maybeSingle();
+
+      if (existingProfile) {
+        btn.disabled = false;
+        btn.textContent = 'Register & Go to Checkout →';
+        return showAuthMessage(
+          'An account with this email already exists.',
+          true,
+          email
+        );
+      }
 
       const { data, error } = await sb.auth.signUp({
         email,
@@ -2418,7 +2464,25 @@
       btn.disabled = false;
       btn.textContent = 'Register & Go to Checkout →';
 
-      if (error) return showAuthMessage(error.message, true);
+      if (error) {
+        const msgLower = (error.message || '').toLowerCase();
+        if (msgLower.includes('already') || msgLower.includes('registered') || msgLower.includes('exists')) {
+          return showAuthMessage(
+            'This email or account is already registered.',
+            true,
+            email
+          );
+        }
+        return showAuthMessage(error.message, true);
+      }
+
+      if (data?.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+        return showAuthMessage(
+          'This email or account is already registered.',
+          true,
+          email
+        );
+      }
 
       pendingSignupData = { name: fullName, email, phone };
       document.getElementById('otpTargetEmail').textContent = email;
