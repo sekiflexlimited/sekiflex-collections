@@ -697,8 +697,12 @@
 
         <div class="flex gap-2 pt-1">
           <button type="button" onclick="closeProductDetailModal()"
-            class="px-4 py-2.5 rounded-xl border border-stone-700 text-xs font-bold text-stone-300 hover:bg-stone-800 transition">
+            class="px-3.5 py-2.5 rounded-xl border border-stone-700 text-xs font-bold text-stone-300 hover:bg-stone-800 transition">
             Close
+          </button>
+          <button type="button" id="detailShareBtn"
+            class="px-3.5 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 border border-amber-400/35 text-xs font-extrabold text-amber-300 transition">
+            Share
           </button>
           <button type="button" id="detailAddToCartBtn"
             class="flex-1 bg-amber-500 hover:bg-amber-400 text-stone-950 py-2.5 rounded-xl text-xs font-extrabold transition shadow-xs">
@@ -1094,6 +1098,10 @@
       </p>
       <p class="text-xs text-stone-300">Save your tracking code below:</p>
       <div class="bg-stone-950 border border-dashed border-amber-400/40 rounded-xl py-2.5 px-4 font-mono text-base font-bold text-amber-400" id="newTrackingCode"></div>
+      <div id="successProductLinksBox" class="hidden text-left bg-stone-950 border border-stone-800 rounded-xl p-2.5 space-y-1">
+        <p class="text-[10px] font-bold uppercase tracking-wider text-amber-400">Share Ordered Product Links</p>
+        <div id="successProductLinksList" class="text-[11px] text-stone-200 space-y-1 break-all"></div>
+      </div>
       <a id="orderWhatsappConfirmBtn" href="https://wa.me/2349069037617" target="_blank" rel="noopener"
          class="block w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-xl text-xs font-bold transition">
         Send Receipt on WhatsApp
@@ -1191,6 +1199,45 @@
     let lastRotationSlot = -1;
     let storeAnchorPushed = false;
     let allowWebsiteExit = false;
+
+    function getProductShareUrl(productId) {
+      const base = `${window.location.origin}${window.location.pathname}`;
+      return `${base}?product=${encodeURIComponent(String(productId))}`;
+    }
+
+    async function shareProductLink(productId, productName) {
+      const url = getProductShareUrl(productId);
+      const text = `Check out ${productName || 'this item'} on Sekiflex Collections:`;
+      try {
+        if (navigator.share) {
+          await navigator.share({
+            title: productName || 'Sekiflex Collections',
+            text,
+            url
+          });
+          return;
+        }
+      } catch (err) {
+        if (err && err.name === 'AbortError') return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(url);
+        alert('Product share link copied: ' + url);
+      } catch (e) {
+        prompt('Copy this product link:', url);
+      }
+    }
+
+    function openSharedProductFromUrl() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const sharedId = params.get('product');
+        if (sharedId && allProducts.some(p => String(p.id) === String(sharedId))) {
+          openProductDetail(sharedId);
+        }
+      } catch (e) {}
+    }
 
     function openLeaveConfirmModal() {
       const modal = document.getElementById('leaveConfirmModal');
@@ -1749,6 +1796,14 @@
       } else {
         stockEl.textContent = 'In Stock';
         stockEl.className = 'text-[11px] font-semibold text-emerald-400 mt-0.5';
+      }
+
+      const shareBtn = document.getElementById('detailShareBtn');
+      if (shareBtn) {
+        shareBtn.onclick = (ev) => {
+          ev.stopPropagation();
+          shareProductLink(prod.id, prod.name);
+        };
       }
 
       const addBtn = document.getElementById('detailAddToCartBtn');
@@ -2423,39 +2478,9 @@
       }
     }
 
-    function openForgotPasswordForEmail(prefilledEmail = '') {
-      const cleanEmail = (prefilledEmail || '').trim();
-      const forgotInput = document.getElementById('forgotEmail');
-      if (forgotInput && cleanEmail) {
-        forgotInput.value = cleanEmail;
-      }
-      switchAuthView('forgot');
-      if (cleanEmail) {
-        showAuthMessage(`Click "Send Reset Code" to receive a code for ${cleanEmail} and set a new password.`, false);
-      }
-    }
-
-    function showAuthMessage(text, isError = true, existingEmail = '') {
+    function showAuthMessage(text, isError = true) {
       const box = document.getElementById('authGateMsg');
-      const safeEmail = String(existingEmail || '').replace(/'/g, "\\'");
-
-      if (existingEmail) {
-        box.innerHTML = `
-          <span>${text}</span>
-          <div class="mt-2 flex items-center justify-center gap-2 flex-wrap">
-            <button type="button" onclick="openForgotPasswordForEmail('${safeEmail}')"
-              class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold px-3 py-1.5 rounded-xl text-[11px] transition">
-              Change / Reset Password →
-            </button>
-            <button type="button" onclick="switchAuthView('signin')"
-              class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-amber-300 font-bold px-3 py-1.5 rounded-xl text-[11px] transition">
-              Sign In
-            </button>
-          </div>`;
-      } else {
-        box.textContent = text;
-      }
-
+      box.textContent = text;
       box.className = `text-xs font-semibold text-center p-2.5 rounded-xl ${
         isError ? 'bg-amber-500/15 text-amber-200 border border-amber-400/40' : 'bg-emerald-950/80 text-emerald-200 border border-emerald-500/30'
       }`;
@@ -2473,23 +2498,7 @@
       if (!fullName) return showAuthMessage('Please enter your full name.', true);
 
       btn.disabled = true;
-      btn.textContent = 'Checking Account & Sending Code...';
-
-      const { data: existingProfile } = await sb
-        .from('customer_profiles')
-        .select('id, email')
-        .ilike('email', email)
-        .maybeSingle();
-
-      if (existingProfile) {
-        btn.disabled = false;
-        btn.textContent = 'Register & Go to Checkout →';
-        return showAuthMessage(
-          'An account with this email already exists.',
-          true,
-          email
-        );
-      }
+      btn.textContent = 'Sending Registration Code...';
 
       const { data, error } = await sb.auth.signUp({
         email,
@@ -2500,25 +2509,7 @@
       btn.disabled = false;
       btn.textContent = 'Register & Go to Checkout →';
 
-      if (error) {
-        const msgLower = (error.message || '').toLowerCase();
-        if (msgLower.includes('already') || msgLower.includes('registered') || msgLower.includes('exists')) {
-          return showAuthMessage(
-            'This email or account is already registered.',
-            true,
-            email
-          );
-        }
-        return showAuthMessage(error.message, true);
-      }
-
-      if (data?.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
-        return showAuthMessage(
-          'This email or account is already registered.',
-          true,
-          email
-        );
-      }
+      if (error) return showAuthMessage(error.message, true);
 
       pendingSignupData = { name: fullName, email, phone };
       document.getElementById('otpTargetEmail').textContent = email;
@@ -2961,6 +2952,7 @@
         renderFeaturedStrip(allProducts);
         renderWallHungPromoCards();
         applyCatalogFilters();
+        openSharedProductFromUrl();
       }
       if (allCategories.length) renderCategoryButtons(allCategories);
       updateShippingFee();
@@ -2977,6 +2969,7 @@
         renderFeaturedStrip(allProducts);
         renderWallHungPromoCards();
         applyCatalogFilters();
+        openSharedProductFromUrl();
       } else if (!allProducts.length) {
         renderProducts([]);
       }
@@ -3375,6 +3368,12 @@
       const total = sub + currentShippingFee;
       const tracking = 'SC-2026-' + Math.random().toString(36).substring(2, 8).toUpperCase();
       const summary = cart.map(i => `${i.qty}x ${i.name}`).join('; ');
+      const productLinksEntries = cart.map(i => ({
+        id: i.id,
+        name: i.name,
+        url: getProductShareUrl(i.id)
+      }));
+      const productLinksText = productLinksEntries.map(x => `${x.name}: ${x.url}`).join('\n');
       const custName = document.getElementById('custName').value.trim() || currentCustomer.name;
       const custEmail = document.getElementById('custEmail').value.trim() || currentCustomer.email;
       const custPhone = document.getElementById('custPhone').value.trim() || currentCustomer.phone;
@@ -3429,6 +3428,8 @@
             customer_phone: custPhone,
             destination,
             items: summary,
+            product_links: productLinksText,
+            product_links_list: productLinksEntries,
             total_amount: total,
             payment_method: paymentNote,
             status: orderStatus,
@@ -3445,12 +3446,27 @@
         `Status: ${orderStatus} (${payStatus})\n` +
         `Name: ${custName}\n` +
         `Items: ${summary}\n` +
+        `Product Links:\n${productLinksText}\n` +
         `Method: ${fulfillmentMode === 'pickup' ? 'Walk-In Store Pickup (Urua Ekpa, Uyo)' : destination}\n` +
         `Amount Paid: ₦${total.toLocaleString()}\n` +
         `Paid To: ${paidBank}\n` +
         `Sender/Ref: ${senderRef}`
       );
       document.getElementById('orderWhatsappConfirmBtn').href = `https://wa.me/${STORE_WHATSAPP_NUMBER}?text=${waOrderText}`;
+
+      const linksBox = document.getElementById('successProductLinksBox');
+      const linksList = document.getElementById('successProductLinksList');
+      if (linksBox && linksList && productLinksEntries.length) {
+        linksList.innerHTML = productLinksEntries.map(x => `
+          <div class="flex items-center justify-between gap-2">
+            <span class="truncate font-semibold text-white">${x.name}</span>
+            <button type="button" onclick="navigator.clipboard.writeText('${x.url.replace(/'/g, "\\'")}'); alert('Product link copied!');"
+              class="text-[10px] font-extrabold text-amber-300 hover:underline shrink-0">Copy Link</button>
+          </div>
+          <a href="${x.url}" class="block text-[10px] text-amber-400/90 underline truncate">${x.url}</a>
+        `).join('');
+        linksBox.classList.remove('hidden');
+      }
 
       cart = [];
       saveCart();
