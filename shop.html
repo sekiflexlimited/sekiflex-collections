@@ -1,94 +1,163 @@
-<!-- Paste inside <head> or your <style> section in shop.html -->
-<style>
-  /* Compact 2-column catalog boxes */
+<!-- Paste right before </body> in shop.html (replaces earlier test snippet) -->
+<style id="sekiflex-layout-fix">
+  /* Force compact catalog & announcement/promo images even if inline styles exist */
+  #catalog-grid img,
+  .catalog-grid img,
+  #products-grid img,
+  .products-grid img,
+  .catalog-card img,
+  .product-card img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 150px !important;
+    max-height: 150px !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+
+  /* Compact 2-column grid for catalog boxes */
   #catalog-grid,
-  .catalog-grid {
+  .catalog-grid,
+  #products-grid,
+  .products-grid {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 10px !important;
   }
 
-  .catalog-card,
-  .product-card {
-    padding: 8px !important;
-    border-radius: 10px !important;
-  }
-
-  .catalog-card img,
-  .product-card img {
+  /* Compact the 4 announcement / promo boxes & their images */
+  .announcement-banner img,
+  .announcement-box img,
+  .announcement-card img,
+  .announcement-item img,
+  .announcement-img,
+  .promo-card img,
+  .promo-box img,
+  .promo-grid img,
+  .announcements-grid img,
+  [class*="announcement"] img,
+  [class*="promo"] img {
     width: 100% !important;
-    height: 165px !important;
+    max-width: 100% !important;
+    height: 105px !important;
+    max-height: 105px !important;
     object-fit: cover !important;
-    border-radius: 8px !important;
     display: block !important;
   }
 
-  /* Compact announcement and promo banner images */
   .announcement-banner,
   .announcement-box,
+  .announcement-card,
+  .announcement-item,
   .promo-card,
-  .announcement-wrapper {
-    max-height: 135px !important;
+  .promo-box,
+  [class*="announcement"],
+  [class*="promo"] {
+    max-height: 140px !important;
     overflow: hidden !important;
   }
 
-  .announcement-banner img,
-  .announcement-box img,
-  .promo-card img,
-  .announcement-img,
-  .promo-card-img {
-    width: 100% !important;
-    max-height: 115px !important;
-    object-fit: cover !important;
-    display: block !important;
+  /* Catch any other large standalone images on the page */
+  main img,
+  section img,
+  .container img {
+    max-height: 220px !important;
   }
 
-  /* Ensure category images are clickable */
-  [data-category],
-  [data-category] img {
-    cursor: pointer;
+  [data-category] {
+    cursor: pointer !important;
   }
 
   @media (min-width: 768px) {
+    #catalog-grid img,
+    .catalog-grid img,
+    #products-grid img,
+    .products-grid img,
     .catalog-card img,
     .product-card img {
-      height: 215px !important;
+      height: 200px !important;
+      max-height: 200px !important;
     }
 
-    .announcement-banner img,
-    .announcement-box img,
-    .promo-card img,
-    .announcement-img,
-    .promo-card-img {
-      max-height: 155px !important;
+    [class*="announcement"] img,
+    [class*="promo"] img {
+      height: 130px !important;
+      max-height: 130px !important;
     }
   }
 </style>
 
-<!-- Paste right before </body> in shop.html -->
 <script>
-  document.addEventListener('click', (event) => {
-    const categoryEl = event.target.closest('[data-category]');
-    if (!categoryEl) return;
+  (function () {
+    // Remove HTML width/height attributes on images that force oversized rendering
+    document.querySelectorAll('img').forEach((img) => {
+      img.removeAttribute('width');
+      img.removeAttribute('height');
+    });
 
-    const category = categoryEl.getAttribute('data-category');
-    if (!category) return;
+    // Capture-phase listener so category clicks run first and jump to catalog photos
+    document.addEventListener(
+      'click',
+      (event) => {
+        const trigger = event.target.closest(
+          '[data-category], .category-card, .category-item, [class*="category"]'
+        );
+        if (!trigger) return;
 
-    if (typeof applyCategoryFilter === 'function') {
-      applyCategoryFilter(category);
-    } else if (typeof filterByCategory === 'function') {
-      filterByCategory(category);
-    } else if (typeof renderCatalog === 'function') {
-      renderCatalog(category);
-    }
+        // Ignore clicks inside the catalog/product list itself so product cards aren't treated as categories
+        if (trigger.closest('#catalog-grid, .catalog-grid, #products-grid, .products-grid')) {
+          return;
+        }
 
-    const targetSection =
-      document.querySelector('#catalog-section') ||
-      document.querySelector('#catalog-grid') ||
-      document.querySelector('.catalog-grid');
+        const rawCategory =
+          trigger.getAttribute('data-category') ||
+          trigger.dataset.category ||
+          trigger.querySelector('[data-category]')?.getAttribute('data-category') ||
+          trigger.textContent?.trim();
 
-    if (targetSection) {
-      targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
+        if (!rawCategory) return;
+
+        const cleanCategory = rawCategory.split('\n')[0].trim();
+
+        const filterFns = [
+          window.applyCategoryFilter,
+          window.filterByCategory,
+          window.selectCategory,
+          window.filterProducts,
+          window.renderCatalog
+        ];
+
+        for (const fn of filterFns) {
+          if (typeof fn === 'function') {
+            try {
+              fn(cleanCategory);
+            } catch (e) {}
+          }
+        }
+
+        // Also click matching category filter buttons/tabs if the page uses them
+        document.querySelectorAll('button, a, [role="button"]').forEach((el) => {
+          if (el === trigger) return;
+          const label = el.textContent?.trim();
+          if (label && label.toLowerCase() === cleanCategory.toLowerCase()) {
+            el.click();
+          }
+        });
+
+        const catalogTarget =
+          document.querySelector('#catalog-section') ||
+          document.querySelector('#catalog') ||
+          document.querySelector('#catalog-grid') ||
+          document.querySelector('.catalog-grid') ||
+          document.querySelector('#products-grid') ||
+          document.querySelector('.products-grid');
+
+        if (catalogTarget) {
+          event.preventDefault();
+          catalogTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      },
+      true
+    );
+  })();
 </script>
