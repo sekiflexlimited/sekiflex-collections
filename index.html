@@ -136,6 +136,15 @@
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
     }
 
+    /* Auto-filled catalog cards continuing down the left side */
+    .skf-side-auto-card {
+      border-radius: 12px;
+      background: linear-gradient(160deg, #211a10 0%, #120f0a 100%);
+      border: 1px solid rgba(245, 158, 11, 0.28);
+      padding: 5px;
+      cursor: pointer;
+    }
+
     .skf-hero-slide {
       width: 88%;
       max-width: 440px;
@@ -698,7 +707,7 @@
           <div class="px-1 flex items-center justify-between">
             <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-400">🔥 Hot Promos</span>
           </div>
-          <div id="wallHungPromoCardsList" class="space-y-3"></div>
+          <div id="wallHungPromoCardsList" class="space-y-2.5"></div>
         </div>
       </aside>
 
@@ -1331,6 +1340,11 @@
       if (promoList && !promoList.dataset.delegated) {
         promoList.dataset.delegated = '1';
         promoList.addEventListener('click', (ev) => {
+          const autoCard = ev.target.closest('[data-auto-prod]');
+          if (autoCard) {
+            openProductDetail(autoCard.getAttribute('data-auto-prod') || '');
+            return;
+          }
           const cardEl = ev.target.closest('[data-promo-cat]');
           if (!cardEl) return;
           const catTarget = cardEl.getAttribute('data-promo-cat') || 'ALL';
@@ -1355,6 +1369,15 @@
       }
     }
 
+    function getFallbackPhotoUrl(seedIdx = 0) {
+      if (!Array.isArray(allProducts) || !allProducts.length) return '';
+      const imgs = allProducts
+        .map(p => (p?.images && p.images[0]) || p?.image_url || '')
+        .filter(Boolean);
+      if (!imgs.length) return '';
+      return imgs[Math.abs(seedIdx) % imgs.length];
+    }
+
     function renderBrandedPlaceholderHtml(labelText = 'Sekiflex') {
       const safeLabel = String(labelText || 'Sekiflex').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       return `<div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#231b10] via-[#16120c] to-[#0e0c09] text-amber-300/90 p-1.5 text-center select-none"><span class="font-editorial text-xs font-extrabold tracking-wider text-amber-400">SC</span><span class="text-[8px] font-bold text-stone-300 line-clamp-2 mt-0.5">${safeLabel}</span></div>`;
@@ -1375,6 +1398,12 @@
       if (!imgEl) return;
       if (imgEl.dataset.timeoutId) {
         clearTimeout(Number(imgEl.dataset.timeoutId));
+      }
+      const nextFallback = getFallbackPhotoUrl((Number(imgEl.dataset.fbIdx) || 0) + 1);
+      if (nextFallback && imgEl.src !== nextFallback && (Number(imgEl.dataset.fbIdx) || 0) < 3) {
+        imgEl.dataset.fbIdx = String((Number(imgEl.dataset.fbIdx) || 0) + 1);
+        imgEl.src = nextFallback;
+        return;
       }
       imgEl.style.display = 'none';
       if (imgEl.parentElement) {
@@ -1972,7 +2001,7 @@
       setActiveBottomTab('home');
       armStoreBackGuard();
 
-      const img = (prod.images && prod.images[0]) || prod.image_url || '';
+      const img = (prod.images && prod.images[0]) || prod.image_url || getFallbackPhotoUrl(0);
       const out = (prod.stock_quantity !== null && prod.stock_quantity <= 0);
       const catObj = allCategories.find(c => String(c.id) === String(prod.category_id));
 
@@ -2122,8 +2151,7 @@
       });
     }
 
-    /* 4 side promo cards in distinct designs (bag, hang-tag, arch, frame) */
-    function renderWallHungPromoCards() {
+    function renderWallHungPromoCards(rightTileCount = 12) {
       const wrap = document.getElementById('wallHungPromoCardsList');
       if (!wrap) return;
 
@@ -2132,12 +2160,12 @@
         ? wallPromoCards.slice(0, DEFAULT_WALL_PROMO_CARDS.length)
         : DEFAULT_WALL_PROMO_CARDS;
 
-      wrap.innerHTML = baseList.map((card, idx) => {
+      const pinnedHtml = baseList.map((card, idx) => {
         const def = DEFAULT_WALL_PROMO_CARDS[idx % DEFAULT_WALL_PROMO_CARDS.length];
         const fallbackProd = fixedPool[idx % Math.max(1, fixedPool.length)];
         const fallbackImg = fallbackProd ? ((fallbackProd.images && fallbackProd.images[0]) || fallbackProd.image_url || '') : '';
         const bannerImg = liveBannerMediaUrls[idx % Math.max(1, liveBannerMediaUrls.length)] || '';
-        const img = (card.image && card.image.trim()) || bannerImg || fallbackImg || '';
+        const img = (card.image && card.image.trim()) || bannerImg || fallbackImg || getFallbackPhotoUrl(idx);
         const title = card.title || def.title;
         const tag = card.tag || def.tag;
         const badgeBg = card.badgeBg || def.badgeBg;
@@ -2154,7 +2182,7 @@
                 ${tag}
               </span>
               ${img
-                ? `<img src="${img}" alt="" onerror="this.parentElement.innerHTML = renderBrandedPlaceholderHtml('${title.replace(/'/g, "\\'")}')" class="w-full h-full object-cover object-top" />`
+                ? `<img src="${img}" alt="" data-fb-idx="${idx}" onerror="handleCatalogImgError(this, '${title.replace(/'/g, "\\'")}')" class="w-full h-full object-cover object-top" />`
                 : renderBrandedPlaceholderHtml(title)}
             </div>
             <div class="pt-1 text-center">
@@ -2170,15 +2198,45 @@
             ${innerCardHtml}
           </div>`;
       }).join('');
+
+      /* Automatically fill the remaining left rail with catalog pictures so there is no blank space down */
+      const rightRows = Math.max(1, Math.ceil(rightTileCount / 3));
+      const targetLeftCards = Math.max(pinnedHtml ? 4 : 0, Math.round((rightRows * 116) / 112));
+      const neededAutoCards = Math.max(0, targetLeftCards - 4);
+      const autoCardsHtml = [];
+
+      for (let i = 0; i < neededAutoCards && fixedPool.length > 0; i++) {
+        const p = fixedPool[i % fixedPool.length];
+        const img = (p.images && p.images[0]) || p.image_url || getFallbackPhotoUrl(i);
+        const { effectivePrice } = getProductPricing(p);
+        const safeProdId = String(p.id).replace(/"/g, '&quot;');
+        const safeProdName = String(p.name || 'Catalog Item').replace(/'/g, "\\'");
+
+        autoCardsHtml.push(`
+          <div data-auto-prod="${safeProdId}" class="skf-side-auto-card">
+            <div class="w-full h-16 rounded-lg overflow-hidden bg-stone-950">
+              ${img
+                ? `<img src="${img}" alt="" data-fb-idx="${i}" onerror="handleCatalogImgError(this, '${safeProdName}')" class="w-full h-full object-cover object-top" />`
+                : renderBrandedPlaceholderHtml(p.name)}
+            </div>
+            <div class="pt-1 text-center">
+              <p class="text-[9px] font-semibold text-stone-200 truncate">${p.name}</p>
+              <p class="text-[9px] font-extrabold text-amber-400">₦${effectivePrice.toLocaleString()}</p>
+            </div>
+          </div>`);
+      }
+
+      wrap.innerHTML = pinnedHtml + autoCardsHtml.join('');
     }
 
-    function renderSplitThumbInner(img, labelText, isHot) {
+    function renderSplitThumbInner(img, labelText, isHot, seedIdx = 0) {
       const safeLabel = String(labelText || 'Sekiflex').replace(/'/g, "\\'");
       const hotBadge = isHot ? '<span class="skf-cat-hot">HOT</span>' : '';
-      if (!img) {
+      const chosenImg = img || getFallbackPhotoUrl(seedIdx);
+      if (!chosenImg) {
         return `${renderBrandedPlaceholderHtml(labelText)}${hotBadge}`;
       }
-      return `<img src="${img}" alt="" onerror="this.parentElement.innerHTML = renderBrandedPlaceholderHtml('${safeLabel}') + '${hotBadge.replace(/'/g, "\\'")}';" />${hotBadge}`;
+      return `<img src="${chosenImg}" alt="" data-fb-idx="${seedIdx}" onerror="handleCatalogImgError(this, '${safeLabel}')" />${hotBadge}`;
     }
 
     function openSplitCategoryStore() {
@@ -2188,7 +2246,6 @@
       showOnlyMainView('splitCategoryStoreView');
       renderSplitCategorySidebar();
       renderSplitCategoryPanel();
-      renderWallHungPromoCards();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -2235,6 +2292,7 @@
         countEl.textContent = `${matches.length} item${matches.length === 1 ? '' : 's'}`;
         if (!matches.length) {
           grid.innerHTML = '<p class="col-span-3 text-center text-xs text-stone-400 py-8">No matching items found.</p>';
+          renderWallHungPromoCards(3);
           return;
         }
         grid.innerHTML = matches.map((p, idx) => {
@@ -2243,12 +2301,13 @@
           return `
             <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-                ${renderSplitThumbInner(img, p.name, idx < 2)}
+                ${renderSplitThumbInner(img, p.name, idx < 2, idx)}
               </div>
               <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
               <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
             </div>`;
         }).join('');
+        renderWallHungPromoCards(matches.length);
         return;
       }
 
@@ -2265,7 +2324,7 @@
             <div data-action="cat" data-val="${String(c.id).replace(/"/g, '&quot;')}"
               class="skf-cat-cell group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-                ${renderSplitThumbInner(img, c.name, idx < 2)}
+                ${renderSplitThumbInner(img, c.name, idx < 2, idx)}
               </div>
               <p class="text-[11px] font-bold text-stone-100 line-clamp-2 leading-tight w-full">${c.name}</p>
               <p class="text-[10px] text-amber-400 font-semibold mt-0.5">${count} item${count === 1 ? '' : 's'}</p>
@@ -2278,7 +2337,7 @@
           return `
             <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-                ${renderSplitThumbInner(img, p.name, idx === 0)}
+                ${renderSplitThumbInner(img, p.name, idx === 0, idx + 1)}
               </div>
               <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
               <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
@@ -2295,7 +2354,7 @@
           combined.push(`
             <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-                ${renderSplitThumbInner(img, p.name, false)}
+                ${renderSplitThumbInner(img, p.name, false, fillIdx + 2)}
               </div>
               <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
               <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
@@ -2304,6 +2363,7 @@
         }
 
         grid.innerHTML = combined.join('');
+        renderWallHungPromoCards(combined.length);
         return;
       }
 
@@ -2315,6 +2375,7 @@
       const sourcePool = items.length ? items : rotatedAll;
       if (!sourcePool.length) {
         grid.innerHTML = '<p class="col-span-3 text-center text-xs text-stone-400 py-8">No items available yet.</p>';
+        renderWallHungPromoCards(3);
         return;
       }
 
@@ -2327,13 +2388,14 @@
         catRows.push(`
           <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
             <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-              ${renderSplitThumbInner(img, p.name, i < 2)}
+              ${renderSplitThumbInner(img, p.name, i < 2, i)}
             </div>
             <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
             <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
           </div>`);
       }
       grid.innerHTML = catRows.join('');
+      renderWallHungPromoCards(catRows.length);
     }
 
     function submitSplitCategorySearch(e) {
@@ -2909,7 +2971,11 @@
         }
       }
 
-      renderWallHungPromoCards();
+      if (!document.getElementById('splitCategoryStoreView').classList.contains('hidden')) {
+        renderSplitCategoryPanel();
+      } else {
+        renderWallHungPromoCards();
+      }
       currentBannerSlideIdx = 0;
       const carousel = document.getElementById('bannerCarousel');
       if (carousel) carousel.scrollLeft = 0;
