@@ -26,7 +26,7 @@
     <header class="bg-white p-4 rounded-2xl shadow-sm flex flex-wrap items-center justify-between gap-2">
       <div>
         <h1 class="font-bold text-lg">Sekiflex Store Manager</h1>
-        <p class="text-xs text-stone-500">Manage hero video, promo banners, products, sample videos, stock, &amp; shipping</p>
+        <p class="text-xs text-stone-500">Manage hero video, promo banners, wall promo cards, products, sample videos, stock, &amp; shipping</p>
       </div>
       <div class="flex gap-2">
         <a href="admin.html" class="text-xs px-3 py-2 rounded-lg border font-medium">Dispatch Admin</a>
@@ -150,6 +150,23 @@
       </form>
     </section>
 
+    <!-- Wall-Hung Promo Cards Manager (Admin Only) -->
+    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-amber-600">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h2 class="font-bold text-base">Wall-Hung Promo Cards (5 Pinned Cards)</h2>
+          <p class="text-xs text-stone-500">Edit titles, badges, and pictures shown on the left sidebar of the Categories view</p>
+        </div>
+        <button type="button" onclick="resetAdminWallPromoCards()" class="text-xs px-3 py-1.5 rounded-lg border font-semibold text-stone-700 hover:bg-stone-50">
+          Reset Defaults
+        </button>
+      </div>
+      <div id="adminWallPromoFormList" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+      <button type="button" onclick="saveAdminWallPromoCards()" class="w-full bg-stone-900 hover:bg-amber-700 text-white rounded-xl text-xs font-bold py-3 transition">
+        Save Wall Promo Cards
+      </button>
+    </section>
+
     <!-- Add Product Card (With Optional Sample Video) -->
     <section class="bg-white p-5 rounded-2xl shadow-sm space-y-4">
       <h2 class="font-bold text-base">Add New Product</h2>
@@ -252,6 +269,135 @@
   <script>
     const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
     let adminProductsCache = [];
+    let adminCategoriesCache = [];
+
+    const DEFAULT_ADMIN_WALL_CARDS = [
+      {
+        id: 'wall_1',
+        title: 'Hot Drops',
+        tag: 'NEW IN',
+        image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=400&q=80',
+        categoryKey: 'ALL'
+      },
+      {
+        id: 'wall_2',
+        title: 'Luxury Fits',
+        tag: 'PROMO',
+        image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=400&q=80',
+        categoryKey: 'ALL'
+      },
+      {
+        id: 'wall_3',
+        title: 'Footwear Edit',
+        tag: 'HOT',
+        image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400&q=80',
+        categoryKey: 'ALL'
+      },
+      {
+        id: 'wall_4',
+        title: 'Watches & Bags',
+        tag: 'LUXURY',
+        image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80',
+        categoryKey: 'ALL'
+      },
+      {
+        id: 'wall_5',
+        title: 'Uyo Dispatch',
+        tag: 'FAST',
+        image: 'https://images.unsplash.com/photo-1617347454431-f49d7ff5c3b1?auto=format&fit=crop&w=400&q=80',
+        categoryKey: 'ALL'
+      }
+    ];
+
+    function getAdminWallCards() {
+      const saved = JSON.parse(localStorage.getItem('sekiflex_wall_promo_cards_v1') || 'null');
+      return DEFAULT_ADMIN_WALL_CARDS.map((def, idx) => ({
+        ...def,
+        ...(Array.isArray(saved) && saved[idx] ? saved[idx] : {})
+      }));
+    }
+
+    function renderAdminWallPromoForm() {
+      const wrap = document.getElementById('adminWallPromoFormList');
+      if (!wrap) return;
+      const cards = getAdminWallCards();
+      const catOptions = `<option value="ALL">All Store Items</option>` +
+        adminCategoriesCache.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+
+      wrap.innerHTML = cards.map((card, idx) => `
+        <div class="border rounded-xl p-3 bg-stone-50 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-amber-800">Pinned Wall Card #${idx + 1}</span>
+            <img src="${card.image || ''}" alt="Preview" class="w-10 h-10 rounded-lg object-cover border bg-white" />
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" data-adm-wall-title="${idx}" value="${card.title || ''}" placeholder="Card Title"
+              class="w-full border rounded-lg px-2.5 py-1.5 text-xs bg-white" />
+            <input type="text" data-adm-wall-tag="${idx}" value="${card.tag || 'PROMO'}" placeholder="Badge"
+              class="w-full border rounded-lg px-2.5 py-1.5 text-xs bg-white" />
+          </div>
+          <input type="url" data-adm-wall-img="${idx}" value="${card.image || ''}" placeholder="Paste Image URL (https://...)"
+            class="w-full border rounded-lg px-2.5 py-1.5 text-xs bg-white" />
+          <div class="flex items-center justify-between gap-2">
+            <label class="text-[11px] font-semibold text-amber-800 bg-amber-100 border border-amber-300 px-2.5 py-1 rounded-lg cursor-pointer shrink-0">
+              Upload Photo
+              <input type="file" accept="image/*" class="hidden" onchange="handleAdminWallFileUpload(event, ${idx})" />
+            </label>
+            <select data-adm-wall-cat="${idx}" class="flex-1 border rounded-lg px-2 py-1.5 text-xs bg-white">
+              ${catOptions}
+            </select>
+          </div>
+        </div>
+      `).join('');
+
+      cards.forEach((card, idx) => {
+        const sel = wrap.querySelector(`[data-adm-wall-cat="${idx}"]`);
+        if (sel && card.categoryKey) sel.value = String(card.categoryKey);
+      });
+    }
+
+    async function handleAdminWallFileUpload(event, idx) {
+      const file = event?.target?.files?.[0];
+      if (!file) return;
+      const fileName = `wall-card-${idx + 1}-${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
+      const { error } = await sb.storage.from('product-images').upload(fileName, file);
+      if (error) {
+        return alert('Wall image upload failed: ' + error.message);
+      }
+      const { data: pub } = sb.storage.from('product-images').getPublicUrl(fileName);
+      const input = document.querySelector(`[data-adm-wall-img="${idx}"]`);
+      if (input && pub?.publicUrl) {
+        input.value = pub.publicUrl;
+      }
+    }
+
+    function saveAdminWallPromoCards() {
+      const current = getAdminWallCards();
+      const updated = DEFAULT_ADMIN_WALL_CARDS.map((def, idx) => {
+        const existing = current[idx] || def;
+        const title = (document.querySelector(`[data-adm-wall-title="${idx}"]`)?.value || '').trim() || def.title;
+        const tag = (document.querySelector(`[data-adm-wall-tag="${idx}"]`)?.value || '').trim() || def.tag;
+        const image = (document.querySelector(`[data-adm-wall-img="${idx}"]`)?.value || '').trim() || def.image;
+        const categoryKey = document.querySelector(`[data-adm-wall-cat="${idx}"]`)?.value || 'ALL';
+        return {
+          id: existing.id || def.id,
+          title,
+          tag,
+          image,
+          categoryKey
+        };
+      });
+
+      localStorage.setItem('sekiflex_wall_promo_cards_v1', JSON.stringify(updated));
+      renderAdminWallPromoForm();
+      alert('Wall-Hung Promo Cards saved for your store!');
+    }
+
+    function resetAdminWallPromoCards() {
+      localStorage.setItem('sekiflex_wall_promo_cards_v1', JSON.stringify(DEFAULT_ADMIN_WALL_CARDS));
+      renderAdminWallPromoForm();
+      alert('Wall-Hung Promo Cards reset to defaults.');
+    }
 
     async function checkSession() {
       const { data: { session } } = await sb.auth.getSession();
@@ -586,14 +732,17 @@
     }
 
     async function loadData() {
-      const [{ data: prods }, { data: zones }, { data: banner }, { data: banner2 }] = await Promise.all([
+      const [{ data: prods }, { data: zones }, { data: banner }, { data: banner2 }, { data: cats }] = await Promise.all([
         sb.from('products').select('*').order('created_at', { ascending: false }),
         sb.from('shipping_zones').select('*').order('country_name'),
         sb.from('store_settings').select('*').eq('id', 'main').maybeSingle(),
-        sb.from('store_settings').select('*').eq('id', 'second').maybeSingle()
+        sb.from('store_settings').select('*').eq('id', 'second').maybeSingle(),
+        sb.from('categories').select('*').order('name')
       ]);
 
       adminProductsCache = prods || [];
+      adminCategoriesCache = cats || [];
+      renderAdminWallPromoForm();
 
       const localHero = JSON.parse(localStorage.getItem('sekiflex_hero_video_v1') || 'null');
       const heroActive = banner?.hero_video_active ?? localHero?.active ?? false;
