@@ -2012,7 +2012,7 @@
             </div>`;
         });
 
-        const featuredTiles = allProducts.slice(0, 6).map((p, idx) => {
+        const featuredTiles = allProducts.map((p, idx) => {
           const img = (p.images && p.images[0]) || p.image_url || 'https://placehold.co/200x200?text=Sekiflex';
           const { effectivePrice } = getProductPricing(p);
           return `
