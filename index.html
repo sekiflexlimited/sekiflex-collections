@@ -618,7 +618,7 @@
       <aside class="skf-cat-sidebar no-scrollbar">
         <div id="splitCategorySidebar"></div>
 
-        <!-- First 5 Custom Wall-Hung Promo Cards + Capped Auto-Filled Store Picture Wall Cards -->
+        <!-- 5 Custom Wall-Hung Promo Cards -->
         <div class="skf-wall-section">
           <div class="flex items-center justify-between px-1 mb-2">
             <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-400">Wall Promos</span>
@@ -1213,12 +1213,6 @@
         window.close();
       }
     }
-
-    window.addEventListener('beforeunload', (e) => {
-      if (allowWebsiteExit) return;
-      e.preventDefault();
-      e.returnValue = '';
-    });
 
     function hasAnyOverlayOpen() {
       const overlayIds = [
@@ -1853,9 +1847,7 @@
       });
     }
 
-    /* WALL-HUNG PROMO CARDS (FIRST 5 PINNED + UP TO 3 AUTO-UPDATED CATALOG PICTURES SO LEFT NEVER RUNS PAST RIGHT) */
-    const MAX_AUTO_WALL_CARDS = 3;
-
+    /* WALL-HUNG PROMO CARDS (5 PINNED WALL CARDS) */
     function renderWallHungPromoCards() {
       const wrap = document.getElementById('wallHungPromoCardsList');
       if (!wrap) return;
@@ -1867,7 +1859,7 @@
             ...(wallPromoCards && wallPromoCards[i] ? wallPromoCards[i] : {})
           }));
 
-      const firstFiveHTML = firstFive.map((card, idx) => {
+      wrap.innerHTML = firstFive.map((card, idx) => {
         const safeImg = card.image || DEFAULT_WALL_PROMO_CARDS[idx].image;
         const safeTitle = card.title || DEFAULT_WALL_PROMO_CARDS[idx].title;
         const safeTag = card.tag || DEFAULT_WALL_PROMO_CARDS[idx].tag;
@@ -1885,26 +1877,6 @@
             </div>
           </div>`;
       }).join('');
-
-      const extraList = (Array.isArray(allProducts) ? allProducts : []).slice(0, MAX_AUTO_WALL_CARDS);
-      const storeExtraHTML = extraList.map((prod, idx) => {
-        const img = (prod.images && prod.images[0]) || prod.image_url || DEFAULT_WALL_PROMO_CARDS[idx % DEFAULT_WALL_PROMO_CARDS.length].image;
-        const badgeText = idx % 2 === 0 ? 'PROMO' : 'HOT';
-        return `
-          <div onclick="openProductDetail('${prod.id}')"
-            class="skf-wall-card" title="${prod.name || 'Store Item'}">
-            <span class="skf-wall-pin"></span>
-            <span class="absolute top-2 right-1.5 z-10 bg-amber-500 text-stone-950 text-[8px] font-black px-1.5 py-0.5 rounded-full shadow">
-              ${badgeText}
-            </span>
-            <img src="${img}" alt="${prod.name || 'Store Item'}" loading="lazy" />
-            <div class="skf-wall-caption">
-              <p class="text-[10px] font-extrabold text-stone-100 truncate">${prod.name || 'Store Pick'}</p>
-            </div>
-          </div>`;
-      }).join('');
-
-      wrap.innerHTML = firstFiveHTML + storeExtraHTML;
     }
 
     function openAdminPromoCardsModal() {
