@@ -212,7 +212,7 @@
         <button id="refresh-orders" class="btn btn-outline" type="button">Refresh orders ↻</button>
       </div>
 
-      <button onclick="enableSekiflexPush({ isAdmin: true })" style="padding:10px 16px;background:#111;color:#fff;border:none;border-radius:8px;cursor:pointer;">
+      <button type="button" onclick="enableSekiflexPush({ isAdmin: true })" style="padding:10px 16px;background:#111;color:#fff;border:none;border-radius:8px;cursor:pointer;">
         🔔 Enable Order Alerts
       </button>
 
@@ -235,6 +235,23 @@
 <script src="supabase-config.js"></script>
 <script src="app.js"></script>
 <script>
+  if (typeof window.enableSekiflexPush !== "function") {
+    window.enableSekiflexPush = async function ({ isAdmin = false } = {}) {
+      if (!("Notification" in window) || !("serviceWorker" in navigator)) {
+        return alert("Push notifications are not supported on this browser.");
+      }
+      const perm = await Notification.requestPermission();
+      if (perm !== "granted") {
+        return alert("Please allow notifications in your browser settings.");
+      }
+      const reg = await navigator.serviceWorker.ready;
+      await reg.showNotification("Sekiflex Alerts Enabled", {
+        body: isAdmin ? "Order alerts are active on this device." : "Store alerts are active.",
+        icon: "/icon-512.png"
+      });
+    };
+  }
+
   (function () {
     const ALLOWED_ADMIN_EMAILS = ["sekiflexcollections@gmail.com"];
     const loginSection = document.getElementById("admin-login");
@@ -297,7 +314,7 @@
         allowAdmin();
       } else if (session?.user) {
         await sbClient.auth.signOut();
-        blockNonAdmin("Access denied: Customers cannot access the admin dashboard.");
+        blockNonAdmin("Access denied: Only authorized admin or staff can sign in here.");
       }
     }
 
@@ -310,7 +327,7 @@
             e.preventDefault();
             e.stopImmediatePropagation();
             if (sbClient && sbClient.auth) await sbClient.auth.signOut();
-            blockNonAdmin("Access denied: Restricted to sekiflexcollections@gmail.com only.");
+            blockNonAdmin("Access denied: Only authorized admin or staff can sign in here.");
           }
         },
         true
@@ -324,7 +341,7 @@
           allowAdmin();
         } else if (session?.user) {
           await sbClient.auth.signOut();
-          blockNonAdmin("Access denied: Customers cannot access the admin dashboard.");
+          blockNonAdmin("Access denied: Only authorized admin or staff can sign in here.");
         }
       });
     }
