@@ -38,18 +38,14 @@
     }
 
     .img-skeleton-box {
-      background: linear-gradient(90deg, #1b1e26 25%, #262a35 50%, #1b1e26 75%);
+      background: linear-gradient(90deg, #161922 25%, #222736 50%, #161922 75%);
       background-size: 200% 100%;
       animation: imgShimmer 1.3s infinite linear;
     }
 
     .catalog-img-smooth {
-      opacity: 0;
-      transition: opacity 0.25s ease-in-out;
-    }
-
-    .catalog-img-smooth.is-loaded {
       opacity: 1;
+      transition: transform 0.2s ease;
     }
 
     @keyframes trackZoomPulse {
@@ -71,7 +67,6 @@
       transform: scale(0.96);
     }
 
-    /* Distinct Category Storefront Arrangement (Different from Home 2-Col Grid) */
     .products-grid-home {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -91,7 +86,6 @@
       }
     }
 
-    /* Split-Screen Category Store View (Left Wall-Hung Promo Cards + Category Tabs + 3-Col Grid) */
     .skf-cat-layout {
       display: flex;
       align-items: flex-start;
@@ -126,7 +120,6 @@
       border-left-color: #f59e0b;
     }
 
-    /* Wall-Hung / Framed Promo Cards Column on Left */
     .skf-wall-section {
       margin-top: 10px;
       padding-top: 10px;
@@ -269,7 +262,6 @@
 
         <p id="authGateMsg" class="hidden text-xs font-semibold text-center p-2.5 rounded-xl"></p>
 
-        <!-- 1. Sign Up Form -->
         <form id="customerSignUpForm" autocomplete="off" onsubmit="handleCustomerSignUp(event)" class="space-y-2.5">
           <input required id="regName" name="sekiflex_reg_fullname" autocomplete="new-password" type="text" placeholder="Your Full Name (e.g. Daniel Okafor)"
             class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400 transition" />
@@ -285,7 +277,6 @@
           </button>
         </form>
 
-        <!-- 2. 8-Digit Email Code Verification Screen -->
         <form id="verifyOtpForm" autocomplete="off" onsubmit="handleVerifySignupOtp(event)" class="hidden space-y-3">
           <div class="bg-amber-500/10 border border-amber-400/30 rounded-2xl p-3 text-center text-xs text-stone-200">
             We sent an 8-digit registration code to <strong id="otpTargetEmail" class="text-amber-300"></strong>
@@ -307,7 +298,6 @@
           </div>
         </form>
 
-        <!-- 3. Sign In Form -->
         <form id="customerSignInForm" onsubmit="handleCustomerSignIn(event)" class="hidden space-y-2.5">
           <input required id="loginEmail" type="email" placeholder="Customer Email Address"
             class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400 transition" />
@@ -324,7 +314,6 @@
           </button>
         </form>
 
-        <!-- 4. Forgot Password — Step A -->
         <form id="forgotRequestForm" onsubmit="handleSendResetCode(event)" class="hidden space-y-3">
           <p class="text-xs text-stone-300 text-center">Enter your registered email to receive an 8-digit password reset code.</p>
           <input required id="forgotEmail" type="email" placeholder="Registered Email Address"
@@ -338,7 +327,6 @@
           </button>
         </form>
 
-        <!-- 5. Forgot Password — Step B -->
         <form id="forgotVerifyForm" autocomplete="off" onsubmit="handleCompletePasswordReset(event)" class="hidden space-y-3">
           <div class="bg-amber-500/10 border border-amber-400/30 rounded-2xl p-2.5 text-center text-xs text-stone-200">
             Enter the 8-digit code sent to <strong id="resetTargetEmail" class="text-amber-300"></strong>
@@ -376,7 +364,6 @@
           </a>
 
           <div class="flex items-center gap-2 min-w-0">
-            <!-- ZOOM-IN / ZOOM-OUT TRACK YOUR ORDER BUTTON -->
             <a href="track.html"
               class="track-zoom-btn inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-400 text-stone-950 text-[11px] sm:text-xs font-extrabold px-3 py-1.5 rounded-full shadow-md shrink-0">
               <span>📦</span>
@@ -435,17 +422,17 @@
 
     <div class="max-w-5xl mx-auto px-3 pt-2.5 space-y-3">
 
-      <!-- HERO SECTION VIDEO BANNER (SHOWN WHEN ENABLED IN ADMIN) -->
+      <!-- HERO SECTION VIDEO BANNER -->
       <section id="heroVideoSection" class="hidden rounded-2xl overflow-hidden bg-[#12141a] border border-amber-400/30 shadow-lg">
         <video id="heroVideoPlayer" controls autoplay muted loop playsinline
           class="w-full max-h-64 sm:max-h-80 object-cover object-top bg-black"></video>
       </section>
 
-      <!-- LUXURY PROMO CAROUSEL (MULTI-BANNER CAROUSEL + CLICKABLE SEKIFLEX DISPATCH RIDER TRACKER) -->
+      <!-- LUXURY PROMO CAROUSEL -->
       <section id="heroCarouselSection">
         <div id="bannerCarousel" class="flex gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
 
-          <!-- Slide 1: Live Admin Promo Announcement #1 (Full-Box Image) -->
+          <!-- Slide 1: Live Admin Promo Announcement #1 -->
           <div id="livePromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full min-h-[168px] rounded-2xl bg-gradient-to-r from-[#14161e] via-[#1c1914] to-amber-950/80 text-white p-3 flex items-stretch justify-between gap-3 border border-amber-400/30 shadow-lg overflow-hidden">
             <div class="space-y-1.5 flex-1 min-w-0 flex flex-col justify-between py-0.5">
               <div class="space-y-1">
@@ -460,10 +447,10 @@
                 </button>
               </div>
             </div>
-            <img id="livePromoImg" src="" alt="Promo" class="hidden w-36 sm:w-44 h-36 sm:h-40 object-cover object-top rounded-xl border border-amber-400/35 shrink-0 shadow-md" />
+            <img id="livePromoImg" src="" alt="Promo" onerror="this.classList.add('hidden')" class="hidden w-36 sm:w-44 h-36 sm:h-40 object-cover object-top rounded-xl border border-amber-400/35 shrink-0 shadow-md" />
           </div>
 
-          <!-- Slide 2: Live Admin Promo Announcement #2 (Full-Box Image) -->
+          <!-- Slide 2: Live Admin Promo Announcement #2 -->
           <div id="livePromoBanner2Card" class="promo-slide hidden snap-start shrink-0 w-full min-h-[168px] rounded-2xl bg-gradient-to-r from-[#14161e] via-[#111f1a] to-emerald-950/85 text-white p-3 flex items-stretch justify-between gap-3 border border-emerald-400/30 shadow-lg overflow-hidden">
             <div class="space-y-1.5 flex-1 min-w-0 flex flex-col justify-between py-0.5">
               <div class="space-y-1">
@@ -478,10 +465,10 @@
                 </button>
               </div>
             </div>
-            <img id="livePromo2Img" src="" alt="Promo 2" class="hidden w-36 sm:w-44 h-36 sm:h-40 object-cover object-top rounded-xl border border-emerald-400/35 shrink-0 shadow-md" />
+            <img id="livePromo2Img" src="" alt="Promo 2" onerror="this.classList.add('hidden')" class="hidden w-36 sm:w-44 h-36 sm:h-40 object-cover object-top rounded-xl border border-emerald-400/35 shrink-0 shadow-md" />
           </div>
 
-          <!-- Slide 3: Luxury Fashion & Accessories Edit (Full-Box Image) -->
+          <!-- Slide 3: Luxury Fashion & Accessories Edit -->
           <div onclick="jumpToAllItems()" class="promo-slide cursor-pointer snap-start shrink-0 w-full min-h-[168px] rounded-2xl bg-gradient-to-r from-[#14161e] via-[#1c1914] to-amber-950/80 text-white p-3 flex items-stretch justify-between gap-3 border border-amber-400/30 shadow-lg overflow-hidden">
             <div class="space-y-1.5 flex-1 min-w-0 flex flex-col justify-between py-0.5">
               <div class="space-y-1">
@@ -500,21 +487,22 @@
               </div>
             </div>
             <img src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&w=600&q=85" alt="Sekiflex Luxury Fashion"
+              onerror="this.style.display='none'"
               class="w-36 sm:w-44 h-36 sm:h-40 object-cover object-top rounded-xl border border-amber-400/35 shrink-0 shadow-md" />
           </div>
 
-          <!-- Slide 4: Clickable Nationwide Delivery with Sekiflex Collections Dispatch Rider & Cargo Visuals -->
+          <!-- Slide 4: Clickable Nationwide Delivery with Rider + Car/Truck Cargo Visuals -->
           <div onclick="window.location.href='track.html'" role="button" tabindex="0"
             class="promo-slide cursor-pointer snap-start shrink-0 w-full min-h-[168px] rounded-2xl bg-gradient-to-r from-[#14161e] via-[#1a1812] to-amber-950/75 text-white p-3 flex items-stretch justify-between gap-3 border border-amber-400/35 hover:border-amber-400 transition shadow-lg overflow-hidden">
             <div class="space-y-1.5 flex-1 min-w-0 flex flex-col justify-between py-0.5">
               <div class="space-y-1">
                 <span class="inline-block text-[9px] font-bold uppercase tracking-widest bg-emerald-500/20 text-emerald-300 border border-emerald-400/35 px-2.5 py-0.5 rounded-full">
-                  🏍️ Sekiflex Collections Dispatch
+                  🏍️🚚 Rider &amp; Cargo Fleet
                 </span>
                 <h2 class="font-editorial text-base sm:text-lg font-bold leading-tight">
                   Nationwide &amp; Global Delivery
                 </h2>
-                <p class="text-[11px] text-stone-300">Sekiflex Collections dispatch riders &amp; cargo from Uyo</p>
+                <p class="text-[11px] text-stone-300">Dispatch riders &amp; cargo vans/trucks from Uyo</p>
               </div>
               <div>
                 <a href="track.html" onclick="event.stopPropagation();"
@@ -525,14 +513,15 @@
               </div>
             </div>
 
-            <!-- Sekiflex Collections Dispatch Rider Machine + Cargo Visual Box -->
+            <!-- Rider + Car/Truck Cargo Visual Box -->
             <div class="relative w-36 sm:w-44 h-36 sm:h-40 rounded-xl overflow-hidden border border-amber-400/35 shrink-0 shadow-md bg-stone-950">
-              <img src="https://images.unsplash.com/photo-1617347454431-f49d7ff5c3b1?auto=format&fit=crop&w=600&q=85"
-                alt="Sekiflex Collections Dispatch Rider and Cargo"
+              <img src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=600&q=85"
+                alt="Sekiflex Collections Cargo Truck and Dispatch Fleet"
+                onerror="this.src='https://images.unsplash.com/photo-1617347454431-f49d7ff5c3b1?auto=format&fit=crop&w=600&q=85'"
                 class="w-full h-full object-cover object-center" />
-              <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/55 to-transparent px-2 py-1.5 flex items-center justify-between text-[10px] font-extrabold text-amber-300">
-                <span>🏍️ Sekiflex Rider</span>
-                <span>📦 Cargo</span>
+              <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/65 to-transparent px-2 py-1.5 flex items-center justify-between text-[10px] font-extrabold text-amber-300">
+                <span>🏍️ Rider</span>
+                <span>🚚 Cargo</span>
               </div>
             </div>
           </div>
@@ -596,7 +585,7 @@
     </div>
   </div>
 
-  <!-- SPLIT-SCREEN CATEGORY STORE VIEW (LEFT RAIL + WALL-HUNG PROMO CARDS + 3-COLUMN VISUAL GRID) -->
+  <!-- SPLIT-SCREEN CATEGORY STORE VIEW -->
   <div id="splitCategoryStoreView" class="hidden">
     <header class="sticky top-0 z-40 bg-[#0c0d10]/95 backdrop-blur-md border-b border-amber-400/20 px-3 py-2.5 shadow-lg">
       <div class="max-w-5xl mx-auto flex items-center gap-2">
@@ -616,11 +605,9 @@
     </header>
 
     <div class="max-w-5xl mx-auto skf-cat-layout">
-      <!-- Left Category Sidebar Rail + Wall-Hung Promo Cards -->
       <aside class="skf-cat-sidebar no-scrollbar">
         <div id="splitCategorySidebar"></div>
 
-        <!-- Pinned Wall Promo Cards + Rotating Catalog Cards -->
         <div class="skf-wall-section">
           <div class="flex items-center justify-between px-1 mb-2">
             <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-400">Wall Promos</span>
@@ -629,7 +616,6 @@
         </div>
       </aside>
 
-      <!-- Right Category Showcase Grid -->
       <main class="skf-cat-main">
         <div class="flex items-center justify-between gap-2 mb-3 pb-2 border-b border-stone-800">
           <div class="min-w-0">
@@ -677,7 +663,7 @@
   <div id="productDetailModal" onclick="if(event.target === this) closeProductDetailModal();" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
     <div class="bg-[#12141a] border border-amber-400/25 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
       <div class="relative bg-stone-950">
-        <img id="detailModalImg" src="" alt="" class="w-full max-h-72 object-contain object-top mx-auto bg-stone-950" />
+        <img id="detailModalImg" src="" alt="" onerror="handleCatalogImgError(this, this.alt)" class="w-full max-h-72 object-contain object-top mx-auto bg-stone-950" />
         <button type="button" onclick="closeProductDetailModal()"
           class="absolute top-3 right-3 w-8 h-8 rounded-full bg-stone-900/90 hover:bg-stone-800 text-white font-bold text-base border border-white/15 flex items-center justify-center">
           &times;
@@ -746,7 +732,7 @@
     </div>
   </nav>
 
-  <!-- LUXURY ACCOUNT SHEET WITH SMALL SIDE BUTTONS -->
+  <!-- LUXURY ACCOUNT SHEET -->
   <div id="accountDrawer" onclick="if(event.target === this) closeAllDrawers();" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-[#12141a] text-white w-full max-w-sm rounded-t-3xl sm:rounded-3xl p-4 space-y-3 shadow-2xl border border-amber-400/25">
       <div class="flex items-center justify-between gap-2 border-b border-stone-800 pb-2.5">
@@ -820,7 +806,7 @@
     </div>
   </div>
 
-  <!-- REVIEWS MODAL (OPENED ON DEMAND) -->
+  <!-- REVIEWS MODAL -->
   <div id="reviewsModal" onclick="if(event.target === this) closeReviewsModal();" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
     <div class="bg-[#12141a] text-white border border-amber-400/25 w-full max-w-md rounded-3xl p-5 space-y-3.5 shadow-2xl my-auto max-h-[85vh] overflow-y-auto">
       <div class="flex items-center justify-between gap-2 border-b border-stone-800 pb-2.5">
@@ -908,7 +894,7 @@
     </div>
   </div>
 
-  <!-- CATEGORIES SHEET (KEPT FOR OPTIONAL BROWSING) -->
+  <!-- CATEGORIES SHEET -->
   <div id="categoriesDrawer" onclick="if(event.target === this) closeAllDrawers();" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-[#12141a] text-white w-full max-w-sm rounded-t-3xl sm:rounded-3xl p-4 max-h-[82vh] overflow-y-auto space-y-3 shadow-2xl border border-amber-400/25">
       <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
@@ -945,7 +931,7 @@
     </button>
   </div>
 
-  <!-- LUXURY MODERATE CART & CHECKOUT SHEET (CART FIRST, WAYBILL ON TAP) -->
+  <!-- LUXURY MODERATE CART & CHECKOUT SHEET -->
   <div id="cartDrawer" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex justify-end p-0 sm:p-3">
     <div class="bg-[#12141a] text-white w-full max-w-sm h-full sm:h-auto sm:max-h-[90vh] sm:my-auto sm:rounded-3xl border border-amber-400/25 overflow-y-auto p-4 flex flex-col justify-between shadow-2xl space-y-3.5">
       <div class="space-y-3.5">
@@ -957,10 +943,8 @@
           <button type="button" onclick="skfHandleKeepShopping(event)" class="w-7 h-7 rounded-full bg-stone-900 hover:bg-stone-800 text-stone-400 hover:text-white text-base font-bold">&times;</button>
         </div>
 
-        <!-- Step A: Cart Items List -->
         <div id="cartItems" class="space-y-2"></div>
 
-        <!-- Cart Subtotal & Proceed Button -->
         <div id="cartSummaryActions" class="space-y-2.5 bg-stone-950 border border-stone-800 rounded-2xl p-3">
           <div class="flex items-center justify-between">
             <span class="text-xs font-medium text-stone-400">Items Subtotal</span>
@@ -979,7 +963,6 @@
           </div>
         </div>
 
-        <!-- Step B: Waybill & Payment Form (Shown Only After Tapping Proceed) -->
         <form id="checkoutForm" autocomplete="off" onsubmit="placeOrder(event)" class="hidden space-y-2.5 bg-stone-950 border border-stone-800 rounded-2xl p-3">
           <div class="flex items-center justify-between pb-1 border-b border-stone-800">
             <h3 class="font-bold text-[11px] uppercase tracking-wider text-amber-300">Waybill &amp; Payment</h3>
@@ -1032,14 +1015,12 @@
 
           <input id="custNotes" type="text" placeholder="Delivery/pickup note or size preference (optional)" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
 
-          <!-- Totals -->
           <div class="bg-[#12141a] rounded-xl p-2.5 text-xs space-y-1 border border-stone-800">
             <div class="flex justify-between text-stone-400"><span>Items Subtotal:</span><span id="subTotalText" class="font-semibold text-white">₦0</span></div>
             <div class="flex justify-between text-stone-400"><span>Delivery (<span id="estDaysText">select state</span>):</span><span id="shipFeeText" class="font-semibold text-white">—</span></div>
             <div class="flex justify-between font-bold text-sm border-t border-stone-800 pt-1"><span>Total to Pay:</span><span id="grandTotalText" class="text-amber-400">₦0</span></div>
           </div>
 
-          <!-- Payment Transfer Box -->
           <div class="border border-amber-400/25 bg-[#12141a] rounded-xl p-2.5 space-y-2">
             <p class="text-[11px] text-stone-300">Transfer <span class="font-bold text-amber-400" id="payBoxAmountText">₦0</span> to:</p>
 
@@ -1130,6 +1111,7 @@
     const TIKTOK_URL = 'https://www.tiktok.com/@sekiflex_collections?_r=1&_t=ZS-9BbSAFjxrZW';
     const FACEBOOK_URL = 'https://www.facebook.com/share/1G3ErASdHa/';
     const ROTATION_MINUTES = 2;
+    const FALLBACK_PRODUCT_IMG = 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=400&q=75';
 
     const DEFAULT_WALL_PROMO_CARDS = [
       {
@@ -1164,7 +1146,7 @@
         id: 'wall_5',
         title: 'Uyo Dispatch',
         tag: 'FAST',
-        image: 'https://images.unsplash.com/photo-1617347454431-f49d7ff5c3b1?auto=format&fit=crop&w=400&q=80',
+        image: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=400&q=80',
         categoryKey: 'ALL'
       }
     ];
@@ -1207,6 +1189,39 @@
     let lastRotationSlot = -1;
     let storeAnchorPushed = false;
     let allowWebsiteExit = false;
+
+    function handleCatalogImgLoad(imgEl) {
+      if (!imgEl) return;
+      imgEl.classList.add('is-loaded');
+      if (imgEl.parentElement) {
+        imgEl.parentElement.classList.remove('img-skeleton-box');
+      }
+    }
+
+    function handleCatalogImgError(imgEl, labelText = 'Sekiflex') {
+      if (!imgEl) return;
+      if (imgEl.dataset.fallbackApplied === '1') {
+        imgEl.style.display = 'none';
+        if (imgEl.parentElement) {
+          imgEl.parentElement.classList.remove('img-skeleton-box');
+          imgEl.parentElement.innerHTML = `<div class="w-full h-full flex flex-col items-center justify-center bg-[#151822] text-amber-300/80 p-2 text-center"><span class="text-lg">✦</span><span class="text-[10px] font-bold line-clamp-2 mt-1">${labelText || 'Sekiflex'}</span></div>`;
+        }
+        return;
+      }
+      imgEl.dataset.fallbackApplied = '1';
+      imgEl.src = FALLBACK_PRODUCT_IMG;
+    }
+
+    function warmUpTopImages(list) {
+      if (!Array.isArray(list) || !list.length) return;
+      list.slice(0, 6).forEach(p => {
+        const src = (p.images && p.images[0]) || p.image_url;
+        if (!src) return;
+        const pre = new Image();
+        pre.decoding = 'async';
+        pre.src = src;
+      });
+    }
 
     function getProductShareUrl(productId) {
       const base = `${window.location.origin}${window.location.pathname}`;
@@ -1776,12 +1791,14 @@
       if (!prod) return;
 
       armStoreBackGuard();
-      const img = (prod.images && prod.images[0]) || prod.image_url || 'https://placehold.co/500x600?text=Sekiflex';
+      const img = (prod.images && prod.images[0]) || prod.image_url || FALLBACK_PRODUCT_IMG;
       const out = (prod.stock_quantity !== null && prod.stock_quantity <= 0);
       const catObj = allCategories.find(c => String(c.id) === String(prod.category_id));
 
-      document.getElementById('detailModalImg').src = img;
-      document.getElementById('detailModalImg').alt = prod.name || 'Product';
+      const detailImg = document.getElementById('detailModalImg');
+      detailImg.dataset.fallbackApplied = '0';
+      detailImg.src = img;
+      detailImg.alt = prod.name || 'Product';
       document.getElementById('detailModalName').textContent = prod.name || 'Product';
       document.getElementById('detailModalPriceBlock').innerHTML = formatPriceHtml(prod, 'text-base');
       document.getElementById('detailModalDesc').textContent = prod.description || 'Quality item from Sekiflex Collections.';
@@ -1919,7 +1936,6 @@
       });
     }
 
-    /* WALL-HUNG PROMO CARDS (FIRST 4 PINNED CARDS UNTOUCHED + 2-MINUTE ROTATING CATALOG FILL) */
     const PINNED_WALL_COUNT = 4;
 
     function getRightGridTileCount() {
@@ -1961,7 +1977,7 @@
             <span class="absolute top-2 right-1.5 z-10 bg-amber-500 text-stone-950 text-[8px] font-black px-1.5 py-0.5 rounded-full shadow">
               ${safeTag}
             </span>
-            <img src="${safeImg}" alt="${safeTitle}" loading="lazy" />
+            <img src="${safeImg}" alt="${safeTitle}" onerror="this.src='${FALLBACK_PRODUCT_IMG}'" />
             <div class="skf-wall-caption">
               <p class="text-[10px] font-extrabold text-amber-300 truncate">${safeTitle}</p>
             </div>
@@ -1986,7 +2002,7 @@
             <span class="absolute top-2 right-1.5 z-10 bg-amber-500 text-stone-950 text-[8px] font-black px-1.5 py-0.5 rounded-full shadow">
               ${badgeText}
             </span>
-            <img src="${img}" alt="${prod.name || 'Store Item'}" loading="lazy" />
+            <img src="${img}" alt="${prod.name || 'Store Item'}" onerror="this.src='${FALLBACK_PRODUCT_IMG}'" />
             <div class="skf-wall-caption">
               <p class="text-[10px] font-extrabold text-stone-100 truncate">${prod.name || 'Store Pick'}</p>
             </div>
@@ -2011,7 +2027,7 @@
         <div class="bg-stone-950 border border-stone-800 rounded-2xl p-3 space-y-2">
           <div class="flex items-center justify-between">
             <span class="text-xs font-extrabold text-amber-400">Pinned Wall Card #${idx + 1}</span>
-            <img src="${card.image || ''}" alt="Preview" class="w-10 h-10 rounded-lg object-cover object-top border border-amber-400/30 bg-stone-900" />
+            <img src="${card.image || ''}" alt="Preview" onerror="this.src='${FALLBACK_PRODUCT_IMG}'" class="w-10 h-10 rounded-lg object-cover object-top border border-amber-400/30 bg-stone-900" />
           </div>
           <div class="grid grid-cols-2 gap-2">
             <input type="text" data-wall-title="${idx}" value="${card.title || ''}" placeholder="Card Title (e.g. Hot Drops)"
@@ -2085,7 +2101,6 @@
       document.getElementById('adminPromoCardsModal').classList.add('hidden');
     }
 
-    /* SPLIT-SCREEN CATEGORY STORE VIEW FUNCTIONS */
     function openSplitCategoryStore() {
       closeAllDrawers();
       armStoreBackGuard();
@@ -2146,12 +2161,12 @@
           return;
         }
         grid.innerHTML = matches.map((p, idx) => {
-          const img = (p.images && p.images[0]) || p.image_url || 'https://placehold.co/200x200?text=Sekiflex';
+          const img = (p.images && p.images[0]) || p.image_url || FALLBACK_PRODUCT_IMG;
           const { effectivePrice } = getProductPricing(p);
           return `
             <div onclick="openProductDetail('${p.id}')" class="cursor-pointer text-center group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-                <img src="${img}" alt="${p.name}" class="w-full h-full object-cover object-top" />
+                <img src="${img}" alt="${p.name}" onerror="this.src='${FALLBACK_PRODUCT_IMG}'" class="w-full h-full object-cover object-top" />
                 ${idx < 2 ? '<span class="skf-cat-hot">HOT</span>' : ''}
               </div>
               <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight">${p.name}</p>
@@ -2169,13 +2184,13 @@
         const catTiles = allCategories.map((c, idx) => {
           const sampleProd = rotatedAll.find(p => String(p.category_id) === String(c.id))
             || allProducts.find(p => String(p.category_id) === String(c.id));
-          const img = (sampleProd?.images && sampleProd.images[0]) || sampleProd?.image_url || 'https://placehold.co/200x200?text=Sekiflex';
+          const img = (sampleProd?.images && sampleProd.images[0]) || sampleProd?.image_url || FALLBACK_PRODUCT_IMG;
           const count = allProducts.filter(p => String(p.category_id) === String(c.id)).length;
           return `
             <div onclick="shopSpecificCategoryFromSplit('${String(c.id).replace(/'/g, "\\'")}')"
               class="cursor-pointer text-center group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-                <img src="${img}" alt="${c.name}" class="w-full h-full object-cover object-top" />
+                <img src="${img}" alt="${c.name}" onerror="this.src='${FALLBACK_PRODUCT_IMG}'" class="w-full h-full object-cover object-top" />
                 ${idx < 2 ? '<span class="skf-cat-hot">HOT</span>' : ''}
               </div>
               <p class="text-[11px] font-bold text-stone-100 line-clamp-2 leading-tight">${c.name}</p>
@@ -2184,12 +2199,12 @@
         });
 
         const featuredTiles = rotatedAll.map((p, idx) => {
-          const img = (p.images && p.images[0]) || p.image_url || 'https://placehold.co/200x200?text=Sekiflex';
+          const img = (p.images && p.images[0]) || p.image_url || FALLBACK_PRODUCT_IMG;
           const { effectivePrice } = getProductPricing(p);
           return `
             <div onclick="openProductDetail('${p.id}')" class="cursor-pointer text-center group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-                <img src="${img}" alt="${p.name}" class="w-full h-full object-cover object-top" />
+                <img src="${img}" alt="${p.name}" onerror="this.src='${FALLBACK_PRODUCT_IMG}'" class="w-full h-full object-cover object-top" />
                 ${idx === 0 ? '<span class="skf-cat-hot">HOT</span>' : ''}
               </div>
               <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight">${p.name}</p>
@@ -2214,12 +2229,12 @@
       }
 
       grid.innerHTML = items.map((p, idx) => {
-        const img = (p.images && p.images[0]) || p.image_url || 'https://placehold.co/200x200?text=Sekiflex';
+        const img = (p.images && p.images[0]) || p.image_url || FALLBACK_PRODUCT_IMG;
         const { effectivePrice } = getProductPricing(p);
         return `
           <div onclick="openProductDetail('${p.id}')" class="cursor-pointer text-center group">
             <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-              <img src="${img}" alt="${p.name}" class="w-full h-full object-cover object-top" />
+              <img src="${img}" alt="${p.name}" onerror="this.src='${FALLBACK_PRODUCT_IMG}'" class="w-full h-full object-cover object-top" />
               ${idx < 2 ? '<span class="skf-cat-hot">HOT</span>' : ''}
             </div>
             <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight">${p.name}</p>
@@ -2297,7 +2312,7 @@
         title.textContent = 'Delivery & Walk-In Store Pickup';
         body.innerHTML = `
           <p><strong class="text-white">Free Walk-In Pickup (Uyo HQ):</strong><br/>Urua Ekpa, Uyo, Akwa Ibom State (Mon–Sat: 7:30 AM – 9:00 PM, Sun: 2:00 PM – 9:00 PM).</p>
-          <p><strong class="text-white">Sekiflex Collections Dispatch &amp; Cargo:</strong><br/>Delivery across all 36 states in Nigeria (2–4 business days) and internationally to the UK, USA, Canada, and Ghana (5–10 business days).</p>
+          <p><strong class="text-white">Sekiflex Collections Dispatch &amp; Cargo:</strong><br/>Dispatch riders and cargo vans/trucks across all 36 states in Nigeria (2–4 business days) and internationally to the UK, USA, Canada, and Ghana (5–10 business days).</p>
           <p><strong class="text-white">Order Tracking:</strong><br/>Every order gets a tracking code (<code class="text-amber-300">SC-2026-XXXXXX</code>) usable on the Track Order page.</p>
         `;
       } else if (type === 'privacy') {
@@ -2966,6 +2981,7 @@
       startProductRotation();
 
       if (allProducts.length) {
+        warmUpTopImages(allProducts);
         renderFeaturedStrip(allProducts);
         renderWallHungPromoCards();
         applyCatalogFilters();
@@ -2983,6 +2999,7 @@
       if (products) {
         allProducts = products;
         localStorage.setItem('sekiflex_products_cache', JSON.stringify(products));
+        warmUpTopImages(allProducts);
         renderFeaturedStrip(allProducts);
         renderWallHungPromoCards();
         applyCatalogFilters();
@@ -3032,14 +3049,6 @@
       applyCatalogFilters();
     }
 
-    function handleCatalogImgLoad(imgEl) {
-      if (!imgEl) return;
-      imgEl.classList.add('is-loaded');
-      if (imgEl.parentElement) {
-        imgEl.parentElement.classList.remove('img-skeleton-box');
-      }
-    }
-
     function renderFeaturedStrip(list) {
       const strip = document.getElementById('featuredHorizontalList');
       const sec = document.getElementById('featuredStripSection');
@@ -3049,16 +3058,17 @@
       }
       sec.classList.remove('hidden');
       strip.innerHTML = list.slice(0, 8).map((p, idx) => {
-        const img = (p.images && p.images[0]) || p.image_url || 'https://placehold.co/400x500?text=Sekiflex';
+        const img = (p.images && p.images[0]) || p.image_url || FALLBACK_PRODUCT_IMG;
         const { effectivePrice, originalPrice } = getProductPricing(p);
+        const safeName = String(p.name || 'Product').replace(/"/g, '&quot;');
         const priceDisplay = originalPrice !== null
           ? `<div class="flex items-baseline gap-1 mt-0.5 flex-wrap"><span class="text-xs font-extrabold text-amber-400">₦${effectivePrice.toLocaleString()}</span><span class="text-[10px] text-stone-500 line-through">₦${originalPrice.toLocaleString()}</span></div>`
           : `<p class="text-xs font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>`;
         return `
           <div onclick="openProductDetail('${p.id}')" class="shrink-0 w-36 sm:w-40 bg-stone-950 rounded-xl overflow-hidden border border-stone-800/90 flex flex-col justify-between cursor-pointer hover:border-amber-400/50 transition">
-            <div class="img-skeleton-box w-full h-36 bg-stone-950 flex items-center justify-center">
-              <img src="${img}" alt="${p.name}" loading="${idx < 4 ? 'eager' : 'lazy'}" decoding="async"
-                onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgLoad(this)"
+            <div class="img-skeleton-box w-full h-36 bg-stone-950 flex items-center justify-center overflow-hidden">
+              <img src="${img}" alt="" loading="eager" decoding="async"
+                onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')"
                 class="catalog-img-smooth w-full h-full object-cover object-top" />
             </div>
             <div class="p-2 bg-[#12141a]">
@@ -3079,18 +3089,19 @@
 
       if (isCategoryArrangement) {
         grid.innerHTML = list.map((p, idx) => {
-          const img = (p.images && p.images[0]) || p.image_url || 'https://placehold.co/400x500?text=Sekiflex';
+          const img = (p.images && p.images[0]) || p.image_url || FALLBACK_PRODUCT_IMG;
           const out = (p.stock_quantity !== null && p.stock_quantity <= 0);
           const catObj = allCategories.find(c => String(c.id) === String(p.category_id));
           const catTag = catObj ? catObj.name : 'Category Edit';
+          const safeName = String(p.name || 'Product').replace(/"/g, '&quot;');
           return `
             <div onclick="openProductDetail('${p.id}')" class="bg-[#12141a] rounded-2xl border border-amber-400/25 overflow-hidden flex items-stretch gap-3 p-2.5 shadow-md cursor-pointer hover:border-amber-400/60 transition">
               <div class="img-skeleton-box w-28 sm:w-32 h-32 bg-stone-950 flex items-center justify-center rounded-xl overflow-hidden shrink-0">
-                <img src="${img}" alt="${p.name}"
-                  loading="${idx < 4 ? 'eager' : 'lazy'}"
+                <img src="${img}" alt=""
+                  loading="${idx < 6 ? 'eager' : 'lazy'}"
                   decoding="async"
                   onload="handleCatalogImgLoad(this)"
-                  onerror="handleCatalogImgLoad(this)"
+                  onerror="handleCatalogImgError(this, '${safeName}')"
                   class="catalog-img-smooth w-full h-full object-cover object-top" />
               </div>
               <div class="flex-1 min-w-0 flex flex-col justify-between py-0.5">
@@ -3113,18 +3124,19 @@
       }
 
       grid.innerHTML = list.map((p, idx) => {
-        const img = (p.images && p.images[0]) || p.image_url || 'https://placehold.co/400x500?text=Sekiflex';
+        const img = (p.images && p.images[0]) || p.image_url || FALLBACK_PRODUCT_IMG;
         const out = (p.stock_quantity !== null && p.stock_quantity <= 0);
-        const isAboveFold = idx < 8;
+        const isAboveFold = idx < 10;
+        const safeName = String(p.name || 'Product').replace(/"/g, '&quot;');
         return `
           <div onclick="openProductDetail('${p.id}')" class="bg-[#12141a] rounded-2xl border border-amber-400/15 overflow-hidden flex flex-col justify-between shadow-md cursor-pointer hover:border-amber-400/50 transition">
             <div class="img-skeleton-box w-full h-40 sm:h-44 bg-stone-950 flex items-center justify-center overflow-hidden">
-              <img src="${img}" alt="${p.name}"
+              <img src="${img}" alt=""
                 loading="${isAboveFold ? 'eager' : 'lazy'}"
                 fetchpriority="${idx < 4 ? 'high' : 'auto'}"
                 decoding="async"
                 onload="handleCatalogImgLoad(this)"
-                onerror="handleCatalogImgLoad(this)"
+                onerror="handleCatalogImgError(this, '${safeName}')"
                 class="catalog-img-smooth w-full h-full object-cover object-top" />
             </div>
             <div class="p-2.5 flex-1 flex flex-col justify-between">
