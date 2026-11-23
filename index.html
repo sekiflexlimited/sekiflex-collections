@@ -93,6 +93,7 @@
     /* Split-Screen Category Store View (Left Wall-Hung Promo Cards + Category Tabs + 3-Col Grid) */
     .skf-cat-layout {
       display: flex;
+      align-items: flex-start;
       min-height: calc(100vh - 115px);
       background: #0c0d10;
     }
@@ -618,7 +619,7 @@
       <aside class="skf-cat-sidebar no-scrollbar">
         <div id="splitCategorySidebar"></div>
 
-        <!-- 5 Custom Wall-Hung Promo Cards -->
+        <!-- Pinned Wall Promo Cards + Balanced Catalog Cards -->
         <div class="skf-wall-section">
           <div class="flex items-center justify-between px-1 mb-2">
             <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-400">Wall Promos</span>
@@ -651,7 +652,7 @@
       <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
         <div>
           <h3 class="font-editorial text-lg font-bold text-amber-300">Wall-Hung Promo Cards Admin</h3>
-          <p class="text-[11px] text-stone-400">Customize your 5 pinned wall cards</p>
+          <p class="text-[11px] text-stone-400">Customize your pinned wall cards</p>
         </div>
         <button type="button" onclick="closeAdminPromoCardsModal()" class="w-7 h-7 rounded-full bg-stone-900 text-stone-400 hover:text-white font-bold">&times;</button>
       </div>
@@ -1847,22 +1848,36 @@
       });
     }
 
-    /* WALL-HUNG PROMO CARDS (5 PINNED WALL CARDS) */
+    /* WALL-HUNG PROMO CARDS (PINNED CARDS FIRST + DYNAMIC CATALOG FILL TO MATCH RIGHT HEIGHT) */
+    function getRightGridTileCount() {
+      const q = (document.getElementById('splitCategorySearchInput')?.value || '').trim().toLowerCase();
+      if (q) {
+        return allProducts.filter(p => {
+          const catObj = allCategories.find(c => String(c.id) === String(p.category_id));
+          return `${p.name || ''} ${p.description || ''} ${catObj ? catObj.name : ''}`.toLowerCase().includes(q);
+        }).length;
+      }
+      if (splitSelectedCatKey === 'FEATURED') {
+        return allCategories.length + allProducts.length;
+      }
+      return allProducts.filter(p => String(p.category_id) === String(splitSelectedCatKey)).length;
+    }
+
     function renderWallHungPromoCards() {
       const wrap = document.getElementById('wallHungPromoCardsList');
       if (!wrap) return;
 
-      const firstFive = (Array.isArray(wallPromoCards) && wallPromoCards.length >= 5)
-        ? wallPromoCards.slice(0, 5)
+      const pinnedCards = (Array.isArray(wallPromoCards) && wallPromoCards.length >= 4)
+        ? wallPromoCards
         : DEFAULT_WALL_PROMO_CARDS.map((def, i) => ({
             ...def,
             ...(wallPromoCards && wallPromoCards[i] ? wallPromoCards[i] : {})
           }));
 
-      wrap.innerHTML = firstFive.map((card, idx) => {
-        const safeImg = card.image || DEFAULT_WALL_PROMO_CARDS[idx].image;
-        const safeTitle = card.title || DEFAULT_WALL_PROMO_CARDS[idx].title;
-        const safeTag = card.tag || DEFAULT_WALL_PROMO_CARDS[idx].tag;
+      const pinnedHTML = pinnedCards.map((card, idx) => {
+        const safeImg = card.image || DEFAULT_WALL_PROMO_CARDS[idx % DEFAULT_WALL_PROMO_CARDS.length].image;
+        const safeTitle = card.title || DEFAULT_WALL_PROMO_CARDS[idx % DEFAULT_WALL_PROMO_CARDS.length].title;
+        const safeTag = card.tag || DEFAULT_WALL_PROMO_CARDS[idx % DEFAULT_WALL_PROMO_CARDS.length].tag;
         const targetCat = card.categoryKey || 'ALL';
         return `
           <div onclick="shopSpecificCategoryFromSplit('${String(targetCat).replace(/'/g, "\\'")}')"
@@ -1877,6 +1892,35 @@
             </div>
           </div>`;
       }).join('');
+
+      // Match left wall height with right 3-col grid height:
+      // Each right row (3 tiles) is ~128px tall; each left wall card is ~114px tall.
+      const rightTiles = getRightGridTileCount();
+      const rightRows = Math.max(1, Math.ceil(rightTiles / 3));
+      const targetLeftCards = Math.max(pinnedCards.length, Math.round((rightRows * 128) / 114));
+      const neededCatalogCards = Math.max(0, targetLeftCards - pinnedCards.length);
+
+      const prodPool = Array.isArray(allProducts) ? allProducts : [];
+      const extraHTML = [];
+      for (let i = 0; i < neededCatalogCards && i < prodPool.length; i++) {
+        const prod = prodPool[i];
+        const img = (prod.images && prod.images[0]) || prod.image_url || DEFAULT_WALL_PROMO_CARDS[i % DEFAULT_WALL_PROMO_CARDS.length].image;
+        const badgeText = i % 2 === 0 ? 'PROMO' : 'HOT';
+        extraHTML.push(`
+          <div onclick="openProductDetail('${prod.id}')"
+            class="skf-wall-card" title="${prod.name || 'Store Item'}">
+            <span class="skf-wall-pin"></span>
+            <span class="absolute top-2 right-1.5 z-10 bg-amber-500 text-stone-950 text-[8px] font-black px-1.5 py-0.5 rounded-full shadow">
+              ${badgeText}
+            </span>
+            <img src="${img}" alt="${prod.name || 'Store Item'}" loading="lazy" />
+            <div class="skf-wall-caption">
+              <p class="text-[10px] font-extrabold text-stone-100 truncate">${prod.name || 'Store Pick'}</p>
+            </div>
+          </div>`);
+      }
+
+      wrap.innerHTML = pinnedHTML + extraHTML.join('');
     }
 
     function openAdminPromoCardsModal() {
@@ -1976,8 +2020,8 @@
       document.getElementById('storeMainWrapper').classList.add('hidden');
       document.getElementById('splitCategoryStoreView').classList.remove('hidden');
       renderSplitCategorySidebar();
-      renderWallHungPromoCards();
       renderSplitCategoryPanel();
+      renderWallHungPromoCards();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -2004,6 +2048,7 @@
       splitSelectedCatKey = key;
       renderSplitCategorySidebar();
       renderSplitCategoryPanel();
+      renderWallHungPromoCards();
     }
 
     function renderSplitCategoryPanel() {
@@ -2023,6 +2068,7 @@
         countEl.textContent = `${matches.length} item${matches.length === 1 ? '' : 's'}`;
         if (!matches.length) {
           grid.innerHTML = '<p class="col-span-3 text-center text-xs text-stone-400 py-8">No matching items found.</p>';
+          renderWallHungPromoCards();
           return;
         }
         grid.innerHTML = matches.map((p, idx) => {
@@ -2038,6 +2084,7 @@
               <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
             </div>`;
         }).join('');
+        renderWallHungPromoCards();
         return;
       }
 
@@ -2076,6 +2123,7 @@
         });
 
         grid.innerHTML = [...catTiles, ...featuredTiles].join('');
+        renderWallHungPromoCards();
         return;
       }
 
@@ -2086,6 +2134,7 @@
 
       if (!items.length) {
         grid.innerHTML = '<p class="col-span-3 text-center text-xs text-stone-400 py-8">No items in this category yet.</p>';
+        renderWallHungPromoCards();
         return;
       }
 
@@ -2102,6 +2151,7 @@
             <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
           </div>`;
       }).join('');
+      renderWallHungPromoCards();
     }
 
     function submitSplitCategorySearch(e) {
@@ -2859,8 +2909,8 @@
 
       if (!document.getElementById('splitCategoryStoreView').classList.contains('hidden')) {
         renderSplitCategorySidebar();
-        renderWallHungPromoCards();
         renderSplitCategoryPanel();
+        renderWallHungPromoCards();
       }
     }
 
