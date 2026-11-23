@@ -618,7 +618,7 @@
       <aside class="skf-cat-sidebar no-scrollbar">
         <div id="splitCategorySidebar"></div>
 
-        <!-- First 5 Custom Wall-Hung Promo Cards + Auto-Filled Store Picture Wall Cards -->
+        <!-- First 5 Custom Wall-Hung Promo Cards + Capped Auto-Filled Store Picture Wall Cards -->
         <div class="skf-wall-section">
           <div class="flex items-center justify-between px-1 mb-2">
             <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-400">Wall Promos</span>
@@ -651,7 +651,7 @@
       <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
         <div>
           <h3 class="font-editorial text-lg font-bold text-amber-300">Wall-Hung Promo Cards Admin</h3>
-          <p class="text-[11px] text-stone-400">Customize your 5 pinned wall cards (extra store items auto-fill below)</p>
+          <p class="text-[11px] text-stone-400">Customize your 5 pinned wall cards</p>
         </div>
         <button type="button" onclick="closeAdminPromoCardsModal()" class="w-7 h-7 rounded-full bg-stone-900 text-stone-400 hover:text-white font-bold">&times;</button>
       </div>
@@ -1853,7 +1853,9 @@
       });
     }
 
-    /* WALL-HUNG PROMO CARDS (FIRST 5 KEPT UNTOUCHED + AUTO-FILL FROM STORE PICTURES) */
+    /* WALL-HUNG PROMO CARDS (FIRST 5 PINNED + UP TO 3 AUTO-UPDATED CATALOG PICTURES SO LEFT NEVER RUNS PAST RIGHT) */
+    const MAX_AUTO_WALL_CARDS = 3;
+
     function renderWallHungPromoCards() {
       const wrap = document.getElementById('wallHungPromoCardsList');
       if (!wrap) return;
@@ -1884,8 +1886,8 @@
           </div>`;
       }).join('');
 
-      // Automatically continue down the left side with store product pictures in the same promo card design
-      const storeExtraHTML = (Array.isArray(allProducts) ? allProducts : []).map((prod, idx) => {
+      const extraList = (Array.isArray(allProducts) ? allProducts : []).slice(0, MAX_AUTO_WALL_CARDS);
+      const storeExtraHTML = extraList.map((prod, idx) => {
         const img = (prod.images && prod.images[0]) || prod.image_url || DEFAULT_WALL_PROMO_CARDS[idx % DEFAULT_WALL_PROMO_CARDS.length].image;
         const badgeText = idx % 2 === 0 ? 'PROMO' : 'HOT';
         return `
