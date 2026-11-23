@@ -81,37 +81,59 @@
       animation: skfPromoShake 3.2s infinite ease-in-out;
       transform-origin: center center;
       cursor: pointer;
-      overflow: hidden;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.65);
     }
     .skf-promo-shake-card:nth-child(2) { animation-delay: 0.7s; }
     .skf-promo-shake-card:nth-child(3) { animation-delay: 1.4s; }
     .skf-promo-shake-card:nth-child(4) { animation-delay: 2.1s; }
 
-    /* 4 distinct designs for the side promo cards */
-    .skf-side-promo-0 {
-      border-radius: 14px;
-      background: linear-gradient(155deg, #3a2208 0%, #171008 100%);
-      border: 1.5px solid rgba(251, 191, 36, 0.7);
-      padding: 6px;
+    /* Promo 0: Boutique shopping bag silhouette with top handles */
+    .skf-bag-promo {
+      position: relative;
+      padding-top: 10px;
     }
-    .skf-side-promo-1 {
-      border-radius: 18px 6px 18px 6px;
-      background: linear-gradient(155deg, #102a24 0%, #0b1513 100%);
+    .skf-bag-handles {
+      width: 34px;
+      height: 11px;
+      border: 2px solid #fbbf24;
+      border-bottom: none;
+      border-radius: 9999px 9999px 0 0;
+      margin: 0 auto -2px;
+    }
+    .skf-bag-body {
+      border-radius: 6px 6px 16px 16px;
+      background: linear-gradient(160deg, #3a2208 0%, #161008 100%);
+      border: 1.5px solid rgba(251, 191, 36, 0.75);
+      padding: 6px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Promo 1: Price/boutique hang-tag shape */
+    .skf-tag-promo {
+      position: relative;
+      border-radius: 4px 18px 18px 4px;
+      background: linear-gradient(155deg, #102a24 0%, #0a1412 100%);
       border: 1.5px solid rgba(52, 211, 153, 0.65);
+      border-left: 4px solid #34d399;
       padding: 6px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
     }
-    .skf-side-promo-2 {
-      border-radius: 8px 18px 8px 18px;
-      background: linear-gradient(155deg, #331222 0%, #160910 100%);
-      border: 1.5px dashed rgba(251, 113, 133, 0.75);
+
+    /* Promo 2: Pill / arch boutique frame */
+    .skf-arch-promo {
+      border-radius: 26px 26px 10px 10px;
+      background: linear-gradient(160deg, #331222 0%, #15080f 100%);
+      border: 1.5px dashed rgba(251, 113, 133, 0.8);
       padding: 6px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
     }
-    .skf-side-promo-3 {
+
+    /* Promo 3: Tilted gold showcase frame */
+    .skf-frame-promo {
       border-radius: 12px;
-      background: linear-gradient(155deg, #132238 0%, #0a101a 100%);
-      border: 2px solid rgba(250, 204, 21, 0.55);
+      background: linear-gradient(160deg, #142238 0%, #09101a 100%);
+      border: 2px solid rgba(250, 204, 21, 0.6);
       padding: 6px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
     }
 
     .skf-hero-slide {
@@ -676,7 +698,7 @@
           <div class="px-1 flex items-center justify-between">
             <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-400">🔥 Hot Promos</span>
           </div>
-          <div id="wallHungPromoCardsList" class="space-y-2.5"></div>
+          <div id="wallHungPromoCardsList" class="space-y-3"></div>
         </div>
       </aside>
 
@@ -1180,10 +1202,10 @@
     const ROTATION_MINUTES = 1;
 
     const DEFAULT_WALL_PROMO_CARDS = [
-      { id: 'wall_1', title: 'Hot Drops', tag: 'NEW IN', badgeBg: 'bg-amber-400 text-stone-950', titleColor: 'text-amber-300', image: '', categoryKey: 'ALL' },
-      { id: 'wall_2', title: 'Luxury Fits', tag: 'DEAL', badgeBg: 'bg-emerald-400 text-stone-950', titleColor: 'text-emerald-300', image: '', categoryKey: 'ALL' },
-      { id: 'wall_3', title: 'Footwear Edit', tag: 'HOT', badgeBg: 'bg-rose-500 text-white', image: '', categoryKey: 'ALL' },
-      { id: 'wall_4', title: 'Watches & Bags', tag: 'VIP', badgeBg: 'bg-yellow-300 text-stone-950', image: '', categoryKey: 'ALL' }
+      { id: 'wall_1', title: 'Hot Drops', tag: 'NEW IN', badgeBg: 'bg-amber-400 text-stone-950', titleColor: 'text-amber-300', shapeClass: 'skf-bag-promo', hasBagHandles: true, image: '', categoryKey: 'ALL' },
+      { id: 'wall_2', title: 'Luxury Fits', tag: 'DEAL', badgeBg: 'bg-emerald-400 text-stone-950', titleColor: 'text-emerald-300', shapeClass: 'skf-tag-promo', hasBagHandles: false, image: '', categoryKey: 'ALL' },
+      { id: 'wall_3', title: 'Footwear Edit', tag: 'HOT', badgeBg: 'bg-rose-500 text-white', titleColor: 'text-rose-300', shapeClass: 'skf-arch-promo', hasBagHandles: false, image: '', categoryKey: 'ALL' },
+      { id: 'wall_4', title: 'Watches & Bags', tag: 'VIP', badgeBg: 'bg-yellow-300 text-stone-950', titleColor: 'text-yellow-200', shapeClass: 'skf-frame-promo', hasBagHandles: false, image: '', categoryKey: 'ALL' }
     ];
 
     const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
@@ -1302,6 +1324,35 @@
 
       window.addEventListener('scroll', onScrollActivity, { passive: true });
       document.addEventListener('touchmove', onScrollActivity, { passive: true });
+    }
+
+    function bindCategoryDelegationOnce() {
+      const promoList = document.getElementById('wallHungPromoCardsList');
+      if (promoList && !promoList.dataset.delegated) {
+        promoList.dataset.delegated = '1';
+        promoList.addEventListener('click', (ev) => {
+          const cardEl = ev.target.closest('[data-promo-cat]');
+          if (!cardEl) return;
+          const catTarget = cardEl.getAttribute('data-promo-cat') || 'ALL';
+          shopSpecificCategoryFromSplit(catTarget);
+        });
+      }
+
+      const splitGrid = document.getElementById('splitCategoryGrid');
+      if (splitGrid && !splitGrid.dataset.delegated) {
+        splitGrid.dataset.delegated = '1';
+        splitGrid.addEventListener('click', (ev) => {
+          const cell = ev.target.closest('[data-action]');
+          if (!cell) return;
+          const action = cell.getAttribute('data-action');
+          const val = cell.getAttribute('data-val') || '';
+          if (action === 'cat') {
+            shopSpecificCategoryFromSplit(val);
+          } else if (action === 'prod') {
+            openProductDetail(val);
+          }
+        });
+      }
     }
 
     function renderBrandedPlaceholderHtml(labelText = 'Sekiflex') {
@@ -1917,7 +1968,10 @@
       const prod = allProducts.find(p => String(p.id) === String(productId));
       if (!prod) return;
 
+      showOnlyMainView('storeMainWrapper');
+      setActiveBottomTab('home');
       armStoreBackGuard();
+
       const img = (prod.images && prod.images[0]) || prod.image_url || '';
       const out = (prod.stock_quantity !== null && prod.stock_quantity <= 0);
       const catObj = allCategories.find(c => String(c.id) === String(prod.category_id));
@@ -2068,6 +2122,7 @@
       });
     }
 
+    /* 4 side promo cards in distinct designs (bag, hang-tag, arch, frame) */
     function renderWallHungPromoCards() {
       const wrap = document.getElementById('wallHungPromoCardsList');
       if (!wrap) return;
@@ -2087,13 +2142,13 @@
         const tag = card.tag || def.tag;
         const badgeBg = card.badgeBg || def.badgeBg;
         const titleColor = card.titleColor || def.titleColor;
-        const styleClass = `skf-side-promo-${idx % 4}`;
+        const shapeClass = card.shapeClass || def.shapeClass;
+        const hasBagHandles = idx === 0;
         const targetCat = card.categoryKey || 'ALL';
         const { effectivePrice } = fallbackProd ? getProductPricing(fallbackProd) : { effectivePrice: 0 };
 
-        return `
-          <div onclick="shopSpecificCategoryFromSplit('${String(targetCat).replace(/'/g, "\\'")}')"
-            class="skf-promo-shake-card ${styleClass}" title="${title}">
+        const innerCardHtml = `
+          <div class="${shapeClass}">
             <div class="relative w-full h-14 rounded-lg overflow-hidden bg-stone-950">
               <span class="absolute top-1 left-1 z-10 ${badgeBg} text-[7px] font-black px-1.5 py-0.2 rounded-full uppercase shadow">
                 ${tag}
@@ -2106,6 +2161,13 @@
               <p class="text-[9px] font-extrabold ${titleColor} truncate">${title}</p>
               ${effectivePrice > 0 ? `<p class="text-[9px] font-bold text-white">₦${effectivePrice.toLocaleString()}</p>` : ''}
             </div>
+          </div>`;
+
+        return `
+          <div data-promo-cat="${String(targetCat).replace(/"/g, '&quot;')}"
+            class="skf-promo-shake-card ${hasBagHandles ? 'skf-bag-promo' : ''}" title="${title}">
+            ${hasBagHandles ? '<div class="skf-bag-handles"></div>' : ''}
+            ${innerCardHtml}
           </div>`;
       }).join('');
     }
@@ -2179,7 +2241,7 @@
           const img = (p.images && p.images[0]) || p.image_url || '';
           const { effectivePrice } = getProductPricing(p);
           return `
-            <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="skf-cat-cell group">
+            <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
                 ${renderSplitThumbInner(img, p.name, idx < 2)}
               </div>
@@ -2200,7 +2262,7 @@
           const img = (sampleProd?.images && sampleProd.images[0]) || sampleProd?.image_url || '';
           const count = allProducts.filter(p => String(p.category_id) === String(c.id)).length;
           return `
-            <div onclick="shopSpecificCategoryFromSplit('${String(c.id).replace(/'/g, "\\'")}')"
+            <div data-action="cat" data-val="${String(c.id).replace(/"/g, '&quot;')}"
               class="skf-cat-cell group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
                 ${renderSplitThumbInner(img, c.name, idx < 2)}
@@ -2210,11 +2272,11 @@
             </div>`;
         });
 
-        let poolTiles = rotatedAll.map((p, idx) => {
+        const poolTiles = rotatedAll.map((p, idx) => {
           const img = (p.images && p.images[0]) || p.image_url || '';
           const { effectivePrice } = getProductPricing(p);
           return `
-            <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="skf-cat-cell group">
+            <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
                 ${renderSplitThumbInner(img, p.name, idx === 0)}
               </div>
@@ -2223,7 +2285,6 @@
             </div>`;
         });
 
-        /* Pad right grid so there are never empty trailing spaces at the bottom */
         const combined = [...catTiles, ...poolTiles];
         const minFillCount = Math.max(12, combined.length);
         let fillIdx = 0;
@@ -2232,7 +2293,7 @@
           const img = (p.images && p.images[0]) || p.image_url || '';
           const { effectivePrice } = getProductPricing(p);
           combined.push(`
-            <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="skf-cat-cell group">
+            <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
                 ${renderSplitThumbInner(img, p.name, false)}
               </div>
@@ -2264,7 +2325,7 @@
         const img = (p.images && p.images[0]) || p.image_url || '';
         const { effectivePrice } = getProductPricing(p);
         catRows.push(`
-          <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="skf-cat-cell group">
+          <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
             <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
               ${renderSplitThumbInner(img, p.name, i < 2)}
             </div>
@@ -2293,7 +2354,7 @@
         } else {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-      }, 40);
+      }, 60);
     }
 
     function shopSelectedSplitCategory() {
@@ -2985,6 +3046,7 @@
     async function init() {
       bindBackButtonGuardsOnce();
       bindScrollPauseWatcher();
+      bindCategoryDelegationOnce();
       trackLiveVisitorHeartbeat();
       lastRotationSlot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000));
       applySocialLinks();
