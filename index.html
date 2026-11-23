@@ -68,11 +68,34 @@
       animation: trackZoomPulse 2.1s infinite ease-in-out;
     }
 
-    .track-zoom-btn:active {
-      transform: scale(0.96);
+    /* Temu / Jumia style lively promo shake animation */
+    @keyframes skfPromoShake {
+      0%, 72%, 100% { transform: rotate(0deg) scale(1); }
+      76% { transform: rotate(-2.5deg) scale(1.03); }
+      80% { transform: rotate(2.5deg) scale(1.04); }
+      84% { transform: rotate(-2deg) scale(1.03); }
+      88% { transform: rotate(2deg) scale(1.02); }
+      92% { transform: rotate(-1deg) scale(1.01); }
     }
 
-    /* Reference-inspired 2-column staggered catalog in Sekiflex gold & dark theme */
+    .skf-promo-shake-card {
+      animation: skfPromoShake 3.2s infinite ease-in-out;
+      transform-origin: center center;
+    }
+    .skf-promo-shake-card:nth-child(2) { animation-delay: 0.7s; }
+    .skf-promo-shake-card:nth-child(3) { animation-delay: 1.4s; }
+    .skf-promo-shake-card:nth-child(4) { animation-delay: 2.1s; }
+
+    /* Jumia-style top hero slider with peek next slide */
+    .skf-hero-slide {
+      width: 88%;
+      max-width: 440px;
+      min-height: 132px;
+      flex-shrink: 0;
+      scroll-snap-align: start;
+    }
+
+    /* Staggered 2-column marketplace catalog in Sekiflex gold & dark */
     .products-grid-home {
       column-count: 2;
       column-gap: 0.65rem;
@@ -98,12 +121,11 @@
 
     .skf-market-card:hover {
       border-color: rgba(251, 191, 36, 0.65);
-      transform: translateY(-1px);
     }
 
     .skf-market-img-tall {
       width: 100%;
-      height: 178px;
+      height: 176px;
       object-fit: cover;
       object-position: top;
       display: block;
@@ -117,25 +139,20 @@
       display: block;
     }
 
-    .products-grid-category-mode {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.7rem;
-    }
-
+    /* Split-screen category view: aligned straight rows + shaking side promos */
     .skf-cat-layout {
       display: flex;
-      align-items: flex-start;
+      align-items: stretch;
       min-height: calc(100vh - 115px);
       background: #0d0c0a;
     }
     .skf-cat-sidebar {
-      width: 124px;
+      width: 118px;
       flex-shrink: 0;
       background: #14110c;
       border-right: 1px solid rgba(245, 158, 11, 0.25);
       overflow-y: auto;
-      padding: 8px 6px 88px;
+      padding: 8px 6px 96px;
     }
     .skf-cat-tab {
       width: 100%;
@@ -157,98 +174,81 @@
       border-left-color: #f59e0b;
     }
 
-    /* Fresh right-side promo spotlight stack (clean, modern, non-repetitive) */
-    .skf-right-promo-box {
-      margin-top: 14px;
-      padding-top: 10px;
-      border-top: 1px solid rgba(245, 158, 11, 0.25);
-      user-select: none;
-    }
-    .skf-spotlight-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px;
-      border-radius: 12px;
-      background: #17130d;
-      border: 1px solid rgba(245, 158, 11, 0.22);
-      border-left-width: 3px;
-      cursor: pointer;
-      transition: border-color 0.2s ease, background 0.2s ease;
-    }
-    .skf-spotlight-item:hover {
-      background: #211b12;
-      border-color: #fbbf24;
-    }
-    .skf-spotlight-accent-0 { border-left-color: #fbbf24; }
-    .skf-spotlight-accent-1 { border-left-color: #34d399; }
-    .skf-spotlight-accent-2 { border-left-color: #f472b6; }
-    .skf-spotlight-accent-3 { border-left-color: #60a5fa; }
-
     .skf-cat-main {
       flex: 1;
       min-width: 0;
-      padding: 10px;
-      padding-bottom: 88px;
+      padding: 10px 8px 96px;
       overflow-y: auto;
     }
     .skf-cat-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px 8px;
+      gap: 12px 6px;
+      align-items: start;
+    }
+    .skf-cat-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      min-width: 0;
     }
     .skf-cat-thumb-wrap {
       position: relative;
-      width: 68px;
-      height: 68px;
+      width: 76px;
+      height: 76px;
+      max-width: 100%;
       margin: 0 auto 6px;
       border-radius: 9999px;
       background: #1b1712;
-      border: 1.5px solid rgba(245, 158, 11, 0.35);
+      border: 1.5px solid rgba(245, 158, 11, 0.42);
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
     .skf-cat-hot {
       position: absolute;
-      top: -1px;
-      right: -1px;
+      top: 2px;
+      right: 2px;
       background: #ef4444;
       color: #fff;
-      font-size: 8px;
+      font-size: 7px;
       font-weight: 900;
-      padding: 1px 5px;
+      padding: 1px 4px;
       border-radius: 9999px;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
+      z-index: 2;
     }
   </style>
 </head>
 <body class="sekiflex-luxury-bg text-stone-100 antialiased pb-20">
 
   <!-- LEAVE WEBSITE CONFIRMATION MODAL (YES / NO) -->
-  <div id="leaveConfirmModal" class="fixed inset-0 z-[70] hidden bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-[#16130f] border border-amber-400/45 rounded-3xl max-w-xs w-full p-5 text-center space-y-4 shadow-2xl">
+  <div id="leaveConfirmModal" class="fixed inset-0 z-[90] hidden bg-black/85 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-[#16130f] border border-amber-400/50 rounded-3xl max-w-xs w-full p-5 text-center space-y-4 shadow-2xl">
       <div class="space-y-1.5">
         <p class="text-[10px] font-extrabold uppercase tracking-widest text-amber-400">Sekiflex Collections</p>
         <h3 class="font-editorial text-lg font-bold text-white">Leaving Sekiflex Collections?</h3>
-        <p class="text-xs text-stone-300 leading-relaxed">Do you want to leave the website?</p>
+        <p class="text-xs text-stone-300 leading-relaxed">Do you really want to leave the website?</p>
       </div>
       <div class="grid grid-cols-2 gap-2.5">
         <button type="button" onclick="confirmLeaveWebsiteNo()"
           class="py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-extrabold transition">
-          No
+          No, Stay
         </button>
         <button type="button" onclick="confirmLeaveWebsiteYes()"
           class="py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 border border-amber-400/25 text-stone-200 text-xs font-bold transition">
-          Yes
+          Yes, Leave
         </button>
       </div>
     </div>
   </div>
 
   <!-- REGISTER / SIGN IN MODAL (FOR CHECKOUT OR ACCOUNT) -->
-  <div id="customerAuthGate" class="fixed inset-0 z-[60] hidden bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+  <div id="customerAuthGate" class="fixed inset-0 z-[80] hidden bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-[#12141a] border border-amber-400/35 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
       <div class="bg-gradient-to-r from-stone-950 via-[#181510] to-amber-950/80 text-white px-6 py-4 text-center space-y-1 relative border-b border-amber-400/20">
         <button type="button" onclick="closeAuthGate()" aria-label="Close sign in window"
@@ -437,17 +437,18 @@
 
     <div class="max-w-5xl mx-auto px-3 pt-2 space-y-2.5">
 
-      <!-- HERO SECTION VIDEO BANNER -->
+      <!-- HERO SECTION VIDEO BANNER (ADMIN CONTROLLED) -->
       <section id="heroVideoSection" class="hidden rounded-2xl overflow-hidden bg-[#16130f] border border-amber-400/35 shadow-lg">
         <video id="heroVideoPlayer" controls autoplay muted loop playsinline
           class="w-full max-h-56 sm:max-h-72 object-cover object-top bg-black"></video>
       </section>
 
-      <!-- COMPACT SCROLLING HERO ANNOUNCEMENT & SHOWCASE SLIDES -->
-      <section id="heroCarouselSection">
-        <div id="bannerCarousel" class="flex gap-2.5 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
+      <!-- JUMIA-STYLE PEEK HERO PROMO SLIDER + PAGINATION DOTS + RIDER & CARGO (NO BLANK SLIDES) -->
+      <section id="heroCarouselSection" class="space-y-1.5">
+        <div id="bannerCarousel" class="flex gap-2.5 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar pr-4">
 
-          <div id="livePromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full min-h-[126px] rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-3 flex items-center justify-between gap-2.5 border border-amber-400/50 shadow-lg overflow-hidden">
+          <!-- Slide 1: Live Admin Promo Announcement #1 (from store_settings id='main') -->
+          <div id="livePromoBannerCard" class="promo-slide skf-hero-slide hidden rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-3 flex items-center justify-between gap-2.5 border border-amber-400/50 shadow-lg overflow-hidden">
             <div class="space-y-1 flex-1 min-w-0 flex flex-col justify-between">
               <span class="inline-block text-[8px] font-extrabold uppercase tracking-widest bg-gradient-to-r from-amber-400 to-yellow-300 text-stone-950 px-2 py-0.5 rounded-full w-fit">
                 ✦ Featured Promo
@@ -460,7 +461,8 @@
             <img id="livePromoImg" src="" alt="" onerror="this.classList.add('hidden')" class="hidden w-24 sm:w-28 h-24 sm:h-28 object-cover object-top rounded-xl border border-amber-400/50 shrink-0 shadow-md" />
           </div>
 
-          <div id="livePromoBanner2Card" class="promo-slide hidden snap-start shrink-0 w-full min-h-[126px] rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-3 flex items-center justify-between gap-2.5 border border-amber-400/45 shadow-lg overflow-hidden">
+          <!-- Slide 2: Live Admin Promo Announcement #2 (from store_settings id='second') -->
+          <div id="livePromoBanner2Card" class="promo-slide skf-hero-slide hidden rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-3 flex items-center justify-between gap-2.5 border border-amber-400/45 shadow-lg overflow-hidden">
             <div class="space-y-1 flex-1 min-w-0 flex flex-col justify-between">
               <span class="inline-block text-[8px] font-extrabold uppercase tracking-widest bg-amber-500/25 text-amber-300 border border-amber-400/40 px-2 py-0.5 rounded-full w-fit">
                 ✦ Store Announcement
@@ -473,7 +475,8 @@
             <img id="livePromo2Img" src="" alt="" onerror="this.classList.add('hidden')" class="hidden w-24 sm:w-28 h-24 sm:h-28 object-cover object-top rounded-xl border border-amber-400/50 shrink-0 shadow-md" />
           </div>
 
-          <div onclick="jumpToAllItems()" class="promo-slide cursor-pointer snap-start shrink-0 w-full min-h-[126px] rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-3 flex items-center justify-between gap-2.5 border border-amber-400/50 shadow-lg overflow-hidden">
+          <!-- Slide 3: Luxury Apparel Edit (Always backed by real product photo) -->
+          <div onclick="jumpToAllItems()" class="promo-slide skf-hero-slide cursor-pointer rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-3 flex items-center justify-between gap-2.5 border border-amber-400/50 shadow-lg overflow-hidden">
             <div class="space-y-1 flex-1 min-w-0">
               <span class="inline-block text-[8px] font-extrabold uppercase tracking-widest bg-gradient-to-r from-amber-400 to-yellow-300 text-stone-950 px-2 py-0.5 rounded-full">
                 ✦ Luxury Apparel
@@ -482,14 +485,17 @@
                 Dresses, Knits &amp; Denim
               </h2>
               <p class="text-[10px] text-amber-100/85 line-clamp-1">Fresh chic styles curated for daily glam</p>
+              <span class="inline-flex items-center gap-1 bg-amber-500 text-stone-950 text-[10px] font-extrabold px-3 py-1 rounded-full mt-0.5">
+                Shop Now →
+              </span>
             </div>
-            <div class="w-24 sm:w-28 h-24 sm:h-28 rounded-xl border border-amber-400/50 shrink-0 shadow-md bg-gradient-to-br from-[#33230c] via-[#1c150c] to-[#110d08] flex flex-col items-center justify-center p-1.5 text-center">
-              <span class="text-lg font-editorial font-extrabold text-amber-400">SC</span>
-              <span class="text-[8px] font-extrabold tracking-widest uppercase text-amber-100 mt-0.5">SEKIFLEX</span>
+            <div id="heroSlideApparelMedia" class="w-24 sm:w-28 h-24 sm:h-28 rounded-xl border border-amber-400/50 shrink-0 shadow-md bg-[#1c150c] overflow-hidden flex items-center justify-center">
+              <span class="text-2xl font-editorial font-extrabold text-amber-400">SC</span>
             </div>
           </div>
 
-          <div onclick="openSplitCategoryStore()" class="promo-slide cursor-pointer snap-start shrink-0 w-full min-h-[126px] rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-3 flex items-center justify-between gap-2.5 border border-amber-400/50 shadow-lg overflow-hidden">
+          <!-- Slide 4: Footwear, Watches & Accessories (Always backed by real product photo) -->
+          <div onclick="openSplitCategoryStore()" class="promo-slide skf-hero-slide cursor-pointer rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-3 flex items-center justify-between gap-2.5 border border-amber-400/50 shadow-lg overflow-hidden">
             <div class="space-y-1 flex-1 min-w-0">
               <span class="inline-block text-[8px] font-extrabold uppercase tracking-widest bg-amber-500/25 text-amber-300 border border-amber-400/40 px-2 py-0.5 rounded-full">
                 ✦ Complete The Look
@@ -498,14 +504,67 @@
                 Shoes, Bags &amp; Watches
               </h2>
               <p class="text-[10px] text-amber-100/85 line-clamp-1">Statement pieces to finish every outfit</p>
+              <span class="inline-flex items-center gap-1 bg-amber-500 text-stone-950 text-[10px] font-extrabold px-3 py-1 rounded-full mt-0.5">
+                Browse Categories →
+              </span>
             </div>
-            <div class="w-24 sm:w-28 h-24 sm:h-28 rounded-xl border border-amber-400/50 shrink-0 shadow-md bg-gradient-to-br from-[#33230c] via-[#1c150c] to-[#110d08] flex flex-col items-center justify-center p-1.5 text-center">
-              <span class="text-amber-400 text-base">♛</span>
-              <span class="text-[8px] font-extrabold tracking-wider uppercase text-amber-100 mt-0.5">CURATED EDIT</span>
+            <div id="heroSlideAccessoriesMedia" class="w-24 sm:w-28 h-24 sm:h-28 rounded-xl border border-amber-400/50 shrink-0 shadow-md bg-[#1c150c] overflow-hidden flex items-center justify-center">
+              <span class="text-2xl text-amber-400">♛</span>
+            </div>
+          </div>
+
+          <!-- Slide 5: Sekiflex Collections Rider & Cargo Truck Delivery -->
+          <div onclick="window.location.href='track.html'" role="button" tabindex="0"
+            class="promo-slide skf-hero-slide cursor-pointer rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-3 flex items-center justify-between gap-2 border border-amber-400/50 hover:border-amber-300 transition shadow-lg overflow-hidden">
+            <div class="space-y-1 flex-1 min-w-0">
+              <span class="inline-block text-[8px] font-extrabold uppercase tracking-widest bg-gradient-to-r from-amber-400 to-yellow-300 text-stone-950 px-2 py-0.5 rounded-full">
+                SEKIFLEX FLEET
+              </span>
+              <h2 class="font-editorial text-sm sm:text-base font-bold leading-tight text-amber-50">
+                Bike Rider &amp; Cargo Truck
+              </h2>
+              <p class="text-[10px] text-amber-100/85 line-clamp-1">Fast dispatch from Uyo nationwide</p>
+              <a href="track.html" onclick="event.stopPropagation();"
+                class="track-zoom-btn inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-3 py-1 rounded-full transition mt-0.5">
+                <span>📦</span>
+                <span>Track Order →</span>
+              </a>
+            </div>
+
+            <div class="relative w-32 sm:w-40 h-24 sm:h-28 rounded-xl overflow-hidden border border-amber-400/50 shrink-0 shadow-md bg-gradient-to-b from-[#281e0e] via-[#18120b] to-[#0d0a07] flex flex-col justify-between p-1">
+              <div class="flex items-center justify-between gap-1 px-1">
+                <span class="text-[7px] font-black tracking-wider uppercase text-amber-300 truncate">SEKIFLEX</span>
+                <span class="text-[7px] font-extrabold bg-emerald-500/20 text-emerald-300 px-1 rounded-full shrink-0">LIVE</span>
+              </div>
+              <svg viewBox="0 0 240 112" class="w-full h-14 overflow-visible" role="img" aria-label="Sekiflex dispatch bike and cargo truck">
+                <line x1="0" y1="101" x2="240" y2="101" stroke="#f59e0b" stroke-opacity="0.45" stroke-width="2" />
+                <g transform="translate(116, 30)">
+                  <rect x="0" y="6" width="76" height="48" rx="6" fill="#1c160e" stroke="#f59e0b" stroke-width="2" />
+                  <text x="38" y="27" text-anchor="middle" fill="#fbbf24" font-size="8" font-weight="900">SEKIFLEX</text>
+                  <text x="38" y="42" text-anchor="middle" fill="#fde68a" font-size="6" font-weight="700">CARGO</text>
+                  <path d="M76 22 L98 22 L106 36 L106 54 L76 54 Z" fill="#231c12" stroke="#fbbf24" stroke-width="1.8" />
+                  <circle cx="18" cy="57" r="10" fill="#0d0a07" stroke="#fbbf24" stroke-width="2.2" />
+                  <circle cx="89" cy="57" r="10" fill="#0d0a07" stroke="#fbbf24" stroke-width="2.2" />
+                </g>
+                <g transform="translate(8, 22)">
+                  <circle cx="52" cy="14" r="7.5" fill="#fbbf24" />
+                  <rect x="6" y="22" width="38" height="27" rx="5" fill="#f59e0b" />
+                  <path d="M36 47 L56 45 L71 33 L76 58" fill="none" stroke="#fbbf24" stroke-width="3.2" stroke-linecap="round" />
+                  <circle cx="24" cy="61" r="14.5" fill="none" stroke="#fbbf24" stroke-width="3" />
+                  <circle cx="77" cy="61" r="14.5" fill="none" stroke="#fbbf24" stroke-width="3" />
+                </g>
+              </svg>
+              <div class="px-1 py-0.5 bg-amber-500/15 rounded flex items-center justify-between text-[8px] font-extrabold text-amber-300">
+                <span>🏍️ Rider</span>
+                <span>🚚 Cargo</span>
+              </div>
             </div>
           </div>
 
         </div>
+
+        <!-- Hero Pagination Dots -->
+        <div id="heroPaginationDots" class="flex items-center justify-center gap-1.5 pt-0.5"></div>
       </section>
 
       <!-- COMPACT TOP SCROLLING SHOWCASE STRIP -->
@@ -587,10 +646,10 @@
       <aside class="skf-cat-sidebar no-scrollbar">
         <div id="splitCategorySidebar"></div>
 
-        <!-- FRESH RIGHT/SIDE PROMO SPOTLIGHT STACK -->
-        <div class="skf-right-promo-box space-y-2">
-          <div class="px-1">
-            <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-400">Spotlight Picks</span>
+        <!-- SHAKING TEMU / JUMIA STYLE SIDE PROMOS (FIXED DURING 1-MIN ROTATION) -->
+        <div class="mt-3 pt-2.5 border-t border-amber-400/25 space-y-2 select-none">
+          <div class="px-1 flex items-center justify-between">
+            <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-400">🔥 Hot Promos</span>
           </div>
           <div id="wallHungPromoCardsList" class="space-y-2"></div>
         </div>
@@ -613,8 +672,272 @@
     </div>
   </div>
 
+  <!-- FULL-SCREEN SCROLLABLE ACCOUNT VIEW (JUMIA-STYLE IN SEKIFLEX LUXURY THEME) -->
+  <div id="accountFullPageView" class="hidden min-h-screen pb-24">
+    <header class="sticky top-0 z-40 bg-[#0d0c0a]/95 backdrop-blur-md border-b border-amber-400/25 px-3 py-2.5 shadow-lg">
+      <div class="max-w-2xl mx-auto flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="switchBottomTab('home')"
+            class="bg-stone-900 hover:bg-stone-800 border border-amber-400/25 text-amber-300 text-xs font-bold px-3 py-1.5 rounded-full">
+            ← Home
+          </button>
+          <h1 class="font-editorial text-base font-bold text-white">My Account</h1>
+        </div>
+        <button type="button" onclick="openStoreSettingsModal()"
+          class="bg-stone-900 hover:bg-stone-800 border border-amber-400/30 text-amber-300 text-xs font-bold px-3 py-1.5 rounded-full">
+          ⚙️ Settings
+        </button>
+      </div>
+    </header>
+
+    <div class="max-w-2xl mx-auto px-3 pt-3 space-y-3">
+      <!-- Top Welcome & Login Banner -->
+      <div class="luxury-glass-card border border-amber-400/35 rounded-2xl p-4 flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <h2 id="menuCustomerName" class="font-editorial text-lg font-bold text-amber-300 truncate">Welcome</h2>
+          <p id="menuCustomerEmail" class="text-xs text-stone-300 truncate">Sign in or register to manage your orders</p>
+        </div>
+        <button type="button" id="accountSignInActionBtn" onclick="openAuthGate('signup', false)"
+          class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-extrabold px-4 py-2.5 rounded-xl shrink-0 transition shadow">
+          Login / Register
+        </button>
+        <button type="button" id="accountSignOutActionBtn" onclick="customerLogout()"
+          class="hidden bg-red-950/80 border border-red-500/40 text-red-200 text-xs font-extrabold px-3.5 py-2 rounded-xl shrink-0 transition">
+          Sign Out
+        </button>
+      </div>
+
+      <!-- Live Chat & WhatsApp Quick Action Row -->
+      <div class="grid grid-cols-2 gap-2.5">
+        <a href="https://wa.me/2349069037617?text=Hello%20Sekiflex%20Collections%2C%20I%20need%20help%20with%20an%20order." target="_blank" rel="noopener"
+          class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold text-xs py-3 px-3 rounded-2xl flex items-center justify-center gap-2 shadow transition">
+          <span>💬</span>
+          <span>Live Chat</span>
+        </a>
+        <a href="https://wa.me/2349069037617" target="_blank" rel="noopener"
+          class="bg-[#16130f] hover:bg-[#211b13] border border-emerald-400/45 text-emerald-300 font-extrabold text-xs py-3 px-3 rounded-2xl flex items-center justify-center gap-2 transition">
+          <span>📱</span>
+          <span>WhatsApp</span>
+        </a>
+      </div>
+
+      <!-- Need Assistance Section -->
+      <div class="space-y-1.5">
+        <p class="text-[11px] font-extrabold uppercase tracking-wider text-amber-400/85 px-1">Need Assistance?</p>
+        <div class="luxury-glass-card border border-amber-400/25 rounded-2xl divide-y divide-stone-800/80 overflow-hidden">
+          <button type="button" onclick="openInfoModal('delivery')" class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+            <span class="flex items-center gap-3 text-xs font-bold text-stone-100">
+              <span>🚚</span>
+              <span>Delivery &amp; Uyo Store Pickup</span>
+            </span>
+            <span class="text-amber-400 font-bold">›</span>
+          </button>
+          <a href="https://wa.me/2349069037617" target="_blank" rel="noopener" class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+            <span class="flex items-center gap-3 text-xs font-bold text-stone-100">
+              <span>🎧</span>
+              <span>Help &amp; Customer Support</span>
+            </span>
+            <span class="text-amber-400 font-bold">›</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- My Sekiflex Account Section -->
+      <div class="space-y-1.5">
+        <p class="text-[11px] font-extrabold uppercase tracking-wider text-amber-400/85 px-1">My Sekiflex Account</p>
+        <div class="luxury-glass-card border border-amber-400/25 rounded-2xl divide-y divide-stone-800/80 overflow-hidden">
+          <a href="track.html" class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+            <span class="flex items-center gap-3 text-xs font-bold text-stone-100">
+              <span>📦</span>
+              <span>Orders &amp; Live Tracking</span>
+            </span>
+            <span class="text-amber-400 font-bold">›</span>
+          </a>
+          <button type="button" onclick="enableSekiflexPush({ customerEmail: currentCustomer?.email || null, customerPhone: currentCustomer?.phone || null, isAdmin: false })"
+            class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+            <span class="flex items-center gap-3 text-xs font-bold text-stone-100">
+              <span>🔔</span>
+              <span>Inbox &amp; Promo Alerts</span>
+            </span>
+            <span class="text-amber-400 font-bold">›</span>
+          </button>
+          <button type="button" onclick="openReviewsModal()" class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+            <span class="flex items-center gap-3 text-xs font-bold text-stone-100">
+              <span>⭐</span>
+              <span>Ratings &amp; Reviews</span>
+            </span>
+            <span class="text-amber-400 font-bold">›</span>
+          </button>
+          <button type="button" onclick="openInfoModal('privacy')" class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+            <span class="flex items-center gap-3 text-xs font-bold text-stone-100">
+              <span>🛡️</span>
+              <span>Privacy Policy</span>
+            </span>
+            <span class="text-amber-400 font-bold">›</span>
+          </button>
+          <button type="button" onclick="openInfoModal('about')" class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+            <span class="flex items-center gap-3 text-xs font-bold text-stone-100">
+              <span>👑</span>
+              <span>About Sekiflex Collections</span>
+            </span>
+            <span class="text-amber-400 font-bold">›</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FULL-SCREEN SCROLLABLE CART & CHECKOUT VIEW (JUMIA-STYLE IN SEKIFLEX LUXURY THEME) -->
+  <div id="cartFullPageView" class="hidden min-h-screen pb-24">
+    <header class="sticky top-0 z-40 bg-[#0d0c0a]/95 backdrop-blur-md border-b border-amber-400/25 px-3 py-2.5 shadow-lg">
+      <div class="max-w-2xl mx-auto flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5">
+          <button type="button" onclick="skfHandleKeepShopping(event)"
+            class="bg-stone-900 hover:bg-stone-800 border border-amber-400/25 text-amber-300 text-xs font-bold px-3 py-1.5 rounded-full">
+            ← Back
+          </button>
+          <h1 id="cartDrawerHeading" class="font-editorial text-base font-bold text-white">Cart</h1>
+        </div>
+        <button type="button" onclick="skfHandleKeepShopping(event)" class="text-xs font-bold text-amber-300 hover:underline">
+          Keep Shopping
+        </button>
+      </div>
+    </header>
+
+    <div class="max-w-2xl mx-auto px-3 pt-3 space-y-3">
+      <!-- Cart Summary Card -->
+      <div class="luxury-glass-card border border-amber-400/30 rounded-2xl p-3.5 space-y-1.5">
+        <p class="text-[10px] font-extrabold uppercase tracking-widest text-amber-400">Cart Summary</p>
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-stone-300">Subtotal</span>
+          <strong id="cartReviewSubTotal" class="text-base font-extrabold text-amber-400">₦0</strong>
+        </div>
+      </div>
+
+      <!-- Scrollable Cart Items List -->
+      <div id="cartItems" class="space-y-2.5"></div>
+
+      <!-- Sticky/Inline Checkout Action Bar -->
+      <div id="cartSummaryActions" class="flex items-center gap-2.5 pt-1">
+        <a href="tel:09069037617" aria-label="Call Sekiflex"
+          class="w-12 h-11 rounded-2xl bg-[#16130f] border border-amber-400/40 text-amber-400 flex items-center justify-center text-base shrink-0">
+          📞
+        </a>
+        <button type="button" id="openWaybillBtn" onclick="skfHandleProceedToCheckout(event)"
+          class="flex-1 h-11 bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950 font-extrabold rounded-2xl text-xs sm:text-sm transition shadow-lg">
+          Checkout (<span id="checkoutBtnTotalLabel">₦0</span>)
+        </button>
+      </div>
+
+      <!-- Expandable Waybill & Bank Transfer Form -->
+      <form id="checkoutForm" autocomplete="off" onsubmit="placeOrder(event)" class="hidden space-y-2.5 luxury-glass-card border border-amber-400/35 rounded-2xl p-3.5">
+        <div class="flex items-center justify-between pb-1.5 border-b border-stone-800">
+          <h3 class="font-bold text-xs uppercase tracking-wider text-amber-300">Waybill &amp; Payment</h3>
+          <button type="button" onclick="backToCartReviewOnly()" class="text-xs font-bold text-amber-400 hover:underline">
+            ← Recheck Cart
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-1.5 bg-[#12141a] p-1 rounded-xl border border-stone-800">
+          <button type="button" id="btnDeliveryMode" onclick="setFulfillmentMode('delivery')"
+            class="py-1.5 px-2.5 rounded-lg text-xs font-bold bg-amber-500 text-stone-950 transition">
+            Courier Delivery
+          </button>
+          <button type="button" id="btnPickupMode" onclick="setFulfillmentMode('pickup')"
+            class="py-1.5 px-2.5 rounded-lg text-xs font-bold text-stone-300 hover:text-white transition">
+            Store Pickup (Free)
+          </button>
+        </div>
+
+        <input required id="custName" name="sekiflex_order_recipient" autocomplete="off" type="text" placeholder="Recipient Full Name" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-amber-400" />
+        <input required id="custEmail" name="sekiflex_order_email" autocomplete="off" type="email" placeholder="Email Address (for tracking receipt)" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-amber-400" />
+        <input required id="custPhone" name="sekiflex_order_phone" autocomplete="off" type="tel" placeholder="Phone / WhatsApp Number" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-amber-400" />
+
+        <div id="deliveryFields" class="space-y-2">
+          <div class="grid grid-cols-2 gap-2">
+            <select required id="custCountry" onchange="handleCountryChange()" class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-2.5 py-2.5 text-xs focus:outline-none focus:border-amber-400">
+              <option value="Nigeria">Nigeria</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="United States">United States</option>
+              <option value="Canada">Canada</option>
+              <option value="Ghana">Ghana</option>
+            </select>
+
+            <select required id="custStateSelect" onchange="updateShippingFee()" class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-2.5 py-2.5 text-xs focus:outline-none focus:border-amber-400">
+              <option value="">Select State...</option>
+            </select>
+
+            <input id="custStateText" oninput="updateShippingFee()" type="text" placeholder="State / Province" class="hidden w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-amber-400" />
+          </div>
+
+          <input required id="custCity" type="text" placeholder="City" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-amber-400" />
+          <input required id="custAddress" type="text" placeholder="Full Street Delivery Address" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-amber-400" />
+        </div>
+
+        <div id="pickupInfoBox" class="hidden bg-amber-500/10 border border-amber-400/30 rounded-xl p-2.5 text-xs space-y-1">
+          <p class="font-bold text-amber-300 text-xs">Store Pickup — Uyo HQ (FREE)</p>
+          <p class="text-stone-200 text-[11px]">Urua Ekpa, Uyo, Akwa Ibom State</p>
+          <p class="text-stone-400 text-[11px]">Mon–Sat: 7:30 AM – 9:00 PM &bull; Sun: 2:00 PM – 9:00 PM</p>
+        </div>
+
+        <input id="custNotes" type="text" placeholder="Delivery/pickup note or size preference (optional)" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-amber-400" />
+
+        <div class="bg-[#12141a] rounded-xl p-2.5 text-xs space-y-1 border border-stone-800">
+          <div class="flex justify-between text-stone-400"><span>Items Subtotal:</span><span id="subTotalText" class="font-semibold text-white">₦0</span></div>
+          <div class="flex justify-between text-stone-400"><span>Delivery (<span id="estDaysText">select state</span>):</span><span id="shipFeeText" class="font-semibold text-white">—</span></div>
+          <div class="flex justify-between font-bold text-sm border-t border-stone-800 pt-1"><span>Total to Pay:</span><span id="grandTotalText" class="text-amber-400">₦0</span></div>
+        </div>
+
+        <div class="border border-amber-400/25 bg-[#12141a] rounded-xl p-2.5 space-y-2">
+          <p class="text-[11px] text-stone-300">Transfer <span class="font-bold text-amber-400" id="payBoxAmountText">₦0</span> to:</p>
+
+          <div class="bg-stone-950 border border-stone-800 rounded-xl p-2 flex items-center justify-between gap-2">
+            <div class="text-xs">
+              <p class="font-bold text-white">Stanbic IBTC</p>
+              <p class="font-mono font-bold text-xs text-amber-400">0084620625</p>
+              <p class="text-[10px] text-stone-400">Sekiflex Collections</p>
+            </div>
+            <button type="button" onclick="copyAcct('0084620625', 'Stanbic IBTC', this)"
+              class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-2.5 py-1.5 rounded-lg shrink-0 transition">
+              Copy
+            </button>
+          </div>
+
+          <div class="bg-stone-950 border border-stone-800 rounded-xl p-2 flex items-center justify-between gap-2">
+            <div class="text-xs">
+              <p class="font-bold text-white">OPay</p>
+              <p class="font-mono font-bold text-xs text-amber-400">9163755234</p>
+              <p class="text-[10px] text-stone-400">Sekiflex Collections</p>
+            </div>
+            <button type="button" onclick="copyAcct('9163755234', 'OPay', this)"
+              class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-2.5 py-1.5 rounded-lg shrink-0 transition">
+              Copy
+            </button>
+          </div>
+
+          <select required id="paidBankSelect" class="w-full border border-stone-800 bg-stone-950 text-white rounded-xl px-2.5 py-2.5 text-xs focus:outline-none focus:border-amber-400">
+            <option value="">Select Account You Transferred To...</option>
+            <option value="Stanbic IBTC (0084620625)">Paid to Stanbic IBTC — 0084620625</option>
+            <option value="OPay (9163755234)">Paid to OPay — 9163755234</option>
+          </select>
+
+          <input required id="senderRefInput" type="text" placeholder="Sender Account Name or Transfer Reference" class="w-full border border-stone-800 bg-stone-950 text-white placeholder:text-stone-500 rounded-xl px-2.5 py-2.5 text-xs focus:outline-none focus:border-amber-400" />
+
+          <label class="flex items-start gap-2 text-[11px] text-stone-300 cursor-pointer">
+            <input required id="paymentConfirmCheck" type="checkbox" class="mt-0.5 accent-amber-500" />
+            <span>I have completed the bank transfer and accept the <button type="button" onclick="event.preventDefault(); openInfoModal('privacy');" class="underline font-semibold text-amber-400">Privacy Policy</button>.</span>
+          </label>
+        </div>
+
+        <button type="submit" id="submitBtn" class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-3 rounded-xl text-xs transition shadow-2xs">
+          I Have Paid — Confirm Order
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- PRODUCT DETAIL MODAL -->
-  <div id="productDetailModal" onclick="if(event.target === this) closeProductDetailModal();" class="fixed inset-0 z-[80] hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
+  <div id="productDetailModal" onclick="if(event.target === this) closeProductDetailModal();" class="fixed inset-0 z-[75] hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
     <div class="bg-[#14110c] border border-amber-400/35 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
       <div class="relative bg-stone-950">
         <img id="detailModalImg" src="" alt="" onerror="handleCatalogImgError(this, this.alt)" class="w-full max-h-72 object-contain object-top mx-auto bg-stone-950" />
@@ -655,7 +978,7 @@
   </div>
 
   <!-- FIXED BOTTOM NAVIGATION BAR -->
-  <nav id="bottomFixedNav" class="fixed bottom-0 inset-x-0 z-40 bg-[#0d0c0a]/95 backdrop-blur-md border-t border-amber-400/25 shadow-[0_-4px_16px_rgba(0,0,0,0.45)]">
+  <nav id="bottomFixedNav" class="fixed bottom-0 inset-x-0 z-50 bg-[#0d0c0a]/95 backdrop-blur-md border-t border-amber-400/25 shadow-[0_-4px_16px_rgba(0,0,0,0.45)]">
     <div class="max-w-5xl mx-auto grid grid-cols-4 h-14">
       <button type="button" id="navHomeBtn" onclick="switchBottomTab('home')"
         class="flex flex-col items-center justify-center gap-0.5 text-amber-400 font-bold text-[10px] transition">
@@ -686,82 +1009,8 @@
     </div>
   </nav>
 
-  <!-- LUXURY ACCOUNT SHEET -->
-  <div id="accountDrawer" onclick="if(event.target === this) closeAllDrawers();" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-[#12141a] text-white w-full max-w-sm rounded-t-3xl sm:rounded-3xl p-4 space-y-3 shadow-2xl border border-amber-400/25">
-      <div class="flex items-center justify-between gap-2 border-b border-stone-800 pb-2.5">
-        <div class="min-w-0">
-          <h3 id="menuCustomerName" class="font-editorial font-bold text-base text-white truncate">Welcome</h3>
-          <p id="menuCustomerEmail" class="text-[11px] text-stone-400 truncate">Sign in or register before checkout</p>
-        </div>
-        <div class="flex items-center gap-1.5 shrink-0">
-          <button type="button" onclick="openStoreSettingsModal()"
-            class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-amber-300 text-[11px] font-bold px-2.5 py-1 rounded-full transition">
-            Settings
-          </button>
-          <button type="button" onclick="closeAllDrawers()" class="w-7 h-7 rounded-full bg-stone-900 text-stone-400 hover:text-white font-bold text-base">&times;</button>
-        </div>
-      </div>
-
-      <div class="divide-y divide-stone-800/90 text-xs font-semibold text-stone-200">
-        <div class="py-2 flex items-center justify-between">
-          <span>Promo &amp; Order Alerts</span>
-          <button type="button" onclick="enableSekiflexPush({ customerEmail: currentCustomer?.email || null, customerPhone: currentCustomer?.phone || null, isAdmin: false })"
-            class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-400/35 px-3 py-1 rounded-full text-[11px] font-bold transition">
-            Enable 🔔
-          </button>
-        </div>
-        <div class="py-2 flex items-center justify-between">
-          <span>Track My Orders</span>
-          <a href="track.html" class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-400/35 px-3 py-1 rounded-full text-[11px] font-bold transition">
-            Open →
-          </a>
-        </div>
-        <div class="py-2 flex items-center justify-between">
-          <span>Reviews &amp; Rating</span>
-          <button type="button" onclick="closeAllDrawers(); openReviewsModal();" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 px-3 py-1 rounded-full text-[11px] font-bold transition">
-            Open →
-          </button>
-        </div>
-        <div class="py-2 flex items-center justify-between">
-          <span>Delivery &amp; Pickup</span>
-          <button type="button" onclick="closeAllDrawers(); openInfoModal('delivery');" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 px-3 py-1 rounded-full text-[11px] font-bold transition">
-            Open →
-          </button>
-        </div>
-        <div class="py-2 flex items-center justify-between">
-          <span>Privacy Policy</span>
-          <button type="button" onclick="closeAllDrawers(); openInfoModal('privacy');" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 px-3 py-1 rounded-full text-[11px] font-bold transition">
-            Open →
-          </button>
-        </div>
-        <div class="py-2 flex items-center justify-between">
-          <span>About Sekiflex</span>
-          <button type="button" onclick="closeAllDrawers(); openInfoModal('about');" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 px-3 py-1 rounded-full text-[11px] font-bold transition">
-            Open →
-          </button>
-        </div>
-        <div class="py-2 flex items-center justify-between">
-          <span>Support (WhatsApp / Call)</span>
-          <a href="https://wa.me/2349069037617" target="_blank" rel="noopener" class="bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-400/35 px-3 py-1 rounded-full text-[11px] font-bold transition">
-            Chat →
-          </a>
-        </div>
-      </div>
-
-      <button type="button" id="accountSignInActionBtn" onclick="closeAllDrawers(); openAuthGate('signup', false);"
-        class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-extrabold text-center transition">
-        Register / Sign In
-      </button>
-      <button type="button" id="accountSignOutActionBtn" onclick="customerLogout()"
-        class="hidden w-full py-2.5 rounded-xl bg-red-950/70 border border-red-500/30 text-red-200 text-xs font-extrabold text-center transition">
-        Sign Out
-      </button>
-    </div>
-  </div>
-
   <!-- REVIEWS MODAL -->
-  <div id="reviewsModal" onclick="if(event.target === this) closeReviewsModal();" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
+  <div id="reviewsModal" onclick="if(event.target === this) closeReviewsModal();" class="fixed inset-0 z-[75] hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
     <div class="bg-[#12141a] text-white border border-amber-400/25 w-full max-w-md rounded-3xl p-5 space-y-3.5 shadow-2xl my-auto max-h-[85vh] overflow-y-auto">
       <div class="flex items-center justify-between gap-2 border-b border-stone-800 pb-2.5">
         <div>
@@ -801,7 +1050,7 @@
   </div>
 
   <!-- STORE SETTINGS MODAL -->
-  <div id="storeSettingsModal" onclick="if(event.target === this) closeStoreSettingsModal();" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
+  <div id="storeSettingsModal" onclick="if(event.target === this) closeStoreSettingsModal();" class="fixed inset-0 z-[75] hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
     <div class="bg-[#12141a] text-white border border-amber-400/25 w-full max-w-md rounded-3xl p-5 space-y-3.5 shadow-2xl my-auto">
       <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
         <div>
@@ -848,22 +1097,8 @@
     </div>
   </div>
 
-  <!-- CATEGORIES SHEET -->
-  <div id="categoriesDrawer" onclick="if(event.target === this) closeAllDrawers();" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-[#12141a] text-white w-full max-w-sm rounded-t-3xl sm:rounded-3xl p-4 max-h-[82vh] overflow-y-auto space-y-3 shadow-2xl border border-amber-400/25">
-      <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
-        <div>
-          <h3 class="font-editorial font-bold text-base text-white">Store Categories</h3>
-          <p class="text-[11px] text-stone-400">Tap any category to view items</p>
-        </div>
-        <button type="button" onclick="closeAllDrawers()" class="w-7 h-7 rounded-full bg-stone-900 text-stone-400 hover:text-white font-bold text-base">&times;</button>
-      </div>
-      <div id="drawerCategoriesList" class="grid grid-cols-2 gap-2"></div>
-    </div>
-  </div>
-
   <!-- ABOUT US / DELIVERY / PRIVACY POLICY MODAL -->
-  <div id="infoModal" onclick="if(event.target === this) this.classList.add('hidden');" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+  <div id="infoModal" onclick="if(event.target === this) this.classList.add('hidden');" class="fixed inset-0 z-[75] hidden bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-[#12141a] text-white border border-amber-400/25 rounded-3xl max-w-md w-full p-5 space-y-3.5 shadow-2xl my-auto max-h-[85vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
         <h3 id="infoModalTitle" class="font-editorial text-lg font-bold text-amber-300">About Sekiflex</h3>
@@ -885,147 +1120,8 @@
     </button>
   </div>
 
-  <!-- LUXURY MODERATE CART & CHECKOUT SHEET -->
-  <div id="cartDrawer" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex justify-end p-0 sm:p-3">
-    <div class="bg-[#12141a] text-white w-full max-w-sm h-full sm:h-auto sm:max-h-[90vh] sm:my-auto sm:rounded-3xl border border-amber-400/25 overflow-y-auto p-4 flex flex-col justify-between shadow-2xl space-y-3.5">
-      <div class="space-y-3.5">
-        <div class="flex items-center justify-between bg-stone-950 border border-amber-400/20 rounded-2xl px-3.5 py-2.5">
-          <div>
-            <p class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Sekiflex Bag</p>
-            <h2 id="cartDrawerHeading" class="font-editorial font-bold text-base text-white">Your Shopping Cart</h2>
-          </div>
-          <button type="button" onclick="skfHandleKeepShopping(event)" class="w-7 h-7 rounded-full bg-stone-900 hover:bg-stone-800 text-stone-400 hover:text-white text-base font-bold">&times;</button>
-        </div>
-
-        <div id="cartItems" class="space-y-2"></div>
-
-        <div id="cartSummaryActions" class="space-y-2.5 bg-stone-950 border border-stone-800 rounded-2xl p-3">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-medium text-stone-400">Items Subtotal</span>
-            <strong id="cartReviewSubTotal" class="text-sm font-extrabold text-amber-400">₦0</strong>
-          </div>
-
-          <div class="flex gap-2">
-            <button type="button" id="skfKeepShoppingBtn" onclick="skfHandleKeepShopping(event)"
-              class="px-3 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 text-xs font-bold transition">
-              ← Keep Shopping
-            </button>
-            <button type="button" id="openWaybillBtn" onclick="skfHandleProceedToCheckout(event)"
-              class="flex-1 bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-2.5 rounded-xl text-xs transition shadow-2xs">
-              Proceed to Checkout →
-            </button>
-          </div>
-        </div>
-
-        <form id="checkoutForm" autocomplete="off" onsubmit="placeOrder(event)" class="hidden space-y-2.5 bg-stone-950 border border-stone-800 rounded-2xl p-3">
-          <div class="flex items-center justify-between pb-1 border-b border-stone-800">
-            <h3 class="font-bold text-[11px] uppercase tracking-wider text-amber-300">Waybill &amp; Payment</h3>
-            <button type="button" onclick="backToCartReviewOnly()" class="text-[11px] font-bold text-amber-400 hover:underline">
-              ← Recheck Cart
-            </button>
-          </div>
-
-          <div class="grid grid-cols-2 gap-1.5 bg-[#12141a] p-1 rounded-xl border border-stone-800">
-            <button type="button" id="btnDeliveryMode" onclick="setFulfillmentMode('delivery')"
-              class="py-1.5 px-2.5 rounded-lg text-xs font-bold bg-amber-500 text-stone-950 transition">
-              Courier Delivery
-            </button>
-            <button type="button" id="btnPickupMode" onclick="setFulfillmentMode('pickup')"
-              class="py-1.5 px-2.5 rounded-lg text-xs font-bold text-stone-300 hover:text-white transition">
-              Store Pickup (Free)
-            </button>
-          </div>
-
-          <input required id="custName" name="sekiflex_order_recipient" autocomplete="off" type="text" placeholder="Recipient Full Name" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
-          <input required id="custEmail" name="sekiflex_order_email" autocomplete="off" type="email" placeholder="Email Address (for tracking receipt)" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
-          <input required id="custPhone" name="sekiflex_order_phone" autocomplete="off" type="tel" placeholder="Phone / WhatsApp Number" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
-
-          <div id="deliveryFields" class="space-y-2">
-            <div class="grid grid-cols-2 gap-2">
-              <select required id="custCountry" onchange="handleCountryChange()" class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-2.5 py-2 text-xs focus:outline-none focus:border-amber-400">
-                <option value="Nigeria">Nigeria</option>
-                <option value="United Kingdom">United Kingdom</option>
-                <option value="United States">United States</option>
-                <option value="Canada">Canada</option>
-                <option value="Ghana">Ghana</option>
-              </select>
-
-              <select required id="custStateSelect" onchange="updateShippingFee()" class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-2.5 py-2 text-xs focus:outline-none focus:border-amber-400">
-                <option value="">Select State...</option>
-              </select>
-
-              <input id="custStateText" oninput="updateShippingFee()" type="text" placeholder="State / Province" class="hidden w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
-            </div>
-
-            <input required id="custCity" type="text" placeholder="City" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
-            <input required id="custAddress" type="text" placeholder="Full Street Delivery Address" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
-          </div>
-
-          <div id="pickupInfoBox" class="hidden bg-amber-500/10 border border-amber-400/30 rounded-xl p-2.5 text-xs space-y-1">
-            <p class="font-bold text-amber-300 text-xs">Store Pickup — Uyo HQ (FREE)</p>
-            <p class="text-stone-200 text-[11px]">Urua Ekpa, Uyo, Akwa Ibom State</p>
-            <p class="text-stone-400 text-[11px]">Mon–Sat: 7:30 AM – 9:00 PM &bull; Sun: 2:00 PM – 9:00 PM</p>
-          </div>
-
-          <input id="custNotes" type="text" placeholder="Delivery/pickup note or size preference (optional)" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
-
-          <div class="bg-[#12141a] rounded-xl p-2.5 text-xs space-y-1 border border-stone-800">
-            <div class="flex justify-between text-stone-400"><span>Items Subtotal:</span><span id="subTotalText" class="font-semibold text-white">₦0</span></div>
-            <div class="flex justify-between text-stone-400"><span>Delivery (<span id="estDaysText">select state</span>):</span><span id="shipFeeText" class="font-semibold text-white">—</span></div>
-            <div class="flex justify-between font-bold text-sm border-t border-stone-800 pt-1"><span>Total to Pay:</span><span id="grandTotalText" class="text-amber-400">₦0</span></div>
-          </div>
-
-          <div class="border border-amber-400/25 bg-[#12141a] rounded-xl p-2.5 space-y-2">
-            <p class="text-[11px] text-stone-300">Transfer <span class="font-bold text-amber-400" id="payBoxAmountText">₦0</span> to:</p>
-
-            <div class="bg-stone-950 border border-stone-800 rounded-xl p-2 flex items-center justify-between gap-2">
-              <div class="text-xs">
-                <p class="font-bold text-white">Stanbic IBTC</p>
-                <p class="font-mono font-bold text-xs text-amber-400">0084620625</p>
-                <p class="text-[10px] text-stone-400">Sekiflex Collections</p>
-              </div>
-              <button type="button" onclick="copyAcct('0084620625', 'Stanbic IBTC', this)"
-                class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-2.5 py-1.5 rounded-lg shrink-0 transition">
-                Copy
-              </button>
-            </div>
-
-            <div class="bg-stone-950 border border-stone-800 rounded-xl p-2 flex items-center justify-between gap-2">
-              <div class="text-xs">
-                <p class="font-bold text-white">OPay</p>
-                <p class="font-mono font-bold text-xs text-amber-400">9163755234</p>
-                <p class="text-[10px] text-stone-400">Sekiflex Collections</p>
-              </div>
-              <button type="button" onclick="copyAcct('9163755234', 'OPay', this)"
-                class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-2.5 py-1.5 rounded-lg shrink-0 transition">
-                Copy
-              </button>
-            </div>
-
-            <select required id="paidBankSelect" class="w-full border border-stone-800 bg-stone-950 text-white rounded-xl px-2.5 py-2 text-xs focus:outline-none focus:border-amber-400">
-              <option value="">Select Account You Transferred To...</option>
-              <option value="Stanbic IBTC (0084620625)">Paid to Stanbic IBTC — 0084620625</option>
-              <option value="OPay (9163755234)">Paid to OPay — 9163755234</option>
-            </select>
-
-            <input required id="senderRefInput" type="text" placeholder="Sender Account Name or Transfer Reference" class="w-full border border-stone-800 bg-stone-950 text-white placeholder:text-stone-500 rounded-xl px-2.5 py-2 text-xs focus:outline-none focus:border-amber-400" />
-
-            <label class="flex items-start gap-2 text-[11px] text-stone-300 cursor-pointer">
-              <input required id="paymentConfirmCheck" type="checkbox" class="mt-0.5 accent-amber-500" />
-              <span>I have completed the bank transfer and accept the <button type="button" onclick="event.preventDefault(); openInfoModal('privacy');" class="underline font-semibold text-amber-400">Privacy Policy</button>.</span>
-            </label>
-          </div>
-
-          <button type="submit" id="submitBtn" class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-2.5 rounded-xl text-xs transition shadow-2xs">
-            I Have Paid — Confirm Order
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-
   <!-- Success Modal -->
-  <div id="successModal" onclick="if(event.target === this) closeSuccessModalToStore();" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
+  <div id="successModal" onclick="if(event.target === this) closeSuccessModalToStore();" class="fixed inset-0 z-[80] hidden bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-[#12141a] text-white border border-amber-400/30 rounded-3xl max-w-sm w-full p-5 text-center space-y-3.5 shadow-2xl relative">
       <button type="button" onclick="closeSuccessModalToStore()" aria-label="Back to store"
         class="absolute top-3.5 left-3.5 inline-flex items-center gap-1 text-xs font-bold text-stone-300 hover:text-white bg-stone-900 hover:bg-stone-800 px-3 py-1 rounded-full transition">
@@ -1064,24 +1160,16 @@
     const STORE_WHATSAPP_NUMBER = '2349069037617';
     const TIKTOK_URL = 'https://www.tiktok.com/@sekiflex_collections?_r=1&_t=ZS-9BbSAFjxrZW';
     const FACEBOOK_URL = 'https://www.facebook.com/share/1G3ErASdHa/';
-    const ROTATION_MINUTES = 2;
+    const ROTATION_MINUTES = 1;
 
     const DEFAULT_WALL_PROMO_CARDS = [
-      { id: 'wall_1', title: 'Hot Drops', tag: 'NEW IN', badgeBg: 'bg-amber-400 text-stone-950', titleColor: 'text-amber-300', image: '', categoryKey: 'ALL' },
-      { id: 'wall_2', title: 'Luxury Fits', tag: 'DEAL', badgeBg: 'bg-emerald-400 text-stone-950', titleColor: 'text-emerald-300', image: '', categoryKey: 'ALL' },
-      { id: 'wall_3', title: 'Footwear Edit', tag: 'HOT', badgeBg: 'bg-pink-400 text-stone-950', titleColor: 'text-pink-300', image: '', categoryKey: 'ALL' },
-      { id: 'wall_4', title: 'Watches & Bags', tag: 'VIP', badgeBg: 'bg-sky-400 text-stone-950', titleColor: 'text-sky-300', image: '', categoryKey: 'ALL' }
+      { id: 'wall_1', title: 'Hot Drops', tag: 'NEW IN', badgeBg: 'bg-amber-400 text-stone-950', image: '', categoryKey: 'ALL' },
+      { id: 'wall_2', title: 'Luxury Fits', tag: 'DEAL', badgeBg: 'bg-emerald-400 text-stone-950', image: '', categoryKey: 'ALL' },
+      { id: 'wall_3', title: 'Footwear Edit', tag: 'HOT', badgeBg: 'bg-rose-500 text-white', image: '', categoryKey: 'ALL' },
+      { id: 'wall_4', title: 'Watches & Bags', tag: 'VIP', badgeBg: 'bg-yellow-300 text-stone-950', image: '', categoryKey: 'ALL' }
     ];
 
     const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
-    const NIGERIA_STATES = [
-      'Abia', 'Abuja (FCT)', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa',
-      'Benue', 'Borno', 'Cross River', 'Delta', 'Ebonyi', 'Edo', 'Ekiti', 'Enugu',
-      'Gombe', 'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Kogi',
-      'Kwara', 'Lagos', 'Nasarawa', 'Niger', 'Ogun', 'Ondo', 'Osun', 'Oyo',
-      'Plateau', 'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara'
-    ];
-
     let allProducts = JSON.parse(localStorage.getItem('sekiflex_products_cache') || '[]');
     let allCategories = JSON.parse(localStorage.getItem('sekiflex_cats_cache') || '[]');
     let shippingZones = JSON.parse(localStorage.getItem('sekiflex_zones_cache') || '[]');
@@ -1110,6 +1198,9 @@
     let featuredAutoTimer = null;
     let featuredPauseUntil = 0;
     let lastRotationSlot = -1;
+    let pendingHomeRotation = false;
+    let isUserScrolling = false;
+    let scrollIdleTimer = null;
     let allowWebsiteExit = false;
 
     function pushBackTrapState() {
@@ -1159,10 +1250,12 @@
         }
 
         const splitView = document.getElementById('splitCategoryStoreView');
-        if (splitView && !splitView.classList.contains('hidden')) {
-          splitView.classList.add('hidden');
-          document.getElementById('storeMainWrapper').classList.remove('hidden');
-          setActiveBottomTab('home');
+        const acctView = document.getElementById('accountFullPageView');
+        const cartView = document.getElementById('cartFullPageView');
+        if ((splitView && !splitView.classList.contains('hidden')) ||
+            (acctView && !acctView.classList.contains('hidden')) ||
+            (cartView && !cartView.classList.contains('hidden'))) {
+          switchBottomTab('home');
           pushBackTrapState();
           return;
         }
@@ -1188,6 +1281,26 @@
           handleBackPress();
         }
       });
+    }
+
+    function bindScrollPauseWatcher() {
+      if (window.__skfScrollWatcherBound) return;
+      window.__skfScrollWatcherBound = true;
+
+      const onScrollActivity = () => {
+        isUserScrolling = true;
+        clearTimeout(scrollIdleTimer);
+        scrollIdleTimer = setTimeout(() => {
+          isUserScrolling = false;
+          if (pendingHomeRotation && allProducts.length > 1) {
+            pendingHomeRotation = false;
+            applyCatalogFilters();
+          }
+        }, 1800);
+      };
+
+      window.addEventListener('scroll', onScrollActivity, { passive: true });
+      document.addEventListener('touchmove', onScrollActivity, { passive: true });
     }
 
     function renderBrandedPlaceholderHtml(labelText = 'Sekiflex') {
@@ -1247,6 +1360,22 @@
         pre.decoding = 'async';
         pre.src = src;
       });
+    }
+
+    function refreshStaticHeroSlideMedia() {
+      if (!Array.isArray(allProducts) || !allProducts.length) return;
+      const appBox = document.getElementById('heroSlideApparelMedia');
+      const accBox = document.getElementById('heroSlideAccessoriesMedia');
+      const img1 = (allProducts[0]?.images && allProducts[0].images[0]) || allProducts[0]?.image_url || '';
+      const prod2 = allProducts[1] || allProducts[0];
+      const img2 = (prod2?.images && prod2.images[0]) || prod2?.image_url || '';
+
+      if (appBox && img1) {
+        appBox.innerHTML = `<img src="${img1}" alt="" class="w-full h-full object-cover object-top" />`;
+      }
+      if (accBox && img2) {
+        accBox.innerHTML = `<img src="${img2}" alt="" class="w-full h-full object-cover object-top" />`;
+      }
     }
 
     function getProductShareUrl(productId) {
@@ -1315,11 +1444,8 @@
         'leaveConfirmModal',
         'customerAuthGate',
         'productDetailModal',
-        'accountDrawer',
         'storeSettingsModal',
-        'categoriesDrawer',
         'infoModal',
-        'cartDrawer',
         'successModal',
         'reviewsModal'
       ];
@@ -1339,11 +1465,7 @@
       const modal = document.getElementById('successModal');
       if (modal) modal.classList.add('hidden');
       closeAllDrawers();
-      document.getElementById('splitCategoryStoreView').classList.add('hidden');
-      document.getElementById('storeMainWrapper').classList.remove('hidden');
-      categoryBrowseMode = false;
-      setActiveBottomTab('home');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      switchBottomTab('home');
       armStoreBackGuard();
     }
 
@@ -1418,17 +1540,36 @@
     }
 
     function jumpToAllItems() {
-      document.getElementById('splitCategoryStoreView').classList.add('hidden');
-      document.getElementById('storeMainWrapper').classList.remove('hidden');
+      showOnlyMainView('storeMainWrapper');
+      setActiveBottomTab('home');
       categoryBrowseMode = false;
       filterCategory('ALL');
       const sec = document.getElementById('catalogSection');
       if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
+    function renderHeroPaginationDots(count, activeIdx = 0) {
+      const dotsWrap = document.getElementById('heroPaginationDots');
+      if (!dotsWrap) return;
+      if (count <= 1) {
+        dotsWrap.innerHTML = '';
+        return;
+      }
+      dotsWrap.innerHTML = Array.from({ length: count }).map((_, i) => `
+        <span class="h-1.5 rounded-full transition-all duration-300 ${
+          i === activeIdx ? 'w-5 bg-amber-400' : 'w-1.5 bg-stone-600'
+        }"></span>
+      `).join('');
+    }
+
     function startBannerAutoShift() {
       const carousel = document.getElementById('bannerCarousel');
       if (!carousel) return;
+
+      const getVisibleSlides = () => Array.from(carousel.querySelectorAll('.promo-slide'))
+        .filter(el => !el.classList.contains('hidden'));
+
+      renderHeroPaginationDots(getVisibleSlides().length, currentBannerSlideIdx);
 
       if (!carousel.dataset.autoBound) {
         carousel.dataset.autoBound = '1';
@@ -1438,6 +1579,14 @@
         carousel.addEventListener('touchstart', pauseAuto, { passive: true });
         carousel.addEventListener('pointerdown', pauseAuto, { passive: true });
         carousel.addEventListener('mouseenter', pauseAuto);
+        carousel.addEventListener('scroll', () => {
+          const slides = getVisibleSlides();
+          if (!slides.length) return;
+          const slideW = slides[0].offsetWidth + 10;
+          const idx = Math.min(slides.length - 1, Math.max(0, Math.round(carousel.scrollLeft / Math.max(1, slideW))));
+          currentBannerSlideIdx = idx;
+          renderHeroPaginationDots(slides.length, idx);
+        }, { passive: true });
       }
 
       if (bannerAutoTimer) clearInterval(bannerAutoTimer);
@@ -1447,9 +1596,7 @@
         const heroSec = document.getElementById('heroCarouselSection');
         if (!heroSec || heroSec.classList.contains('hidden')) return;
 
-        const visibleSlides = Array.from(carousel.querySelectorAll('.promo-slide'))
-          .filter(el => !el.classList.contains('hidden'));
-
+        const visibleSlides = getVisibleSlides();
         if (visibleSlides.length <= 1) return;
 
         currentBannerSlideIdx = (currentBannerSlideIdx + 1) % visibleSlides.length;
@@ -1458,6 +1605,7 @@
           left: target.offsetLeft - carousel.offsetLeft,
           behavior: 'smooth'
         });
+        renderHeroPaginationDots(visibleSlides.length, currentBannerSlideIdx);
       }, 3500);
     }
 
@@ -1515,22 +1663,26 @@
       return items;
     }
 
-    function refreshAllRotatedViews() {
-      applyCatalogFilters();
-      if (!document.getElementById('splitCategoryStoreView').classList.contains('hidden')) {
-        renderSplitCategoryPanel();
-        renderWallHungPromoCards();
-      }
-    }
-
     function startProductRotation() {
       setInterval(() => {
         const slot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000));
         if (slot !== lastRotationSlot && allProducts.length > 1) {
           lastRotationSlot = slot;
-          refreshAllRotatedViews();
+
+          // Only rotate Home catalog when customer is NOT actively scrolling
+          if (isUserScrolling) {
+            pendingHomeRotation = true;
+          } else {
+            pendingHomeRotation = false;
+            applyCatalogFilters();
+          }
+
+          // Rotate right-side category items every 1 minute while keeping the 4 side promo cards steady
+          if (!document.getElementById('splitCategoryStoreView').classList.contains('hidden')) {
+            renderSplitCategoryPanel();
+          }
         }
-      }, 10000);
+      }, 5000);
     }
 
     function applySocialLinks() {
@@ -1762,20 +1914,11 @@
       renderReviews();
     }
 
-    function openProductDetailByIndex(idx) {
-      const prod = allProducts[idx];
-      if (!prod) return;
-      openProductDetail(prod.id);
-    }
-
     function openProductDetail(productId) {
       const prod = allProducts.find(p => String(p.id) === String(productId));
       if (!prod) return;
 
-      document.getElementById('splitCategoryStoreView').classList.add('hidden');
-      document.getElementById('storeMainWrapper').classList.remove('hidden');
       armStoreBackGuard();
-
       const img = (prod.images && prod.images[0]) || prod.image_url || '';
       const out = (prod.stock_quantity !== null && prod.stock_quantity <= 0);
       const catObj = allCategories.find(c => String(c.id) === String(prod.category_id));
@@ -1899,14 +2042,20 @@
     }
 
     function closeAllDrawers() {
-      document.getElementById('categoriesDrawer').classList.add('hidden');
-      document.getElementById('accountDrawer').classList.add('hidden');
-      document.getElementById('cartDrawer').classList.add('hidden');
       document.getElementById('storeSettingsModal').classList.add('hidden');
       document.getElementById('productDetailModal').classList.add('hidden');
       document.getElementById('reviewsModal').classList.add('hidden');
       document.getElementById('infoModal').classList.add('hidden');
       document.getElementById('customerAuthGate').classList.add('hidden');
+    }
+
+    function showOnlyMainView(viewId) {
+      ['storeMainWrapper', 'splitCategoryStoreView', 'accountFullPageView', 'cartFullPageView'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (id === viewId) el.classList.remove('hidden');
+        else el.classList.add('hidden');
+      });
     }
 
     function setActiveBottomTab(tab) {
@@ -1920,40 +2069,42 @@
       });
     }
 
+    /* Render the 4 shaking Temu/Jumia style side promos (kept fixed during 1-minute rotation) */
     function renderWallHungPromoCards() {
       const wrap = document.getElementById('wallHungPromoCardsList');
       if (!wrap) return;
 
-      const rotatedPool = getRotatedProducts(allProducts);
+      const fixedPool = Array.isArray(allProducts) ? allProducts : [];
       const baseList = (Array.isArray(wallPromoCards) && wallPromoCards.length >= DEFAULT_WALL_PROMO_CARDS.length)
         ? wallPromoCards.slice(0, DEFAULT_WALL_PROMO_CARDS.length)
         : DEFAULT_WALL_PROMO_CARDS;
 
       wrap.innerHTML = baseList.map((card, idx) => {
         const def = DEFAULT_WALL_PROMO_CARDS[idx % DEFAULT_WALL_PROMO_CARDS.length];
-        const fallbackProd = rotatedPool[idx % Math.max(1, rotatedPool.length)];
+        const fallbackProd = fixedPool[idx % Math.max(1, fixedPool.length)];
         const fallbackImg = fallbackProd ? ((fallbackProd.images && fallbackProd.images[0]) || fallbackProd.image_url || '') : '';
         const bannerImg = liveBannerMediaUrls[idx % Math.max(1, liveBannerMediaUrls.length)] || '';
         const img = (card.image && card.image.trim()) || bannerImg || fallbackImg || '';
         const title = card.title || def.title;
         const tag = card.tag || def.tag;
         const badgeBg = card.badgeBg || def.badgeBg;
-        const titleColor = card.titleColor || def.titleColor;
         const targetCat = card.categoryKey || 'ALL';
         const { effectivePrice } = fallbackProd ? getProductPricing(fallbackProd) : { effectivePrice: 0 };
 
         return `
           <div onclick="shopSpecificCategoryFromSplit('${String(targetCat).replace(/'/g, "\\'")}')"
-            class="skf-spotlight-item skf-spotlight-accent-${idx % 4}" title="${title}">
-            <div class="w-11 h-11 rounded-lg overflow-hidden bg-stone-950 border border-amber-400/25 shrink-0">
+            class="skf-promo-shake-card cursor-pointer rounded-xl bg-gradient-to-br from-[#2a1d0d] via-[#18130c] to-[#100d09] border border-amber-400/50 p-1.5 shadow-md overflow-hidden">
+            <div class="relative w-full h-14 rounded-lg overflow-hidden bg-stone-950">
+              <span class="absolute top-1 left-1 z-10 ${badgeBg} text-[7px] font-black px-1.5 py-0.2 rounded-full uppercase shadow">
+                ${tag}
+              </span>
               ${img
                 ? `<img src="${img}" alt="" onerror="this.parentElement.innerHTML = renderBrandedPlaceholderHtml('${title.replace(/'/g, "\\'")}')" class="w-full h-full object-cover object-top" />`
                 : renderBrandedPlaceholderHtml(title)}
             </div>
-            <div class="min-w-0 flex-1">
-              <span class="inline-block ${badgeBg} text-[7px] font-black px-1.5 py-0.2 rounded-full uppercase">${tag}</span>
-              <p class="text-[10px] font-extrabold ${titleColor} truncate mt-0.5">${title}</p>
-              ${effectivePrice > 0 ? `<p class="text-[9px] font-bold text-stone-300">₦${effectivePrice.toLocaleString()}</p>` : ''}
+            <div class="pt-1 text-center">
+              <p class="text-[9px] font-extrabold text-amber-300 truncate">${title}</p>
+              ${effectivePrice > 0 ? `<p class="text-[9px] font-bold text-white">₦${effectivePrice.toLocaleString()}</p>` : ''}
             </div>
           </div>`;
       }).join('');
@@ -1972,8 +2123,7 @@
       closeAllDrawers();
       armStoreBackGuard();
       setActiveBottomTab('categories');
-      document.getElementById('storeMainWrapper').classList.add('hidden');
-      document.getElementById('splitCategoryStoreView').classList.remove('hidden');
+      showOnlyMainView('splitCategoryStoreView');
       renderSplitCategorySidebar();
       renderSplitCategoryPanel();
       renderWallHungPromoCards();
@@ -2003,7 +2153,6 @@
       splitSelectedCatKey = key;
       renderSplitCategorySidebar();
       renderSplitCategoryPanel();
-      renderWallHungPromoCards();
     }
 
     function renderSplitCategoryPanel() {
@@ -2024,22 +2173,20 @@
         countEl.textContent = `${matches.length} item${matches.length === 1 ? '' : 's'}`;
         if (!matches.length) {
           grid.innerHTML = '<p class="col-span-3 text-center text-xs text-stone-400 py-8">No matching items found.</p>';
-          renderWallHungPromoCards();
           return;
         }
         grid.innerHTML = matches.map((p, idx) => {
           const img = (p.images && p.images[0]) || p.image_url || '';
           const { effectivePrice } = getProductPricing(p);
           return `
-            <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="cursor-pointer text-center group">
+            <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="skf-cat-cell group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
                 ${renderSplitThumbInner(img, p.name, idx < 2)}
               </div>
-              <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight">${p.name}</p>
+              <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
               <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
             </div>`;
         }).join('');
-        renderWallHungPromoCards();
         return;
       }
 
@@ -2054,11 +2201,11 @@
           const count = allProducts.filter(p => String(p.category_id) === String(c.id)).length;
           return `
             <div onclick="shopSpecificCategoryFromSplit('${String(c.id).replace(/'/g, "\\'")}')"
-              class="cursor-pointer text-center group">
+              class="skf-cat-cell group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
                 ${renderSplitThumbInner(img, c.name, idx < 2)}
               </div>
-              <p class="text-[11px] font-bold text-stone-100 line-clamp-2 leading-tight">${c.name}</p>
+              <p class="text-[11px] font-bold text-stone-100 line-clamp-2 leading-tight w-full">${c.name}</p>
               <p class="text-[10px] text-amber-400 font-semibold mt-0.5">${count} item${count === 1 ? '' : 's'}</p>
             </div>`;
         });
@@ -2067,17 +2214,16 @@
           const img = (p.images && p.images[0]) || p.image_url || '';
           const { effectivePrice } = getProductPricing(p);
           return `
-            <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="cursor-pointer text-center group">
+            <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="skf-cat-cell group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
                 ${renderSplitThumbInner(img, p.name, idx === 0)}
               </div>
-              <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight">${p.name}</p>
+              <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
               <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
             </div>`;
         });
 
         grid.innerHTML = [...catTiles, ...featuredTiles].join('');
-        renderWallHungPromoCards();
         return;
       }
 
@@ -2088,7 +2234,6 @@
 
       if (!items.length) {
         grid.innerHTML = '<p class="col-span-3 text-center text-xs text-stone-400 py-8">No items in this category yet.</p>';
-        renderWallHungPromoCards();
         return;
       }
 
@@ -2096,15 +2241,14 @@
         const img = (p.images && p.images[0]) || p.image_url || '';
         const { effectivePrice } = getProductPricing(p);
         return `
-          <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="cursor-pointer text-center group">
+          <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="skf-cat-cell group">
             <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
               ${renderSplitThumbInner(img, p.name, idx < 2)}
             </div>
-            <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight">${p.name}</p>
+            <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
             <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
           </div>`;
       }).join('');
-      renderWallHungPromoCards();
     }
 
     function submitSplitCategorySearch(e) {
@@ -2114,8 +2258,7 @@
 
     function shopSpecificCategoryFromSplit(catId) {
       closeAllDrawers();
-      document.getElementById('splitCategoryStoreView').classList.add('hidden');
-      document.getElementById('storeMainWrapper').classList.remove('hidden');
+      showOnlyMainView('storeMainWrapper');
       categoryBrowseMode = true;
       setActiveBottomTab('home');
       filterCategory(catId);
@@ -2142,8 +2285,7 @@
       setActiveBottomTab(tab);
 
       if (tab === 'home') {
-        document.getElementById('splitCategoryStoreView').classList.add('hidden');
-        document.getElementById('storeMainWrapper').classList.remove('hidden');
+        showOnlyMainView('storeMainWrapper');
         categoryBrowseMode = false;
         activeCategory = 'ALL';
         renderCategoryButtons(allCategories);
@@ -2152,21 +2294,16 @@
       } else if (tab === 'categories') {
         openSplitCategoryStore();
       } else if (tab === 'cart') {
-        document.getElementById('splitCategoryStoreView').classList.add('hidden');
-        document.getElementById('storeMainWrapper').classList.remove('hidden');
         openCartReview();
       } else if (tab === 'account') {
-        document.getElementById('splitCategoryStoreView').classList.add('hidden');
-        document.getElementById('storeMainWrapper').classList.remove('hidden');
         armStoreBackGuard();
-        document.getElementById('accountDrawer').classList.remove('hidden');
+        showOnlyMainView('accountFullPageView');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
 
     function resetToHome(e) {
       if (e) e.preventDefault();
-      document.getElementById('splitCategoryStoreView').classList.add('hidden');
-      document.getElementById('storeMainWrapper').classList.remove('hidden');
       categoryBrowseMode = false;
       clearPictureSearch();
       clearSearch();
@@ -2276,7 +2413,7 @@
       if (searchQuery) {
         const keywords = searchQuery.split(/\s+/).filter(Boolean);
         filtered = filtered.filter(p => {
-          const catObj = allCategories.find(c => c.id === p.category_id);
+          const catObj = allCategories.find(c => String(c.id) === String(p.category_id));
           const haystack = `${p.name || ''} ${p.description || ''} ${catObj ? catObj.name : ''}`.toLowerCase();
           return keywords.every(word => haystack.includes(word));
         });
@@ -2286,16 +2423,12 @@
         filtered.sort((a, b) => (pictureSearchScores[String(b.id)] ?? -1) - (pictureSearchScores[String(a.id)] ?? -1));
       }
 
-      const grid = document.getElementById('productsGrid');
       const catBanner = document.getElementById('categoryViewBanner');
       const catSubtitle = document.getElementById('categoryViewSubtitle');
       const heading = document.getElementById('catalogHeading');
       const catObj = allCategories.find(c => String(c.id) === String(activeCategory));
 
       const isCategoryArrangement = categoryBrowseMode || (activeCategory !== 'ALL' && !searchQuery && !pictureSearchScores);
-      if (grid) {
-        grid.className = 'products-grid-home';
-      }
 
       if (catBanner && catSubtitle) {
         if (isCategoryArrangement) {
@@ -2636,7 +2769,7 @@
         dark: 'from-[#33220a] via-[#1f160b] to-[#120e09]'
       };
       const chosenGradient = colorMap[banner.banner_color] || colorMap[defaultColor] || colorMap.gold;
-      cardEl.className = `promo-slide snap-start shrink-0 w-full min-h-[126px] rounded-2xl bg-gradient-to-br ${chosenGradient} text-white p-3 flex items-center justify-between gap-2.5 border border-amber-400/50 shadow-lg overflow-hidden`;
+      cardEl.className = `promo-slide skf-hero-slide rounded-2xl bg-gradient-to-br ${chosenGradient} text-white p-3 flex items-center justify-between gap-2.5 border border-amber-400/50 shadow-lg overflow-hidden`;
       textEl.textContent = banner.banner_text;
 
       if (banner.banner_image_url) {
@@ -2695,6 +2828,7 @@
       currentBannerSlideIdx = 0;
       const carousel = document.getElementById('bannerCarousel');
       if (carousel) carousel.scrollLeft = 0;
+      startBannerAutoShift();
     }
 
     function copyAcct(acctNum, bankName, btnEl) {
@@ -2783,16 +2917,15 @@
     function renderCategoryButtons(cats) {
       allCategories = cats || [];
       const bar = document.getElementById('categoryBar');
-      const drawerList = document.getElementById('drawerCategoriesList');
+      if (!bar) return;
 
-      bar.innerHTML = `<button type="button" onclick="categoryBrowseMode = false; filterCategory('ALL', this); document.getElementById('catalogSection').scrollIntoView({behavior:'smooth'});" class="cat-btn ${activeCategory === 'ALL' ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-[#16130f] border border-amber-400/20 text-stone-300 font-semibold'} text-[11px] px-3.5 py-1.5 rounded-full whitespace-nowrap">All Items (${allProducts.length})</button>`;
-      drawerList.innerHTML = `<button type="button" onclick="categoryBrowseMode = false; filterCategory('ALL'); closeAllDrawers(); setActiveBottomTab('home'); document.getElementById('catalogSection').scrollIntoView({behavior:'smooth'});" class="p-3 rounded-xl bg-amber-500 text-stone-950 text-xs font-extrabold text-left flex items-center justify-between"><span>All Store Items</span><span>(${allProducts.length})</span></button>`;
+      bar.innerHTML = `<button type="button" onclick="categoryBrowseMode = false; filterCategory('ALL', this); document.getElementById('catalogSection').scrollIntoView({behavior:'smooth'});" class="cat-btn ${activeCategory === 'ALL' ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-[#16130f] border border-amber-400/20 text-stone-300 font-semibold'} text-[11px] px-3 py-1 rounded-full whitespace-nowrap">All Items (${allProducts.length})</button>`;
 
       allCategories.forEach(c => {
         const countInCat = allProducts.filter(p => String(p.category_id) === String(c.id)).length;
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = `cat-btn ${String(activeCategory) === String(c.id) ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-[#16130f] border border-amber-400/20 text-stone-300 font-semibold'} text-[11px] px-3.5 py-1.5 rounded-full whitespace-nowrap`;
+        btn.className = `cat-btn ${String(activeCategory) === String(c.id) ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-[#16130f] border border-amber-400/20 text-stone-300 font-semibold'} text-[11px] px-3 py-1 rounded-full whitespace-nowrap`;
         btn.textContent = `${c.name} (${countInCat})`;
         btn.onclick = () => {
           categoryBrowseMode = true;
@@ -2800,25 +2933,11 @@
           document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
         };
         bar.appendChild(btn);
-
-        const dBtn = document.createElement('button');
-        dBtn.type = 'button';
-        dBtn.className = 'p-3 rounded-xl bg-stone-950 hover:bg-stone-800 border border-amber-400/20 text-stone-100 text-xs font-bold text-left flex items-center justify-between gap-1.5 transition';
-        dBtn.innerHTML = `<span class="truncate">${c.name}</span><span class="text-[10px] font-extrabold text-amber-400 shrink-0">(${countInCat})</span>`;
-        dBtn.onclick = () => {
-          categoryBrowseMode = true;
-          filterCategory(c.id);
-          closeAllDrawers();
-          setActiveBottomTab('categories');
-          document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
-        };
-        drawerList.appendChild(dBtn);
       });
 
       if (!document.getElementById('splitCategoryStoreView').classList.contains('hidden')) {
         renderSplitCategorySidebar();
         renderSplitCategoryPanel();
-        renderWallHungPromoCards();
       }
     }
 
@@ -2841,6 +2960,7 @@
 
     async function init() {
       bindBackButtonGuardsOnce();
+      bindScrollPauseWatcher();
       trackLiveVisitorHeartbeat();
       lastRotationSlot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000));
       applySocialLinks();
@@ -2855,6 +2975,7 @@
 
       if (allProducts.length) {
         warmUpTopImages(allProducts);
+        refreshStaticHeroSlideMedia();
         renderFeaturedStrip(allProducts);
         renderWallHungPromoCards();
         applyCatalogFilters();
@@ -2873,6 +2994,7 @@
         allProducts = products;
         localStorage.setItem('sekiflex_products_cache', JSON.stringify(products));
         warmUpTopImages(allProducts);
+        refreshStaticHeroSlideMedia();
         renderFeaturedStrip(allProducts);
         renderWallHungPromoCards();
         applyCatalogFilters();
@@ -2912,10 +3034,10 @@
       if (catId === 'ALL') categoryBrowseMode = false;
       if (catId !== 'ALL') armStoreBackGuard();
       document.querySelectorAll('.cat-btn').forEach(b => {
-        b.className = 'cat-btn bg-[#16130f] border border-amber-400/20 text-stone-300 text-[11px] font-semibold px-3.5 py-1.5 rounded-full whitespace-nowrap';
+        b.className = 'cat-btn bg-[#16130f] border border-amber-400/20 text-stone-300 text-[11px] font-semibold px-3 py-1 rounded-full whitespace-nowrap';
       });
       if (activeBtn) {
-        activeBtn.className = 'cat-btn bg-amber-500 text-stone-950 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full whitespace-nowrap';
+        activeBtn.className = 'cat-btn bg-amber-500 text-stone-950 text-[11px] font-extrabold px-3 py-1 rounded-full whitespace-nowrap';
       } else {
         renderCategoryButtons(allCategories);
       }
@@ -2941,12 +3063,12 @@
           ? `<img src="${img}" alt="" data-prod-label="${safeName}" loading="eager" decoding="async" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
           : renderBrandedPlaceholderHtml(p.name);
         return `
-          <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="shrink-0 w-36 sm:w-40 bg-[#18140e] rounded-xl overflow-hidden border border-amber-400/25 flex flex-col justify-between cursor-pointer hover:border-amber-400 transition shadow-sm">
-            <div class="${img ? 'img-skeleton-box' : ''} w-full h-36 bg-stone-950 flex items-center justify-center overflow-hidden">
+          <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="shrink-0 w-32 sm:w-36 bg-[#18140e] rounded-xl overflow-hidden border border-amber-400/25 flex flex-col justify-between cursor-pointer hover:border-amber-400 transition shadow-sm">
+            <div class="${img ? 'img-skeleton-box' : ''} w-full h-28 bg-stone-950 flex items-center justify-center overflow-hidden">
               ${mediaInner}
             </div>
-            <div class="p-2 bg-[#16130f]">
-              <p class="text-xs font-semibold text-white truncate">${p.name}</p>
+            <div class="p-1.5 bg-[#16130f]">
+              <p class="text-[11px] font-semibold text-white truncate">${p.name}</p>
               ${priceDisplay}
             </div>
           </div>`;
@@ -3039,6 +3161,11 @@
       showBagToast(prod.name);
     }
 
+    function removeFromCart(idx) {
+      cart.splice(idx, 1);
+      saveCart();
+    }
+
     function changeQty(idx, delta) {
       cart[idx].qty += delta;
       if (cart[idx].qty <= 0) cart.splice(idx, 1);
@@ -3082,6 +3209,8 @@
       const grandTotal = sub + currentShippingFee;
       document.getElementById('cartCount').textContent = count;
       document.getElementById('cartReviewSubTotal').textContent = '₦' + sub.toLocaleString();
+      const btnTotalLabel = document.getElementById('checkoutBtnTotalLabel');
+      if (btnTotalLabel) btnTotalLabel.textContent = '₦' + sub.toLocaleString();
       document.getElementById('subTotalText').textContent = '₦' + sub.toLocaleString();
 
       if (fulfillmentMode === 'pickup') {
@@ -3094,46 +3223,65 @@
       document.getElementById('grandTotalText').textContent = '₦' + grandTotal.toLocaleString();
       document.getElementById('payBoxAmountText').textContent = '₦' + grandTotal.toLocaleString();
 
-      const waybillBtn = document.getElementById('openWaybillBtn');
+      const summaryActions = document.getElementById('cartSummaryActions');
       const box = document.getElementById('cartItems');
       if (!cart.length) {
-        box.innerHTML = '<p class="text-xs text-stone-400 text-center py-5">Your shopping cart is empty.</p>';
-        if (waybillBtn) waybillBtn.classList.add('hidden');
+        box.innerHTML = '<div class="luxury-glass-card border border-amber-400/20 rounded-2xl p-8 text-center space-y-3"><p class="text-sm font-bold text-stone-300">Your shopping cart is empty.</p><button type="button" onclick="skfHandleKeepShopping(event)" class="bg-amber-500 text-stone-950 text-xs font-extrabold px-4 py-2 rounded-full">Start Shopping</button></div>';
+        if (summaryActions) summaryActions.classList.add('hidden');
         document.getElementById('checkoutForm').classList.add('hidden');
         return;
       }
-      if (waybillBtn && document.getElementById('checkoutForm').classList.contains('hidden')) {
-        waybillBtn.classList.remove('hidden');
+      if (summaryActions && document.getElementById('checkoutForm').classList.contains('hidden')) {
+        summaryActions.classList.remove('hidden');
       }
 
-      box.innerHTML = cart.map((item, i) => `
-        <div class="flex items-center justify-between gap-2 bg-stone-950 p-2.5 rounded-xl border border-stone-800/90">
-          <div class="min-w-0">
-            <p class="text-xs font-bold text-white truncate">${item.name}</p>
-            <p class="text-xs text-amber-400 font-extrabold mt-0.5">₦${(item.price * item.qty).toLocaleString()}</p>
-          </div>
-          <div class="flex items-center gap-1.5 shrink-0">
-            <button type="button" onclick="changeQty(${i}, -1)" class="w-6 h-6 bg-stone-800 hover:bg-stone-700 text-white rounded-lg font-bold text-xs">-</button>
-            <span class="text-xs font-bold w-4 text-center text-white">${item.qty}</span>
-            <button type="button" onclick="changeQty(${i}, 1)" class="w-6 h-6 bg-stone-800 hover:bg-stone-700 text-white rounded-lg font-bold text-xs">+</button>
-          </div>
-        </div>`).join('');
+      box.innerHTML = cart.map((item, i) => {
+        const matchedProd = allProducts.find(p => String(p.id) === String(item.id));
+        const thumbImg = (matchedProd?.images && matchedProd.images[0]) || matchedProd?.image_url || '';
+        return `
+          <div class="luxury-glass-card p-3 rounded-2xl border border-amber-400/25 space-y-2.5">
+            <div class="flex items-start gap-3">
+              <div class="w-16 h-16 rounded-xl overflow-hidden bg-stone-950 border border-amber-400/20 shrink-0">
+                ${thumbImg
+                  ? `<img src="${thumbImg}" alt="" class="w-full h-full object-cover object-top" />`
+                  : renderBrandedPlaceholderHtml(item.name)}
+              </div>
+              <div class="min-w-0 flex-1 space-y-1">
+                <p class="text-xs sm:text-sm font-bold text-white line-clamp-2 leading-snug">${item.name}</p>
+                <p class="text-sm text-amber-400 font-extrabold">₦${(item.price * item.qty).toLocaleString()}</p>
+                <p class="text-[10px] font-semibold text-emerald-400">In Stock • Sekiflex Express</p>
+              </div>
+            </div>
+            <div class="flex items-center justify-between pt-2 border-t border-stone-800/80">
+              <button type="button" onclick="removeFromCart(${i})" class="inline-flex items-center gap-1 text-xs font-bold text-amber-400 hover:text-amber-300">
+                <span>🗑️</span>
+                <span>Remove</span>
+              </button>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="changeQty(${i}, -1)" class="w-7 h-7 bg-amber-500/20 hover:bg-amber-500/35 border border-amber-400/40 text-amber-300 rounded-lg font-extrabold text-sm">-</button>
+                <span class="text-xs font-extrabold w-5 text-center text-white">${item.qty}</span>
+                <button type="button" onclick="changeQty(${i}, 1)" class="w-7 h-7 bg-amber-500 hover:bg-amber-400 text-stone-950 rounded-lg font-extrabold text-sm">+</button>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
     }
 
     function openCartReview() {
       armStoreBackGuard();
       backToCartReviewOnly();
       setActiveBottomTab('cart');
-      document.getElementById('cartDrawer').classList.remove('hidden');
+      showOnlyMainView('cartFullPageView');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function backToCartReviewOnly() {
       document.getElementById('checkoutForm').classList.add('hidden');
-      document.getElementById('cartSummaryActions').classList.remove('hidden');
       if (cart.length) {
-        document.getElementById('openWaybillBtn').classList.remove('hidden');
+        document.getElementById('cartSummaryActions').classList.remove('hidden');
       }
-      document.getElementById('cartDrawerHeading').textContent = 'Your Shopping Cart';
+      const totalItems = cart.reduce((s, i) => s + i.qty, 0);
+      document.getElementById('cartDrawerHeading').textContent = `Cart (${totalItems})`;
     }
 
     function skfHandleKeepShopping(e) {
@@ -3142,9 +3290,9 @@
         e.stopPropagation();
       }
       document.getElementById('checkoutForm').classList.add('hidden');
-      document.getElementById('cartSummaryActions').classList.remove('hidden');
-      document.getElementById('cartDrawer').classList.add('hidden');
+      showOnlyMainView('storeMainWrapper');
       setActiveBottomTab('home');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     async function skfHandleProceedToCheckout(e) {
@@ -3184,6 +3332,7 @@
       document.getElementById('cartSummaryActions').classList.add('hidden');
       document.getElementById('checkoutForm').classList.remove('hidden');
       document.getElementById('cartDrawerHeading').textContent = 'Waybill & Checkout';
+      document.getElementById('checkoutForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     async function openWaybillSection() {
@@ -3194,7 +3343,7 @@
       if (show) {
         armStoreBackGuard();
         setActiveBottomTab('cart');
-        document.getElementById('cartDrawer').classList.remove('hidden');
+        showOnlyMainView('cartFullPageView');
         if (showWaybillImmediately) {
           skfHandleProceedToCheckout();
         } else {
