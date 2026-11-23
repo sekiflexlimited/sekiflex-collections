@@ -1218,15 +1218,15 @@ function urlBase64ToUint8Array(base64String) {
   return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
 }
 
-window.enableSekiflexPush = async function ({ customerEmail = null, customerPhone = null, isAdmin = false } = {}) {
+window.enableSekiflexPush = async function ({ customerEmail = null, customerPhone = null, isAdmin = false, silent = false } = {}) {
   if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
-    alert("Push notifications are not supported on this browser.");
+    if (!silent) alert("Push notifications are not supported on this browser.");
     return false;
   }
 
   const permission = await Notification.requestPermission();
   if (permission !== "granted") {
-    alert("Please allow notifications in your browser settings.");
+    if (!silent) alert("Please allow notifications in your browser settings.");
     return false;
   }
 
@@ -1253,16 +1253,38 @@ window.enableSekiflexPush = async function ({ customerEmail = null, customerPhon
       endpoint: subJson.endpoint,
       p256dh: subJson.keys.p256dh,
       auth: subJson.keys.auth,
+      updated_at: new Date().toISOString()
     },
     { onConflict: "endpoint" }
   );
 
   if (error) {
     console.error("Push save error:", error);
-    alert("Could not save push subscription.");
+    if (!silent) alert("Could not save push subscription.");
     return false;
   }
 
-  alert("Order push notifications enabled!");
+  if (!silent) alert("Order push notifications enabled!");
   return true;
+};
+
+window.sendSekiflexPushBroadcast = async function ({ title, body, url = "https://sekiflexcollections.com/", target = "customers" }) {
+  const sbClient = window.supabase.createClient(
+    window.SEKIFLEX_SUPABASE_URL,
+    window.SEKIFLEX_SUPABASE_KEY
+  );
+  const { data: sessionData } = await sbClient.auth.getSession();
+
+  return await sbClient.functions.invoke("sekiflex-order-notifications", {
+    body: {
+      event_type: "push_broadcast",
+      title,
+      body,
+      url,
+      target
+    },
+    headers: sessionData?.session?.access_token
+      ? { Authorization: `Bearer ${sessionData.session.access_token}` }
+      : {}
+  });
 };
