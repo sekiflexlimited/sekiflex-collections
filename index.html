@@ -550,7 +550,7 @@
     </div>
   </div>
 
-  <!-- SPLIT-SCREEN CATEGORY STORE VIEW (LEFT RAIL + 5 WALL-HUNG PROMO CARDS + 3-COLUMN VISUAL GRID) -->
+  <!-- SPLIT-SCREEN CATEGORY STORE VIEW (LEFT RAIL + WALL-HUNG PROMO CARDS + 3-COLUMN VISUAL GRID) -->
   <div id="splitCategoryStoreView" class="hidden">
     <header class="sticky top-0 z-40 bg-[#0c0d10]/95 backdrop-blur-md border-b border-amber-400/20 px-3 py-2.5 shadow-lg">
       <div class="max-w-5xl mx-auto flex items-center gap-2">
@@ -574,11 +574,11 @@
     </header>
 
     <div class="max-w-5xl mx-auto skf-cat-layout">
-      <!-- Left Category Sidebar Rail + 5 Wall-Hung Promo Cards -->
+      <!-- Left Category Sidebar Rail + Wall-Hung Promo Cards -->
       <aside class="skf-cat-sidebar no-scrollbar">
         <div id="splitCategorySidebar"></div>
 
-        <!-- 5 Wall-Hung / Framed Promo Cards -->
+        <!-- First 5 Custom Wall-Hung Promo Cards + Auto-Filled Store Picture Wall Cards -->
         <div class="skf-wall-section">
           <div class="flex items-center justify-between px-1 mb-2">
             <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-400">Wall Promos</span>
@@ -614,7 +614,7 @@
       <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
         <div>
           <h3 class="font-editorial text-lg font-bold text-amber-300">Wall-Hung Promo Cards Admin</h3>
-          <p class="text-[11px] text-stone-400">Add or change pictures &amp; promo labels for the 5 wall-hung cards</p>
+          <p class="text-[11px] text-stone-400">Customize your 5 pinned wall cards (extra store items auto-fill below)</p>
         </div>
         <button type="button" onclick="closeAdminPromoCardsModal()" class="w-7 h-7 rounded-full bg-stone-900 text-stone-400 hover:text-white font-bold">&times;</button>
       </div>
@@ -902,8 +902,8 @@
   </div>
 
   <!-- LUXURY MODERATE CART & CHECKOUT SHEET (CART FIRST, WAYBILL ON TAP) -->
-  <div id="cartDrawer" onclick="if(event.target === this) skfHandleKeepShopping(event);" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex justify-end p-0 sm:p-3">
-    <div onclick="event.stopPropagation();" class="bg-[#12141a] text-white w-full max-w-sm h-full sm:h-auto sm:max-h-[90vh] sm:my-auto sm:rounded-3xl border border-amber-400/25 overflow-y-auto p-4 flex flex-col justify-between shadow-2xl space-y-3.5">
+  <div id="cartDrawer" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex justify-end p-0 sm:p-3">
+    <div class="bg-[#12141a] text-white w-full max-w-sm h-full sm:h-auto sm:max-h-[90vh] sm:my-auto sm:rounded-3xl border border-amber-400/25 overflow-y-auto p-4 flex flex-col justify-between shadow-2xl space-y-3.5">
       <div class="space-y-3.5">
         <div class="flex items-center justify-between bg-stone-950 border border-amber-400/20 rounded-2xl px-3.5 py-2.5">
           <div>
@@ -924,11 +924,11 @@
           </div>
 
           <div class="flex gap-2">
-            <button type="button" id="skfKeepShoppingBtn"
+            <button type="button" id="skfKeepShoppingBtn" onclick="skfHandleKeepShopping(event)"
               class="px-3 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 text-xs font-bold transition">
               ← Keep Shopping
             </button>
-            <button type="button" id="openWaybillBtn"
+            <button type="button" id="openWaybillBtn" onclick="skfHandleProceedToCheckout(event)"
               class="flex-1 bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-2.5 rounded-xl text-xs transition shadow-2xs">
               Proceed to Checkout →
             </button>
@@ -1778,19 +1778,22 @@
       });
     }
 
-    /* WALL-HUNG PROMO CARDS + ADMIN MANAGER */
+    /* WALL-HUNG PROMO CARDS (FIRST 5 KEPT UNTOUCHED + AUTO-FILL FROM STORE PICTURES) */
     function renderWallHungPromoCards() {
       const wrap = document.getElementById('wallHungPromoCardsList');
       if (!wrap) return;
 
-      const cardsToRender = (Array.isArray(wallPromoCards) && wallPromoCards.length)
+      const firstFive = (Array.isArray(wallPromoCards) && wallPromoCards.length >= 5)
         ? wallPromoCards.slice(0, 5)
-        : DEFAULT_WALL_PROMO_CARDS;
+        : DEFAULT_WALL_PROMO_CARDS.map((def, i) => ({
+            ...def,
+            ...(wallPromoCards && wallPromoCards[i] ? wallPromoCards[i] : {})
+          }));
 
-      wrap.innerHTML = cardsToRender.map((card, idx) => {
-        const safeImg = card.image || DEFAULT_WALL_PROMO_CARDS[idx % DEFAULT_WALL_PROMO_CARDS.length].image;
-        const safeTitle = card.title || `Promo ${idx + 1}`;
-        const safeTag = card.tag || 'PROMO';
+      const firstFiveHTML = firstFive.map((card, idx) => {
+        const safeImg = card.image || DEFAULT_WALL_PROMO_CARDS[idx].image;
+        const safeTitle = card.title || DEFAULT_WALL_PROMO_CARDS[idx].title;
+        const safeTag = card.tag || DEFAULT_WALL_PROMO_CARDS[idx].tag;
         const targetCat = card.categoryKey || 'ALL';
         return `
           <div onclick="shopSpecificCategoryFromSplit('${String(targetCat).replace(/'/g, "\\'")}')"
@@ -1805,6 +1808,26 @@
             </div>
           </div>`;
       }).join('');
+
+      // Automatically continue down the left side with store product pictures in the same promo card design
+      const storeExtraHTML = (Array.isArray(allProducts) ? allProducts : []).map((prod, idx) => {
+        const img = (prod.images && prod.images[0]) || prod.image_url || DEFAULT_WALL_PROMO_CARDS[idx % DEFAULT_WALL_PROMO_CARDS.length].image;
+        const badgeText = idx % 2 === 0 ? 'PROMO' : 'HOT';
+        return `
+          <div onclick="openProductDetail('${prod.id}')"
+            class="skf-wall-card" title="${prod.name || 'Store Item'}">
+            <span class="skf-wall-pin"></span>
+            <span class="absolute top-2 right-1.5 z-10 bg-amber-500 text-stone-950 text-[8px] font-black px-1.5 py-0.5 rounded-full shadow">
+              ${badgeText}
+            </span>
+            <img src="${img}" alt="${prod.name || 'Store Item'}" loading="lazy" />
+            <div class="skf-wall-caption">
+              <p class="text-[10px] font-extrabold text-stone-100 truncate">${prod.name || 'Store Pick'}</p>
+            </div>
+          </div>`;
+      }).join('');
+
+      wrap.innerHTML = firstFiveHTML + storeExtraHTML;
     }
 
     function openAdminPromoCardsModal() {
@@ -1813,10 +1836,15 @@
       const catOptions = `<option value="ALL">All Store Items</option>` +
         allCategories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
 
-      formList.innerHTML = wallPromoCards.slice(0, 5).map((card, idx) => `
+      const firstFive = DEFAULT_WALL_PROMO_CARDS.map((def, i) => ({
+        ...def,
+        ...(wallPromoCards && wallPromoCards[i] ? wallPromoCards[i] : {})
+      }));
+
+      formList.innerHTML = firstFive.map((card, idx) => `
         <div class="bg-stone-950 border border-stone-800 rounded-2xl p-3 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-extrabold text-amber-400">Wall Card #${idx + 1}</span>
+            <span class="text-xs font-extrabold text-amber-400">Pinned Wall Card #${idx + 1}</span>
             <img src="${card.image || ''}" alt="Preview" class="w-10 h-10 rounded-lg object-cover border border-amber-400/30 bg-stone-900" />
           </div>
           <div class="grid grid-cols-2 gap-2">
@@ -1839,7 +1867,7 @@
         </div>
       `).join('');
 
-      wallPromoCards.slice(0, 5).forEach((card, idx) => {
+      firstFive.forEach((card, idx) => {
         const sel = formList.querySelector(`[data-wall-cat="${idx}"]`);
         if (sel && card.categoryKey) sel.value = String(card.categoryKey);
       });
@@ -1859,13 +1887,14 @@
     }
 
     function saveAdminWallPromoCards() {
-      const updated = wallPromoCards.slice(0, 5).map((card, idx) => {
-        const title = (document.querySelector(`[data-wall-title="${idx}"]`)?.value || '').trim() || `Promo ${idx + 1}`;
-        const tag = (document.querySelector(`[data-wall-tag="${idx}"]`)?.value || '').trim() || 'PROMO';
-        const image = (document.querySelector(`[data-wall-img="${idx}"]`)?.value || '').trim() || DEFAULT_WALL_PROMO_CARDS[idx].image;
+      const updated = DEFAULT_WALL_PROMO_CARDS.map((def, idx) => {
+        const existing = wallPromoCards[idx] || def;
+        const title = (document.querySelector(`[data-wall-title="${idx}"]`)?.value || '').trim() || def.title;
+        const tag = (document.querySelector(`[data-wall-tag="${idx}"]`)?.value || '').trim() || def.tag;
+        const image = (document.querySelector(`[data-wall-img="${idx}"]`)?.value || '').trim() || def.image;
         const categoryKey = document.querySelector(`[data-wall-cat="${idx}"]`)?.value || 'ALL';
         return {
-          id: card.id || `wall_${idx + 1}`,
+          id: existing.id || def.id,
           title,
           tag,
           image,
@@ -2705,24 +2734,8 @@
       } catch (e) {}
     }
 
-    function bindCartActionButtons() {
-      const keepBtn = document.getElementById('skfKeepShoppingBtn');
-      const checkoutBtn = document.getElementById('openWaybillBtn');
-
-      if (keepBtn && !keepBtn.dataset.skfBound) {
-        keepBtn.dataset.skfBound = '1';
-        keepBtn.addEventListener('click', skfHandleKeepShopping);
-      }
-
-      if (checkoutBtn && !checkoutBtn.dataset.skfBound) {
-        checkoutBtn.dataset.skfBound = '1';
-        checkoutBtn.addEventListener('click', skfHandleProceedToCheckout);
-      }
-    }
-
     async function init() {
       armStoreBackGuard();
-      bindCartActionButtons();
       trackLiveVisitorHeartbeat();
       lastRotationSlot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000));
       applySocialLinks();
@@ -2737,6 +2750,7 @@
 
       if (allProducts.length) {
         renderFeaturedStrip(allProducts);
+        renderWallHungPromoCards();
         applyCatalogFilters();
       }
       if (allCategories.length) renderCategoryButtons(allCategories);
@@ -2752,6 +2766,7 @@
         allProducts = products;
         localStorage.setItem('sekiflex_products_cache', JSON.stringify(products));
         renderFeaturedStrip(allProducts);
+        renderWallHungPromoCards();
         applyCatalogFilters();
       } else if (!allProducts.length) {
         renderProducts([]);
@@ -3031,7 +3046,6 @@
       backToCartReviewOnly();
       setActiveBottomTab('cart');
       document.getElementById('cartDrawer').classList.remove('hidden');
-      bindCartActionButtons();
     }
 
     function backToCartReviewOnly() {
@@ -3041,7 +3055,6 @@
         document.getElementById('openWaybillBtn').classList.remove('hidden');
       }
       document.getElementById('cartDrawerHeading').textContent = 'Your Shopping Cart';
-      bindCartActionButtons();
     }
 
     function skfHandleKeepShopping(e) {
@@ -3050,11 +3063,12 @@
         e.stopPropagation();
       }
       document.getElementById('checkoutForm').classList.add('hidden');
+      document.getElementById('cartSummaryActions').classList.remove('hidden');
       document.getElementById('cartDrawer').classList.add('hidden');
       setActiveBottomTab('home');
     }
 
-    function skfHandleProceedToCheckout(e) {
+    async function skfHandleProceedToCheckout(e) {
       if (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -3065,28 +3079,24 @@
       }
 
       if (!currentCustomer) {
-        openAuthGate(
-          'signup',
-          true,
-          'You do not have an account or are not signed in yet — please register or log in to continue to checkout.'
-        );
-        return;
-      }
-
-      openWaybillSection();
-    }
-
-    async function openWaybillSection() {
-      if (!cart.length) {
-        alert('Add at least one item to your cart first.');
-        return;
+        try {
+          const { data: { session } } = await sb.auth.getSession();
+          if (session?.user) {
+            const { data: profile } = await sb
+              .from('customer_profiles')
+              .select('*')
+              .eq('id', session.user.id)
+              .maybeSingle();
+            applySignedInCustomerState(session.user, profile);
+          }
+        } catch (err) {}
       }
 
       if (!currentCustomer) {
         openAuthGate(
           'signup',
           true,
-          'You do not have an account or are not signed in yet — please register or log in to continue to checkout.'
+          'You do not have an account or are not signed in yet — please register an account or log in to continue to checkout.'
         );
         return;
       }
@@ -3097,14 +3107,17 @@
       document.getElementById('cartDrawerHeading').textContent = 'Waybill & Checkout';
     }
 
+    async function openWaybillSection() {
+      return skfHandleProceedToCheckout();
+    }
+
     function toggleCart(show, showWaybillImmediately = false) {
       if (show) {
         armStoreBackGuard();
         setActiveBottomTab('cart');
         document.getElementById('cartDrawer').classList.remove('hidden');
-        bindCartActionButtons();
         if (showWaybillImmediately) {
-          openWaybillSection();
+          skfHandleProceedToCheckout();
         } else {
           backToCartReviewOnly();
         }
@@ -3119,7 +3132,7 @@
         openAuthGate(
           'signup',
           true,
-          'You do not have an account or are not signed in yet — please register or log in to continue to checkout.'
+          'You do not have an account or are not signed in yet — please register an account or log in to continue to checkout.'
         );
         return;
       }
