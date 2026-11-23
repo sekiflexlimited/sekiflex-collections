@@ -28,7 +28,7 @@
     body.sekiflex-luxury-bg {
       background-color: #0e0d0b;
       background-image:
-        radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.24) 0%, rgba(18, 15, 11, 0.96) 50%, #090807 100%);
+        radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.22) 0%, rgba(16, 13, 10, 0.97) 50%, #090807 100%);
       background-attachment: fixed;
     }
 
@@ -38,7 +38,7 @@
     }
 
     .img-skeleton-box {
-      background: linear-gradient(90deg, #1b1712 25%, #2c2419 50%, #1b1712 75%);
+      background: linear-gradient(90deg, #191510 25%, #272017 50%, #191510 75%);
       background-size: 200% 100%;
       animation: imgShimmer 1.2s infinite linear;
     }
@@ -70,19 +70,19 @@
     .products-grid-home {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.55rem;
+      gap: 0.625rem;
     }
 
     .products-grid-category-mode {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 0.65rem;
+      gap: 0.75rem;
     }
 
     @media (min-width: 640px) {
       .products-grid-category-mode {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0.75rem;
+        gap: 0.875rem;
       }
     }
 
@@ -469,7 +469,7 @@
             <img id="livePromo2Img" src="" alt="" onerror="this.classList.add('hidden')" class="hidden w-36 sm:w-44 h-36 sm:h-38 object-cover object-top rounded-xl border-2 border-amber-400/45 shrink-0 shadow-md" />
           </div>
 
-          <!-- Slide 3: Luxury Dresses, Tops & Denim Edit -->
+          <!-- Slide 3: Luxury Apparel Edit -->
           <div onclick="jumpToAllItems()" class="promo-slide cursor-pointer snap-start shrink-0 w-full min-h-[164px] rounded-2xl bg-gradient-to-br from-[#2b1d0b] via-[#1d150c] to-[#120f0a] text-white p-3 flex items-stretch justify-between gap-3 border border-amber-400/45 shadow-lg overflow-hidden">
             <div class="space-y-1.5 flex-1 min-w-0 flex flex-col justify-between py-0.5">
               <div class="space-y-1">
@@ -487,9 +487,11 @@
                 </button>
               </div>
             </div>
-            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=500&q=80" alt=""
-              onerror="this.style.display='none'"
-              class="w-36 sm:w-44 h-36 sm:h-38 object-cover object-top rounded-xl border-2 border-amber-400/45 shrink-0 shadow-md" />
+            <div class="w-36 sm:w-44 h-36 sm:h-38 rounded-xl border-2 border-amber-400/45 shrink-0 shadow-md bg-gradient-to-br from-[#2c1f0c] to-[#141009] flex flex-col items-center justify-center p-2 text-center">
+              <span class="text-2xl font-editorial font-extrabold text-amber-400">SC</span>
+              <span class="text-[9px] font-extrabold tracking-widest uppercase text-amber-100 mt-0.5">SEKIFLEX</span>
+              <span class="text-[8px] text-amber-300/80">COLLECTIONS</span>
+            </div>
           </div>
 
           <!-- Slide 4: Footwear, Watches & Designer Accessories -->
@@ -510,9 +512,11 @@
                 </button>
               </div>
             </div>
-            <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=500&q=80" alt=""
-              onerror="this.style.display='none'"
-              class="w-36 sm:w-44 h-36 sm:h-38 object-cover object-top rounded-xl border-2 border-amber-400/45 shrink-0 shadow-md" />
+            <div class="w-36 sm:w-44 h-36 sm:h-38 rounded-xl border-2 border-amber-400/45 shrink-0 shadow-md bg-gradient-to-br from-[#2c1f0c] to-[#141009] flex flex-col items-center justify-center p-2 text-center">
+              <span class="text-amber-400 text-lg">♛</span>
+              <span class="text-[10px] font-extrabold tracking-wider uppercase text-amber-100 mt-0.5">CURATED EDIT</span>
+              <span class="text-[8px] text-amber-300/80 mt-0.5">Uyo • Nationwide</span>
+            </div>
           </div>
 
           <!-- Slide 5: Clickable Nationwide Delivery with BIG Custom Sekiflex Collections Bike + Cargo Truck -->
@@ -615,9 +619,9 @@
       </section>
 
       <!-- REFINED TOP SCROLLING SHOWCASE STRIP -->
-      <section id="featuredStripSection" class="rounded-2xl overflow-hidden bg-gradient-to-r from-[#1a140c] via-[#15110b] to-[#1a140c] border border-amber-400/35 shadow-md">
+      <section id="featuredStripSection" class="rounded-2xl overflow-hidden bg-gradient-to-r from-[#1e170d] via-[#17120b] to-[#1e170d] border border-amber-400/35 shadow-md">
         <div class="px-3 py-2 border-b border-amber-400/20 flex items-center justify-between bg-amber-500/10">
-          <h2 class="text-[11px] font-extrabold uppercase tracking-widest text-amber-300">✦ Trending Style Strip</h2>
+          <h2 class="text-[11px] font-extrabold uppercase tracking-widest text-amber-300">✦ Featured</h2>
           <button type="button" onclick="jumpToAllItems()" class="text-[11px] font-extrabold text-amber-300 hover:text-amber-200">
             All Items →
           </button>
@@ -652,14 +656,14 @@
           <button type="button" onclick="filterCategory('ALL', this)" class="cat-btn bg-amber-500 text-stone-950 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full whitespace-nowrap">All Items</button>
         </div>
 
-        <!-- COMPACT CLOTHING-FIRST PRODUCT GRID (LESS EMPTY DARK AREA) -->
+        <!-- PRODUCT GRID -->
         <div id="productsGrid" class="products-grid-home">
-          <div class="bg-[#16130f] border border-amber-400/20 rounded-2xl p-2 animate-pulse space-y-1.5">
+          <div class="bg-[#16130f] border border-amber-400/20 rounded-2xl p-2 animate-pulse space-y-2">
             <div class="w-full h-44 bg-stone-800 rounded-xl"></div>
             <div class="h-3 bg-stone-800 rounded w-3/4"></div>
             <div class="h-7 bg-stone-800 rounded-xl w-full"></div>
           </div>
-          <div class="bg-[#16130f] border border-amber-400/20 rounded-2xl p-2 animate-pulse space-y-1.5">
+          <div class="bg-[#16130f] border border-amber-400/20 rounded-2xl p-2 animate-pulse space-y-2">
             <div class="w-full h-44 bg-stone-800 rounded-xl"></div>
             <div class="h-3 bg-stone-800 rounded w-3/4"></div>
             <div class="h-7 bg-stone-800 rounded-xl w-full"></div>
@@ -1196,42 +1200,41 @@
     const TIKTOK_URL = 'https://www.tiktok.com/@sekiflex_collections?_r=1&_t=ZS-9BbSAFjxrZW';
     const FACEBOOK_URL = 'https://www.facebook.com/share/1G3ErASdHa/';
     const ROTATION_MINUTES = 2;
-    const FALLBACK_PRODUCT_IMG = 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=360&q=70';
 
     const DEFAULT_WALL_PROMO_CARDS = [
       {
         id: 'wall_1',
         title: 'Hot Drops',
         tag: 'NEW IN',
-        image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=400&q=80',
+        image: '',
         categoryKey: 'ALL'
       },
       {
         id: 'wall_2',
         title: 'Luxury Fits',
         tag: 'PROMO',
-        image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=400&q=80',
+        image: '',
         categoryKey: 'ALL'
       },
       {
         id: 'wall_3',
         title: 'Footwear Edit',
         tag: 'HOT',
-        image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400&q=80',
+        image: '',
         categoryKey: 'ALL'
       },
       {
         id: 'wall_4',
         title: 'Watches & Bags',
         tag: 'LUXURY',
-        image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80',
+        image: '',
         categoryKey: 'ALL'
       },
       {
         id: 'wall_5',
         title: 'Uyo Dispatch',
         tag: 'FAST',
-        image: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=400&q=80',
+        image: '',
         categoryKey: 'ALL'
       }
     ];
@@ -1353,6 +1356,11 @@
       });
     }
 
+    function renderBrandedPlaceholderHtml(labelText = 'Sekiflex') {
+      const safeLabel = String(labelText || 'Sekiflex').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return `<div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#1d170f] via-[#14100b] to-[#0e0c09] text-amber-300/90 p-2 text-center select-none"><span class="font-editorial text-sm font-extrabold tracking-wider text-amber-400">SC</span><span class="text-[9px] font-bold text-stone-300 line-clamp-2 mt-0.5">${safeLabel}</span></div>`;
+    }
+
     function handleCatalogImgLoad(imgEl) {
       if (!imgEl) return;
       if (imgEl.dataset.timeoutId) {
@@ -1369,16 +1377,11 @@
       if (imgEl.dataset.timeoutId) {
         clearTimeout(Number(imgEl.dataset.timeoutId));
       }
-      if (imgEl.dataset.fallbackApplied === '1') {
-        imgEl.style.display = 'none';
-        if (imgEl.parentElement) {
-          imgEl.parentElement.classList.remove('img-skeleton-box');
-          imgEl.parentElement.innerHTML = `<div class="w-full h-full flex flex-col items-center justify-center bg-[#1c160e] text-amber-300/90 p-2 text-center"><span class="text-base">✦</span><span class="text-[10px] font-bold line-clamp-2 mt-0.5">${labelText || 'Sekiflex'}</span></div>`;
-        }
-        return;
+      imgEl.style.display = 'none';
+      if (imgEl.parentElement) {
+        imgEl.parentElement.classList.remove('img-skeleton-box');
+        imgEl.parentElement.innerHTML = renderBrandedPlaceholderHtml(labelText);
       }
-      imgEl.dataset.fallbackApplied = '1';
-      imgEl.src = FALLBACK_PRODUCT_IMG;
     }
 
     function armSlowImageGuard(imgEl, labelText = 'Sekiflex') {
@@ -1569,7 +1572,7 @@
       return { effectivePrice, originalPrice };
     }
 
-    function formatPriceHtml(prod, sizeClass = 'text-xs') {
+    function formatPriceHtml(prod, sizeClass = 'text-xs sm:text-sm') {
       const { effectivePrice, originalPrice } = getProductPricing(prod);
       if (originalPrice !== null) {
         return `
@@ -1931,12 +1934,12 @@
       if (!prod) return;
 
       armStoreBackGuard();
-      const img = (prod.images && prod.images[0]) || prod.image_url || FALLBACK_PRODUCT_IMG;
+      const img = (prod.images && prod.images[0]) || prod.image_url || '';
       const out = (prod.stock_quantity !== null && prod.stock_quantity <= 0);
       const catObj = allCategories.find(c => String(c.id) === String(prod.category_id));
 
       const detailImg = document.getElementById('detailModalImg');
-      detailImg.dataset.fallbackApplied = '0';
+      detailImg.style.display = '';
       detailImg.src = img;
       detailImg.alt = prod.name || 'Product';
       document.getElementById('detailModalName').textContent = prod.name || 'Product';
@@ -2106,10 +2109,13 @@
       const pinnedCards = baseList.slice(0, PINNED_WALL_COUNT);
 
       const pinnedHTML = pinnedCards.map((card, idx) => {
-        const safeImg = card.image || DEFAULT_WALL_PROMO_CARDS[idx % DEFAULT_WALL_PROMO_CARDS.length].image;
+        const safeImg = card.image || '';
         const safeTitle = card.title || DEFAULT_WALL_PROMO_CARDS[idx % DEFAULT_WALL_PROMO_CARDS.length].title;
         const safeTag = card.tag || DEFAULT_WALL_PROMO_CARDS[idx % DEFAULT_WALL_PROMO_CARDS.length].tag;
         const targetCat = card.categoryKey || 'ALL';
+        const mediaHtml = safeImg
+          ? `<img src="${safeImg}" alt="" onerror="this.parentElement.innerHTML = renderBrandedPlaceholderHtml('${safeTitle.replace(/'/g, "\\'")}')" />`
+          : `<div class="w-full h-[78px]">${renderBrandedPlaceholderHtml(safeTitle)}</div>`;
         return `
           <div onclick="shopSpecificCategoryFromSplit('${String(targetCat).replace(/'/g, "\\'")}')"
             class="skf-wall-card" title="${safeTitle}">
@@ -2117,7 +2123,7 @@
             <span class="absolute top-2 right-1.5 z-10 bg-amber-500 text-stone-950 text-[8px] font-black px-1.5 py-0.5 rounded-full shadow">
               ${safeTag}
             </span>
-            <img src="${safeImg}" alt="" onerror="this.src='${FALLBACK_PRODUCT_IMG}'" />
+            ${mediaHtml}
             <div class="skf-wall-caption">
               <p class="text-[10px] font-extrabold text-amber-300 truncate">${safeTitle}</p>
             </div>
@@ -2133,8 +2139,12 @@
       const extraHTML = [];
       for (let i = 0; i < neededCatalogCards && i < rotatedPool.length; i++) {
         const prod = rotatedPool[i];
-        const img = (prod.images && prod.images[0]) || prod.image_url || DEFAULT_WALL_PROMO_CARDS[i % DEFAULT_WALL_PROMO_CARDS.length].image;
+        const img = (prod.images && prod.images[0]) || prod.image_url || '';
         const badgeText = i % 2 === 0 ? 'PROMO' : 'HOT';
+        const safeProdName = String(prod.name || 'Store Pick').replace(/'/g, "\\'");
+        const mediaHtml = img
+          ? `<img src="${img}" alt="" onerror="this.parentElement.innerHTML = renderBrandedPlaceholderHtml('${safeProdName}')" />`
+          : `<div class="w-full h-[78px]">${renderBrandedPlaceholderHtml(safeProdName)}</div>`;
         extraHTML.push(`
           <div onclick="openProductDetail('${prod.id}')"
             class="skf-wall-card" title="${prod.name || 'Store Item'}">
@@ -2142,7 +2152,7 @@
             <span class="absolute top-2 right-1.5 z-10 bg-amber-500 text-stone-950 text-[8px] font-black px-1.5 py-0.5 rounded-full shadow">
               ${badgeText}
             </span>
-            <img src="${img}" alt="" onerror="this.src='${FALLBACK_PRODUCT_IMG}'" />
+            ${mediaHtml}
             <div class="skf-wall-caption">
               <p class="text-[10px] font-extrabold text-stone-100 truncate">${prod.name || 'Store Pick'}</p>
             </div>
@@ -2167,7 +2177,9 @@
         <div class="bg-stone-950 border border-stone-800 rounded-2xl p-3 space-y-2">
           <div class="flex items-center justify-between">
             <span class="text-xs font-extrabold text-amber-400">Pinned Wall Card #${idx + 1}</span>
-            <img src="${card.image || ''}" alt="" onerror="this.src='${FALLBACK_PRODUCT_IMG}'" class="w-10 h-10 rounded-lg object-cover object-top border border-amber-400/30 bg-stone-900" />
+            <div class="w-10 h-10 rounded-lg overflow-hidden border border-amber-400/30 bg-stone-900">
+              ${card.image ? `<img src="${card.image}" alt="" onerror="this.parentElement.innerHTML = renderBrandedPlaceholderHtml('SC')" class="w-full h-full object-cover object-top" />` : renderBrandedPlaceholderHtml('SC')}
+            </div>
           </div>
           <div class="grid grid-cols-2 gap-2">
             <input type="text" data-wall-title="${idx}" value="${card.title || ''}" placeholder="Card Title (e.g. Hot Drops)"
@@ -2241,6 +2253,15 @@
       document.getElementById('adminPromoCardsModal').classList.add('hidden');
     }
 
+    function renderSplitThumbInner(img, labelText, isHot) {
+      const safeLabel = String(labelText || 'Sekiflex').replace(/'/g, "\\'");
+      const hotBadge = isHot ? '<span class="skf-cat-hot">HOT</span>' : '';
+      if (!img) {
+        return `${renderBrandedPlaceholderHtml(labelText)}${hotBadge}`;
+      }
+      return `<img src="${img}" alt="" onerror="this.parentElement.innerHTML = renderBrandedPlaceholderHtml('${safeLabel}') + '${hotBadge.replace(/'/g, "\\'")}';" class="w-full h-full object-cover object-top" />${hotBadge}`;
+    }
+
     function openSplitCategoryStore() {
       closeAllDrawers();
       armStoreBackGuard();
@@ -2301,13 +2322,12 @@
           return;
         }
         grid.innerHTML = matches.map((p, idx) => {
-          const img = (p.images && p.images[0]) || p.image_url || FALLBACK_PRODUCT_IMG;
+          const img = (p.images && p.images[0]) || p.image_url || '';
           const { effectivePrice } = getProductPricing(p);
           return `
             <div onclick="openProductDetail('${p.id}')" class="cursor-pointer text-center group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-                <img src="${img}" alt="" onerror="this.src='${FALLBACK_PRODUCT_IMG}'" class="w-full h-full object-cover object-top" />
-                ${idx < 2 ? '<span class="skf-cat-hot">HOT</span>' : ''}
+                ${renderSplitThumbInner(img, p.name, idx < 2)}
               </div>
               <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight">${p.name}</p>
               <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
@@ -2324,14 +2344,13 @@
         const catTiles = allCategories.map((c, idx) => {
           const sampleProd = rotatedAll.find(p => String(p.category_id) === String(c.id))
             || allProducts.find(p => String(p.category_id) === String(c.id));
-          const img = (sampleProd?.images && sampleProd.images[0]) || sampleProd?.image_url || FALLBACK_PRODUCT_IMG;
+          const img = (sampleProd?.images && sampleProd.images[0]) || sampleProd?.image_url || '';
           const count = allProducts.filter(p => String(p.category_id) === String(c.id)).length;
           return `
             <div onclick="shopSpecificCategoryFromSplit('${String(c.id).replace(/'/g, "\\'")}')"
               class="cursor-pointer text-center group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-                <img src="${img}" alt="" onerror="this.src='${FALLBACK_PRODUCT_IMG}'" class="w-full h-full object-cover object-top" />
-                ${idx < 2 ? '<span class="skf-cat-hot">HOT</span>' : ''}
+                ${renderSplitThumbInner(img, c.name, idx < 2)}
               </div>
               <p class="text-[11px] font-bold text-stone-100 line-clamp-2 leading-tight">${c.name}</p>
               <p class="text-[10px] text-amber-400 font-semibold mt-0.5">${count} item${count === 1 ? '' : 's'}</p>
@@ -2339,13 +2358,12 @@
         });
 
         const featuredTiles = rotatedAll.map((p, idx) => {
-          const img = (p.images && p.images[0]) || p.image_url || FALLBACK_PRODUCT_IMG;
+          const img = (p.images && p.images[0]) || p.image_url || '';
           const { effectivePrice } = getProductPricing(p);
           return `
             <div onclick="openProductDetail('${p.id}')" class="cursor-pointer text-center group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-                <img src="${img}" alt="" onerror="this.src='${FALLBACK_PRODUCT_IMG}'" class="w-full h-full object-cover object-top" />
-                ${idx === 0 ? '<span class="skf-cat-hot">HOT</span>' : ''}
+                ${renderSplitThumbInner(img, p.name, idx === 0)}
               </div>
               <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight">${p.name}</p>
               <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
@@ -2369,13 +2387,12 @@
       }
 
       grid.innerHTML = items.map((p, idx) => {
-        const img = (p.images && p.images[0]) || p.image_url || FALLBACK_PRODUCT_IMG;
+        const img = (p.images && p.images[0]) || p.image_url || '';
         const { effectivePrice } = getProductPricing(p);
         return `
           <div onclick="openProductDetail('${p.id}')" class="cursor-pointer text-center group">
             <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-              <img src="${img}" alt="" onerror="this.src='${FALLBACK_PRODUCT_IMG}'" class="w-full h-full object-cover object-top" />
-              ${idx < 2 ? '<span class="skf-cat-hot">HOT</span>' : ''}
+              ${renderSplitThumbInner(img, p.name, idx < 2)}
             </div>
             <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight">${p.name}</p>
             <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
@@ -3198,21 +3215,22 @@
       }
       sec.classList.remove('hidden');
       strip.innerHTML = list.slice(0, 8).map((p) => {
-        const img = (p.images && p.images[0]) || p.image_url || FALLBACK_PRODUCT_IMG;
+        const img = (p.images && p.images[0]) || p.image_url || '';
         const { effectivePrice, originalPrice } = getProductPricing(p);
-        const safeName = String(p.name || 'Product').replace(/"/g, '&quot;');
+        const safeName = String(p.name || 'Product').replace(/"/g, '&quot;').replace(/'/g, "\\'");
         const priceDisplay = originalPrice !== null
-          ? `<div class="flex items-baseline gap-1 mt-0.5 flex-wrap"><span class="text-[11px] font-extrabold text-amber-400">₦${effectivePrice.toLocaleString()}</span><span class="text-[9px] text-stone-400 line-through">₦${originalPrice.toLocaleString()}</span></div>`
-          : `<p class="text-[11px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>`;
+          ? `<div class="flex items-baseline gap-1 mt-0.5 flex-wrap"><span class="text-xs font-extrabold text-amber-400">₦${effectivePrice.toLocaleString()}</span><span class="text-[10px] text-stone-400 line-through">₦${originalPrice.toLocaleString()}</span></div>`
+          : `<p class="text-xs font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>`;
+        const mediaInner = img
+          ? `<img src="${img}" alt="" data-prod-label="${safeName}" loading="eager" decoding="async" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
+          : renderBrandedPlaceholderHtml(p.name);
         return `
-          <div onclick="openProductDetail('${p.id}')" class="shrink-0 w-32 sm:w-36 bg-[#1b150e] rounded-xl overflow-hidden border border-amber-400/30 flex flex-col justify-between cursor-pointer hover:border-amber-400 transition shadow-sm">
-            <div class="img-skeleton-box w-full h-32 bg-stone-950 flex items-center justify-center overflow-hidden">
-              <img src="${img}" alt="" data-prod-label="${safeName}" loading="eager" decoding="async"
-                onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')"
-                class="catalog-img-smooth w-full h-full object-cover object-top" />
+          <div onclick="openProductDetail('${p.id}')" class="shrink-0 w-36 sm:w-40 bg-[#18140e] rounded-xl overflow-hidden border border-amber-400/25 flex flex-col justify-between cursor-pointer hover:border-amber-400 transition">
+            <div class="${img ? 'img-skeleton-box' : ''} w-full h-36 bg-stone-950 flex items-center justify-center overflow-hidden">
+              ${mediaInner}
             </div>
-            <div class="p-1.5 bg-[#19140d]">
-              <p class="text-[11px] font-bold text-amber-50 truncate">${p.name}</p>
+            <div class="p-2 bg-[#16130f]">
+              <p class="text-xs font-semibold text-white truncate">${p.name}</p>
               ${priceDisplay}
             </div>
           </div>`;
@@ -3230,28 +3248,27 @@
 
       if (isCategoryArrangement) {
         grid.innerHTML = list.map((p, idx) => {
-          const img = (p.images && p.images[0]) || p.image_url || FALLBACK_PRODUCT_IMG;
+          const img = (p.images && p.images[0]) || p.image_url || '';
           const out = (p.stock_quantity !== null && p.stock_quantity <= 0);
           const catObj = allCategories.find(c => String(c.id) === String(p.category_id));
           const catTag = catObj ? catObj.name : 'Category Edit';
-          const safeName = String(p.name || 'Product').replace(/"/g, '&quot;');
+          const safeName = String(p.name || 'Product').replace(/"/g, '&quot;').replace(/'/g, "\\'");
+          const mediaInner = img
+            ? `<img src="${img}" alt="" data-prod-label="${safeName}" loading="${idx < 6 ? 'eager' : 'lazy'}" decoding="async" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
+            : renderBrandedPlaceholderHtml(p.name);
           return `
-            <div onclick="openProductDetail('${p.id}')" class="bg-[#16130f] rounded-2xl border border-amber-400/30 overflow-hidden flex items-center gap-2.5 p-2 shadow-md cursor-pointer hover:border-amber-400/60 transition">
-              <div class="img-skeleton-box w-24 sm:w-28 h-28 bg-stone-950 flex items-center justify-center rounded-xl overflow-hidden shrink-0">
-                <img src="${img}" alt="" data-prod-label="${safeName}"
-                  loading="${idx < 6 ? 'eager' : 'lazy'}"
-                  decoding="async"
-                  onload="handleCatalogImgLoad(this)"
-                  onerror="handleCatalogImgError(this, '${safeName}')"
-                  class="catalog-img-smooth w-full h-full object-cover object-top" />
+            <div onclick="openProductDetail('${p.id}')" class="bg-[#16130f] rounded-2xl border border-amber-400/30 overflow-hidden flex items-stretch gap-3 p-2.5 shadow-md cursor-pointer hover:border-amber-400/60 transition">
+              <div class="${img ? 'img-skeleton-box' : ''} w-28 sm:w-32 h-32 bg-stone-950 flex items-center justify-center rounded-xl overflow-hidden shrink-0">
+                ${mediaInner}
               </div>
-              <div class="flex-1 min-w-0 flex flex-col justify-between gap-1.5">
+              <div class="flex-1 min-w-0 flex flex-col justify-between py-0.5">
                 <div>
-                  <span class="inline-block text-[9px] font-extrabold uppercase tracking-wider bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full">${catTag}</span>
-                  <h3 class="font-bold text-xs sm:text-sm text-white truncate mt-0.5">${p.name}</h3>
+                  <span class="inline-block text-[9px] font-extrabold uppercase tracking-wider bg-amber-500/15 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full mb-1">${catTag}</span>
+                  <h3 class="font-bold text-sm text-white truncate">${p.name}</h3>
+                  <p class="text-[11px] text-stone-400 line-clamp-2 mt-0.5">${p.description || 'Tap to view details'}</p>
                 </div>
-                <div class="flex items-center justify-between gap-2">
-                  <div>${formatPriceHtml(p, 'text-xs sm:text-sm')}</div>
+                <div class="mt-2 flex items-center justify-between gap-2">
+                  <div>${formatPriceHtml(p, 'text-sm')}</div>
                   <button type="button" ${out ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart('${p.id}', this)"
                     class="${out ? 'bg-stone-800 text-stone-500' : 'bg-amber-500 hover:bg-amber-400 text-stone-950'} text-[11px] font-extrabold px-3 py-1.5 rounded-xl transition shrink-0">
                     ${out ? 'Sold Out' : 'Add to Cart'}
@@ -3265,27 +3282,27 @@
       }
 
       grid.innerHTML = list.map((p, idx) => {
-        const img = (p.images && p.images[0]) || p.image_url || FALLBACK_PRODUCT_IMG;
+        const img = (p.images && p.images[0]) || p.image_url || '';
         const out = (p.stock_quantity !== null && p.stock_quantity <= 0);
         const isAboveFold = idx < 10;
-        const safeName = String(p.name || 'Product').replace(/"/g, '&quot;');
+        const safeName = String(p.name || 'Product').replace(/"/g, '&quot;').replace(/'/g, "\\'");
+        const mediaInner = img
+          ? `<img src="${img}" alt="" data-prod-label="${safeName}" loading="${isAboveFold ? 'eager' : 'lazy'}" fetchpriority="${idx < 4 ? 'high' : 'auto'}" decoding="async" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
+          : renderBrandedPlaceholderHtml(p.name);
         return `
-          <div onclick="openProductDetail('${p.id}')" class="bg-[#17130e] rounded-2xl border border-amber-400/25 overflow-hidden flex flex-col justify-between shadow-md cursor-pointer hover:border-amber-400/60 transition">
-            <div class="img-skeleton-box w-full h-44 sm:h-48 bg-stone-950 flex items-center justify-center overflow-hidden">
-              <img src="${img}" alt="" data-prod-label="${safeName}"
-                loading="${isAboveFold ? 'eager' : 'lazy'}"
-                fetchpriority="${idx < 4 ? 'high' : 'auto'}"
-                decoding="async"
-                onload="handleCatalogImgLoad(this)"
-                onerror="handleCatalogImgError(this, '${safeName}')"
-                class="catalog-img-smooth w-full h-full object-cover object-top" />
+          <div onclick="openProductDetail('${p.id}')" class="bg-[#16130f] rounded-2xl border border-amber-400/20 overflow-hidden flex flex-col justify-between shadow-md cursor-pointer hover:border-amber-400/50 transition">
+            <div class="${img ? 'img-skeleton-box' : ''} w-full h-44 sm:h-48 bg-stone-950 flex items-center justify-center overflow-hidden">
+              ${mediaInner}
             </div>
-            <div class="px-2 pt-1.5 pb-2 space-y-1 bg-[#17130e]">
-              <h3 class="font-bold text-[11px] text-amber-50 truncate">${p.name}</h3>
-              <div class="flex items-center justify-between gap-1.5">
-                <div class="min-w-0">${formatPriceHtml(p, 'text-xs')}</div>
+            <div class="p-2.5 flex-1 flex flex-col justify-between">
+              <div>
+                <h3 class="font-bold text-xs text-white line-clamp-1">${p.name}</h3>
+                <p class="text-[10px] text-stone-400 line-clamp-1 mt-0.5">${p.description || 'Tap to view details'}</p>
+              </div>
+              <div class="mt-2">
+                ${formatPriceHtml(p, 'text-xs sm:text-sm')}
                 <button type="button" ${out ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart('${p.id}', this)"
-                  class="${out ? 'bg-stone-800 text-stone-500' : 'bg-amber-500 hover:bg-amber-400 text-stone-950'} text-[10px] font-extrabold px-2.5 py-1 rounded-lg transition shrink-0">
+                  class="mt-1.5 w-full ${out ? 'bg-stone-800 text-stone-500' : 'bg-amber-500 hover:bg-amber-400 text-stone-950'} text-[11px] font-extrabold py-1.5 rounded-xl transition">
                   ${out ? 'Sold Out' : 'Add to Cart'}
                 </button>
               </div>
