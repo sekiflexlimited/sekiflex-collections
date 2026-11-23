@@ -1,163 +1,269 @@
-<!-- Paste right before </body> in shop.html (replaces earlier test snippet) -->
-<style id="sekiflex-layout-fix">
-  /* Force compact catalog & announcement/promo images even if inline styles exist */
-  #catalog-grid img,
-  .catalog-grid img,
-  #products-grid img,
-  .products-grid img,
-  .catalog-card img,
-  .product-card img {
-    width: 100% !important;
-    max-width: 100% !important;
-    height: 150px !important;
-    max-height: 150px !important;
-    object-fit: cover !important;
-    display: block !important;
-  }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sekiflex Collections — Shop</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style id="sekiflex-storefront-fix">
+    * {
+      box-sizing: border-box;
+    }
 
-  /* Compact 2-column grid for catalog boxes */
-  #catalog-grid,
-  .catalog-grid,
-  #products-grid,
-  .products-grid {
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 10px !important;
-  }
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
 
-  /* Compact the 4 announcement / promo boxes & their images */
-  .announcement-banner img,
-  .announcement-box img,
-  .announcement-card img,
-  .announcement-item img,
-  .announcement-img,
-  .promo-card img,
-  .promo-box img,
-  .promo-grid img,
-  .announcements-grid img,
-  [class*="announcement"] img,
-  [class*="promo"] img {
-    width: 100% !important;
-    max-width: 100% !important;
-    height: 105px !important;
-    max-height: 105px !important;
-    object-fit: cover !important;
-    display: block !important;
-  }
+    /* Compact 2-column catalog grid & cards */
+    #catalog-grid,
+    .catalog-grid,
+    #products-grid,
+    .products-grid,
+    #shop-grid,
+    .shop-grid {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 10px !important;
+      padding: 10px !important;
+    }
 
-  .announcement-banner,
-  .announcement-box,
-  .announcement-card,
-  .announcement-item,
-  .promo-card,
-  .promo-box,
-  [class*="announcement"],
-  [class*="promo"] {
-    max-height: 140px !important;
-    overflow: hidden !important;
-  }
+    .catalog-card,
+    .product-card,
+    .shop-card {
+      padding: 8px !important;
+      border-radius: 10px !important;
+      overflow: hidden !important;
+    }
 
-  /* Catch any other large standalone images on the page */
-  main img,
-  section img,
-  .container img {
-    max-height: 220px !important;
-  }
-
-  [data-category] {
-    cursor: pointer !important;
-  }
-
-  @media (min-width: 768px) {
     #catalog-grid img,
     .catalog-grid img,
     #products-grid img,
     .products-grid img,
+    #shop-grid img,
+    .shop-grid img,
     .catalog-card img,
-    .product-card img {
-      height: 200px !important;
-      max-height: 200px !important;
+    .product-card img,
+    .shop-card img {
+      width: 100% !important;
+      max-width: 100% !important;
+      height: 155px !important;
+      max-height: 155px !important;
+      object-fit: contain !important;
+      display: block !important;
+      margin: 0 auto !important;
+    }
+
+    /* Compact announcement & wall promo boxes + lock against customer editing */
+    [class*="announcement"],
+    [class*="promo"],
+    [class*="wall"],
+    [id*="announcement"],
+    [id*="promo"],
+    [id*="wall"] {
+      max-height: 145px !important;
+      overflow: hidden !important;
+      -webkit-user-modify: read-only !important;
+      user-select: none !important;
+      caret-color: transparent !important;
+    }
+
+    [class*="announcement"] *,
+    [class*="promo"] *,
+    [class*="wall"] *,
+    [id*="announcement"] *,
+    [id*="promo"] *,
+    [id*="wall"] * {
+      -webkit-user-modify: read-only !important;
+      user-select: none !important;
+      caret-color: transparent !important;
     }
 
     [class*="announcement"] img,
-    [class*="promo"] img {
-      height: 130px !important;
-      max-height: 130px !important;
+    [class*="promo"] img,
+    [class*="wall"] img,
+    [id*="announcement"] img,
+    [id*="promo"] img,
+    [id*="wall"] img {
+      width: 100% !important;
+      max-width: 100% !important;
+      height: 105px !important;
+      max-height: 105px !important;
+      object-fit: contain !important;
+      display: block !important;
+      margin: 0 auto !important;
     }
-  }
-</style>
 
-<script>
-  (function () {
-    // Remove HTML width/height attributes on images that force oversized rendering
-    document.querySelectorAll('img').forEach((img) => {
-      img.removeAttribute('width');
-      img.removeAttribute('height');
-    });
+    /* Keep other section images from stretching huge */
+    main img,
+    section img {
+      max-height: 210px !important;
+    }
 
-    // Capture-phase listener so category clicks run first and jump to catalog photos
-    document.addEventListener(
-      'click',
-      (event) => {
-        const trigger = event.target.closest(
-          '[data-category], .category-card, .category-item, [class*="category"]'
-        );
-        if (!trigger) return;
+    /* Clickable category tiles */
+    [data-category],
+    .category-card,
+    .category-item,
+    [class*="category"] {
+      cursor: pointer !important;
+    }
 
-        // Ignore clicks inside the catalog/product list itself so product cards aren't treated as categories
-        if (trigger.closest('#catalog-grid, .catalog-grid, #products-grid, .products-grid')) {
-          return;
-        }
+    @media (min-width: 768px) {
+      #catalog-grid img,
+      .catalog-grid img,
+      #products-grid img,
+      .products-grid img,
+      #shop-grid img,
+      .shop-grid img,
+      .catalog-card img,
+      .product-card img,
+      .shop-card img {
+        height: 210px !important;
+        max-height: 210px !important;
+      }
 
-        const rawCategory =
-          trigger.getAttribute('data-category') ||
-          trigger.dataset.category ||
-          trigger.querySelector('[data-category]')?.getAttribute('data-category') ||
-          trigger.textContent?.trim();
+      [class*="announcement"] img,
+      [class*="promo"] img,
+      [class*="wall"] img,
+      [id*="announcement"] img,
+      [id*="promo"] img,
+      [id*="wall"] img {
+        height: 130px !important;
+        max-height: 130px !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
 
-        if (!rawCategory) return;
+  <script src="supabase-config.js"></script>
+  <script src="app.js"></script>
 
-        const cleanCategory = rawCategory.split('\n')[0].trim();
-
-        const filterFns = [
-          window.applyCategoryFilter,
-          window.filterByCategory,
-          window.selectCategory,
-          window.filterProducts,
-          window.renderCatalog
-        ];
-
-        for (const fn of filterFns) {
-          if (typeof fn === 'function') {
-            try {
-              fn(cleanCategory);
-            } catch (e) {}
-          }
-        }
-
-        // Also click matching category filter buttons/tabs if the page uses them
-        document.querySelectorAll('button, a, [role="button"]').forEach((el) => {
-          if (el === trigger) return;
-          const label = el.textContent?.trim();
-          if (label && label.toLowerCase() === cleanCategory.toLowerCase()) {
-            el.click();
-          }
+  <script id="sekiflex-full-shop-script">
+    (function () {
+      function cleanStorefrontDom() {
+        document.querySelectorAll("img").forEach((img) => {
+          img.removeAttribute("width");
+          img.removeAttribute("height");
         });
 
-        const catalogTarget =
-          document.querySelector('#catalog-section') ||
-          document.querySelector('#catalog') ||
-          document.querySelector('#catalog-grid') ||
-          document.querySelector('.catalog-grid') ||
-          document.querySelector('#products-grid') ||
-          document.querySelector('.products-grid');
+        const promoContainers = document.querySelectorAll(
+          '[class*="announcement"], [class*="promo"], [class*="wall"], [id*="announcement"], [id*="promo"], [id*="wall"]'
+        );
 
-        if (catalogTarget) {
-          event.preventDefault();
-          catalogTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      },
-      true
-    );
-  })();
-</script>
+        promoContainers.forEach((box) => {
+          if (box.hasAttribute("contenteditable")) {
+            box.setAttribute("contenteditable", "false");
+          }
+          box.querySelectorAll("[contenteditable]").forEach((el) => {
+            el.setAttribute("contenteditable", "false");
+          });
+
+          const img = box.querySelector("img");
+          if (img && img.getAttribute("src") && img.getAttribute("src").trim() !== "") {
+            box.querySelectorAll("span, div, p, strong, small").forEach((node) => {
+              if (node.children.length === 0 && node.textContent && node.textContent.trim() === "SC") {
+                node.style.setProperty("display", "none", "important");
+              }
+            });
+          }
+        });
+      }
+
+      document.addEventListener(
+        "beforeinput",
+        (event) => {
+          if (
+            event.target &&
+            event.target.closest &&
+            event.target.closest(
+              '[class*="announcement"], [class*="promo"], [class*="wall"], [id*="announcement"], [id*="promo"], [id*="wall"]'
+            )
+          ) {
+            event.preventDefault();
+          }
+        },
+        true
+      );
+
+      document.addEventListener(
+        "click",
+        (event) => {
+          const trigger = event.target.closest(
+            '[data-category], .category-card, .category-item, [class*="category"]'
+          );
+          if (!trigger) return;
+
+          if (
+            trigger.closest(
+              "#catalog-grid, .catalog-grid, #products-grid, .products-grid, #shop-grid, .shop-grid"
+            )
+          ) {
+            return;
+          }
+
+          const category =
+            trigger.getAttribute("data-category") ||
+            (trigger.dataset && trigger.dataset.category) ||
+            (trigger.querySelector("[data-category]") &&
+              trigger.querySelector("[data-category]").getAttribute("data-category")) ||
+            (trigger.textContent ? trigger.textContent.trim().split("\n")[0].trim() : "");
+
+          if (!category) return;
+
+          [
+            "applyCategoryFilter",
+            "filterByCategory",
+            "selectCategory",
+            "filterProducts",
+            "renderCatalog",
+            "renderProducts"
+          ].forEach((fnName) => {
+            if (typeof window[fnName] === "function") {
+              try {
+                window[fnName](category);
+              } catch (e) {}
+            }
+          });
+
+          document.querySelectorAll("button, a, [role='button']").forEach((el) => {
+            if (el === trigger) return;
+            const label = el.textContent ? el.textContent.trim() : "";
+            if (label && label.toLowerCase() === category.toLowerCase()) {
+              try {
+                el.click();
+              } catch (e) {}
+            }
+          });
+
+          const catalogTarget =
+            document.querySelector("#catalog-section") ||
+            document.querySelector("#catalog") ||
+            document.querySelector("#catalog-grid") ||
+            document.querySelector(".catalog-grid") ||
+            document.querySelector("#products-grid") ||
+            document.querySelector(".products-grid") ||
+            document.querySelector("#shop-grid");
+
+          if (catalogTarget) {
+            event.preventDefault();
+            catalogTarget.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        },
+        true
+      );
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", cleanStorefrontDom);
+      } else {
+        cleanStorefrontDom();
+      }
+
+      const observer = new MutationObserver(cleanStorefrontDom);
+      observer.observe(document.documentElement, { childList: true, subtree: true });
+    })();
+  </script>
+</body>
+</html>
