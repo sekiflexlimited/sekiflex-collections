@@ -18,6 +18,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
+  <script src="app.js"></script>
   <style>
     html, body { max-width: 100%; overflow-x: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
     .font-editorial { font-family: 'Playfair Display', serif; }
@@ -763,6 +764,13 @@
       </div>
 
       <div class="divide-y divide-stone-800/90 text-xs font-semibold text-stone-200">
+        <div class="py-2 flex items-center justify-between">
+          <span>Promo &amp; Order Alerts</span>
+          <button type="button" onclick="enableSekiflexPush({ customerEmail: currentCustomer?.email || null, customerPhone: currentCustomer?.phone || null, isAdmin: false })"
+            class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-400/35 px-3 py-1 rounded-full text-[11px] font-bold transition">
+            Enable 🔔
+          </button>
+        </div>
         <div class="py-2 flex items-center justify-between">
           <span>Track My Orders</span>
           <a href="track.html" class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-400/35 px-3 py-1 rounded-full text-[11px] font-bold transition">
@@ -2689,6 +2697,15 @@
       document.getElementById('accountSignOutActionBtn').classList.remove('hidden');
 
       prefillCustomerCheckout();
+
+      if ("Notification" in window && Notification.permission === "granted" && typeof window.enableSekiflexPush === "function") {
+        window.enableSekiflexPush({
+          customerEmail: currentCustomer.email,
+          customerPhone: currentCustomer.phone,
+          isAdmin: false,
+          silent: true
+        });
+      }
     }
 
     function completeAuthAndBounceBack(user, profile) {
