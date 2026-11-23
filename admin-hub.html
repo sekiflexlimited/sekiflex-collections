@@ -331,7 +331,7 @@
       } else {
         if (session?.user) {
           await sb.auth.signOut();
-          showHubError("Access denied: Customers cannot open the admin hub.");
+          showHubError("Access denied: Only authorized admin or staff can sign in here.");
         }
         showLogin();
       }
@@ -344,7 +344,7 @@
       const password = document.getElementById("hubPassword").value;
 
       if (!ALLOWED_ADMIN_EMAILS.includes(email)) {
-        return showHubError("Access denied: Only sekiflexcollections@gmail.com can sign in here.");
+        return showHubError("Access denied: Only authorized admin or staff can sign in here.");
       }
 
       const btn = document.getElementById("hubLoginBtn");
@@ -359,7 +359,7 @@
       if (error) return showHubError(error.message);
       if (!isAdmin(data?.user)) {
         await sb.auth.signOut();
-        return showHubError("Access denied: Unauthorized account.");
+        return showHubError("Access denied: Only authorized admin or staff can sign in here.");
       }
 
       showDashboard(data.user.email);
