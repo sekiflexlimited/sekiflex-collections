@@ -50,6 +50,25 @@
     .catalog-img-smooth.is-loaded {
       opacity: 1;
     }
+
+    @keyframes trackZoomPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.55);
+      }
+      50% {
+        transform: scale(1.07);
+        box-shadow: 0 0 0 8px rgba(245, 158, 11, 0);
+      }
+    }
+
+    .track-zoom-btn {
+      animation: trackZoomPulse 2.1s infinite ease-in-out;
+    }
+
+    .track-zoom-btn:active {
+      transform: scale(0.96);
+    }
   </style>
 </head>
 <body class="sekiflex-luxury-bg text-stone-100 antialiased pb-20">
@@ -66,7 +85,7 @@
           Sekiflex <span class="text-amber-400 italic font-semibold">Collections</span>
         </h2>
         <p id="authSubtitle" class="text-xs text-stone-300 leading-relaxed">
-          Sign in or register to continue to checkout.
+          Please register or log in an account to continue to checkout.
         </p>
       </div>
 
@@ -186,12 +205,21 @@
     <header class="sticky top-0 z-40 bg-[#0c0d10]/95 backdrop-blur-md border-b border-amber-400/20 px-3 pt-2.5 pb-2 shadow-lg">
       <div class="max-w-5xl mx-auto space-y-2">
         <div class="flex items-center justify-between gap-2">
-          <a href="index.html" onclick="resetToHome(event)" class="font-editorial text-lg sm:text-xl font-bold tracking-wide text-white">
+          <a href="index.html" onclick="resetToHome(event)" class="font-editorial text-lg sm:text-xl font-bold tracking-wide text-white shrink-0">
             Sekiflex <span class="text-amber-400 italic font-semibold">Collections</span>
           </a>
-          <span id="topWelcomeGreeting" class="text-[11px] font-medium text-amber-200/80 truncate max-w-[140px]">
-            Welcome
-          </span>
+
+          <div class="flex items-center gap-2 min-w-0">
+            <!-- ZOOM-IN / ZOOM-OUT TRACK YOUR ORDER BUTTON -->
+            <a href="track.html"
+              class="track-zoom-btn inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-400 text-stone-950 text-[11px] sm:text-xs font-extrabold px-3 py-1.5 rounded-full shadow-md shrink-0">
+              <span>📦</span>
+              <span>Track Order</span>
+            </a>
+            <span id="topWelcomeGreeting" class="hidden sm:inline text-[11px] font-medium text-amber-200/80 truncate max-w-[110px]">
+              Welcome
+            </span>
+          </div>
         </div>
 
         <form onsubmit="submitSearch(event)" class="relative flex items-center gap-1.5">
@@ -241,52 +269,81 @@
 
     <div class="max-w-5xl mx-auto px-3 pt-2.5 space-y-3">
 
-      <!-- LUXURY PROMO CAROUSEL -->
+      <!-- LUXURY PROMO CAROUSEL (LARGE FULL-BOX PICTURES + CLICKABLE DISPATCH RIDER TRACKER) -->
       <section id="heroCarouselSection">
-        <div id="bannerCarousel" class="flex gap-2.5 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
+        <div id="bannerCarousel" class="flex gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
 
-          <div id="livePromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full sm:w-[460px] rounded-2xl bg-gradient-to-r from-[#14161e] via-[#1c1914] to-amber-950/70 text-white p-3.5 flex items-center justify-between gap-3 border border-amber-400/25">
-            <div class="space-y-1 flex-1 min-w-0">
-              <span class="inline-block text-[9px] font-bold uppercase tracking-widest bg-amber-400/15 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full">
-                Edition
-              </span>
-              <p id="livePromoText" class="font-editorial text-sm sm:text-base font-bold leading-snug line-clamp-2"></p>
-              <button type="button" onclick="jumpToAllItems()" class="inline-flex items-center gap-1 bg-amber-500 text-stone-950 text-[11px] font-extrabold px-3 py-1 rounded-full mt-0.5">
-                All Items →
-              </button>
+          <!-- Slide 1: Live Admin Promo Announcement (Full-Box Image) -->
+          <div id="livePromoBannerCard" class="promo-slide hidden snap-start shrink-0 w-full sm:w-[490px] min-h-[168px] rounded-2xl bg-gradient-to-r from-[#14161e] via-[#1c1914] to-amber-950/80 text-white p-3 flex items-stretch justify-between gap-3 border border-amber-400/30 shadow-lg overflow-hidden">
+            <div class="space-y-1.5 flex-1 min-w-0 flex flex-col justify-between py-0.5">
+              <div class="space-y-1">
+                <span class="inline-block text-[9px] font-bold uppercase tracking-widest bg-amber-400/20 text-amber-300 border border-amber-400/35 px-2.5 py-0.5 rounded-full">
+                  New Announcement
+                </span>
+                <p id="livePromoText" class="font-editorial text-sm sm:text-base font-bold leading-snug line-clamp-3"></p>
+              </div>
+              <div>
+                <button type="button" onclick="jumpToAllItems()" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full transition">
+                  Shop Collection →
+                </button>
+              </div>
             </div>
-            <img id="livePromoImg" src="" alt="Promo" class="hidden w-16 h-16 object-cover object-top rounded-xl border border-amber-400/25 shrink-0" />
+            <img id="livePromoImg" src="" alt="Promo" class="hidden w-36 sm:w-44 h-36 sm:h-40 object-cover object-center rounded-xl border border-amber-400/35 shrink-0 shadow-md" />
           </div>
 
-          <div class="promo-slide snap-start shrink-0 w-full sm:w-[460px] rounded-2xl bg-gradient-to-r from-[#14161e] via-[#1c1914] to-amber-950/70 text-white p-3.5 flex items-center justify-between gap-3 border border-amber-400/25">
-            <div class="space-y-1 flex-1">
-              <span class="inline-block text-[9px] font-bold uppercase tracking-widest bg-amber-400/15 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full">
-                Signature Edit
-              </span>
-              <h2 class="font-editorial text-base sm:text-lg font-bold leading-tight">
-                Refined Style &amp; Accessories
-              </h2>
-              <p class="text-[11px] text-stone-300">Apparel, footwear, watches &amp; bags</p>
-              <button type="button" onclick="jumpToAllItems()" class="inline-flex items-center gap-1 bg-amber-500 text-stone-950 text-[11px] font-extrabold px-3 py-1 rounded-full mt-0.5">
-                All Items →
-              </button>
+          <!-- Slide 2: Luxury Fashion & Accessories Edit (Full-Box Image) -->
+          <div onclick="jumpToAllItems()" class="promo-slide cursor-pointer snap-start shrink-0 w-full sm:w-[490px] min-h-[168px] rounded-2xl bg-gradient-to-r from-[#14161e] via-[#1c1914] to-amber-950/80 text-white p-3 flex items-stretch justify-between gap-3 border border-amber-400/30 shadow-lg overflow-hidden">
+            <div class="space-y-1.5 flex-1 min-w-0 flex flex-col justify-between py-0.5">
+              <div class="space-y-1">
+                <span class="inline-block text-[9px] font-bold uppercase tracking-widest bg-amber-400/20 text-amber-300 border border-amber-400/35 px-2.5 py-0.5 rounded-full">
+                  Signature Edit
+                </span>
+                <h2 class="font-editorial text-base sm:text-lg font-bold leading-tight">
+                  Refined Style &amp; Luxury Picks
+                </h2>
+                <p class="text-[11px] text-stone-300">Apparel, footwear, watches &amp; designer bags</p>
+              </div>
+              <div>
+                <button type="button" onclick="event.stopPropagation(); jumpToAllItems();" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full transition">
+                  Explore All Items →
+                </button>
+              </div>
             </div>
-            <img src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&w=400&q=80" alt="Sekiflex Fashion"
-              class="w-16 h-16 object-cover object-top rounded-xl border border-amber-400/25 shrink-0" />
+            <img src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&w=600&q=85" alt="Sekiflex Luxury Fashion"
+              class="w-36 sm:w-44 h-36 sm:h-40 object-cover object-center rounded-xl border border-amber-400/35 shrink-0 shadow-md" />
           </div>
 
-          <div class="promo-slide snap-start shrink-0 w-full sm:w-[460px] rounded-2xl bg-gradient-to-r from-[#14161e] via-[#161a22] to-stone-900 text-white p-3.5 flex items-center justify-between gap-3 border border-amber-400/25">
-            <div class="space-y-1 flex-1">
-              <span class="inline-block text-[9px] font-bold uppercase tracking-widest bg-amber-400/15 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full">
-                Private Dispatch
-              </span>
-              <h2 class="font-editorial text-base sm:text-lg font-bold leading-tight">
-                Nationwide &amp; Global Delivery
-              </h2>
-              <p class="text-[11px] text-stone-300">Or walk-in pickup at Urua Ekpa, Uyo</p>
-              <a href="track.html" class="inline-flex items-center gap-1 bg-white/10 hover:bg-white/20 text-amber-300 border border-amber-400/35 text-[11px] font-bold px-3 py-1 rounded-full mt-0.5 transition">
-                Track Order →
-              </a>
+          <!-- Slide 3: Clickable Nationwide Delivery with Dispatch Rider, Bike & Cargo Visuals -->
+          <div onclick="window.location.href='track.html'" role="button" tabindex="0"
+            class="promo-slide cursor-pointer snap-start shrink-0 w-full sm:w-[490px] min-h-[168px] rounded-2xl bg-gradient-to-r from-[#14161e] via-[#1a1812] to-amber-950/75 text-white p-3 flex items-stretch justify-between gap-3 border border-amber-400/35 hover:border-amber-400 transition shadow-lg overflow-hidden">
+            <div class="space-y-1.5 flex-1 min-w-0 flex flex-col justify-between py-0.5">
+              <div class="space-y-1">
+                <span class="inline-block text-[9px] font-bold uppercase tracking-widest bg-emerald-500/20 text-emerald-300 border border-emerald-400/35 px-2.5 py-0.5 rounded-full">
+                  🏍️ Express Rider &amp; Cargo
+                </span>
+                <h2 class="font-editorial text-base sm:text-lg font-bold leading-tight">
+                  Nationwide &amp; Global Delivery
+                </h2>
+                <p class="text-[11px] text-stone-300">Fast dispatch riders &amp; cargo shipping from Uyo</p>
+              </div>
+              <div>
+                <a href="track.html" onclick="event.stopPropagation();"
+                  class="track-zoom-btn inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full transition">
+                  <span>📦</span>
+                  <span>Track Your Order →</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Dispatch Rider Machine + Cargo Visual Box -->
+            <div class="relative w-36 sm:w-44 h-36 sm:h-40 rounded-xl overflow-hidden border border-amber-400/35 shrink-0 shadow-md bg-stone-950">
+              <img src="https://images.unsplash.com/photo-1617347454431-f49d7ff5c3b1?auto=format&fit=crop&w=600&q=85"
+                alt="Dispatch Rider Machine and Cargo Delivery"
+                class="w-full h-full object-cover object-center" />
+              <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/55 to-transparent px-2 py-1.5 flex items-center justify-between text-[10px] font-extrabold text-amber-300">
+                <span>🏍️ Rider</span>
+                <span>📦 Cargo</span>
+              </div>
             </div>
           </div>
 
@@ -562,7 +619,10 @@
   <div id="categoriesDrawer" onclick="if(event.target === this) closeAllDrawers();" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-[#12141a] text-white w-full max-w-sm rounded-t-3xl sm:rounded-3xl p-4 max-h-[82vh] overflow-y-auto space-y-3 shadow-2xl border border-amber-400/25">
       <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
-        <h3 class="font-editorial font-bold text-base text-white">Categories</h3>
+        <div>
+          <h3 class="font-editorial font-bold text-base text-white">Store Categories</h3>
+          <p class="text-[11px] text-stone-400">Tap any category to view items</p>
+        </div>
         <button type="button" onclick="closeAllDrawers()" class="w-7 h-7 rounded-full bg-stone-900 text-stone-400 hover:text-white font-bold text-base">&times;</button>
       </div>
       <div id="drawerCategoriesList" class="grid grid-cols-2 gap-2"></div>
@@ -1419,6 +1479,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (tab === 'categories') {
         armStoreBackGuard();
+        renderCategoryButtons(allCategories);
         document.getElementById('categoriesDrawer').classList.remove('hidden');
       } else if (tab === 'cart') {
         openCartReview();
@@ -1532,13 +1593,13 @@
       let filtered = getRotatedProducts(allProducts);
 
       if (activeCategory !== 'ALL') {
-        filtered = filtered.filter(p => p.category_id === activeCategory);
+        filtered = filtered.filter(p => String(p.category_id) === String(activeCategory));
       }
 
       if (searchQuery) {
         const keywords = searchQuery.split(/\s+/).filter(Boolean);
         filtered = filtered.filter(p => {
-          const catObj = allCategories.find(c => c.id === p.category_id);
+          const catObj = allCategories.find(c => String(c.id) === String(p.category_id));
           const haystack = `${p.name || ''} ${p.description || ''} ${catObj ? catObj.name : ''}`.toLowerCase();
           return keywords.every(word => haystack.includes(word));
         });
@@ -1556,7 +1617,7 @@
       } else if (searchQuery) {
         heading.textContent = `Search results for "${document.getElementById('storeSearchInput').value.trim()}"`;
       } else if (activeCategory !== 'ALL') {
-        const catObj = allCategories.find(c => c.id === activeCategory);
+        const catObj = allCategories.find(c => String(c.id) === String(activeCategory));
         heading.textContent = catObj ? catObj.name : 'Filtered Products';
       } else {
         heading.textContent = 'All Items';
@@ -1566,14 +1627,17 @@
       renderProducts(filtered);
     }
 
-    function openAuthGate(defaultTab = 'signup', returnToCheckout = false) {
+    function openAuthGate(defaultTab = 'signup', returnToCheckout = false, noticeText = '') {
       returnToCheckoutAfterAuth = Boolean(returnToCheckout);
       armStoreBackGuard();
       document.getElementById('authSubtitle').textContent = returnToCheckoutAfterAuth
-        ? 'Sign in or register first — you will return straight to checkout.'
+        ? 'You must register or sign in first before entering delivery details and payment.'
         : 'Sign in or register to your Sekiflex Collections account.';
 
       switchAuthView(defaultTab);
+      if (noticeText) {
+        showAuthMessage(noticeText, true);
+      }
       document.getElementById('customerAuthGate').classList.remove('hidden');
     }
 
@@ -1614,7 +1678,7 @@
       const box = document.getElementById('authGateMsg');
       box.textContent = text;
       box.className = `text-xs font-semibold text-center p-2.5 rounded-xl ${
-        isError ? 'bg-red-950/80 text-red-200 border border-red-500/30' : 'bg-emerald-950/80 text-emerald-200 border border-emerald-500/30'
+        isError ? 'bg-amber-500/15 text-amber-200 border border-amber-400/40' : 'bg-emerald-950/80 text-emerald-200 border border-emerald-500/30'
       }`;
       box.classList.remove('hidden');
     }
@@ -1869,12 +1933,12 @@
       }
 
       const colorMap = {
-        gold: 'from-[#14161e] via-[#1f1a11] to-amber-950/80',
-        green: 'from-[#14161e] via-[#111f1a] to-emerald-950/80',
-        red: 'from-[#14161e] via-[#1f1215] to-rose-950/80',
-        dark: 'from-[#14161e] via-[#1c1914] to-amber-950/70'
+        gold: 'from-[#14161e] via-[#1f1a11] to-amber-950/85',
+        green: 'from-[#14161e] via-[#111f1a] to-emerald-950/85',
+        red: 'from-[#14161e] via-[#1f1215] to-rose-950/85',
+        dark: 'from-[#14161e] via-[#1c1914] to-amber-950/80'
       };
-      card.className = `promo-slide snap-start shrink-0 w-full sm:w-[460px] rounded-2xl bg-gradient-to-r ${colorMap[banner.banner_color] || colorMap.dark} text-white p-3.5 flex items-center justify-between gap-3 border border-amber-400/25`;
+      card.className = `promo-slide snap-start shrink-0 w-full sm:w-[490px] min-h-[168px] rounded-2xl bg-gradient-to-r ${colorMap[banner.banner_color] || colorMap.dark} text-white p-3 flex items-stretch justify-between gap-3 border border-amber-400/30 shadow-lg overflow-hidden`;
       txt.textContent = banner.banner_text;
 
       if (banner.banner_image_url) {
@@ -1978,14 +2042,15 @@
       const bar = document.getElementById('categoryBar');
       const drawerList = document.getElementById('drawerCategoriesList');
 
-      bar.innerHTML = `<button type="button" onclick="filterCategory('ALL', this); document.getElementById('catalogSection').scrollIntoView({behavior:'smooth'});" class="cat-btn ${activeCategory === 'ALL' ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-[#12141a] border border-stone-800 text-stone-300 font-semibold'} text-[11px] px-3.5 py-1.5 rounded-full whitespace-nowrap">All Items</button>`;
-      drawerList.innerHTML = `<button type="button" onclick="filterCategory('ALL'); closeAllDrawers(); document.getElementById('catalogSection').scrollIntoView({behavior:'smooth'});" class="p-2.5 rounded-xl bg-amber-500 text-stone-950 text-xs font-extrabold text-left">All Items</button>`;
+      bar.innerHTML = `<button type="button" onclick="filterCategory('ALL', this); document.getElementById('catalogSection').scrollIntoView({behavior:'smooth'});" class="cat-btn ${activeCategory === 'ALL' ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-[#12141a] border border-stone-800 text-stone-300 font-semibold'} text-[11px] px-3.5 py-1.5 rounded-full whitespace-nowrap">All Items (${allProducts.length})</button>`;
+      drawerList.innerHTML = `<button type="button" onclick="filterCategory('ALL'); closeAllDrawers(); setActiveBottomTab('home'); document.getElementById('catalogSection').scrollIntoView({behavior:'smooth'});" class="p-3 rounded-xl bg-amber-500 text-stone-950 text-xs font-extrabold text-left flex items-center justify-between"><span>All Store Items</span><span>(${allProducts.length})</span></button>`;
 
       allCategories.forEach(c => {
+        const countInCat = allProducts.filter(p => String(p.category_id) === String(c.id)).length;
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = `cat-btn ${activeCategory === c.id ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-[#12141a] border border-stone-800 text-stone-300 font-semibold'} text-[11px] px-3.5 py-1.5 rounded-full whitespace-nowrap`;
-        btn.textContent = c.name;
+        btn.className = `cat-btn ${String(activeCategory) === String(c.id) ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-[#12141a] border border-stone-800 text-stone-300 font-semibold'} text-[11px] px-3.5 py-1.5 rounded-full whitespace-nowrap`;
+        btn.textContent = `${c.name} (${countInCat})`;
         btn.onclick = () => {
           filterCategory(c.id, btn);
           document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
@@ -1994,11 +2059,12 @@
 
         const dBtn = document.createElement('button');
         dBtn.type = 'button';
-        dBtn.className = 'p-2.5 rounded-xl bg-stone-950 hover:bg-stone-800 border border-stone-800 text-stone-200 text-xs font-bold text-left truncate';
-        dBtn.textContent = c.name;
+        dBtn.className = 'p-3 rounded-xl bg-stone-950 hover:bg-stone-800 border border-amber-400/20 text-stone-100 text-xs font-bold text-left flex items-center justify-between gap-1.5 transition';
+        dBtn.innerHTML = `<span class="truncate">${c.name}</span><span class="text-[10px] font-extrabold text-amber-400 shrink-0">(${countInCat})</span>`;
         dBtn.onclick = () => {
           filterCategory(c.id);
           closeAllDrawers();
+          setActiveBottomTab('home');
           document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
         };
         drawerList.appendChild(dBtn);
@@ -2120,7 +2186,7 @@
           ? `<div class="flex items-baseline gap-1 mt-0.5 flex-wrap"><span class="text-xs font-extrabold text-amber-400">₦${effectivePrice.toLocaleString()}</span><span class="text-[10px] text-stone-500 line-through">₦${originalPrice.toLocaleString()}</span></div>`
           : `<p class="text-xs font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>`;
         return `
-          <div onclick="openProductDetail('${p.id}')" class="shrink-0 w-36 sm:w-40 bg-stone-950 rounded-xl overflow-hidden border border-stone-800/90 flex flex-col justify-between cursor-pointer">
+          <div onclick="openProductDetail('${p.id}')" class="shrink-0 w-36 sm:w-40 bg-stone-950 rounded-xl overflow-hidden border border-stone-800/90 flex flex-col justify-between cursor-pointer hover:border-amber-400/50 transition">
             <div class="img-skeleton-box w-full h-36 bg-stone-950 flex items-center justify-center p-1">
               <img src="${img}" alt="${p.name}" loading="${idx < 4 ? 'eager' : 'lazy'}" decoding="async"
                 onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgLoad(this)"
@@ -2187,10 +2253,10 @@
     }
 
     function addToCart(productId, btnEl) {
-      const prod = allProducts.find(p => p.id === productId);
+      const prod = allProducts.find(p => String(p.id) === String(productId));
       if (!prod) return;
       const { effectivePrice } = getProductPricing(prod);
-      const existing = cart.find(i => i.id === productId);
+      const existing = cart.find(i => String(i.id) === String(productId));
       if (existing) existing.qty += 1;
       else cart.push({ id: prod.id, name: prod.name, price: effectivePrice, qty: 1 });
       saveCart();
@@ -2305,12 +2371,30 @@
       document.getElementById('cartDrawerHeading').textContent = 'Your Shopping Cart';
     }
 
-    function openWaybillSection() {
+    async function openWaybillSection() {
       if (!cart.length) return alert('Add at least one item to your cart first.');
+
       if (!currentCustomer) {
-        openAuthGate('signup', true);
+        const { data: { session } } = await sb.auth.getSession();
+        if (session?.user) {
+          const { data: profile } = await sb
+            .from('customer_profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .maybeSingle();
+          applySignedInCustomerState(session.user, profile);
+        }
+      }
+
+      if (!currentCustomer) {
+        openAuthGate(
+          'signup',
+          true,
+          'Please register an account or log in first so you can enter your delivery details and complete payment.'
+        );
         return;
       }
+
       prefillCustomerCheckout();
       document.getElementById('cartSummaryActions').classList.add('hidden');
       document.getElementById('checkoutForm').classList.remove('hidden');
@@ -2336,7 +2420,11 @@
     async function placeOrder(e) {
       e.preventDefault();
       if (!currentCustomer) {
-        openAuthGate('signup', true);
+        openAuthGate(
+          'signup',
+          true,
+          'Please register an account or log in first so you can enter your delivery details and complete payment.'
+        );
         return;
       }
       if (!cart.length) return alert('Add at least one item to your cart first.');
