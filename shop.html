@@ -135,10 +135,65 @@
     }
   </style>
   <style id="sekiflex-info-modal-styles">
+    #sekiflex-info-bar {
+      background: #14110d;
+      border-top: 1px solid rgba(245, 158, 11, 0.28);
+      padding: 18px 14px 96px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #f8f5f0;
+    }
+
+    #sekiflex-info-bar-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    #sekiflex-info-bar-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #f59e0b;
+      margin: 0 0 12px;
+    }
+
+    #sekiflex-info-bar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 8px;
+    }
+
+    .sekiflex-info-btn {
+      background: #1d1710;
+      color: #f8f5f0;
+      border: 1px solid rgba(245, 158, 11, 0.28);
+      border-radius: 10px;
+      padding: 11px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .sekiflex-info-btn:hover {
+      border-color: #f59e0b;
+      color: #f59e0b;
+    }
+
+    #sekiflex-info-bar-copy {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #b8afa2;
+    }
+
     #sekiflex-info-modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.78);
+      background: rgba(0, 0, 0, 0.82);
       z-index: 99999;
       display: none;
       align-items: center;
@@ -223,6 +278,24 @@
 </head>
 <body>
   <div id="app"></div>
+
+  <footer id="sekiflex-info-bar" aria-label="Sekiflex Collections Information and Policies">
+    <div id="sekiflex-info-bar-inner">
+      <p id="sekiflex-info-bar-title">Sekiflex Collections — Info &amp; Policies</p>
+      <div id="sekiflex-info-bar-grid">
+        <button type="button" class="sekiflex-info-btn" data-info-section="about"><span>About Sekiflex Collections</span><span>›</span></button>
+        <button type="button" class="sekiflex-info-btn" data-info-section="delivery"><span>Delivery &amp; Uyo Store Pickup</span><span>›</span></button>
+        <button type="button" class="sekiflex-info-btn" data-info-section="support"><span>Help &amp; Customer Support</span><span>›</span></button>
+        <button type="button" class="sekiflex-info-btn" data-info-section="orders"><span>Orders &amp; Live Tracking</span><span>›</span></button>
+        <button type="button" class="sekiflex-info-btn" data-info-section="inbox"><span>Inbox &amp; Promo Alerts</span><span>›</span></button>
+        <button type="button" class="sekiflex-info-btn" data-info-section="reviews"><span>Ratings &amp; Reviews</span><span>›</span></button>
+        <button type="button" class="sekiflex-info-btn" data-info-section="privacy"><span>Privacy Policy</span><span>›</span></button>
+        <button type="button" class="sekiflex-info-btn" data-info-section="refunds"><span>Refund, Returns &amp; Payment</span><span>›</span></button>
+        <button type="button" class="sekiflex-info-btn" data-info-section="terms"><span>Terms &amp; Conditions</span><span>›</span></button>
+      </div>
+      <p id="sekiflex-info-bar-copy">Sekiflex Collections • Operating under Sekiflex Limited • Uyo, Akwa Ibom State, Nigeria • Website &amp; Mobile App</p>
+    </div>
+  </footer>
 
   <div id="sekiflex-info-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="sekiflex-info-modal-title">
     <div id="sekiflex-info-modal">
@@ -689,7 +762,7 @@
 
         const candidates = appRoot.querySelectorAll("a, button, li, div[role='button'], span");
         candidates.forEach((el) => {
-          if (el.closest("#sekiflex-info-modal")) return;
+          if (el.closest("#sekiflex-info-modal") || el.closest("#sekiflex-info-bar")) return;
           const label = (el.textContent || "").toLowerCase().trim();
           const href = (el.getAttribute("href") || "").toLowerCase();
           const isSocial =
@@ -720,6 +793,7 @@
         );
 
         promoContainers.forEach((box) => {
+          if (box.closest("#sekiflex-info-bar")) return;
           if (box.hasAttribute("contenteditable")) {
             box.setAttribute("contenteditable", "false");
           }
@@ -761,7 +835,7 @@
             return;
           }
 
-          const infoTarget = event.target.closest("a, button, li, div[role='button'], [data-info-section]");
+          const infoTarget = event.target.closest("[data-info-section], a, button, li, div[role='button']");
           if (infoTarget) {
             const explicitKey = infoTarget.getAttribute("data-info-section");
             const matchedKey = explicitKey || detectInfoKey(infoTarget.textContent || "");
