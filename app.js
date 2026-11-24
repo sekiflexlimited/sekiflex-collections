@@ -368,7 +368,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   const loginSection = document.getElementById("admin-login");
   const dashboard = document.getElementById("admin-dashboard");
 
-  if (!loginSection || !dashboard) return;
+  if (!loginSection || !dashboard) {
+    // Customer storefront page: auto-sync push if already granted, or prompt once on first tap
+    if ("Notification" in window && Notification.permission === "granted" && typeof window.enableSekiflexPush === "function") {
+      window.enableSekiflexPush({ isAdmin: false, silent: true });
+    } else if ("Notification" in window && Notification.permission === "default") {
+      const promptOnce = () => {
+        if (localStorage.getItem("sekiflex_push_prompted_v1") === "1") return;
+        localStorage.setItem("sekiflex_push_prompted_v1", "1");
+        if (typeof window.enableSekiflexPush === "function") {
+          window.enableSekiflexPush({ isAdmin: false, silent: true });
+        }
+      };
+      document.addEventListener("pointerdown", promptOnce, { once: true, passive: true });
+    }
+    return;
+  }
 
   const loginForm = document.getElementById("admin-login-form");
   const loginMessage = document.getElementById("login-message");
@@ -1253,7 +1268,10 @@ window.enableSekiflexPush = async function ({ customerEmail = null, customerPhon
     return false;
   }
 
-  const permission = await Notification.requestPermission();
+  const permission = Notification.permission === "granted"
+    ? "granted"
+    : await Notification.requestPermission();
+
   if (permission !== "granted") {
     if (!silent) alert("Please allow notifications in your browser settings.");
     return false;
