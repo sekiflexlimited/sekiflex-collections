@@ -249,6 +249,20 @@
       </form>
     </section>
 
+    <!-- Free Shipping Promo Toggle Card -->
+    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-emerald-600">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 class="font-bold text-base">Free Shipping Promo Mode</h2>
+          <p class="text-xs text-stone-500">Toggle ON to waive delivery fees across checkout (includes Akwa Ibom Payment on Delivery). Toggle OFF to restore normal rates.</p>
+        </div>
+        <label class="flex items-center gap-2.5 bg-emerald-50 border border-emerald-200 px-3.5 py-2 rounded-xl cursor-pointer shrink-0">
+          <input id="freeShippingActive" type="checkbox" onchange="saveFreeShippingToggle()" class="accent-emerald-600 w-4 h-4" />
+          <span id="freeShippingStatusText" class="text-xs font-bold text-emerald-900">OFF (Normal Rates)</span>
+        </label>
+      </div>
+    </section>
+
     <!-- Shipping Zone Quick Add -->
     <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3">
       <h2 class="font-bold text-base">Set Delivery Rate by State / Country</h2>
@@ -871,6 +885,23 @@
       loadData();
     }
 
+    async function saveFreeShippingToggle() {
+      const isFree = document.getElementById('freeShippingActive').checked;
+      const label = document.getElementById('freeShippingStatusText');
+      label.textContent = isFree ? 'ON (Free Shipping Live)' : 'OFF (Normal Rates)';
+
+      const { error } = await sb.from('store_settings').upsert({
+        id: 'free_shipping',
+        banner_active: isFree,
+        banner_text: isFree ? 'FREE_SHIPPING_ON' : 'FREE_SHIPPING_OFF',
+        updated_at: new Date().toISOString()
+      });
+
+      if (error) {
+        alert('Could not update Free Shipping mode: ' + error.message);
+      }
+    }
+
     async function addZone(e) {
       e.preventDefault();
       const { error } = await sb.from('shipping_zones').insert({
@@ -891,17 +922,24 @@
     }
 
     async function loadData() {
-      const [{ data: prods }, { data: zones }, { data: banner }, { data: banner2 }, { data: cats }] = await Promise.all([
+      const [{ data: prods }, { data: zones }, { data: banner }, { data: banner2 }, { data: cats }, { data: freeShipRow }] = await Promise.all([
         sb.from('products').select('*').order('created_at', { ascending: false }),
         sb.from('shipping_zones').select('*').order('country_name'),
         sb.from('store_settings').select('*').eq('id', 'main').maybeSingle(),
         sb.from('store_settings').select('*').eq('id', 'second').maybeSingle(),
-        sb.from('categories').select('*').order('name')
+        sb.from('categories').select('*').order('name'),
+        sb.from('store_settings').select('*').eq('id', 'free_shipping').maybeSingle()
       ]);
 
       adminProductsCache = prods || [];
       adminCategoriesCache = cats || [];
       renderAdminWallPromoForm();
+
+      const isFreeShip = !!freeShipRow?.banner_active;
+      const fsCheckbox = document.getElementById('freeShippingActive');
+      const fsStatus = document.getElementById('freeShippingStatusText');
+      if (fsCheckbox) fsCheckbox.checked = isFreeShip;
+      if (fsStatus) fsStatus.textContent = isFreeShip ? 'ON (Free Shipping Live)' : 'OFF (Normal Rates)';
 
       const localHero = JSON.parse(localStorage.getItem('sekiflex_hero_video_v1') || 'null');
       const heroActive = banner?.hero_video_active ?? localHero?.active ?? false;
