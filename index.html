@@ -37,20 +37,11 @@
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(251, 191, 36, 0.14);
     }
 
-    @keyframes imgShimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-
-    .img-skeleton-box {
-      background: linear-gradient(90deg, #1a150f 25%, #2c2318 50%, #1a150f 75%);
-      background-size: 200% 100%;
-      animation: imgShimmer 1.2s infinite linear;
-    }
-
     .catalog-img-smooth {
       opacity: 1;
-      transition: transform 0.25s ease;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: high-quality;
+      transform: translateZ(0);
     }
 
     @keyframes trackZoomPulse {
@@ -271,20 +262,8 @@
       object-fit: cover;
       object-position: top;
       display: block;
-    }
-    .skf-cat-hot {
-      position: absolute;
-      top: 2px;
-      right: 2px;
-      background: #ef4444;
-      color: #fff;
-      font-size: 7px;
-      font-weight: 900;
-      padding: 1px 4px;
-      border-radius: 9999px;
-      letter-spacing: 0.03em;
-      z-index: 2;
-      pointer-events: none;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: high-quality;
     }
 
     /* Styled Policy & Info Modal Content */
@@ -335,7 +314,7 @@
 </head>
 <body class="sekiflex-luxury-bg text-stone-100 antialiased pb-24">
 
-  <!-- LEAVE WEBSITE CONFIRMATION MODAL (YES / NO) -->
+  <!-- LEAVE WEBSITE CONFIRMATION MODAL (BACK BUTTON ONLY) -->
   <div id="leaveConfirmModal" class="fixed inset-0 z-[90] hidden bg-black/85 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-[#16130f] border border-amber-400/50 rounded-3xl max-w-xs w-full p-5 text-center space-y-4 shadow-2xl">
       <div class="space-y-1.5">
@@ -709,15 +688,15 @@
         </div>
 
         <div id="productsGrid" class="products-grid-home">
-          <div class="skf-market-card animate-pulse p-2 space-y-2">
-            <div class="w-full h-36 bg-stone-800 rounded-xl"></div>
-            <div class="h-3 bg-stone-800 rounded w-3/4"></div>
-            <div class="h-7 bg-stone-800 rounded-lg w-full"></div>
+          <div class="skf-market-card p-2 space-y-2">
+            <div class="w-full h-36 bg-stone-900/70 rounded-xl"></div>
+            <div class="h-3 bg-stone-900/70 rounded w-3/4"></div>
+            <div class="h-7 bg-stone-900/70 rounded-lg w-full"></div>
           </div>
-          <div class="skf-market-card animate-pulse p-2 space-y-2">
-            <div class="w-full h-28 bg-stone-800 rounded-xl"></div>
-            <div class="h-3 bg-stone-800 rounded w-2/3"></div>
-            <div class="h-7 bg-stone-800 rounded-lg w-full"></div>
+          <div class="skf-market-card p-2 space-y-2">
+            <div class="w-full h-28 bg-stone-900/70 rounded-xl"></div>
+            <div class="h-3 bg-stone-900/70 rounded w-2/3"></div>
+            <div class="h-7 bg-stone-900/70 rounded-lg w-full"></div>
           </div>
         </div>
       </section>
@@ -750,7 +729,7 @@
 
         <div class="mt-3 pt-2.5 border-t border-amber-400/25 space-y-2 select-none">
           <div class="px-1 flex items-center justify-between">
-            <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-400">🔥 Hot Promos</span>
+            <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-400">✦ Featured Picks</span>
           </div>
           <div id="wallHungPromoCardsList" class="space-y-2.5"></div>
         </div>
@@ -1181,7 +1160,7 @@
     </div>
   </div>
 
-  <!-- STORE SETTINGS MODAL (SOCIAL LINKS REMOVED FROM HERE) -->
+  <!-- STORE SETTINGS MODAL -->
   <div id="storeSettingsModal" onclick="if(event.target === this) closeStoreSettingsModal();" class="fixed inset-0 z-[75] hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
     <div class="bg-[#12141a] text-white border border-amber-400/25 w-full max-w-md rounded-3xl p-5 space-y-3.5 shadow-2xl my-auto">
       <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
@@ -1584,7 +1563,7 @@
           <p>Customers who receive an incorrect, damaged, defective, or materially misdescribed product should contact our customer support team promptly with their order or tracking number, proof of purchase or payment, clear photographs or videos showing the issue, and a brief explanation. Where a valid return is accepted, Sekiflex Collections will provide a replacement, repair where applicable, or refund in accordance with applicable law.</p>
 
           <h4>5. Payment Errors and Duplicate Transactions</h4>
-          <p>If your account is debited but your order is not confirmed, please contact our support team with your payment receipt or transaction reference. Where a duplicate payment is confirmed with the payment provider, the additional payment will be processed for a refund. A payment screenshot alone may not establish settlement; verification is based on available transaction records and confirmation from the relevant payment provider.</p>
+          <p>If your account is debited but your order is not confirmed, please contact our support team with your payment receipt or transaction reference. Where a duplicate payment is confirmed with our payment provider, the additional payment will be processed for a refund. A payment screenshot alone may not establish settlement; verification is based on available transaction records and confirmation from the relevant payment provider.</p>
 
           <h4>6. Refund Processing</h4>
           <p>Once a refund request is reviewed and approved, the refund will normally be made through the original payment method wherever reasonably possible, subject to financial institution processing timelines.</p>
@@ -1728,14 +1707,6 @@
         pushBackTrapState();
         openLeaveConfirmModal();
       });
-
-      window.addEventListener('beforeunload', (e) => {
-        if (allowWebsiteExit) return;
-        openLeaveConfirmModal();
-        e.preventDefault();
-        e.returnValue = 'Do you really want to leave Sekiflex Collections?';
-        return e.returnValue;
-      });
     }
 
     function bindScrollPauseWatcher() {
@@ -1808,20 +1779,11 @@
 
     function handleCatalogImgLoad(imgEl) {
       if (!imgEl) return;
-      if (imgEl.dataset.timeoutId) {
-        clearTimeout(Number(imgEl.dataset.timeoutId));
-      }
       imgEl.classList.add('is-loaded');
-      if (imgEl.parentElement) {
-        imgEl.parentElement.classList.remove('img-skeleton-box');
-      }
     }
 
     function handleCatalogImgError(imgEl, labelText = 'Sekiflex') {
       if (!imgEl) return;
-      if (imgEl.dataset.timeoutId) {
-        clearTimeout(Number(imgEl.dataset.timeoutId));
-      }
       const nextFallback = getFallbackPhotoUrl((Number(imgEl.dataset.fbIdx) || 0) + 1);
       if (nextFallback && imgEl.src !== nextFallback && (Number(imgEl.dataset.fbIdx) || 0) < 3) {
         imgEl.dataset.fbIdx = String((Number(imgEl.dataset.fbIdx) || 0) + 1);
@@ -1830,38 +1792,17 @@
       }
       imgEl.style.display = 'none';
       if (imgEl.parentElement) {
-        imgEl.parentElement.classList.remove('img-skeleton-box');
         imgEl.parentElement.innerHTML = renderBrandedPlaceholderHtml(labelText);
       }
     }
 
-    function armSlowImageGuard(imgEl, labelText = 'Sekiflex') {
-      if (!imgEl) return;
-      if (imgEl.complete && imgEl.naturalWidth > 0) {
-        handleCatalogImgLoad(imgEl);
-        return;
-      }
-      const tid = setTimeout(() => {
-        if (!imgEl.complete || imgEl.naturalWidth === 0) {
-          handleCatalogImgError(imgEl, labelText);
-        }
-      }, 4500);
-      imgEl.dataset.timeoutId = String(tid);
-    }
-
-    function activateSlowImageGuards() {
-      document.querySelectorAll('img.catalog-img-smooth').forEach(img => {
-        armSlowImageGuard(img, img.dataset.prodLabel || 'Sekiflex');
-      });
-    }
-
     function warmUpTopImages(list) {
       if (!Array.isArray(list) || !list.length) return;
-      list.slice(0, 12).forEach(p => {
+      list.slice(0, 16).forEach(p => {
         const src = (p.images && p.images[0]) || p.image_url;
         if (!src) return;
         const pre = new Image();
-        pre.decoding = 'async';
+        pre.decoding = 'sync';
         pre.src = src;
       });
     }
@@ -1875,10 +1816,10 @@
       const img2 = (prod2?.images && prod2.images[0]) || prod2?.image_url || '';
 
       if (appBox && img1) {
-        appBox.innerHTML = `<img src="${img1}" alt="" class="w-full h-full object-cover object-top" />`;
+        appBox.innerHTML = `<img src="${img1}" alt="" decoding="sync" class="catalog-img-smooth w-full h-full object-cover object-top" />`;
       }
       if (accBox && img2) {
-        accBox.innerHTML = `<img src="${img2}" alt="" class="w-full h-full object-cover object-top" />`;
+        accBox.innerHTML = `<img src="${img2}" alt="" decoding="sync" class="catalog-img-smooth w-full h-full object-cover object-top" />`;
       }
     }
 
@@ -2601,7 +2542,7 @@
                 ${tag}
               </span>
               ${img
-                ? `<img src="${img}" alt="" data-fb-idx="${idx}" onerror="handleCatalogImgError(this, '${title.replace(/'/g, "\\'")}')" class="w-full h-full object-cover object-top" />`
+                ? `<img src="${img}" alt="" decoding="sync" data-fb-idx="${idx}" onerror="handleCatalogImgError(this, '${title.replace(/'/g, "\\'")}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
                 : renderBrandedPlaceholderHtml(title)}
             </div>
             <div class="pt-1 text-center">
@@ -2634,7 +2575,7 @@
           <div data-auto-prod="${safeProdId}" class="skf-side-auto-card">
             <div class="w-full h-16 rounded-lg overflow-hidden bg-stone-950">
               ${img
-                ? `<img src="${img}" alt="" data-fb-idx="${i}" onerror="handleCatalogImgError(this, '${safeProdName}')" class="w-full h-full object-cover object-top" />`
+                ? `<img src="${img}" alt="" decoding="sync" data-fb-idx="${i}" onerror="handleCatalogImgError(this, '${safeProdName}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
                 : renderBrandedPlaceholderHtml(p.name)}
             </div>
             <div class="pt-1 text-center">
@@ -2647,14 +2588,13 @@
       wrap.innerHTML = pinnedHtml + autoCardsHtml.join('');
     }
 
-    function renderSplitThumbInner(img, labelText, isHot, seedIdx = 0) {
+    function renderSplitThumbInner(img, labelText, seedIdx = 0) {
       const safeLabel = String(labelText || 'Sekiflex').replace(/'/g, "\\'");
-      const hotBadge = isHot ? '<span class="skf-cat-hot">HOT</span>' : '';
       const chosenImg = img || getFallbackPhotoUrl(seedIdx);
       if (!chosenImg) {
-        return `${renderBrandedPlaceholderHtml(labelText)}${hotBadge}`;
+        return renderBrandedPlaceholderHtml(labelText);
       }
-      return `<img src="${chosenImg}" alt="" data-fb-idx="${seedIdx}" onerror="handleCatalogImgError(this, '${safeLabel}')" />${hotBadge}`;
+      return `<img src="${chosenImg}" alt="" decoding="sync" data-fb-idx="${seedIdx}" onerror="handleCatalogImgError(this, '${safeLabel}')" />`;
     }
 
     function openSplitCategoryStore() {
@@ -2719,7 +2659,7 @@
           return `
             <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-                ${renderSplitThumbInner(img, p.name, idx < 2, idx)}
+                ${renderSplitThumbInner(img, p.name, idx)}
               </div>
               <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
               <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
@@ -2742,7 +2682,7 @@
             <div data-action="cat" data-val="${String(c.id).replace(/"/g, '&quot;')}"
               class="skf-cat-cell group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-                ${renderSplitThumbInner(img, c.name, idx < 2, idx)}
+                ${renderSplitThumbInner(img, c.name, idx)}
               </div>
               <p class="text-[11px] font-bold text-stone-100 line-clamp-2 leading-tight w-full">${c.name}</p>
               <p class="text-[10px] text-amber-400 font-semibold mt-0.5">${count} item${count === 1 ? '' : 's'}</p>
@@ -2755,7 +2695,7 @@
           return `
             <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-                ${renderSplitThumbInner(img, p.name, idx === 0, idx + 1)}
+                ${renderSplitThumbInner(img, p.name, idx + 1)}
               </div>
               <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
               <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
@@ -2772,7 +2712,7 @@
           combined.push(`
             <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
               <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-                ${renderSplitThumbInner(img, p.name, false, fillIdx + 2)}
+                ${renderSplitThumbInner(img, p.name, fillIdx + 2)}
               </div>
               <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
               <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
@@ -2806,7 +2746,7 @@
         catRows.push(`
           <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
             <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-              ${renderSplitThumbInner(img, p.name, i < 2, i)}
+              ${renderSplitThumbInner(img, p.name, i)}
             </div>
             <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
             <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
@@ -3621,11 +3561,11 @@
           ? `<div class="flex items-baseline gap-1 mt-0.5 flex-wrap"><span class="text-xs font-extrabold text-amber-400">₦${effectivePrice.toLocaleString()}</span><span class="text-[10px] text-stone-400 line-through">₦${originalPrice.toLocaleString()}</span></div>`
           : `<p class="text-xs font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>`;
         const mediaInner = img
-          ? `<img src="${img}" alt="" data-prod-label="${safeName}" loading="eager" decoding="async" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
+          ? `<img src="${img}" alt="" decoding="sync" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
           : renderBrandedPlaceholderHtml(p.name);
         return `
           <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="shrink-0 w-32 sm:w-36 bg-[#18140e] rounded-xl overflow-hidden border border-amber-400/25 flex flex-col justify-between cursor-pointer hover:border-amber-400 transition shadow-sm">
-            <div class="${img ? 'img-skeleton-box' : ''} w-full h-28 bg-stone-950 flex items-center justify-center overflow-hidden">
+            <div class="w-full h-28 bg-stone-950 flex items-center justify-center overflow-hidden">
               ${mediaInner}
             </div>
             <div class="p-1.5 bg-[#16130f]">
@@ -3634,7 +3574,6 @@
             </div>
           </div>`;
       }).join('');
-      activateSlowImageGuards();
       startFeaturedAutoScroll();
     }
 
@@ -3655,12 +3594,12 @@
         const { effectivePrice, originalPrice } = getProductPricing(p);
 
         const mediaInner = img
-          ? `<img src="${img}" alt="" data-prod-label="${safeName}" loading="eager" fetchpriority="${idx < 4 ? 'high' : 'auto'}" decoding="async" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth ${imgClass}" />`
+          ? `<img src="${img}" alt="" decoding="sync" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth ${imgClass}" />`
           : `<div class="${imgClass}">${renderBrandedPlaceholderHtml(p.name)}</div>`;
 
         return `
           <div onclick="openProductDetail('${safeId}')" class="skf-market-card">
-            <div class="${img ? 'img-skeleton-box' : ''} w-full bg-stone-950 overflow-hidden">
+            <div class="w-full bg-stone-950 overflow-hidden">
               ${mediaInner}
             </div>
             <div class="p-2.5 space-y-1.5">
@@ -3676,7 +3615,6 @@
                   🛒
                 </button>
               </div>
-              <p class="text-[10px] text-amber-200/75 truncate">Sekiflex Verified • ${isTall ? 'Trending Pick' : 'Limited Stock'}</p>
               <button type="button" ${out ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart('${safeId}', this);"
                 class="w-full ${out ? 'bg-stone-800 text-stone-500' : 'bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950'} text-[11px] font-extrabold py-1.5 rounded-xl transition shadow-xs">
                 ${out ? 'Sold Out' : 'Add to Cart'}
@@ -3684,7 +3622,6 @@
             </div>
           </div>`;
       }).join('');
-      activateSlowImageGuards();
     }
 
     function showBagToast(itemName) {
@@ -3804,7 +3741,7 @@
             <div class="flex items-start gap-3">
               <div class="w-16 h-16 rounded-xl overflow-hidden bg-stone-950 border border-amber-400/20 shrink-0">
                 ${thumbImg
-                  ? `<img src="${thumbImg}" alt="" class="w-full h-full object-cover object-top" />`
+                  ? `<img src="${thumbImg}" alt="" decoding="sync" class="catalog-img-smooth w-full h-full object-cover object-top" />`
                   : renderBrandedPlaceholderHtml(item.name)}
               </div>
               <div class="min-w-0 flex-1 space-y-1">
