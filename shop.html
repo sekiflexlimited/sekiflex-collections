@@ -14,6 +14,7 @@
       margin: 0;
       padding: 0;
       overflow-x: hidden;
+      background: #0d0b08;
     }
 
     /* Compact 2-column catalog grid & cards */
@@ -135,164 +136,237 @@
     }
   </style>
   <style id="sekiflex-info-modal-styles">
+    /* Black & Gold Grouped Card Design matching Account screen */
     #sekiflex-info-bar {
-      background: #14110d;
-      border-top: 1px solid rgba(245, 158, 11, 0.28);
-      padding: 18px 14px 96px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      color: #f8f5f0;
+      background: #0d0b08 !important;
+      padding: 16px 14px 104px !important;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+      color: #f8f5f0 !important;
     }
 
     #sekiflex-info-bar-inner {
-      max-width: 900px;
-      margin: 0 auto;
+      max-width: 680px !important;
+      margin: 0 auto !important;
     }
 
-    #sekiflex-info-bar-title {
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #f59e0b;
-      margin: 0 0 12px;
+    .sekiflex-group-label {
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.06em !important;
+      text-transform: uppercase !important;
+      color: #f59e0b !important;
+      margin: 18px 4px 10px !important;
     }
 
-    #sekiflex-info-bar-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      gap: 8px;
+    .sekiflex-dark-card {
+      background: #16130e !important;
+      border: 1px solid rgba(245, 158, 11, 0.24) !important;
+      border-radius: 16px !important;
+      overflow: hidden !important;
     }
 
-    .sekiflex-info-btn {
-      background: #1d1710;
-      color: #f8f5f0;
-      border: 1px solid rgba(245, 158, 11, 0.28);
-      border-radius: 10px;
-      padding: 11px 12px;
-      font-size: 13px;
-      font-weight: 600;
-      text-align: left;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
+    .sekiflex-dark-row {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 12px !important;
+      padding: 16px 18px !important;
+      background: #16130e !important;
+      color: #f8f5f0 !important;
+      text-decoration: none !important;
+      font-size: 15px !important;
+      font-weight: 600 !important;
+      border-bottom: 1px solid rgba(245, 158, 11, 0.14) !important;
+      cursor: pointer !important;
+      transition: background 0.15s ease !important;
     }
 
-    .sekiflex-info-btn:hover {
-      border-color: #f59e0b;
-      color: #f59e0b;
+    .sekiflex-dark-row:last-child {
+      border-bottom: none !important;
+    }
+
+    .sekiflex-dark-row:active,
+    .sekiflex-dark-row:hover {
+      background: #1f1a13 !important;
+    }
+
+    .sekiflex-row-left {
+      display: flex !important;
+      align-items: center !important;
+      gap: 14px !important;
+    }
+
+    .sekiflex-row-icon {
+      width: 22px !important;
+      text-align: center !important;
+      font-size: 16px !important;
+      color: #f59e0b !important;
+      flex-shrink: 0 !important;
+    }
+
+    .sekiflex-row-arrow {
+      color: #f59e0b !important;
+      font-size: 18px !important;
+      font-weight: 700 !important;
     }
 
     #sekiflex-info-bar-copy {
-      margin-top: 14px;
-      font-size: 12px;
-      color: #b8afa2;
+      margin-top: 18px !important;
+      text-align: center !important;
+      font-size: 12px !important;
+      color: #9f9689 !important;
+      line-height: 1.5 !important;
     }
 
+    /* Fullscreen/Centered Dark Modal when an item is tapped */
     #sekiflex-info-modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.82);
-      z-index: 99999;
+      position: fixed !important;
+      inset: 0 !important;
+      background: rgba(0, 0, 0, 0.85) !important;
+      z-index: 99999 !important;
       display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 14px !important;
     }
 
     #sekiflex-info-modal-backdrop.is-open {
-      display: flex;
+      display: flex !important;
     }
 
     #sekiflex-info-modal {
-      width: 100%;
-      max-width: 680px;
-      max-height: 86vh;
-      background: #14110d;
-      color: #f8f5f0;
-      border: 1px solid rgba(245, 158, 11, 0.35);
-      border-radius: 16px;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      width: 100% !important;
+      max-width: 680px !important;
+      max-height: 86vh !important;
+      background: #16130e !important;
+      color: #f8f5f0 !important;
+      border: 1px solid rgba(245, 158, 11, 0.35) !important;
+      border-radius: 16px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow: hidden !important;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75) !important;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     }
 
     #sekiflex-info-modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 16px 20px;
-      background: #1d1710;
-      border-bottom: 1px solid rgba(245, 158, 11, 0.22);
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 12px !important;
+      padding: 16px 20px !important;
+      background: #1d1811 !important;
+      border-bottom: 1px solid rgba(245, 158, 11, 0.22) !important;
     }
 
     #sekiflex-info-modal-title {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 700;
-      color: #f59e0b;
+      margin: 0 !important;
+      font-size: 17px !important;
+      font-weight: 700 !important;
+      color: #f59e0b !important;
     }
 
     #sekiflex-info-modal-close {
-      background: rgba(245, 158, 11, 0.14);
-      color: #f59e0b;
-      border: 1px solid rgba(245, 158, 11, 0.35);
-      border-radius: 8px;
-      padding: 6px 12px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
+      background: #261f16 !important;
+      color: #f59e0b !important;
+      border: 1px solid rgba(245, 158, 11, 0.35) !important;
+      border-radius: 8px !important;
+      padding: 6px 12px !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
     }
 
     #sekiflex-info-modal-body {
-      padding: 20px;
-      overflow-y: auto;
-      line-height: 1.65;
-      font-size: 14px;
+      padding: 20px !important;
+      overflow-y: auto !important;
+      line-height: 1.65 !important;
+      font-size: 14px !important;
     }
 
     #sekiflex-info-modal-body h4 {
-      margin: 16px 0 6px;
-      font-size: 15px;
-      color: #f59e0b;
+      margin: 16px 0 6px !important;
+      font-size: 15px !important;
+      color: #f59e0b !important;
     }
 
     #sekiflex-info-modal-body p {
-      margin: 0 0 10px;
-      color: #f8f5f0;
+      margin: 0 0 10px !important;
+      color: #f8f5f0 !important;
     }
 
     #sekiflex-info-modal-body ul {
-      margin: 0 0 12px;
-      padding-left: 20px;
+      margin: 0 0 12px !important;
+      padding-left: 20px !important;
     }
 
     #sekiflex-info-modal-body li {
-      margin-bottom: 6px;
+      margin-bottom: 6px !important;
     }
   </style>
 </head>
 <body>
   <div id="app"></div>
 
-  <footer id="sekiflex-info-bar" aria-label="Sekiflex Collections Information and Policies">
+  <footer id="sekiflex-info-bar" aria-label="Sekiflex Collections Information, Policies, and Socials">
     <div id="sekiflex-info-bar-inner">
-      <p id="sekiflex-info-bar-title">Sekiflex Collections — Info &amp; Policies</p>
-      <div id="sekiflex-info-bar-grid">
-        <button type="button" class="sekiflex-info-btn" data-info-section="about"><span>About Sekiflex Collections</span><span>›</span></button>
-        <button type="button" class="sekiflex-info-btn" data-info-section="delivery"><span>Delivery &amp; Uyo Store Pickup</span><span>›</span></button>
-        <button type="button" class="sekiflex-info-btn" data-info-section="support"><span>Help &amp; Customer Support</span><span>›</span></button>
-        <button type="button" class="sekiflex-info-btn" data-info-section="orders"><span>Orders &amp; Live Tracking</span><span>›</span></button>
-        <button type="button" class="sekiflex-info-btn" data-info-section="inbox"><span>Inbox &amp; Promo Alerts</span><span>›</span></button>
-        <button type="button" class="sekiflex-info-btn" data-info-section="reviews"><span>Ratings &amp; Reviews</span><span>›</span></button>
-        <button type="button" class="sekiflex-info-btn" data-info-section="privacy"><span>Privacy Policy</span><span>›</span></button>
-        <button type="button" class="sekiflex-info-btn" data-info-section="refunds"><span>Refund, Returns &amp; Payment</span><span>›</span></button>
-        <button type="button" class="sekiflex-info-btn" data-info-section="terms"><span>Terms &amp; Conditions</span><span>›</span></button>
+
+      <p class="sekiflex-group-label">NEED ASSISTANCE?</p>
+      <div class="sekiflex-dark-card">
+        <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="delivery">
+          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">🚚</span><span>Delivery &amp; Uyo Store Pickup</span></span>
+          <span class="sekiflex-row-arrow">›</span>
+        </div>
+        <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="support">
+          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">🎧</span><span>Help &amp; Customer Support</span></span>
+          <span class="sekiflex-row-arrow">›</span>
+        </div>
       </div>
+
+      <p class="sekiflex-group-label">SEKIFLEX INFORMATION &amp; POLICIES</p>
+      <div class="sekiflex-dark-card">
+        <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="orders">
+          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">📦</span><span>Orders &amp; Live Tracking</span></span>
+          <span class="sekiflex-row-arrow">›</span>
+        </div>
+        <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="inbox">
+          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">🔔</span><span>Inbox &amp; Promo Alerts</span></span>
+          <span class="sekiflex-row-arrow">›</span>
+        </div>
+        <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="reviews">
+          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">⭐</span><span>Ratings &amp; Reviews</span></span>
+          <span class="sekiflex-row-arrow">›</span>
+        </div>
+        <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="privacy">
+          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">🛡️</span><span>Privacy Policy</span></span>
+          <span class="sekiflex-row-arrow">›</span>
+        </div>
+        <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="refunds">
+          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">💳</span><span>Refund, Returns &amp; Payment Policy</span></span>
+          <span class="sekiflex-row-arrow">›</span>
+        </div>
+        <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="terms">
+          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">📄</span><span>Terms &amp; Conditions</span></span>
+          <span class="sekiflex-row-arrow">›</span>
+        </div>
+        <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="about">
+          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">👑</span><span>About Sekiflex Collections</span></span>
+          <span class="sekiflex-row-arrow">›</span>
+        </div>
+      </div>
+
+      <p class="sekiflex-group-label">CONNECT WITH US</p>
+      <div class="sekiflex-dark-card">
+        <a class="sekiflex-dark-row" href="https://www.facebook.com/sekiflexcollections" target="_blank" rel="noopener noreferrer">
+          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">📘</span><span>Facebook</span></span>
+          <span class="sekiflex-row-arrow">›</span>
+        </a>
+        <a class="sekiflex-dark-row" href="https://www.tiktok.com/@sekiflexcollections" target="_blank" rel="noopener noreferrer">
+          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">🎵</span><span>TikTok</span></span>
+          <span class="sekiflex-row-arrow">›</span>
+        </a>
+      </div>
+
       <p id="sekiflex-info-bar-copy">Sekiflex Collections • Operating under Sekiflex Limited • Uyo, Akwa Ibom State, Nigeria • Website &amp; Mobile App</p>
     </div>
   </footer>
@@ -301,7 +375,7 @@
     <div id="sekiflex-info-modal">
       <div id="sekiflex-info-modal-header">
         <h3 id="sekiflex-info-modal-title">Sekiflex Collections</h3>
-        <button id="sekiflex-info-modal-close" type="button" aria-label="Close modal">Close</button>
+        <div id="sekiflex-info-modal-close" role="button" tabindex="0" aria-label="Close modal">Close</div>
       </div>
       <div id="sekiflex-info-modal-body"></div>
     </div>
@@ -756,37 +830,11 @@
         return null;
       }
 
-      function removeSocialFromAccountSettings() {
-        const appRoot = document.getElementById("app");
-        if (!appRoot) return;
-
-        const candidates = appRoot.querySelectorAll("a, button, li, div[role='button'], span");
-        candidates.forEach((el) => {
-          if (el.closest("#sekiflex-info-modal") || el.closest("#sekiflex-info-bar")) return;
-          const label = (el.textContent || "").toLowerCase().trim();
-          const href = (el.getAttribute("href") || "").toLowerCase();
-          const isSocial =
-            label === "facebook" ||
-            label === "tiktok" ||
-            href.includes("facebook.com") ||
-            href.includes("tiktok.com");
-
-          if (isSocial) {
-            const row = el.closest("li, a, button, .menu-item, .settings-item, .account-item") || el;
-            if (row && row.parentNode && row !== appRoot) {
-              row.style.setProperty("display", "none", "important");
-            }
-          }
-        });
-      }
-
       function cleanStorefrontDom() {
         document.querySelectorAll("img").forEach((img) => {
           img.removeAttribute("width");
           img.removeAttribute("height");
         });
-
-        removeSocialFromAccountSettings();
 
         const promoContainers = document.querySelectorAll(
           '[class*="announcement"], [class*="promo"], [class*="wall"], [id*="announcement"], [id*="promo"], [id*="wall"]'
@@ -837,6 +885,9 @@
 
           const infoTarget = event.target.closest("[data-info-section], a, button, li, div[role='button']");
           if (infoTarget) {
+            if (infoTarget.tagName === "A" && infoTarget.getAttribute("target") === "_blank") {
+              return;
+            }
             const explicitKey = infoTarget.getAttribute("data-info-section");
             const matchedKey = explicitKey || detectInfoKey(infoTarget.textContent || "");
             if (matchedKey && INFO_SECTIONS[matchedKey]) {
