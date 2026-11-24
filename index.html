@@ -145,25 +145,29 @@
     }
 
     .products-grid-home {
-      column-count: 2;
-      column-gap: 0.65rem;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.65rem;
+      align-items: stretch;
     }
 
     @media (min-width: 768px) {
       .products-grid-home {
-        column-count: 3;
-        column-gap: 0.85rem;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.85rem;
       }
     }
 
     .skf-market-card {
-      break-inside: avoid;
-      margin-bottom: 0.7rem;
+      margin-bottom: 0;
       border-radius: 14px;
       background: linear-gradient(165deg, rgba(28, 22, 14, 0.96) 0%, rgba(15, 12, 9, 0.98) 100%);
       border: 1px solid rgba(245, 158, 11, 0.26);
       overflow: hidden;
       cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       transition: transform 0.2s ease, border-color 0.2s ease;
     }
 
@@ -171,17 +175,10 @@
       border-color: rgba(251, 191, 36, 0.65);
     }
 
-    .skf-market-img-tall {
-      width: 100%;
-      height: 176px;
-      object-fit: cover;
-      object-position: top;
-      display: block;
-    }
-
+    .skf-market-img-tall,
     .skf-market-img-compact {
       width: 100%;
-      height: 124px;
+      height: 158px;
       object-fit: cover;
       object-position: top;
       display: block;
@@ -660,7 +657,7 @@
         </div>
       </section>
 
-      <!-- CATEGORY BAR & MARKETPLACE-STYLE STAGGERED PRODUCT SHOWCASE -->
+      <!-- CATEGORY BAR & MARKETPLACE-STYLE PRODUCT SHOWCASE -->
       <section id="catalogSection" class="space-y-2 scroll-mt-24">
         <div id="categoryViewBanner" class="hidden rounded-2xl bg-gradient-to-r from-[#281d0d] via-[#1c150c] to-amber-950/60 border border-amber-400/40 px-3 py-2 flex items-center justify-between gap-2">
           <div class="min-w-0">
@@ -693,7 +690,7 @@
             <div class="h-7 bg-stone-900/70 rounded-lg w-full"></div>
           </div>
           <div class="skf-market-card p-2 space-y-2">
-            <div class="w-full h-28 bg-stone-900/70 rounded-xl"></div>
+            <div class="w-full h-36 bg-stone-900/70 rounded-xl"></div>
             <div class="h-3 bg-stone-900/70 rounded w-2/3"></div>
             <div class="h-7 bg-stone-900/70 rounded-lg w-full"></div>
           </div>
@@ -1345,6 +1342,8 @@
     let lastRotationSlot = -1;
     let pendingHomeRotation = false;
     let isUserScrolling = false;
+    let catalogTouchLockedUntil = 0;
+    let lockedCatalogOrderIds = null;
     let scrollIdleTimer = null;
     let allowWebsiteExit = false;
 
@@ -1746,24 +1745,47 @@
       });
     }
 
+    function lockCatalogAndCategoriesWhileBrowsing(durationMs = 45000) {
+      catalogTouchLockedUntil = Date.now() + durationMs;
+      pendingHomeRotation = false;
+    }
+
+    function isCatalogOrCategoryLocked() {
+      return isUserScrolling || Date.now() < catalogTouchLockedUntil;
+    }
+
     function bindScrollPauseWatcher() {
       if (window.__skfScrollWatcherBound) return;
       window.__skfScrollWatcherBound = true;
 
       const onScrollActivity = () => {
         isUserScrolling = true;
+        lockCatalogAndCategoriesWhileBrowsing(45000);
         clearTimeout(scrollIdleTimer);
         scrollIdleTimer = setTimeout(() => {
           isUserScrolling = false;
-          if (pendingHomeRotation && allProducts.length > 1) {
-            pendingHomeRotation = false;
-            applyCatalogFilters();
-          }
-        }, 1800);
+        }, 2500);
+      };
+
+      const onCatalogOrCategoryTouch = (ev) => {
+        const target = ev.target;
+        if (!target || typeof target.closest !== 'function') return;
+        // Touching or interacting anywhere in catalog, categories, or split category screen locks their order
+        // Featured strip (#featuredStripSection) continues scrolling uninterrupted
+        if (
+          target.closest('#catalogSection') ||
+          target.closest('#categoryBar') ||
+          target.closest('#splitCategoryStoreView') ||
+          target.closest('#navCatBtn')
+        ) {
+          lockCatalogAndCategoriesWhileBrowsing(60000);
+        }
       };
 
       window.addEventListener('scroll', onScrollActivity, { passive: true });
       document.addEventListener('touchmove', onScrollActivity, { passive: true });
+      document.addEventListener('touchstart', onCatalogOrCategoryTouch, { passive: true });
+      document.addEventListener('pointerdown', onCatalogOrCategoryTouch, { passive: true });
     }
 
     function bindCategoryDelegationOnce() {
@@ -2094,7 +2116,7 @@
       if (!strip.dataset.autoBound) {
         strip.dataset.autoBound = '1';
         const pauseFeatured = () => {
-          featuredPauseUntil = Date.now() + 5000;
+          featuredPauseUntil = Date.now() + 2500;
         };
         strip.addEventListener('touchstart', pauseFeatured, { passive: true });
         strip.addEventListener('pointerdown', pauseFeatured, { passive: true });
@@ -2122,6 +2144,22 @@
 
     function getRotatedProducts(list) {
       if (!Array.isArray(list) || list.length <= 1) return list || [];
+
+      // Keep catalog & category order completely frozen while customer is touching or scrolling
+      if (isCatalogOrCategoryLocked() && Array.isArray(lockedCatalogOrderIds) && lockedCatalogOrderIds.length) {
+        const mapById = new Map(list.map(item => [String(item.id), item]));
+        const ordered = [];
+        lockedCatalogOrderIds.forEach(id => {
+          const found = mapById.get(String(id));
+          if (found) {
+            ordered.push(found);
+            mapById.delete(String(id));
+          }
+        });
+        mapById.forEach(rest => ordered.push(rest));
+        return ordered;
+      }
+
       const slot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000));
       const items = [...list];
       const n = items.length;
@@ -2138,6 +2176,7 @@
         items[i] = items[j];
         items[j] = tmp;
       }
+      lockedCatalogOrderIds = items.map(p => String(p.id));
       return items;
     }
 
@@ -2147,12 +2186,12 @@
         if (slot !== lastRotationSlot && allProducts.length > 1) {
           lastRotationSlot = slot;
 
-          if (isUserScrolling) {
-            pendingHomeRotation = true;
-          } else {
-            pendingHomeRotation = false;
-            applyCatalogFilters();
+          // Never reshuffle catalog or categories while the customer is touching/scrolling them
+          if (isCatalogOrCategoryLocked()) {
+            return;
           }
+
+          applyCatalogFilters();
 
           if (!document.getElementById('splitCategoryStoreView').classList.contains('hidden')) {
             renderSplitCategoryPanel();
@@ -2397,6 +2436,7 @@
       showOnlyMainView('storeMainWrapper');
       setActiveBottomTab('home');
       armStoreBackGuard();
+      lockCatalogAndCategoriesWhileBrowsing(60000);
 
       const img = (prod.images && prod.images[0]) || prod.image_url || getFallbackPhotoUrl(0);
       const out = (prod.stock_quantity !== null && prod.stock_quantity <= 0);
@@ -2637,6 +2677,7 @@
     function openSplitCategoryStore() {
       closeAllDrawers();
       armStoreBackGuard();
+      lockCatalogAndCategoriesWhileBrowsing(60000);
       setActiveBottomTab('categories');
       showOnlyMainView('splitCategoryStoreView');
       renderSplitCategorySidebar();
@@ -2665,6 +2706,7 @@
 
     function selectSplitCategory(key) {
       splitSelectedCatKey = key;
+      lockCatalogAndCategoriesWhileBrowsing(60000);
       renderSplitCategorySidebar();
       renderSplitCategoryPanel();
     }
@@ -2802,6 +2844,7 @@
       closeAllDrawers();
       showOnlyMainView('storeMainWrapper');
       categoryBrowseMode = true;
+      lockCatalogAndCategoriesWhileBrowsing(60000);
       setActiveBottomTab('home');
       filterCategory(catId);
       setTimeout(() => {
@@ -2891,6 +2934,7 @@
 
       if (searchQuery || pictureSearchScores) {
         armStoreBackGuard();
+        lockCatalogAndCategoriesWhileBrowsing(60000);
         document.getElementById('heroCarouselSection').classList.add('hidden');
         document.getElementById('featuredStripSection').classList.add('hidden');
       } else {
@@ -3551,6 +3595,7 @@
         btn.textContent = `${c.name} (${countInCat})`;
         btn.onclick = () => {
           categoryBrowseMode = true;
+          lockCatalogAndCategoriesWhileBrowsing(60000);
           filterCategory(c.id, btn);
           document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
         };
@@ -3665,9 +3710,12 @@
     function filterCategory(catId, activeBtn) {
       activeCategory = catId;
       if (catId === 'ALL') categoryBrowseMode = false;
-      if (catId !== 'ALL') armStoreBackGuard();
+      if (catId !== 'ALL') {
+        armStoreBackGuard();
+        lockCatalogAndCategoriesWhileBrowsing(60000);
+      }
       document.querySelectorAll('.cat-btn').forEach(b => {
-        b.className = 'cat-btn bg-[#16130f] border border-amber-400/20 text-stone-300 text-[11px] px-3 py-1 rounded-full whitespace-nowrap';
+        b.className = 'cat-btn bg-[#16130f] border border-amber-400/20 text-stone-300 text-[11px] font-semibold px-3 py-1 rounded-full whitespace-nowrap';
       });
       if (activeBtn) {
         activeBtn.className = 'cat-btn bg-amber-500 text-stone-950 text-[11px] font-extrabold px-3 py-1 rounded-full whitespace-nowrap';
@@ -3712,22 +3760,20 @@
     function renderProducts(list) {
       const grid = document.getElementById('productsGrid');
       if (!list.length) {
-        grid.innerHTML = '<p class="text-center text-stone-400 py-12 text-xs">No matching products found.</p>';
+        grid.innerHTML = '<p class="col-span-full text-center text-stone-400 py-12 text-xs">No matching products found.</p>';
         return;
       }
 
-      grid.innerHTML = list.map((p, idx) => {
+      grid.innerHTML = list.map((p) => {
         const img = (p.images && p.images[0]) || p.image_url || '';
         const out = (p.stock_quantity !== null && p.stock_quantity <= 0);
-        const isTall = idx % 2 === 0;
-        const imgClass = isTall ? 'skf-market-img-tall' : 'skf-market-img-compact';
         const safeName = String(p.name || 'Product').replace(/"/g, '&quot;').replace(/'/g, "\\'");
         const safeId = String(p.id).replace(/'/g, "\\'");
         const { effectivePrice, originalPrice } = getProductPricing(p);
 
         const mediaInner = img
-          ? `<img src="${img}" alt="" decoding="sync" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth ${imgClass}" />`
-          : `<div class="${imgClass}">${renderBrandedPlaceholderHtml(p.name)}</div>`;
+          ? `<img src="${img}" alt="" decoding="sync" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth skf-market-img-tall" />`
+          : `<div class="skf-market-img-tall">${renderBrandedPlaceholderHtml(p.name)}</div>`;
 
         return `
           <div onclick="openProductDetail('${safeId}')" class="skf-market-card">
