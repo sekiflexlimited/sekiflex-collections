@@ -1,1032 +1,768 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sekiflex Collections — Shop</title>
-  <link rel="stylesheet" href="styles.css" />
-  <style id="sekiflex-storefront-fix">
-    * {
-      box-sizing: border-box;
-    }
+<!-- ==================== ACCOUNT PAGE SECTION ==================== -->
+<style>
+  :root {
+    --bg-dark: #0a0a0a;
+    --card-bg: #151412;
+    --card-border: #2a251d;
+    --gold: #f5a623;
+    --gold-soft: rgba(245, 166, 35, 0.14);
+    --text-main: #ffffff;
+    --text-muted: #a39e93;
+  }
 
-    body {
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
-      background: #0d0b08;
-    }
+  .account-container {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding: 16px 16px 95px 16px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
 
-    /* Compact 2-column catalog grid & cards */
-    #catalog-grid,
-    .catalog-grid,
-    #products-grid,
-    .products-grid,
-    #shop-grid,
-    .shop-grid {
-      display: grid !important;
-      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-      gap: 10px !important;
-      padding: 10px !important;
-    }
+  /* Top Support Buttons */
+  .support-btn-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
 
-    .catalog-card,
-    .product-card,
-    .shop-card {
-      padding: 8px !important;
-      border-radius: 10px !important;
-      overflow: hidden !important;
-    }
+  .btn-live-chat {
+    background: var(--gold);
+    color: #000;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    padding: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+  }
 
-    #catalog-grid img,
-    .catalog-grid img,
-    #products-grid img,
-    .products-grid img,
-    #shop-grid img,
-    .shop-grid img,
-    .catalog-card img,
-    .product-card img,
-    .shop-card img {
-      width: 100% !important;
-      max-width: 100% !important;
-      height: 155px !important;
-      max-height: 155px !important;
-      object-fit: contain !important;
-      display: block !important;
-      margin: 0 auto !important;
-    }
+  .btn-whatsapp {
+    background: #0f1a12;
+    color: #fff;
+    font-weight: 600;
+    border: 1px solid #1f3d27;
+    border-radius: 12px;
+    padding: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+  }
 
-    /* Compact announcement & wall promo boxes + lock against customer editing */
-    [class*="announcement"],
-    [class*="promo"],
-    [class*="wall"],
-    [id*="announcement"],
-    [id*="promo"],
-    [id*="wall"] {
-      max-height: 145px !important;
-      overflow: hidden !important;
-      -webkit-user-modify: read-only !important;
-      user-select: none !important;
-      caret-color: transparent !important;
-    }
+  /* Section Titles */
+  .menu-section-label {
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 18px 0 8px 4px;
+  }
 
-    [class*="announcement"] *,
-    [class*="promo"] *,
-    [class*="wall"] *,
-    [id*="announcement"] *,
-    [id*="promo"] *,
-    [id*="wall"] * {
-      -webkit-user-modify: read-only !important;
-      user-select: none !important;
-      caret-color: transparent !important;
-    }
+  /* Card Groups */
+  .menu-card-group {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
 
-    [class*="announcement"] img,
-    [class*="promo"] img,
-    [class*="wall"] img,
-    [id*="announcement"] img,
-    [id*="promo"] img,
-    [id*="wall"] img {
-      width: 100% !important;
-      max-width: 100% !important;
-      height: 105px !important;
-      max-height: 105px !important;
-      object-fit: contain !important;
-      display: block !important;
-      margin: 0 auto !important;
-    }
+  .menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 16px;
+    border-bottom: 1px solid var(--card-border);
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
 
-    /* Keep other section images from stretching huge */
-    main img,
-    section img {
-      max-height: 210px !important;
-    }
+  .menu-item:last-child {
+    border-bottom: none;
+  }
 
-    /* Clickable category tiles */
-    [data-category],
-    .category-card,
-    .category-item,
-    [class*="category"] {
-      cursor: pointer !important;
-    }
+  .menu-item:active, .menu-item:hover {
+    background: rgba(245, 166, 35, 0.06);
+  }
 
-    @media (min-width: 768px) {
-      #catalog-grid img,
-      .catalog-grid img,
-      #products-grid img,
-      .products-grid img,
-      #shop-grid img,
-      .shop-grid img,
-      .catalog-card img,
-      .product-card img,
-      .shop-card img {
-        height: 210px !important;
-        max-height: 210px !important;
-      }
+  .menu-item-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--text-main);
+  }
 
-      [class*="announcement"] img,
-      [class*="promo"] img,
-      [class*="wall"] img,
-      [id*="announcement"] img,
-      [id*="promo"] img,
-      [id*="wall"] img {
-        height: 130px !important;
-        max-height: 130px !important;
-      }
-    }
-  </style>
-  <style id="sekiflex-info-modal-styles">
-    #sekiflex-info-bar {
-      display: none !important;
-      background: #0d0b08 !important;
-      padding: 6px 14px 104px !important;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-      color: #f8f5f0 !important;
-    }
+  .menu-icon {
+    width: 22px;
+    text-align: center;
+    font-size: 16px;
+  }
 
-    #sekiflex-info-bar.is-account-active {
-      display: block !important;
-    }
+  .menu-arrow {
+    color: var(--gold);
+    font-size: 14px;
+    font-weight: bold;
+  }
 
-    #sekiflex-info-bar-inner {
-      max-width: 680px !important;
-      margin: 0 auto !important;
-    }
+  /* Bottom Social Media Section (Moved from Settings) */
+  .social-footer-card {
+    background: linear-gradient(145deg, #171512, #11100e);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 16px;
+    margin-top: 22px;
+    text-align: center;
+  }
 
-    .sekiflex-group-label {
-      font-size: 12px !important;
-      font-weight: 700 !important;
-      letter-spacing: 0.06em !important;
-      text-transform: uppercase !important;
-      color: #f59e0b !important;
-      margin: 18px 4px 10px !important;
-    }
+  .social-footer-title {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    letter-spacing: 0.4px;
+  }
 
-    .sekiflex-dark-card {
-      background: #16130e !important;
-      border: 1px solid rgba(245, 158, 11, 0.24) !important;
-      border-radius: 16px !important;
-      overflow: hidden !important;
-    }
+  .social-btn-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
 
-    .sekiflex-dark-row {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 12px !important;
-      padding: 16px 18px !important;
-      background: #16130e !important;
-      color: #f8f5f0 !important;
-      text-decoration: none !important;
-      font-size: 15px !important;
-      font-weight: 600 !important;
-      border-bottom: 1px solid rgba(245, 158, 11, 0.14) !important;
-      cursor: pointer !important;
-      transition: background 0.15s ease !important;
-    }
+  .social-pill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 12px;
+    border-radius: 10px;
+    background: #1d1b17;
+    border: 1px solid #332c20;
+    color: #fff;
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
 
-    .sekiflex-dark-row:last-child {
-      border-bottom: none !important;
-    }
+  .social-pill:hover {
+    border-color: var(--gold);
+    background: var(--gold-soft);
+  }
 
-    .sekiflex-dark-row:active,
-    .sekiflex-dark-row:hover {
-      background: #1f1a13 !important;
-    }
+  .brand-copyright {
+    text-align: center;
+    font-size: 11.5px;
+    color: #6e6a63;
+    margin-top: 16px;
+  }
 
-    .sekiflex-row-left {
-      display: flex !important;
-      align-items: center !important;
-      gap: 14px !important;
-    }
+  /* ==================== POLICY & INFO MODAL ==================== */
+  .sk-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    align-items: flex-end;
+    justify-content: center;
+  }
 
-    .sekiflex-row-icon {
-      width: 22px !important;
-      height: 22px !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      font-size: 16px !important;
-      color: #f59e0b !important;
-      flex-shrink: 0 !important;
-    }
+  .sk-modal-overlay.active {
+    display: flex;
+  }
 
-    .sekiflex-brand-svg {
-      width: 20px !important;
-      height: 20px !important;
-      display: block !important;
-      flex-shrink: 0 !important;
-    }
+  .sk-modal-sheet {
+    background: #12110f;
+    border-top: 2px solid var(--gold);
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 520px;
+    max-height: 86vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideUp 0.25s ease-out;
+  }
 
-    .sekiflex-row-arrow {
-      color: #f59e0b !important;
-      font-size: 18px !important;
-      font-weight: 700 !important;
-    }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
 
-    #sekiflex-info-bar-copy {
-      margin-top: 18px !important;
-      text-align: center !important;
-      font-size: 12px !important;
-      color: #9f9689 !important;
-      line-height: 1.5 !important;
-    }
+  .sk-modal-header {
+    padding: 16px 20px;
+    background: #181613;
+    border-bottom: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-    #sekiflex-info-modal-backdrop {
-      position: fixed !important;
-      inset: 0 !important;
-      background: rgba(0, 0, 0, 0.85) !important;
-      z-index: 99999 !important;
-      display: none;
-      align-items: center !important;
-      justify-content: center !important;
-      padding: 14px !important;
-    }
+  .sk-modal-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gold);
+    margin: 0;
+  }
 
-    #sekiflex-info-modal-backdrop.is-open {
-      display: flex !important;
-    }
+  .sk-modal-close {
+    background: #26231d;
+    border: none;
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-    #sekiflex-info-modal {
-      width: 100% !important;
-      max-width: 680px !important;
-      max-height: 86vh !important;
-      background: #16130e !important;
-      color: #f8f5f0 !important;
-      border: 1px solid rgba(245, 158, 11, 0.35) !important;
-      border-radius: 16px !important;
-      display: flex !important;
-      flex-direction: column !important;
-      overflow: hidden !important;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75) !important;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-    }
+  .sk-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    color: #e4e0d8;
+    font-size: 14px;
+    line-height: 1.65;
+  }
 
-    #sekiflex-info-modal-header {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 12px !important;
-      padding: 16px 20px !important;
-      background: #1d1811 !important;
-      border-bottom: 1px solid rgba(245, 158, 11, 0.22) !important;
-    }
+  .sk-modal-body h4 {
+    color: var(--gold);
+    font-size: 14.5px;
+    margin: 18px 0 6px 0;
+    font-weight: 700;
+  }
 
-    #sekiflex-info-modal-title {
-      margin: 0 !important;
-      font-size: 17px !important;
-      font-weight: 700 !important;
-      color: #f59e0b !important;
-    }
+  .sk-modal-body h4:first-child {
+    margin-top: 0;
+  }
 
-    #sekiflex-info-modal-close {
-      background: #261f16 !important;
-      color: #f59e0b !important;
-      border: 1px solid rgba(245, 158, 11, 0.35) !important;
-      border-radius: 8px !important;
-      padding: 6px 12px !important;
-      font-size: 13px !important;
-      font-weight: 600 !important;
-      cursor: pointer !important;
-    }
+  .sk-modal-body p {
+    margin: 0 0 12px 0;
+    color: #d0ccc4;
+  }
 
-    #sekiflex-info-modal-body {
-      padding: 20px !important;
-      overflow-y: auto !important;
-      line-height: 1.65 !important;
-      font-size: 14px !important;
-    }
+  .sk-modal-body ul {
+    margin: 0 0 14px 0;
+    padding-left: 18px;
+  }
 
-    #sekiflex-info-modal-body h4 {
-      margin: 16px 0 6px !important;
-      font-size: 15px !important;
-      color: #f59e0b !important;
-    }
+  .sk-modal-body li {
+    margin-bottom: 6px;
+    color: #d0ccc4;
+  }
 
-    #sekiflex-info-modal-body p {
-      margin: 0 0 10px !important;
-      color: #f8f5f0 !important;
-    }
+  .sk-badge {
+    display: inline-block;
+    background: var(--gold-soft);
+    color: var(--gold);
+    border: 1px solid rgba(245, 166, 35, 0.35);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
 
-    #sekiflex-info-modal-body ul {
-      margin: 0 0 12px !important;
-      padding-left: 20px !important;
-    }
+  .sk-tagline-box {
+    margin-top: 18px;
+    padding: 12px 14px;
+    background: #1a1814;
+    border-left: 3px solid var(--gold);
+    border-radius: 8px;
+    font-weight: 600;
+    color: var(--gold);
+    font-size: 13px;
+  }
+</style>
 
-    #sekiflex-info-modal-body li {
-      margin-bottom: 6px !important;
-    }
-  </style>
-</head>
-<body>
-  <div id="app"></div>
+<div class="account-container">
+  <!-- Quick Support Buttons -->
+  <div class="support-btn-row">
+    <button class="btn-live-chat" onclick="openLiveChat()">
+      <span>💬</span> Live Chat
+    </button>
+    <a class="btn-whatsapp" href="https://wa.me/YOUR_WHATSAPP_NUMBER" target="_blank">
+      <span>📱</span> WhatsApp
+    </a>
+  </div>
 
-  <div id="sekiflex-info-bar" aria-label="Sekiflex Collections Information, Policies, and Socials">
-    <div id="sekiflex-info-bar-inner">
-
-      <p class="sekiflex-group-label">SEKIFLEX INFORMATION &amp; POLICIES</p>
-      <div class="sekiflex-dark-card">
-        <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="refunds">
-          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">💳</span><span>Refund, Returns &amp; Payment Policy</span></span>
-          <span class="sekiflex-row-arrow">›</span>
-        </div>
-        <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="terms">
-          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">📄</span><span>Terms &amp; Conditions</span></span>
-          <span class="sekiflex-row-arrow">›</span>
-        </div>
+  <!-- NEED ASSISTANCE? -->
+  <div class="menu-section-label">NEED ASSISTANCE?</div>
+  <div class="menu-card-group">
+    <div class="menu-item" onclick="openInfoModal('delivery')">
+      <div class="menu-item-left">
+        <span class="menu-icon">🚚</span>
+        <span>Delivery & Shipping</span>
       </div>
-
-      <p class="sekiflex-group-label">CONNECT WITH US</p>
-      <div class="sekiflex-dark-card">
-        <a class="sekiflex-dark-row" data-social-link="facebook" href="https://www.facebook.com/sekiflexcollections" target="_blank" rel="noopener noreferrer">
-          <span class="sekiflex-row-left">
-            <span class="sekiflex-row-icon" aria-hidden="true">
-              <svg class="sekiflex-brand-svg" viewBox="0 0 24 24" fill="none">
-                <rect width="24" height="24" rx="6" fill="#1877F2"/>
-                <path d="M15.8 8.2h-1.6c-.5 0-.8.3-.8.8v1.4h2.4l-.3 2.3h-2.1V20h-2.5v-7.2H10v-2.3h2.4V8.8C12.4 6.9 13.5 6 15.3 6h.5v2.2z" fill="#FFFFFF"/>
-              </svg>
-            </span>
-            <span>Facebook</span>
-          </span>
-          <span class="sekiflex-row-arrow">›</span>
-        </a>
-        <a class="sekiflex-dark-row" data-social-link="tiktok" href="https://www.tiktok.com/@sekiflexcollections" target="_blank" rel="noopener noreferrer">
-          <span class="sekiflex-row-left">
-            <span class="sekiflex-row-icon" aria-hidden="true">
-              <svg class="sekiflex-brand-svg" viewBox="0 0 24 24" fill="none">
-                <rect width="24" height="24" rx="6" fill="#111111"/>
-                <path d="M15.4 5.5c.5.7 1.2 1.2 2.1 1.3v2.1c-.8 0-1.5-.2-2.1-.6v5.2c0 2.3-1.8 4.1-4.1 4.1-2.3 0-4.1-1.8-4.1-4.1 0-2.3 1.8-4.1 4.1-4.1.2 0 .4 0 .6.1v2.2c-.2-.1-.4-.1-.6-.1-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2V5.5h2.2z" fill="#FF0050"/>
-                <path d="M14.7 5.2c.5.7 1.2 1.2 2.1 1.3v2.1c-.8 0-1.5-.2-2.1-.6v5.2c0 2.3-1.8 4.1-4.1 4.1-.7 0-1.4-.2-2-.5.7.5 1.5.8 2.4.8 2.3 0 4.1-1.8 4.1-4.1V8.9c.6.4 1.3.6 2.1.6V7.4c-.9-.1-1.6-.6-2.1-1.3-.2-.3-.3-.6-.4-.9h0z" fill="#00F2EA"/>
-              </svg>
-            </span>
-            <span>TikTok</span>
-          </span>
-          <span class="sekiflex-row-arrow">›</span>
-        </a>
+      <span class="menu-arrow">›</span>
+    </div>
+    <div class="menu-item" onclick="openInfoModal('support')">
+      <div class="menu-item-left">
+        <span class="menu-icon">🎧</span>
+        <span>Help & Customer Support</span>
       </div>
-
-      <p id="sekiflex-info-bar-copy">Sekiflex Collections • Operating under Sekiflex Limited • Uyo, Akwa Ibom State, Nigeria • Website &amp; Mobile App</p>
+      <span class="menu-arrow">›</span>
     </div>
   </div>
 
-  <div id="sekiflex-info-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="sekiflex-info-modal-title">
-    <div id="sekiflex-info-modal">
-      <div id="sekiflex-info-modal-header">
-        <h3 id="sekiflex-info-modal-title">Sekiflex Collections</h3>
-        <div id="sekiflex-info-modal-close" role="button" tabindex="0" aria-label="Close modal">Close</div>
+  <!-- MY SEKIFLEX ACCOUNT -->
+  <div class="menu-section-label">MY SEKIFLEX ACCOUNT</div>
+  <div class="menu-card-group">
+    <div class="menu-item" onclick="openInfoModal('orders')">
+      <div class="menu-item-left">
+        <span class="menu-icon">📦</span>
+        <span>Orders & Live Tracking</span>
       </div>
-      <div id="sekiflex-info-modal-body"></div>
+      <span class="menu-arrow">›</span>
+    </div>
+    <div class="menu-item" onclick="openInfoModal('inbox')">
+      <div class="menu-item-left">
+        <span class="menu-icon">🔔</span>
+        <span>Inbox & Promotional Alerts</span>
+      </div>
+      <span class="menu-arrow">›</span>
+    </div>
+    <div class="menu-item" onclick="openInfoModal('reviews')">
+      <div class="menu-item-left">
+        <span class="menu-icon">⭐</span>
+        <span>Ratings & Reviews</span>
+      </div>
+      <span class="menu-arrow">›</span>
     </div>
   </div>
 
-  <script src="supabase-config.js"></script>
-  <script src="app.js"></script>
+  <!-- ABOUT & LEGAL POLICIES -->
+  <div class="menu-section-label">COMPANY & LEGAL</div>
+  <div class="menu-card-group">
+    <div class="menu-item" onclick="openInfoModal('about')">
+      <div class="menu-item-left">
+        <span class="menu-icon">👑</span>
+        <span>About Sekiflex Collections</span>
+      </div>
+      <span class="menu-arrow">›</span>
+    </div>
+    <div class="menu-item" onclick="openInfoModal('privacy')">
+      <div class="menu-item-left">
+        <span class="menu-icon">🛡️</span>
+        <span>Privacy Policy</span>
+      </div>
+      <span class="menu-arrow">›</span>
+    </div>
+    <div class="menu-item" onclick="openInfoModal('refund')">
+      <div class="menu-item-left">
+        <span class="menu-icon">💳</span>
+        <span>Refund, Returns & Payment Policy</span>
+      </div>
+      <span class="menu-arrow">›</span>
+    </div>
+    <div class="menu-item" onclick="openInfoModal('terms')">
+      <div class="menu-item-left">
+        <span class="menu-icon">📜</span>
+        <span>Terms & Conditions</span>
+      </div>
+      <span class="menu-arrow">›</span>
+    </div>
+  </div>
 
-  <script id="sekiflex-full-shop-script">
-    (function () {
-      // Allow page reload anytime; only guard against repeated/rapid Back presses
-      window.onbeforeunload = null;
-      const origAddEventListener = window.addEventListener.bind(window);
-      window.addEventListener = function (type, listener, options) {
-        if (type === "beforeunload") return;
-        return origAddEventListener(type, listener, options);
-      };
+  <!-- SOCIAL MEDIA LINKS (MOVED FROM SETTINGS TO BOTTOM) -->
+  <div class="social-footer-card">
+    <div class="social-footer-title">FOLLOW SEKIFLEX COLLECTIONS</div>
+    <div class="social-btn-grid">
+      <a class="social-pill" href="https://www.facebook.com/YOUR_FACEBOOK_PAGE" target="_blank" rel="noopener">
+        <svg width="16" height="16" fill="#1877F2" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>
+        Facebook
+      </a>
+      <a class="social-pill" href="https://www.tiktok.com/@YOUR_TIKTOK_HANDLE" target="_blank" rel="noopener">
+        <svg width="16" height="16" fill="#ffffff" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+        TikTok
+      </a>
+    </div>
+  </div>
 
-      let lastBackPressTime = 0;
-      try {
-        if (!window.history.state || !window.history.state.sekiflexGuard) {
-          window.history.pushState({ sekiflexGuard: true }, "");
-        }
-      } catch (e) {}
+  <div class="brand-copyright">
+    © 2026 Sekiflex Collections • Operated by Sekiflex Limited
+  </div>
+</div>
 
-      window.addEventListener("popstate", function () {
-        const now = Date.now();
-        if (now - lastBackPressTime < 1500) {
-          const leave = window.confirm("Leave Sekiflex Collections?");
-          if (!leave) {
-            try {
-              window.history.pushState({ sekiflexGuard: true }, "");
-            } catch (e) {}
-          }
-        } else {
-          lastBackPressTime = now;
-          try {
-            window.history.pushState({ sekiflexGuard: true }, "");
-          } catch (e) {}
-        }
-      });
+<!-- ==================== REUSABLE INFO MODAL ==================== -->
+<div id="skInfoModal" class="sk-modal-overlay" onclick="closeInfoModal(event)">
+  <div class="sk-modal-sheet" onclick="event.stopPropagation()">
+    <div class="sk-modal-header">
+      <h3 id="skModalTitle" class="sk-modal-title">Title</h3>
+      <button class="sk-modal-close" onclick="closeInfoModal()">✕</button>
+    </div>
+    <div id="skModalBody" class="sk-modal-body"></div>
+  </div>
+</div>
 
-      const INFO_SECTIONS = {
-        about: {
-          title: "About Sekiflex Collections",
-          html: `
-            <p>Sekiflex Collections is a fashion and lifestyle brand operating under Sekiflex Limited, committed to providing quality, stylish, and affordable products to customers in Nigeria and beyond, across our website and mobile app.</p>
-            <p>We offer a wide selection of men's and women's fashion, including clothing, jeans, polo shirts, tops, jackets, gowns, handbags, jewellery, fashion accessories, and beauty essentials.</p>
-            <p>Our vision is to build a trusted and recognized brand where customers can enjoy quality products, competitive prices, and a convenient shopping experience.</p>
-            <p>At Sekiflex Collections, we believe that fashion is more than just appearance; it is about confidence, comfort, individuality, and self-expression. We carefully focus on bringing our customers products that combine style, quality, and value.</p>
-            <p>With our physical business location in Uyo, Akwa Ibom State, Nigeria, and an online shopping platform accessible on our website and mobile app to customers everywhere, we are continuously expanding our reach to make shopping easier and more accessible.</p>
-            <p>Customer satisfaction, trust, quality, and professionalism remain at the heart of everything we do.</p>
-            <p><strong>Sekiflex Collections – Quality, Style and Confidence.</strong></p>
-            <p><em>Proudly operating under Sekiflex Limited.</em></p>
-          `
-        },
-        delivery: {
-          title: "Delivery & Uyo Store Pickup",
-          html: `
-            <p>At Sekiflex Collections, we make shopping convenient by bringing your orders directly to your doorstep, or for local pickup in Uyo, wherever you are across our website and mobile app. Through our dedicated Sekiflex Collections Bike &amp; Cargo Fleet, we provide reliable delivery services across Nigeria and selected international destinations.</p>
-            <h4>Nationwide Delivery – Nigeria</h4>
-            <p>We deliver across all 36 states in Nigeria, with an estimated delivery time of 1–4 business days.</p>
-            <h4>Uyo Store Pickup</h4>
-            <p>Local pickup is available in Uyo, Akwa Ibom State, Nigeria for convenient collection.</p>
-            <h4>International Shipping</h4>
-            <p>We also offer international shipping to:</p>
-            <ul>
-              <li>United Kingdom</li>
-              <li>United States of America</li>
-              <li>Canada</li>
-              <li>Ghana</li>
-            </ul>
-            <p>Estimated international delivery time is 5–10 business days.</p>
-            <h4>Our Delivery Commitment</h4>
-            <p>We are committed to providing reliable, convenient, and professional delivery services, ensuring that your orders are handled with care and delivered to your preferred destination.</p>
-            <p>Wherever you are, Sekiflex Collections is dedicated to bringing your favourite products closer to you.</p>
-            <p><strong>Sekiflex Collections – We Deliver Beyond Boundaries.</strong></p>
-          `
-        },
-        support: {
-          title: "Help & Customer Support",
-          html: `
-            <p>At Sekiflex Collections, your satisfaction matters to us. We are committed to providing helpful, friendly, and reliable customer support to make your shopping experience on our website and mobile app as smooth and convenient as possible.</p>
-            <p>Whether you need assistance with placing an order, making payments, product enquiries, delivery information, order tracking, or other shopping-related concerns, our support team is available to help.</p>
-            <h4>How We Can Help You</h4>
-            <ul>
-              <li><strong>Order Assistance:</strong> Get help with placing orders and resolving order-related issues.</li>
-              <li><strong>Payment Support:</strong> Receive assistance with payment enquiries and transaction confirmation.</li>
-              <li><strong>Delivery Enquiries:</strong> Get updates and assistance regarding your order delivery.</li>
-              <li><strong>Order Tracking:</strong> Get help locating and tracking your purchased items.</li>
-              <li><strong>Product Enquiries:</strong> Ask questions about our products, availability, prices, and other details.</li>
-              <li><strong>General Assistance:</strong> Contact us for any other questions or concerns regarding our services.</li>
-            </ul>
-            <h4>Contact Our Support Team</h4>
-            <p>You can reach us through the available customer support channels on our website and mobile app:</p>
-            <ul>
-              <li>Live Chat</li>
-              <li>WhatsApp Support</li>
-            </ul>
-            <p>Our goal is to respond to your enquiries and provide the assistance you need as promptly as possible.</p>
-            <p>Thank you for choosing Sekiflex Collections. We appreciate your trust and look forward to serving you.</p>
-            <p><strong>Sekiflex Collections – Your Satisfaction Is Our Priority.</strong></p>
-          `
-        },
-        orders: {
-          title: "Orders & Live Tracking",
-          html: `
-            <p>At Sekiflex Collections, we make ordering simple, convenient, and transparent. Our online shopping platform on our website and mobile app allows customers to browse products, select their preferred items, and place orders conveniently from anywhere.</p>
-            <h4>Placing an Order</h4>
-            <p>Customers can place orders directly through our website or mobile app by selecting their desired products, adding them to their shopping cart, providing the required delivery information, and completing the checkout process.</p>
-            <h4>Instant Order Confirmation</h4>
-            <p>Once an order is successfully placed, customers receive an order confirmation along with a unique tracking number for easy identification and tracking.</p>
-            <h4>Live Order Tracking</h4>
-            <p>Our website and mobile app provide an order-tracking feature that allows customers to monitor the progress of their purchases. Simply visit our Track Order page and enter your tracking number to view the latest available updates on your order.</p>
-            <h4>Delivery Updates</h4>
-            <p>Customers can stay informed as their orders progress through the delivery process, from order confirmation and processing to dispatch and delivery.</p>
-            <h4>Our Commitment</h4>
-            <p>We value transparency and believe every customer deserves to know the status of their purchase. Our goal is to provide a smooth ordering experience, reliable order updates, and greater confidence from checkout to delivery.</p>
-            <p><strong>Sekiflex Collections – Shop with Confidence. Track with Ease.</strong></p>
-          `
-        },
-        inbox: {
-          title: "Inbox & Promo Alerts",
-          html: `
-            <p>Stay connected with Sekiflex Collections through our Inbox and Promotional Alerts feature on our website and mobile app. We keep our customers informed about important shopping updates, exclusive offers, special discounts, and exciting brand announcements.</p>
-            <h4>Customer Inbox</h4>
-            <p>Our website and mobile app inbox provides a convenient space for customers to receive important messages and notifications relating to their shopping experience, including order updates, account notifications, and other important information.</p>
-            <h4>Promotional Alerts</h4>
-            <p>Stay informed about our latest promotions, special discounts, limited-time offers, new product arrivals, seasonal sales, and exclusive shopping deals.</p>
-            <h4>Never Miss an Offer</h4>
-            <p>By keeping your notifications enabled, you can stay updated on exciting opportunities to shop your favourite products at great prices.</p>
-            <h4>Our Commitment</h4>
-            <p>We aim to keep our customers informed, connected, and up to date with relevant information that makes their shopping experience more rewarding.</p>
-            <p><strong>Sekiflex Collections – Stay Connected. Stay Updated. Shop More.</strong></p>
-          `
-        },
-        reviews: {
-          title: "Ratings & Reviews",
-          html: `
-            <p>At Sekiflex Collections, customer satisfaction is at the heart of everything we do. We value your opinions, experiences, and feedback because they help us improve our products and services across our website and mobile app.</p>
-            <h4>Share Your Experience</h4>
-            <p>After receiving your order, we encourage you to rate your shopping experience and leave an honest review. Your feedback helps us understand what we are doing well and where we can improve.</p>
-            <h4>Rate Our Products</h4>
-            <p>Customers can share their opinions about product quality, appearance, comfort, value for money, and overall satisfaction. Your reviews also help other shoppers make informed purchasing decisions.</p>
-            <h4>Help Other Customers Shop with Confidence</h4>
-            <p>Your experience matters. By sharing genuine feedback, you help build trust within our shopping community and make it easier for other customers to choose the right products.</p>
-            <h4>Our Commitment</h4>
-            <p>We appreciate every rating, review, suggestion, and recommendation. We continuously use customer feedback to improve our quality, customer service, and overall shopping experience.</p>
-            <p>Thank you for shopping with Sekiflex Collections and being part of our growing community.</p>
-            <p><strong>Sekiflex Collections – Your Feedback Makes Us Better.</strong></p>
-          `
-        },
-        privacy: {
-          title: "Privacy Policy – Sekiflex Collections",
-          html: `
-            <p><strong>Effective Date:</strong> 24 November 2026</p>
-            <h4>1. Introduction</h4>
-            <p>Welcome to Sekiflex Collections.</p>
-            <p>Your privacy and trust are important to us. We are committed to respecting and protecting the personal information of everyone who visits our website, uses our mobile app, creates an account, makes a purchase, or uses our services.</p>
-            <p>This Privacy Policy explains how Sekiflex Collections, operating under Sekiflex Limited, collects, uses, stores, and protects your information when you interact with our website, mobile app, and services.</p>
-            <p>By using our website or mobile app, you acknowledge that you have read this Privacy Policy. Where consent is legally required, we will request it separately.</p>
-            <h4>2. Information We Collect</h4>
-            <p>To provide our services effectively, we may collect the following information:</p>
-            <ul>
-              <li>Personal information such as your full name, phone number, and email address.</li>
-              <li>Delivery information, including your delivery address and location details necessary to fulfil your order.</li>
-              <li>Order information, including purchased products, order numbers, tracking numbers, and order history.</li>
-              <li>Payment information and transaction details required to verify and confirm payments.</li>
-              <li>Account information, including login and profile details.</li>
-              <li>Communication records when you contact our customer support team.</li>
-              <li>Website and mobile app usage information, such as device information, browser or app details, and certain activity.</li>
-            </ul>
-            <p>We only seek information that is reasonably necessary for our business operations and the services we provide.</p>
-            <h4>3. How We Use Your Information</h4>
-            <p>We collect and use customer information for legitimate business purposes, including:</p>
-            <ul>
-              <li>Processing and confirming customer orders.</li>
-              <li>Verifying payments and preventing fraudulent transactions.</li>
-              <li>Arranging deliveries and shipping services.</li>
-              <li>Generating order numbers and tracking codes.</li>
-              <li>Providing order updates and delivery notifications.</li>
-              <li>Responding to customer enquiries and complaints.</li>
-              <li>Managing customer accounts.</li>
-              <li>Sending promotional messages where permitted or where you have given the required consent.</li>
-              <li>Improving our website, mobile app, products, services, and customer experience.</li>
-              <li>Meeting applicable legal, accounting, and regulatory requirements.</li>
-            </ul>
-            <h4>4. Payment Security</h4>
-            <p>We take payment security seriously.</p>
-            <p>Payments made through our website or mobile app may be processed by authorised third-party payment service providers. These providers may collect and process payment information according to their own privacy and security policies.</p>
-            <p>Sekiflex Collections does not intend to store customers' complete payment card details or banking passwords on its own website or mobile app servers.</p>
-            <p>Customers should never share their banking passwords, PINs, or one-time passwords with anyone claiming to represent our company.</p>
-            <h4>5. Order Information and Delivery</h4>
-            <p>To successfully fulfil your purchases, certain customer information may be shared with authorised delivery partners, dispatch riders, cargo operators, and logistics service providers.</p>
-            <p>This information may include your name, phone number, delivery address, and order details necessary to complete delivery.</p>
-            <p>Where international shipping is requested, relevant information may also be shared with international shipping partners and customs authorities where necessary.</p>
-            <p>We only share information reasonably required to provide the requested service.</p>
-            <h4>6. Sharing of Customer Information</h4>
-            <p>Sekiflex Collections does not sell customers' personal information to third parties.</p>
-            <p>However, we may share necessary information with trusted service providers who assist us in operating our business, including:</p>
-            <ul>
-              <li>Payment processing companies.</li>
-              <li>Delivery and logistics partners.</li>
-              <li>Website and mobile app hosting and technical service providers.</li>
-              <li>Email and notification service providers.</li>
-              <li>Customer support service providers.</li>
-              <li>Government authorities or regulatory bodies where disclosure is legally required.</li>
-            </ul>
-            <p>Such parties may only receive information necessary for their authorised responsibilities, subject to applicable legal requirements.</p>
-            <h4>7. Cookies and Website Technology</h4>
-            <p>Our website and mobile app may use cookies, app storage, and similar technologies to improve functionality, remember customer preferences, maintain shopping sessions, and understand how visitors interact with our platform.</p>
-            <p>Where required, customers will be given appropriate options to manage their cookie or device preferences.</p>
-            <p>Disabling certain cookies or permissions may affect some website or mobile app features or shopping functions.</p>
-            <h4>8. Protection of Your Information</h4>
-            <p>We take reasonable technical and organisational measures to protect customer information against unauthorised access, misuse, alteration, disclosure, loss, or destruction.</p>
-            <p>Access to customer information is restricted to authorised personnel and service providers who need the information to perform their responsibilities.</p>
-            <p>Although we work to maintain appropriate security measures, no internet transmission or electronic storage system can be guaranteed to be completely secure.</p>
-            <p>We therefore encourage customers to protect their account passwords and avoid sharing confidential account information.</p>
-            <h4>9. How Long We Keep Your Information</h4>
-            <p>We retain customer information only for as long as reasonably necessary to fulfil the purposes for which it was collected, including order processing, customer support, business administration, legal obligations, accounting requirements, and the resolution of disputes.</p>
-            <p>When information is no longer required, we will take appropriate steps to delete, anonymise, or securely dispose of it, subject to applicable legal retention requirements.</p>
-            <h4>10. Your Privacy Rights</h4>
-            <p>We respect your rights regarding your personal information under applicable data protection laws.</p>
-            <p>Depending on the circumstances, you may have the right to:</p>
-            <ul>
-              <li>Request access to personal information we hold about you.</li>
-              <li>Request corrections to inaccurate or incomplete information.</li>
-              <li>Request deletion of personal information where legally applicable.</li>
-              <li>Withdraw consent where processing is based on consent.</li>
-              <li>Object to certain types of information processing, including direct marketing.</li>
-              <li>Request restriction of certain processing activities.</li>
-              <li>Request a copy of your information in a portable format where applicable.</li>
-              <li>Lodge a complaint with the Nigeria Data Protection Commission.</li>
-            </ul>
-            <p>To exercise these rights, please contact our customer support team through the contact details provided on our website or mobile app.</p>
-            <p>Some information may need to be retained where required by law or where necessary to establish, exercise, or defend legal claims.</p>
-            <h4>11. Promotional Messages and Notifications</h4>
-            <p>We may send customers information about new arrivals, special offers, discounts, promotions, and other company announcements where permitted by law.</p>
-            <p>Customers can opt out of promotional communications at any time through the available unsubscribe or notification options or by contacting our support team.</p>
-            <p>Please note that opting out of promotional messages will not prevent us from sending important service-related communications, such as order confirmations, payment notifications, and delivery updates.</p>
-            <h4>12. Third-Party Websites and Services</h4>
-            <p>Our website and mobile app may contain links to third-party websites, payment platforms, or external services.</p>
-            <p>These platforms operate independently and may have their own privacy policies and terms of service.</p>
-            <p>Sekiflex Collections is not responsible for the privacy practices or security policies of independent third-party websites. We encourage customers to review their policies before sharing personal information with them.</p>
-            <h4>13. Children's Privacy</h4>
-            <p>Our website, mobile app, and services are not intended to encourage children to independently provide personal information without appropriate parental or guardian involvement.</p>
-            <p>Where information relating to a child is necessary for a transaction, appropriate safeguards and applicable legal requirements will apply.</p>
-            <h4>14. Changes to This Privacy Policy</h4>
-            <p>Sekiflex Collections reserves the right to review and update this Privacy Policy when necessary to reflect changes in our business operations, website or mobile app features, technology, or applicable legal requirements.</p>
-            <p>Any updated version will be published on our website and mobile app with its revised effective date.</p>
-            <p>We encourage customers to review this page periodically to remain informed about how their information is handled.</p>
-            <h4>15. Contact Us</h4>
-            <p>If you have questions, concerns, complaints, or requests relating to this Privacy Policy or the handling of your personal information, please contact us through our official customer support channels.</p>
-            <p><strong>Company:</strong> Sekiflex Collections<br>
-            <strong>Operating Company:</strong> Sekiflex Limited<br>
-            <strong>Physical Business Location:</strong> Uyo, Akwa Ibom State, Nigeria.<br>
-            <strong>Website:</strong> https://sekiflexcollections.com</p>
-            <p>We value your trust and remain committed to treating your personal information with care, responsibility, and respect.</p>
-            <p><strong>Sekiflex Collections – Your Privacy, Our Responsibility.</strong></p>
-          `
-        },
-        refunds: {
-          title: "Refund, Returns & Payment Policy",
-          html: `
-            <p><strong>Effective Date:</strong> 24 November 2026</p>
-            <p>At Sekiflex Collections, we value our customers and are committed to providing a fair, transparent, and secure shopping experience across our website and mobile app. We understand that situations may sometimes arise where an order needs to be cancelled, returned, corrected, or refunded.</p>
-            <p>This policy explains how we handle refunds, returns, cancellations, failed payments, and payment-related complaints.</p>
-            <h4>1. Order Cancellation</h4>
-            <p>Customers who wish to cancel an order should contact our customer support team as soon as possible.</p>
-            <ul>
-              <li>Cancellation requests made before an order is processed or dispatched may be considered for cancellation and a refund.</li>
-              <li>Once an order has been processed, packaged, or handed over to a delivery partner, cancellation may no longer be possible through the normal cancellation process.</li>
-              <li>Where cancellation is no longer possible, customers may contact our support team for assistance with the available options.</li>
-            </ul>
-            <p>All cancellation requests are subject to the circumstances of the order and applicable consumer protection laws.</p>
-            <h4>2. Refund Eligibility</h4>
-            <p>Refund requests may be considered under the following circumstances:</p>
-            <ul>
-              <li>A customer successfully makes payment but the order is not confirmed due to a verified payment or system error.</li>
-              <li>A customer is charged more than once for the same order.</li>
-              <li>An order is cancelled under circumstances where a refund is applicable.</li>
-              <li>A customer receives an incorrect product.</li>
-              <li>A product arrives damaged, defective, unsafe, or materially different from its advertised description.</li>
-              <li>An order cannot be fulfilled by Sekiflex Collections after payment has been received.</li>
-              <li>Other circumstances where a refund or appropriate remedy is required under applicable law.</li>
-            </ul>
-            <p>Each request will be reviewed based on the available order information, payment records, and supporting evidence.</p>
-            <h4>3. Non-Eligible Refund Requests</h4>
-            <p>Where a product has been correctly supplied in accordance with its description and the agreed order details, a refund will not automatically be granted simply because:</p>
-            <ul>
-              <li>A customer changes their mind after purchasing.</li>
-              <li>A customer no longer wants the product.</li>
-              <li>A customer selected the wrong size, colour, or product despite the correct details being provided.</li>
-              <li>A customer provides an incorrect delivery address or contact information.</li>
-              <li>A customer fails to receive or collect an order due to circumstances within their control.</li>
-            </ul>
-            <p>However, these circumstances will be considered individually where applicable, and nothing in this policy removes any refund or return rights provided by law.</p>
-            <h4>4. Product Returns and Exchanges</h4>
-            <p>Customers who receive an incorrect, damaged, defective, or materially misdescribed product should contact our customer support team promptly.</p>
-            <p>To help us resolve the issue, customers may be asked to provide:</p>
-            <ul>
-              <li>Their order or tracking number.</li>
-              <li>Proof of purchase or payment.</li>
-              <li>Clear photographs or videos showing the issue.</li>
-              <li>A brief explanation of the complaint.</li>
-            </ul>
-            <p>Returned products may be inspected to establish the nature of the complaint.</p>
-            <p>Where a valid return is accepted, Sekiflex Collections will provide an appropriate remedy, which may include a replacement, repair where applicable, or refund in accordance with applicable law.</p>
-            <p>Products returned for eligible defects or incorrect supply will be handled in accordance with the customer's legal rights.</p>
-            <h4>5. Payment Errors and Duplicate Transactions</h4>
-            <p>We understand that payment errors can sometimes occur due to banking networks, payment gateways, internet interruptions, or technical issues.</p>
-            <p>If your account is debited but your order is not confirmed, please contact our support team with your payment receipt or transaction reference.</p>
-            <p>Our team will verify the transaction with the relevant payment provider before taking the appropriate action.</p>
-            <p>Where a duplicate payment is confirmed, the additional payment will be processed for a refund.</p>
-            <p>Please note that a payment screenshot alone may not establish that funds have successfully settled into our business account. Payment verification will be based on available transaction records and confirmation from the relevant payment provider.</p>
-            <h4>6. Refund Processing</h4>
-            <p>Once a refund request has been reviewed and approved, the refund will normally be made through the original payment method wherever reasonably possible.</p>
-            <p>Depending on the payment method and financial institution, the time required for the refunded amount to reflect may vary.</p>
-            <p>Customers may be required to provide relevant transaction details to help complete the refund process.</p>
-            <p>Sekiflex Collections is not responsible for delays caused solely by banks, payment processors, or other independent financial institutions, but we will provide reasonable assistance in following up on verified refund transactions.</p>
-            <h4>7. Delivery and Shipping Charges</h4>
-            <p>Delivery and shipping charges are separate from the cost of purchased products.</p>
-            <p>Where a customer changes their mind or provides incorrect delivery information, any applicable additional delivery or return costs will be assessed based on the circumstances and disclosed terms.</p>
-            <p>Where a return or refund is required because of an error attributable to Sekiflex Collections or another legally recognised reason, the applicable return and delivery costs will be handled in accordance with the customer's rights under applicable law.</p>
-            <h4>8. Fraud Prevention and Payment Verification</h4>
-            <p>To protect our customers and our business, Sekiflex Collections reserves the right to verify payment transactions, order details, and refund requests before processing them.</p>
-            <p>We may request additional information or supporting documentation where necessary to establish the authenticity of a transaction or complaint.</p>
-            <p>Any suspected fraudulent activity, false payment claims, manipulated transaction receipts, or abuse of the refund process may be investigated and handled through appropriate lawful procedures.</p>
-            <p>A refund will not be approved solely on the basis of an unverified payment claim.</p>
-            <h4>9. How to Request a Refund</h4>
-            <p>Customers requesting a refund or reporting a payment problem should contact our official customer support team and provide:</p>
-            <ul>
-              <li>Full name used when placing the order.</li>
-              <li>Order number or tracking number, where available.</li>
-              <li>Payment reference or transaction receipt.</li>
-              <li>Reason for the refund request.</li>
-              <li>Supporting photographs or other relevant evidence, where applicable.</li>
-            </ul>
-            <p>Our team will review the information and communicate the next appropriate steps.</p>
-            <h4>10. Policy Updates</h4>
-            <p>Sekiflex Collections reserves the right to review and update this policy when necessary to reflect changes in our business operations, payment systems, delivery arrangements, or applicable laws.</p>
-            <p>Any updated version will be published on our official website and mobile app.</p>
-            <p>No change to this policy will remove rights that customers are entitled to under applicable law.</p>
-            <h4>11. Contact and Customer Support</h4>
-            <p>For questions, refund requests, payment complaints, or assistance with an order, please contact us through our official customer support channels available on our website and mobile app.</p>
-            <p><strong>Company:</strong> Sekiflex Collections<br>
-            <strong>Operating Company:</strong> Sekiflex Limited<br>
-            <strong>Physical Business Location:</strong> Uyo, Akwa Ibom State, Nigeria.<br>
-            <strong>Website:</strong> https://sekiflexcollections.com</p>
-            <p>We appreciate your trust in Sekiflex Collections and remain committed to resolving genuine customer concerns professionally, fairly, and responsibly.</p>
-            <p><strong>Sekiflex Collections – Fair Shopping. Trusted Service. Customer Confidence.</strong></p>
-          `
-        },
-        terms: {
-          title: "Terms & Conditions – Sekiflex Collections",
-          html: `
-            <p><strong>Effective Date:</strong> 24 November 2026</p>
-            <p>Welcome to Sekiflex Collections. We appreciate your interest in shopping with us. These Terms &amp; Conditions explain the rules, responsibilities, and important information you should understand before using our website, mobile app, or purchasing our products.</p>
-            <p>Sekiflex Collections operates under Sekiflex Limited. By accessing our website or mobile app, creating an account, placing an order, or using our services, you agree to comply with these Terms &amp; Conditions and applicable laws.</p>
-            <h4>1. Use of Our Website and Mobile App</h4>
-            <p>Customers are expected to use our website and mobile app responsibly and provide accurate information when creating accounts, placing orders, or contacting our team.</p>
-            <p>You must not:</p>
-            <ul>
-              <li>Use our website or mobile app for fraudulent, unlawful, or misleading activities.</li>
-              <li>Attempt to interfere with the operation or security of our website or mobile app.</li>
-              <li>Provide false payment information or deliberately submit misleading transaction evidence.</li>
-              <li>Attempt to gain unauthorised access to customer accounts or company systems.</li>
-              <li>Use our website or mobile app in a way that could harm our business or other customers.</li>
-            </ul>
-            <p>We reserve the right to investigate suspected misuse and take appropriate lawful action.</p>
-            <h4>2. Product Information and Availability</h4>
-            <p>We make reasonable efforts to ensure that product descriptions, images, prices, sizes, colours, and other details displayed on our website and mobile app are accurate.</p>
-            <p>However, slight differences in colour or appearance may occur due to screen settings, lighting, photography, or manufacturing variations.</p>
-            <p>All products are subject to availability. We reserve the right to update product information, correct genuine listing errors, and discontinue products when necessary.</p>
-            <p>If a product becomes unavailable after an order has been placed and paid for, we will contact the customer to discuss an appropriate resolution.</p>
-            <h4>3. Prices and Payments</h4>
-            <p>All product prices are displayed on our website and mobile app in the stated currency.</p>
-            <p>Customers are responsible for reviewing their order details and the total amount payable before completing checkout.</p>
-            <p>Orders are subject to successful payment verification. A payment notification or screenshot alone does not necessarily confirm that funds have been received.</p>
-            <p>Where payment discrepancies occur, we may contact the customer or relevant payment provider for verification before processing the order.</p>
-            <h4>4. Order Confirmation and Processing</h4>
-            <p>After successfully placing an order, customers may receive an order confirmation and a unique tracking number.</p>
-            <p>Please ensure that all information supplied during checkout is correct, including your name, phone number, delivery address, and selected products.</p>
-            <p>We reserve the right to review or hold an order where there are reasonable concerns involving payment verification, inaccurate information, suspected fraud, or other genuine processing issues.</p>
-            <p>Where an order cannot be fulfilled, the customer will be informed and an appropriate resolution will be provided.</p>
-            <h4>5. Delivery and Shipping</h4>
-            <p>We provide delivery services within Nigeria and selected international destinations.</p>
-            <p>Estimated delivery periods are provided as guidance and may vary depending on location, weather conditions, public holidays, customs procedures, logistics operations, and other circumstances beyond our reasonable control.</p>
-            <p>Customers are responsible for providing accurate delivery details and remaining reasonably available to receive their orders.</p>
-            <p>Additional delivery arrangements or charges may apply where a customer provides incorrect information, requests a change of destination, or requires another delivery attempt.</p>
-            <h4>6. Order Tracking</h4>
-            <p>Customers may use the tracking number provided after placing an order to check available updates through our website or mobile app.</p>
-            <p>Tracking information depends on the updates received from our dispatch and logistics operations.</p>
-            <p>Although we make reasonable efforts to provide timely updates, temporary delays in tracking information may occur.</p>
-            <h4>7. Refunds, Returns and Exchanges</h4>
-            <p>All refund, return, cancellation, and exchange requests are handled according to our separate Refund, Returns &amp; Payment Policy.</p>
-            <p>Customers are encouraged to read that policy before completing their purchases.</p>
-            <p>Nothing in these Terms &amp; Conditions removes any rights available to customers under applicable consumer protection laws.</p>
-            <h4>8. Customer Accounts and Responsibilities</h4>
-            <p>Customers are responsible for maintaining the confidentiality of their account login details and for activities carried out through their accounts.</p>
-            <p>Please notify our customer support team if you suspect unauthorised access to your account.</p>
-            <p>We are not responsible for losses arising solely from a customer's failure to protect their login information, except where applicable law provides otherwise.</p>
-            <h4>9. Promotions, Discounts and Special Offers</h4>
-            <p>Sekiflex Collections may introduce promotional campaigns, discounts, special offers, and other shopping benefits from time to time.</p>
-            <p>Promotional offers may have specific eligibility requirements, validity periods, product limitations, or usage conditions.</p>
-            <p>Unless expressly stated otherwise, promotional offers cannot be exchanged for cash and cannot be combined with other discounts.</p>
-            <p>We reserve the right to correct promotional errors and withdraw or modify offers where reasonably necessary, subject to applicable law and any offers already accepted.</p>
-            <h4>10. Intellectual Property</h4>
-            <p>All original website and mobile app content, including company branding, logos, graphics, photographs, product descriptions, designs, and other materials owned by Sekiflex Collections or its licensors, is protected by applicable intellectual property laws.</p>
-            <p>You may not reproduce, distribute, modify, or commercially use our protected materials without appropriate permission.</p>
-            <h4>11. Limitation of Responsibility</h4>
-            <p>Sekiflex Collections makes reasonable efforts to maintain a reliable website and mobile app and provide quality products and services.</p>
-            <p>However, we cannot guarantee uninterrupted website or mobile app access or that every service will always operate without technical interruptions.</p>
-            <p>To the extent permitted by law, we are not responsible for indirect losses arising from circumstances beyond our reasonable control, including third-party service interruptions, network failures, or external logistics delays.</p>
-            <p>Nothing in these Terms limits liability that cannot legally be excluded or restricted.</p>
-            <h4>12. Privacy and Customer Information</h4>
-            <p>We respect customer privacy and handle personal information in accordance with our Privacy Policy and applicable data protection laws.</p>
-            <p>Customers are encouraged to review our Privacy Policy to understand how their information is collected, used, stored, and protected.</p>
-            <h4>13. Changes to These Terms</h4>
-            <p>Sekiflex Collections reserves the right to review and update these Terms &amp; Conditions when necessary.</p>
-            <p>Updated terms will be published on our official website and mobile app with the revised effective date.</p>
-            <p>Continued use of our website or mobile app after updated terms take effect constitutes acceptance where permitted by applicable law. Where fresh consent is legally required, we will obtain it.</p>
-            <h4>14. Applicable Law and Disputes</h4>
-            <p>These Terms &amp; Conditions are governed by the applicable laws of the Federal Republic of Nigeria.</p>
-            <p>We encourage customers to contact our support team first so that genuine complaints and disagreements can be resolved professionally and amicably.</p>
-            <p>Where a dispute cannot be resolved directly, the parties may pursue the appropriate legal or regulatory channels available under applicable law.</p>
-            <h4>15. Contact Information</h4>
-            <p>For questions, complaints, or clarification regarding these Terms &amp; Conditions, please contact us through our official customer support channels available on our website and mobile app.</p>
-            <p><strong>Business Name:</strong> Sekiflex Collections<br>
-            <strong>Operating Company:</strong> Sekiflex Limited<br>
-            <strong>Physical Business Location:</strong> Uyo, Akwa Ibom State, Nigeria.<br>
-            <strong>Website:</strong> https://sekiflexcollections.com</p>
-            <p>Thank you for choosing Sekiflex Collections. We appreciate your trust and look forward to providing you with a convenient, reliable, and enjoyable shopping experience.</p>
-            <p><strong>Sekiflex Collections – Shop with Confidence.</strong></p>
-          `
-        }
-      };
+<script>
+  const sekiflexPages = {
+    about: {
+      title: "About Sekiflex Collections",
+      html: `
+        <span class="sk-badge">Operated by Sekiflex Limited</span>
+        <p><strong>Sekiflex Collections</strong> is a fashion and lifestyle brand operating under <strong>Sekiflex Limited</strong>, committed to providing quality, stylish, and affordable products to customers in Nigeria and beyond.</p>
+        <p>We offer a wide selection of men's and women's fashion, including clothing, jeans, polo shirts, tops, jackets, gowns, handbags, jewellery, fashion accessories, and beauty essentials.</p>
+        <h4>Our Vision</h4>
+        <p>Our vision is to build a trusted and recognized brand where customers can enjoy quality products, competitive prices, and a convenient shopping experience across our website and mobile app.</p>
+        <h4>What We Believe</h4>
+        <p>At Sekiflex Collections, we believe that fashion is more than just appearance; it is about confidence, comfort, individuality, and self-expression. We carefully focus on bringing our customers products that combine style, quality, and value.</p>
+        <h4>Our Presence</h4>
+        <p>With our physical business location in <strong>Uyo, Akwa Ibom State, Nigeria</strong>, alongside our website and mobile shopping app accessible to customers everywhere, we are continuously expanding our reach to make shopping easier and more accessible.</p>
+        <p>Customer satisfaction, trust, quality, and professionalism remain at the heart of everything we do.</p>
+        <div class="sk-tagline-box">
+          Sekiflex Collections – Quality, Style and Confidence.<br>
+          <span style="font-size:11.5px; color:#ccc; font-weight:400;">Proudly operating under Sekiflex Limited.</span>
+        </div>
+      `
+    },
 
-      const backdrop = document.getElementById("sekiflex-info-modal-backdrop");
-      const modalTitle = document.getElementById("sekiflex-info-modal-title");
-      const modalBody = document.getElementById("sekiflex-info-modal-body");
-      const closeBtn = document.getElementById("sekiflex-info-modal-close");
-      const infoBar = document.getElementById("sekiflex-info-bar");
+    delivery: {
+      title: "Delivery & Shipping",
+      html: `
+        <span class="sk-badge">Sekiflex Bike & Cargo Fleet</span>
+        <p>At Sekiflex Collections, we make shopping convenient by bringing your orders directly to your doorstep, wherever you are. Through our dedicated <strong>Sekiflex Collections Bike & Cargo Fleet</strong>, we provide reliable delivery services across Nigeria and selected international destinations.</p>
+        <h4>Nationwide Delivery – Nigeria</h4>
+        <p>We deliver across all <strong>36 states in Nigeria</strong>, with an estimated delivery time of <strong>1–4 business days</strong>.</p>
+        <h4>International Shipping</h4>
+        <p>We also offer international shipping to:</p>
+        <ul>
+          <li>United Kingdom</li>
+          <li>United States of America</li>
+          <li>Canada</li>
+          <li>Ghana</li>
+        </ul>
+        <p>Estimated international delivery time is <strong>5–10 business days</strong>.</p>
+        <h4>Our Delivery Commitment</h4>
+        <p>We are committed to providing reliable, convenient, and professional delivery services, ensuring that your orders are handled with care and delivered to your preferred destination.</p>
+        <p>Wherever you are, Sekiflex Collections is dedicated to bringing your favourite products closer to you.</p>
+        <div class="sk-tagline-box">Sekiflex Collections – We Deliver Beyond Boundaries.</div>
+      `
+    },
 
-      function openInfoSection(key) {
-        const section = INFO_SECTIONS[key];
-        if (!section || !backdrop || !modalTitle || !modalBody) return;
-        modalTitle.textContent = section.title;
-        modalBody.innerHTML = section.html;
-        modalBody.scrollTop = 0;
-        backdrop.classList.add("is-open");
-      }
+    support: {
+      title: "Help & Customer Support",
+      html: `
+        <span class="sk-badge">Website & Mobile App Support</span>
+        <p>At Sekiflex Collections, your satisfaction matters to us. We are committed to providing helpful, friendly, and reliable customer support to make your shopping experience on our website and mobile app as smooth and convenient as possible.</p>
+        <p>Whether you need assistance with placing an order, making payments, product enquiries, delivery information, order tracking, or other shopping-related concerns, our support team is available to help.</p>
+        <h4>How We Can Help You</h4>
+        <ul>
+          <li><strong>Order Assistance:</strong> Get help with placing orders and resolving order-related issues.</li>
+          <li><strong>Payment Support:</strong> Receive assistance with payment enquiries and transaction confirmation.</li>
+          <li><strong>Delivery Enquiries:</strong> Get updates and assistance regarding your order delivery.</li>
+          <li><strong>Order Tracking:</strong> Get help locating and tracking your purchased items.</li>
+          <li><strong>Product Enquiries:</strong> Ask questions about our products, availability, prices, and other details.</li>
+          <li><strong>General Assistance:</strong> Contact us for any other questions or concerns regarding our services.</li>
+        </ul>
+        <h4>Contact Our Support Team</h4>
+        <p>You can reach us directly through the customer support channels available on our website and mobile app:</p>
+        <ul>
+          <li><strong>Live Chat</strong></li>
+          <li><strong>WhatsApp Support</strong></li>
+        </ul>
+        <p>Our goal is to respond to your enquiries and provide the assistance you need as promptly as possible. Thank you for choosing Sekiflex Collections.</p>
+        <div class="sk-tagline-box">Sekiflex Collections – Your Satisfaction Is Our Priority.</div>
+      `
+    },
 
-      function closeInfoSection() {
-        if (backdrop) {
-          backdrop.classList.remove("is-open");
-        }
-      }
+    orders: {
+      title: "Orders & Live Tracking",
+      html: `
+        <span class="sk-badge">Real-Time Order Updates</span>
+        <p>At Sekiflex Collections, we make ordering simple, convenient, and transparent. Our website and mobile app allow customers to browse products, select their preferred items, and place orders conveniently from anywhere.</p>
+        <h4>Placing an Order</h4>
+        <p>Customers can place orders directly through our website or mobile app by selecting their desired products, adding them to their shopping cart, providing the required delivery information, and completing the checkout process.</p>
+        <h4>Instant Order Confirmation</h4>
+        <p>Once an order is successfully placed, customers receive an order confirmation along with a unique tracking number for easy identification and tracking.</p>
+        <h4>Live Order Tracking</h4>
+        <p>Our website and mobile app provide an order-tracking feature that allows customers to monitor the progress of their purchases. Simply open the <strong>Track Order</strong> page and enter your tracking number to view the latest available updates on your order.</p>
+        <h4>Delivery Updates</h4>
+        <p>Customers can stay informed as their orders progress through the delivery process, from order confirmation and processing to dispatch and delivery.</p>
+        <h4>Our Commitment</h4>
+        <p>We value transparency and believe every customer deserves to know the status of their purchase. Our goal is to provide a smooth ordering experience, reliable order updates, and greater confidence from checkout to delivery.</p>
+        <div class="sk-tagline-box">Sekiflex Collections – Shop with Confidence. Track with Ease.</div>
+      `
+    },
 
-      if (closeBtn) {
-        closeBtn.addEventListener("click", closeInfoSection);
-        closeBtn.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            closeInfoSection();
-          }
-        });
-      }
+    inbox: {
+      title: "Inbox & Promotional Alerts",
+      html: `
+        <span class="sk-badge">App Push & In-App Alerts</span>
+        <p>Stay connected with Sekiflex Collections through our Inbox and Promotional Alerts feature across our website and mobile app. We keep our customers informed about important shopping updates, exclusive offers, special discounts, and exciting brand announcements.</p>
+        <h4>Customer Inbox</h4>
+        <p>Our in-app and website inbox provides a convenient space for customers to receive important messages and notifications relating to their shopping experience, including order updates, account notifications, and other important information.</p>
+        <h4>Promotional Alerts</h4>
+        <p>Stay informed about our latest promotions, special discounts, limited-time offers, new product arrivals, seasonal sales, and exclusive shopping deals.</p>
+        <h4>Never Miss an Offer</h4>
+        <p>By keeping your mobile app push notifications and website alerts enabled, you can stay updated on exciting opportunities to shop your favourite products at great prices.</p>
+        <h4>Our Commitment</h4>
+        <p>We aim to keep our customers informed, connected, and up to date with relevant information that makes their shopping experience more rewarding.</p>
+        <div class="sk-tagline-box">Sekiflex Collections – Stay Connected. Stay Updated. Shop More.</div>
+      `
+    },
 
-      if (backdrop) {
-        backdrop.addEventListener("click", (e) => {
-          if (e.target === backdrop) closeInfoSection();
-        });
-      }
+    reviews: {
+      title: "Ratings & Reviews",
+      html: `
+        <span class="sk-badge">Verified Shopper Community</span>
+        <p>At Sekiflex Collections, customer satisfaction is at the heart of everything we do. We value your opinions, experiences, and feedback because they help us improve our products and services across our website and mobile app.</p>
+        <h4>Share Your Experience</h4>
+        <p>After receiving your order, we encourage you to rate your shopping experience and leave an honest review. Your feedback helps us understand what we are doing well and where we can improve.</p>
+        <h4>Rate Our Products</h4>
+        <p>Customers can share their opinions about product quality, appearance, comfort, value for money, and overall satisfaction. Your reviews also help other shoppers make informed purchasing decisions.</p>
+        <h4>Help Other Customers Shop with Confidence</h4>
+        <p>Your experience matters. By sharing genuine feedback on our website or mobile app, you help build trust within our shopping community and make it easier for other customers to choose the right products.</p>
+        <h4>Our Commitment</h4>
+        <p>We appreciate every rating, review, suggestion, and recommendation. We continuously use customer feedback to improve our quality, customer service, and overall shopping experience.</p>
+        <div class="sk-tagline-box">Sekiflex Collections – Your Feedback Makes Us Better.</div>
+      `
+    },
 
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closeInfoSection();
-      });
+    privacy: {
+      title: "Privacy Policy",
+      html: `
+        <span class="sk-badge">Effective Date: 24 November 2026</span>
+        <h4>1. Introduction</h4>
+        <p>Welcome to Sekiflex Collections. Your privacy and trust are important to us. We are committed to respecting and protecting the personal information of everyone who visits our website, uses our mobile app, creates an account, makes a purchase, or uses our services.</p>
+        <p>This Privacy Policy explains how Sekiflex Collections, operating under Sekiflex Limited, collects, uses, stores, and protects your information when you interact with our website, mobile app, and services. By using our platforms, you acknowledge that you have read this Privacy Policy. Where consent is legally required, we will request it separately.</p>
 
-      function detectInfoKey(text) {
-        const clean = text.toLowerCase().replace(/\s+/g, " ").trim();
-        if (clean.includes("about sekiflex") || clean === "about") return "about";
-        if (clean.includes("delivery") || clean.includes("uyo store pickup") || clean.includes("shipping")) return "delivery";
-        if (clean.includes("help & customer support") || clean.includes("customer support")) return "support";
-        if (clean.includes("orders & live tracking") || clean.includes("live tracking")) return "orders";
-        if (clean.includes("inbox & promo") || clean.includes("promotional alerts")) return "inbox";
-        if (clean.includes("ratings & reviews")) return "reviews";
-        if (clean.includes("privacy policy")) return "privacy";
-        if (clean.includes("refund, returns") || clean.includes("refund & returns")) return "refunds";
-        if (clean.includes("terms & conditions")) return "terms";
-        return null;
-      }
+        <h4>2. Information We Collect</h4>
+        <p>To provide our services effectively, we may collect the following information:</p>
+        <ul>
+          <li>Personal information such as your full name, phone number, and email address.</li>
+          <li>Delivery information, including your delivery address and location details necessary to fulfil your order.</li>
+          <li>Order information, including purchased products, order numbers, tracking numbers, and order history.</li>
+          <li>Payment information and transaction details required to verify and confirm payments.</li>
+          <li>Account information, including login and profile details across our website and mobile app.</li>
+          <li>Communication records when you contact our customer support team.</li>
+          <li>Platform usage information, such as device information, mobile app diagnostics, browser details, push notification tokens, and usage activity.</li>
+        </ul>
+        <p>We only seek information that is reasonably necessary for our business operations and the services we provide.</p>
 
-      function syncAccountView() {
-        const appRoot = document.getElementById("app");
-        if (!appRoot || !infoBar) return;
+        <h4>3. How We Use Your Information</h4>
+        <ul>
+          <li>Processing and confirming customer orders.</li>
+          <li>Verifying payments and preventing fraudulent transactions.</li>
+          <li>Arranging deliveries and shipping services.</li>
+          <li>Generating order numbers and tracking codes.</li>
+          <li>Providing order updates, in-app alerts, and delivery notifications.</li>
+          <li>Responding to customer enquiries and complaints.</li>
+          <li>Managing customer accounts across our website and mobile app.</li>
+          <li>Sending promotional messages or push alerts where permitted or where you have given consent.</li>
+          <li>Improving our website, mobile app, products, services, and customer experience.</li>
+          <li>Meeting applicable legal, accounting, and regulatory requirements.</li>
+        </ul>
 
-        const appText = (appRoot.textContent || "").toLowerCase();
-        const isAccountPage =
-          appText.includes("my sekiflex account") ||
-          appText.includes("need assistance?") ||
-          appText.includes("about sekiflex collections");
+        <h4>4. Payment Security</h4>
+        <p>We take payment security seriously. Payments made through our website or mobile app may be processed by authorised third-party payment service providers according to their own privacy and security policies.</p>
+        <p>Sekiflex Collections does not store customers' complete payment card details or banking passwords on its own servers. Customers should never share their banking passwords, PINs, or one-time passwords with anyone claiming to represent our company.</p>
 
-        if (isAccountPage) {
-          infoBar.classList.add("is-account-active");
-        } else {
-          infoBar.classList.remove("is-account-active");
-        }
-      }
+        <h4>5. Order Information and Delivery</h4>
+        <p>To successfully fulfil your purchases, certain customer information (such as name, phone number, delivery address, and order details) may be shared with authorised delivery partners, dispatch riders, cargo operators, and logistics service providers. Where international shipping is requested, relevant information may also be shared with international shipping partners and customs authorities where necessary.</p>
 
-      function cleanStorefrontDom() {
-        document.querySelectorAll("img").forEach((img) => {
-          img.removeAttribute("width");
-          img.removeAttribute("height");
-        });
+        <h4>6. Sharing of Customer Information</h4>
+        <p>Sekiflex Collections does not sell customers' personal information to third parties. However, we may share necessary information with trusted service providers who assist us in operating our business, including payment processors, delivery partners, website/app hosting and technical providers, email/SMS/push notification services, customer support tools, and government or regulatory authorities where legally required.</p>
 
-        syncAccountView();
+        <h4>7. Cookies, App Storage & Technology</h4>
+        <p>Our website and mobile app may use cookies, local app storage, and similar technologies to improve functionality, remember customer preferences, maintain shopping sessions, and understand platform performance. Disabling certain cookies or app permissions may affect some features.</p>
 
-        const promoContainers = document.querySelectorAll(
-          '[class*="announcement"], [class*="promo"], [class*="wall"], [id*="announcement"], [id*="promo"], [id*="wall"]'
-        );
+        <h4>8. Protection of Your Information</h4>
+        <p>We take reasonable technical and organisational measures to protect customer information against unauthorised access, misuse, alteration, disclosure, loss, or destruction. Access is restricted to authorised personnel and service providers. We encourage customers to protect their account passwords and avoid sharing confidential account details.</p>
 
-        promoContainers.forEach((box) => {
-          if (box.closest("#sekiflex-info-bar")) return;
-          if (box.hasAttribute("contenteditable")) {
-            box.setAttribute("contenteditable", "false");
-          }
-          box.querySelectorAll("[contenteditable]").forEach((el) => {
-            el.setAttribute("contenteditable", "false");
-          });
+        <h4>9. How Long We Keep Your Information</h4>
+        <p>We retain customer information only for as long as reasonably necessary to fulfil the purposes for which it was collected, including order processing, customer support, business administration, legal obligations, accounting requirements, and dispute resolution, after which it is securely deleted or anonymised.</p>
 
-          const img = box.querySelector("img");
-          if (img && img.getAttribute("src") && img.getAttribute("src").trim() !== "") {
-            box.querySelectorAll("span, div, p, strong, small").forEach((node) => {
-              if (node.children.length === 0 && node.textContent && node.textContent.trim() === "SC") {
-                node.style.setProperty("display", "none", "important");
-              }
-            });
-          }
-        });
-      }
+        <h4>10. Your Privacy Rights</h4>
+        <p>Under applicable data protection laws, depending on the circumstances, you may have the right to:</p>
+        <ul>
+          <li>Request access to personal information we hold about you.</li>
+          <li>Request corrections to inaccurate or incomplete information.</li>
+          <li>Request deletion of your account and personal information where legally applicable.</li>
+          <li>Withdraw consent where processing is based on consent.</li>
+          <li>Object to certain types of processing, including direct marketing.</li>
+          <li>Request restriction of certain processing activities or a portable copy of your data.</li>
+          <li>Lodge a complaint with the Nigeria Data Protection Commission (NDPC).</li>
+        </ul>
 
-      document.addEventListener(
-        "beforeinput",
-        (event) => {
-          if (
-            event.target &&
-            event.target.closest &&
-            event.target.closest(
-              '[class*="announcement"], [class*="promo"], [class*="wall"], [id*="announcement"], [id*="promo"], [id*="wall"]'
-            )
-          ) {
-            event.preventDefault();
-          }
-        },
-        true
-      );
+        <h4>11. Promotional Messages and Push Notifications</h4>
+        <p>Customers can opt out of promotional emails, SMS, or mobile app push notifications at any time through app/device settings, unsubscribe options, or by contacting support. Service-related messages (such as order confirmations and delivery updates) will still be sent as needed.</p>
 
-      document.addEventListener(
-        "click",
-        (event) => {
-          if (event.target && event.target.closest && event.target.closest("#sekiflex-info-modal")) {
-            return;
-          }
+        <h4>12. Third-Party Websites and Services</h4>
+        <p>Our website and mobile app may contain links to third-party websites, payment platforms, or external services that operate independently under their own privacy policies.</p>
 
-          const infoTarget = event.target.closest("[data-info-section], a, button, li, div[role='button']");
-          if (infoTarget) {
-            if (infoTarget.hasAttribute("data-social-link")) {
-              return;
-            }
-            const explicitKey = infoTarget.getAttribute("data-info-section");
-            const matchedKey = explicitKey || detectInfoKey(infoTarget.textContent || "");
-            if (matchedKey && INFO_SECTIONS[matchedKey]) {
-              event.preventDefault();
-              event.stopPropagation();
-              openInfoSection(matchedKey);
-              return;
-            }
-          }
+        <h4>13. Children's Privacy</h4>
+        <p>Our website, mobile app, and services are not intended for children to independently provide personal information without parental or guardian involvement.</p>
 
-          const trigger = event.target.closest(
-            '[data-category], .category-card, .category-item, [class*="category"]'
-          );
-          if (!trigger) return;
+        <h4>14. Changes to This Privacy Policy</h4>
+        <p>Sekiflex Collections reserves the right to update this Privacy Policy when necessary. Any updated version will be published on our website and mobile app with its revised effective date.</p>
 
-          if (
-            trigger.closest(
-              "#catalog-grid, .catalog-grid, #products-grid, .products-grid, #shop-grid, .shop-grid"
-            )
-          ) {
-            return;
-          }
+        <h4>15. Contact Us</h4>
+        <p>
+          <strong>Company:</strong> Sekiflex Collections<br>
+          <strong>Operating Company:</strong> Sekiflex Limited<br>
+          <strong>Physical Business Location:</strong> Uyo, Akwa Ibom State, Nigeria<br>
+          <strong>Website & App:</strong> https://sekiflexcollections.com
+        </p>
+        <div class="sk-tagline-box">Sekiflex Collections – Your Privacy, Our Responsibility.</div>
+      `
+    },
 
-          const category =
-            trigger.getAttribute("data-category") ||
-            (trigger.dataset && trigger.dataset.category) ||
-            (trigger.querySelector("[data-category]") &&
-              trigger.querySelector("[data-category]").getAttribute("data-category")) ||
-            (trigger.textContent ? trigger.textContent.trim().split("\n")[0].trim() : "");
+    refund: {
+      title: "Refund, Returns & Payment Policy",
+      html: `
+        <span class="sk-badge">Effective Date: 24 November 2026</span>
+        <p>At Sekiflex Collections, we value our customers and are committed to providing a fair, transparent, and secure shopping experience across our website and mobile app. This policy explains how we handle refunds, returns, cancellations, failed payments, and payment-related complaints.</p>
 
-          if (!category) return;
+        <h4>1. Order Cancellation</h4>
+        <ul>
+          <li>Cancellation requests made before an order is processed or dispatched may be considered for cancellation and a refund.</li>
+          <li>Once an order has been processed, packaged, or handed over to a delivery partner, cancellation may no longer be possible through the normal process.</li>
+          <li>Where cancellation is no longer possible, customers may contact our support team for assistance with available options.</li>
+        </ul>
 
-          [
-            "applyCategoryFilter",
-            "filterByCategory",
-            "selectCategory",
-            "filterProducts",
-            "renderCatalog",
-            "renderProducts"
-          ].forEach((fnName) => {
-            if (typeof window[fnName] === "function") {
-              try {
-                window[fnName](category);
-              } catch (e) {}
-            }
-          });
+        <h4>2. Refund Eligibility</h4>
+        <p>Refund requests may be considered under the following circumstances:</p>
+        <ul>
+          <li>A customer successfully makes payment but the order is not confirmed due to a verified payment or system error.</li>
+          <li>A customer is charged more than once for the same order.</li>
+          <li>An order is cancelled under circumstances where a refund is applicable.</li>
+          <li>A customer receives an incorrect product.</li>
+          <li>A product arrives damaged, defective, unsafe, or materially different from its advertised description.</li>
+          <li>An order cannot be fulfilled by Sekiflex Collections after payment has been received.</li>
+          <li>Other circumstances where a refund or appropriate remedy is required under applicable law.</li>
+        </ul>
 
-          document.querySelectorAll("button, a, [role='button']").forEach((el) => {
-            if (el === trigger) return;
-            const label = el.textContent ? el.textContent.trim() : "";
-            if (label && label.toLowerCase() === category.toLowerCase()) {
-              try {
-                el.click();
-              } catch (e) {}
-            }
-          });
+        <h4>3. Non-Eligible Refund Requests</h4>
+        <p>Where a product has been correctly supplied in accordance with its description and agreed order details, a refund will not automatically be granted simply because:</p>
+        <ul>
+          <li>A customer changes their mind after purchasing or no longer wants the product.</li>
+          <li>A customer selected the wrong size, colour, or product despite correct details being provided.</li>
+          <li>A customer provides an incorrect delivery address or contact information.</li>
+          <li>A customer fails to receive or collect an order due to circumstances within their control.</li>
+        </ul>
+        <p>Nothing in this policy removes any refund or return rights provided by law.</p>
 
-          const catalogTarget =
-            document.querySelector("#catalog-section") ||
-            document.querySelector("#catalog") ||
-            document.querySelector("#catalog-grid") ||
-            document.querySelector(".catalog-grid") ||
-            document.querySelector("#products-grid") ||
-            document.querySelector(".products-grid") ||
-            document.querySelector("#shop-grid");
+        <h4>4. Product Returns and Exchanges</h4>
+        <p>Customers who receive an incorrect, damaged, defective, or materially misdescribed product should contact our support team promptly with their order/tracking number, proof of purchase, clear photos or videos showing the issue, and a brief explanation. Where a valid return is accepted, Sekiflex Collections will provide a replacement, repair where applicable, or refund in accordance with applicable law.</p>
 
-          if (catalogTarget) {
-            event.preventDefault();
-            catalogTarget.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
-        },
-        true
-      );
+        <h4>5. Payment Errors and Duplicate Transactions</h4>
+        <p>If your account is debited but your order is not confirmed, please contact our support team with your payment receipt or transaction reference. Where a duplicate payment is confirmed with our payment provider, the additional payment will be refunded. Please note that a payment screenshot alone does not establish settlement; verification is based on confirmed transaction records.</p>
 
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", cleanStorefrontDom);
-      } else {
-        cleanStorefrontDom();
-      }
+        <h4>6. Refund Processing</h4>
+        <p>Approved refunds are normally made through the original payment method wherever reasonably possible. Processing timelines depend on the payment provider and financial institution.</p>
 
-      const observer = new MutationObserver(cleanStorefrontDom);
-      observer.observe(document.documentElement, { childList: true, subtree: true });
-    })();
-  </script>
-</body>
-</html>
+        <h4>7. Delivery and Shipping Charges</h4>
+        <p>Delivery and shipping charges are separate from product costs. Additional delivery or return costs arising from incorrect customer delivery details or change of mind will be assessed based on disclosed terms, while errors attributable to Sekiflex Collections will be handled according to applicable consumer law.</p>
+
+        <h4>8. Fraud Prevention and Payment Verification</h4>
+        <p>Sekiflex Collections reserves the right to verify payment transactions, order details, and refund requests before processing them. Suspected fraudulent activity or manipulated receipts will be investigated lawfully.</p>
+
+        <h4>9. How to Request a Refund</h4>
+        <p>Contact our official support team via Live Chat or WhatsApp with your full name, order/tracking number, payment reference or receipt, reason for the request, and supporting photos/videos where applicable.</p>
+
+        <h4>10. Policy Updates & Contact</h4>
+        <p>Updated versions of this policy will be published on our website and mobile app.<br>
+        <strong>Company:</strong> Sekiflex Collections (Operated by Sekiflex Limited)<br>
+        <strong>Location:</strong> Uyo, Akwa Ibom State, Nigeria<br>
+        <strong>Website & App:</strong> https://sekiflexcollections.com</p>
+        <div class="sk-tagline-box">Sekiflex Collections – Fair Shopping. Trusted Service. Customer Confidence.</div>
+      `
+    },
+
+    terms: {
+      title: "Terms & Conditions",
+      html: `
+        <span class="sk-badge">Effective Date: 24 November 2026</span>
+        <p>Welcome to Sekiflex Collections. These Terms & Conditions explain the rules, responsibilities, and important information you should understand before using our website, mobile app, or purchasing our products. Sekiflex Collections operates under <strong>Sekiflex Limited</strong>. By accessing our website or mobile app, creating an account, placing an order, or using our services, you agree to comply with these Terms & Conditions and applicable laws.</p>
+
+        <h4>1. Use of Our Website & Mobile App</h4>
+        <p>Customers must use our website and mobile app responsibly and provide accurate information. You must not:</p>
+        <ul>
+          <li>Use our platforms for fraudulent, unlawful, or misleading activities.</li>
+          <li>Attempt to interfere with the operation, code, or security of our website or mobile app.</li>
+          <li>Provide false payment information or submit misleading transaction evidence.</li>
+          <li>Attempt to gain unauthorised access to customer accounts or company systems.</li>
+          <li>Use our platforms in any way that could harm our business or other customers.</li>
+        </ul>
+
+        <h4>2. Product Information and Availability</h4>
+        <p>We make reasonable efforts to ensure product descriptions, images, prices, sizes, and colours are accurate, though slight variations may occur due to screen settings or lighting. All products are subject to availability.</p>
+
+        <h4>3. Prices and Payments</h4>
+        <p>All product prices are displayed in the stated currency. Orders are subject to successful payment verification with our payment provider.</p>
+
+        <h4>4. Order Confirmation and Processing</h4>
+        <p>After placing an order on our website or mobile app, customers receive an order confirmation and unique tracking number. We reserve the right to review or hold orders where payment verification or address accuracy requires confirmation.</p>
+
+        <h4>5. Delivery and Shipping</h4>
+        <p>We deliver across Nigeria and selected international destinations. Estimated delivery timelines are guidance and may vary due to location, weather, public holidays, or customs clearance. Customers are responsible for providing accurate delivery details.</p>
+
+        <h4>6. Order Tracking</h4>
+        <p>Customers may track orders on our website or mobile app using their unique tracking number.</p>
+
+        <h4>7. Refunds, Returns and Exchanges</h4>
+        <p>All refund, return, cancellation, and exchange requests are governed by our <strong>Refund, Returns & Payment Policy</strong>.</p>
+
+        <h4>8. Customer Accounts and Responsibilities</h4>
+        <p>Customers are responsible for maintaining the confidentiality of their website and mobile app login details and notifying support immediately of any unauthorised account access.</p>
+
+        <h4>9. Promotions, Discounts and Special Offers</h4>
+        <p>Promotional campaigns and discounts are subject to stated validity periods and eligibility conditions, cannot be exchanged for cash, and cannot be combined unless stated otherwise.</p>
+
+        <h4>10. Intellectual Property</h4>
+        <p>All branding, logos, app designs, graphics, photographs, product descriptions, and content owned by Sekiflex Collections or Sekiflex Limited are protected by intellectual property laws and may not be reproduced without permission.</p>
+
+        <h4>11. Limitation of Responsibility</h4>
+        <p>While we strive for uninterrupted access to our website and mobile app, we are not responsible for indirect losses arising from network failures, third-party service interruptions, or external logistics delays beyond our reasonable control, except as required by law.</p>
+
+        <h4>12. Privacy and Customer Information</h4>
+        <p>Personal information is handled in accordance with our <strong>Privacy Policy</strong>.</p>
+
+        <h4>13. Changes to These Terms</h4>
+        <p>Updated Terms & Conditions will be published on our website and mobile app with the revised effective date.</p>
+
+        <h4>14. Applicable Law and Disputes</h4>
+        <p>These Terms & Conditions are governed by the laws of the <strong>Federal Republic of Nigeria</strong>.</p>
+
+        <h4>15. Contact Information</h4>
+        <p>
+          <strong>Business Name:</strong> Sekiflex Collections<br>
+          <strong>Operating Company:</strong> Sekiflex Limited<br>
+          <strong>Physical Business Location:</strong> Uyo, Akwa Ibom State, Nigeria<br>
+          <strong>Website & App:</strong> https://sekiflexcollections.com
+        </p>
+        <div class="sk-tagline-box">Sekiflex Collections – Shop with Confidence.</div>
+      `
+    }
+  };
+
+  function openInfoModal(key) {
+    const data = sekiflexPages[key];
+    if (!data) return;
+    document.getElementById("skModalTitle").textContent = data.title;
+    document.getElementById("skModalBody").innerHTML = data.html;
+    document.getElementById("skInfoModal").classList.add("active");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeInfoModal(event) {
+    if (event && event.target !== event.currentTarget) return;
+    document.getElementById("skInfoModal").classList.remove("active");
+    document.body.style.overflow = "";
+  }
+</script>
