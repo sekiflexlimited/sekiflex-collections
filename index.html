@@ -266,7 +266,6 @@
       image-rendering: high-quality;
     }
 
-    /* Styled Policy & Info Modal Content */
     .skf-policy-wrap h4 {
       color: #fbbf24;
       font-size: 12.5px;
@@ -920,6 +919,10 @@
     </header>
 
     <div class="max-w-2xl mx-auto px-3 pt-3 space-y-3">
+      <div id="freeShippingPromoBanner" class="hidden rounded-2xl bg-emerald-950/80 border border-emerald-400/45 px-3.5 py-2.5 text-center">
+        <p class="text-xs font-extrabold text-emerald-300">🎉 FREE SHIPPING PROMO IS ACTIVE — Delivery Fee Waived (₦0)!</p>
+      </div>
+
       <div class="luxury-glass-card border border-amber-400/30 rounded-2xl p-3.5 space-y-1.5">
         <p class="text-[10px] font-extrabold uppercase tracking-widest text-amber-400">Cart Summary</p>
         <div class="flex items-center justify-between">
@@ -999,44 +1002,75 @@
           <div class="flex justify-between font-bold text-sm border-t border-stone-800 pt-1"><span>Total to Pay:</span><span id="grandTotalText" class="text-amber-400">₦0</span></div>
         </div>
 
-        <div class="border border-amber-400/25 bg-[#12141a] rounded-xl p-2.5 space-y-2">
-          <p class="text-[11px] text-stone-300">Transfer <span class="font-bold text-amber-400" id="payBoxAmountText">₦0</span> to:</p>
+        <div class="border border-amber-400/25 bg-[#12141a] rounded-xl p-2.5 space-y-2.5">
+          <p class="text-[11px] font-bold text-amber-300">Select Payment Option:</p>
 
-          <div class="bg-stone-950 border border-stone-800 rounded-xl p-2 flex items-center justify-between gap-2">
-            <div class="text-xs">
-              <p class="font-bold text-white">Stanbic IBTC</p>
-              <p class="font-mono font-bold text-xs text-amber-400">0084620625</p>
-              <p class="text-[10px] text-stone-400">Sekiflex Collections</p>
-            </div>
-            <button type="button" onclick="copyAcct('0084620625', 'Stanbic IBTC', this)"
-              class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-2.5 py-1.5 rounded-lg shrink-0 transition">
-              Copy
+          <div class="grid grid-cols-2 gap-1.5 bg-stone-950 p-1 rounded-xl border border-stone-800">
+            <button type="button" id="btnPayTransfer" onclick="setPaymentOption('transfer')"
+              class="py-2 px-2 rounded-lg text-[11px] font-extrabold bg-amber-500 text-stone-950 transition">
+              Bank Transfer
+            </button>
+            <button type="button" id="btnPayOnDelivery" onclick="setPaymentOption('pod')"
+              class="py-2 px-2 rounded-lg text-[11px] font-bold text-stone-300 hover:text-white transition">
+              Pay on Delivery
             </button>
           </div>
 
-          <div class="bg-stone-950 border border-stone-800 rounded-xl p-2 flex items-center justify-between gap-2">
-            <div class="text-xs">
-              <p class="font-bold text-white">OPay</p>
-              <p class="font-mono font-bold text-xs text-amber-400">9163755234</p>
-              <p class="text-[10px] text-stone-400">Sekiflex Collections</p>
+          <p id="podAvailabilityHint" class="text-[10px] text-stone-400">
+            Payment on Delivery is available for <strong class="text-amber-300">Akwa Ibom</strong> courier deliveries only (shipping included in total).
+          </p>
+
+          <!-- Bank Transfer Fields -->
+          <div id="bankTransferFields" class="space-y-2">
+            <p class="text-[11px] text-stone-300">Transfer <span class="font-bold text-amber-400" id="payBoxAmountText">₦0</span> to:</p>
+
+            <div class="bg-stone-950 border border-stone-800 rounded-xl p-2 flex items-center justify-between gap-2">
+              <div class="text-xs">
+                <p class="font-bold text-white">Stanbic IBTC</p>
+                <p class="font-mono font-bold text-xs text-amber-400">0084620625</p>
+                <p class="text-[10px] text-stone-400">Sekiflex Collections</p>
+              </div>
+              <button type="button" onclick="copyAcct('0084620625', 'Stanbic IBTC', this)"
+                class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-2.5 py-1.5 rounded-lg shrink-0 transition">
+                Copy
+              </button>
             </div>
-            <button type="button" onclick="copyAcct('9163755234', 'OPay', this)"
-              class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-2.5 py-1.5 rounded-lg shrink-0 transition">
-              Copy
-            </button>
+
+            <div class="bg-stone-950 border border-stone-800 rounded-xl p-2 flex items-center justify-between gap-2">
+              <div class="text-xs">
+                <p class="font-bold text-white">OPay</p>
+                <p class="font-mono font-bold text-xs text-amber-400">9163755234</p>
+                <p class="text-[10px] text-stone-400">Sekiflex Collections</p>
+              </div>
+              <button type="button" onclick="copyAcct('9163755234', 'OPay', this)"
+                class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-2.5 py-1.5 rounded-lg shrink-0 transition">
+                Copy
+              </button>
+            </div>
+
+            <select required id="paidBankSelect" class="w-full border border-stone-800 bg-stone-950 text-white rounded-xl px-2.5 py-2.5 text-xs focus:outline-none focus:border-amber-400">
+              <option value="">Select Account You Transferred To...</option>
+              <option value="Stanbic IBTC (0084620625)">Paid to Stanbic IBTC — 0084620625</option>
+              <option value="OPay (9163755234)">Paid to OPay — 9163755234</option>
+            </select>
+
+            <input required id="senderRefInput" type="text" placeholder="Sender Account Name or Transfer Reference" class="w-full border border-stone-800 bg-stone-950 text-white placeholder:text-stone-500 rounded-xl px-2.5 py-2.5 text-xs focus:outline-none focus:border-amber-400" />
           </div>
 
-          <select required id="paidBankSelect" class="w-full border border-stone-800 bg-stone-950 text-white rounded-xl px-2.5 py-2.5 text-xs focus:outline-none focus:border-amber-400">
-            <option value="">Select Account You Transferred To...</option>
-            <option value="Stanbic IBTC (0084620625)">Paid to Stanbic IBTC — 0084620625</option>
-            <option value="OPay (9163755234)">Paid to OPay — 9163755234</option>
-          </select>
-
-          <input required id="senderRefInput" type="text" placeholder="Sender Account Name or Transfer Reference" class="w-full border border-stone-800 bg-stone-950 text-white placeholder:text-stone-500 rounded-xl px-2.5 py-2.5 text-xs focus:outline-none focus:border-amber-400" />
+          <!-- Pay on Delivery Info Box (Akwa Ibom Only) -->
+          <div id="podInfoFields" class="hidden bg-amber-500/10 border border-amber-400/35 rounded-xl p-2.5 space-y-1 text-xs">
+            <p class="font-extrabold text-amber-300">Payment on Delivery — Akwa Ibom State</p>
+            <p class="text-[11px] text-stone-200">
+              Total to pay upon delivery (items + shipping): <strong id="podTotalAmountText" class="text-amber-300">₦0</strong>
+            </p>
+            <p class="text-[10px] text-stone-300">
+              Please keep your phone reachable and have the full total ready when our dispatch rider arrives in Akwa Ibom.
+            </p>
+          </div>
 
           <label class="flex items-start gap-2 text-[11px] text-stone-300 cursor-pointer">
             <input required id="paymentConfirmCheck" type="checkbox" class="mt-0.5 accent-amber-500" />
-            <span>I have completed the bank transfer and accept the <button type="button" onclick="event.preventDefault(); openInfoModal('privacy');" class="underline font-semibold text-amber-400">Privacy Policy</button> &amp; <button type="button" onclick="event.preventDefault(); openInfoModal('terms');" class="underline font-semibold text-amber-400">Terms</button>.</span>
+            <span id="paymentConfirmLabel">I have completed the bank transfer and accept the <button type="button" onclick="event.preventDefault(); openInfoModal('privacy');" class="underline font-semibold text-amber-400">Privacy Policy</button> &amp; <button type="button" onclick="event.preventDefault(); openInfoModal('terms');" class="underline font-semibold text-amber-400">Terms</button>.</span>
           </label>
         </div>
 
@@ -1261,6 +1295,7 @@
     const TIKTOK_URL = 'https://www.tiktok.com/@sekiflex_collections?_r=1&_t=ZS-9BbSAFjxrZW';
     const FACEBOOK_URL = 'https://www.facebook.com/share/1G3ErASdHa/';
     const ROTATION_MINUTES = 1;
+    const AKWA_IBOM_SHIPPING_FEE = 2000;
 
     const DEFAULT_WALL_PROMO_CARDS = [
       { id: 'wall_1', title: 'Hot Drops', tag: 'NEW IN', badgeBg: 'bg-amber-400 text-stone-950', titleColor: 'text-amber-300', shapeClass: 'skf-bag-promo', hasBagHandles: true, image: '', categoryKey: 'ALL' },
@@ -1281,6 +1316,7 @@
     let allProducts = JSON.parse(localStorage.getItem('sekiflex_products_cache') || '[]');
     let allCategories = JSON.parse(localStorage.getItem('sekiflex_cats_cache') || '[]');
     let shippingZones = JSON.parse(localStorage.getItem('sekiflex_zones_cache') || '[]');
+    let freeShippingMode = localStorage.getItem('sekiflex_free_shipping_v1') === '1';
     let cart = JSON.parse(localStorage.getItem('sekiflex_cart') || '[]');
     let storeReviews = JSON.parse(localStorage.getItem('sekiflex_reviews_v1') || '[]');
     let wallPromoCards = JSON.parse(localStorage.getItem('sekiflex_wall_promo_cards_v1') || 'null') || [...DEFAULT_WALL_PROMO_CARDS];
@@ -1293,6 +1329,7 @@
     let pictureSearchScores = null;
     let pictureSearchFileName = '';
     let fulfillmentMode = 'delivery';
+    let paymentOption = 'transfer';
     let currentShippingFee = 0;
     let currentEstDays = 'select state';
     let toastTimer = null;
@@ -3269,11 +3306,24 @@
       cardEl.classList.remove('hidden');
     }
 
+    function applyFreeShippingState(isEnabled) {
+      freeShippingMode = Boolean(isEnabled);
+      localStorage.setItem('sekiflex_free_shipping_v1', freeShippingMode ? '1' : '0');
+      const promoBanner = document.getElementById('freeShippingPromoBanner');
+      if (promoBanner) {
+        promoBanner.classList.toggle('hidden', !freeShippingMode);
+      }
+      updateShippingFee();
+    }
+
     async function loadStoreBanner() {
-      const [{ data: banner }, { data: banner2 }] = await Promise.all([
+      const [{ data: banner }, { data: banner2 }, { data: freeShipRow }] = await Promise.all([
         sb.from('store_settings').select('*').eq('id', 'main').maybeSingle(),
-        sb.from('store_settings').select('*').eq('id', 'second').maybeSingle()
+        sb.from('store_settings').select('*').eq('id', 'second').maybeSingle(),
+        sb.from('store_settings').select('*').eq('id', 'free_shipping').maybeSingle()
       ]);
+
+      applyFreeShippingState(Boolean(freeShipRow?.banner_active));
 
       liveBannerMediaUrls = [banner?.banner_image_url, banner2?.banner_image_url].filter(Boolean);
 
@@ -3341,8 +3391,89 @@
         NIGERIA_STATES.map(st => `<option value="${st}">${st}</option>`).join('');
     }
 
+    function isAkwaIbomCourierSelected() {
+      if (fulfillmentMode !== 'delivery') return false;
+      const country = (document.getElementById('custCountry')?.value || '').trim().toLowerCase();
+      const state = getSelectedState().toLowerCase();
+      return country === 'nigeria' && state === 'akwa ibom';
+    }
+
+    function syncPaymentOptionUi() {
+      const btnTransfer = document.getElementById('btnPayTransfer');
+      const btnPod = document.getElementById('btnPayOnDelivery');
+      const bankBox = document.getElementById('bankTransferFields');
+      const podBox = document.getElementById('podInfoFields');
+      const hintEl = document.getElementById('podAvailabilityHint');
+      const confirmLabel = document.getElementById('paymentConfirmLabel');
+      const submitBtn = document.getElementById('submitBtn');
+      const paidBankEl = document.getElementById('paidBankSelect');
+      const senderRefEl = document.getElementById('senderRefInput');
+
+      const podEligible = isAkwaIbomCourierSelected();
+
+      if (!podEligible && paymentOption === 'pod') {
+        paymentOption = 'transfer';
+      }
+
+      if (btnPod) {
+        btnPod.disabled = !podEligible;
+        btnPod.classList.toggle('opacity-45', !podEligible);
+        btnPod.classList.toggle('cursor-not-allowed', !podEligible);
+      }
+
+      if (hintEl) {
+        if (fulfillmentMode === 'pickup') {
+          hintEl.innerHTML = 'Store Pickup is <strong>FREE (₦0)</strong> at Urua Ekpa, Uyo. Complete bank transfer to confirm your pickup order.';
+        } else if (podEligible) {
+          hintEl.innerHTML = '<strong>Akwa Ibom selected:</strong> You can pay by Bank Transfer or choose <strong>Pay on Delivery</strong> (shipping fee included in total).';
+        } else {
+          hintEl.innerHTML = 'Pay on Delivery is available for <strong>Akwa Ibom</strong> courier deliveries only. Select <strong>Nigeria → Akwa Ibom</strong> to enable it.';
+        }
+      }
+
+      const isPod = podEligible && paymentOption === 'pod';
+
+      if (btnTransfer && btnPod) {
+        if (isPod) {
+          btnPod.className = 'py-2 px-2 rounded-lg text-[11px] font-extrabold bg-amber-500 text-stone-950 transition';
+          btnTransfer.className = 'py-2 px-2 rounded-lg text-[11px] font-bold text-stone-300 hover:text-white transition';
+        } else {
+          btnTransfer.className = 'py-2 px-2 rounded-lg text-[11px] font-extrabold bg-amber-500 text-stone-950 transition';
+          btnPod.className = `py-2 px-2 rounded-lg text-[11px] font-bold text-stone-300 hover:text-white transition ${!podEligible ? 'opacity-45 cursor-not-allowed' : ''}`;
+        }
+      }
+
+      if (bankBox) bankBox.classList.toggle('hidden', isPod);
+      if (podBox) podBox.classList.toggle('hidden', !isPod);
+
+      if (paidBankEl) paidBankEl.required = !isPod;
+      if (senderRefEl) senderRefEl.required = !isPod;
+
+      if (confirmLabel) {
+        confirmLabel.innerHTML = isPod
+          ? 'I agree to pay the full order total upon delivery in Akwa Ibom and accept the <button type="button" onclick="event.preventDefault(); openInfoModal(\'privacy\');" class="underline font-semibold text-amber-400">Privacy Policy</button> &amp; <button type="button" onclick="event.preventDefault(); openInfoModal(\'terms\');" class="underline font-semibold text-amber-400">Terms</button>.'
+          : 'I have completed the bank transfer and accept the <button type="button" onclick="event.preventDefault(); openInfoModal(\'privacy\');" class="underline font-semibold text-amber-400">Privacy Policy</button> &amp; <button type="button" onclick="event.preventDefault(); openInfoModal(\'terms\');" class="underline font-semibold text-amber-400">Terms</button>.';
+      }
+
+      if (submitBtn && !submitBtn.disabled) {
+        submitBtn.textContent = isPod ? 'Confirm Pay on Delivery Order' : 'I Have Paid — Confirm Order';
+      }
+    }
+
+    function setPaymentOption(opt) {
+      if (opt === 'pod' && !isAkwaIbomCourierSelected()) {
+        alert('Payment on Delivery is available for Akwa Ibom State courier deliveries only.');
+        return;
+      }
+      paymentOption = opt === 'pod' ? 'pod' : 'transfer';
+      syncPaymentOptionUi();
+    }
+
     function setFulfillmentMode(mode) {
       fulfillmentMode = mode;
+      if (mode !== 'delivery') {
+        paymentOption = 'transfer';
+      }
       const btnDel = document.getElementById('btnDeliveryMode');
       const btnPick = document.getElementById('btnPickupMode');
       const delFields = document.getElementById('deliveryFields');
@@ -3460,6 +3591,7 @@
       renderReviews();
       renderWallHungPromoCards();
       populateNigeriaStates();
+      applyFreeShippingState(freeShippingMode);
       renderCart();
       startBannerAutoShift();
       startFeaturedAutoScroll();
@@ -3679,6 +3811,7 @@
       if (fulfillmentMode === 'pickup') {
         currentShippingFee = 0;
         currentEstDays = 'Uyo HQ Pickup';
+        syncPaymentOptionUi();
         renderCart();
         return;
       }
@@ -3689,6 +3822,7 @@
       if (country === 'nigeria' && !state) {
         currentShippingFee = 0;
         currentEstDays = 'select state';
+        syncPaymentOptionUi();
         renderCart();
         return;
       }
@@ -3696,8 +3830,17 @@
       const match = shippingZones.find(z => z.country_name.toLowerCase() === country && z.state_name && z.state_name.toLowerCase() === state)
                  || shippingZones.find(z => z.country_name.toLowerCase() === country && !z.state_name);
 
-      currentShippingFee = match ? Number(match.delivery_fee_ngn) : (country === 'nigeria' ? 5500 : 60000);
-      currentEstDays = match ? match.estimated_days : (country === 'nigeria' ? '1-4 business days' : '5-10 business days');
+      let baseFee = match ? Number(match.delivery_fee_ngn) : (country === 'nigeria' ? 5500 : 60000);
+      if (country === 'nigeria' && state === 'akwa ibom') {
+        baseFee = AKWA_IBOM_SHIPPING_FEE;
+      }
+
+      currentShippingFee = freeShippingMode ? 0 : baseFee;
+      currentEstDays = freeShippingMode
+        ? 'Free Shipping Promo'
+        : (match ? match.estimated_days : (country === 'nigeria' ? '1-4 business days' : '5-10 business days'));
+
+      syncPaymentOptionUi();
       renderCart();
     }
 
@@ -3713,6 +3856,8 @@
 
       if (fulfillmentMode === 'pickup') {
         document.getElementById('shipFeeText').textContent = 'FREE (₦0)';
+      } else if (freeShippingMode) {
+        document.getElementById('shipFeeText').textContent = 'FREE (₦0)';
       } else {
         document.getElementById('shipFeeText').textContent = currentShippingFee > 0 ? '₦' + currentShippingFee.toLocaleString() : '—';
       }
@@ -3720,6 +3865,8 @@
       document.getElementById('estDaysText').textContent = currentEstDays;
       document.getElementById('grandTotalText').textContent = '₦' + grandTotal.toLocaleString();
       document.getElementById('payBoxAmountText').textContent = '₦' + grandTotal.toLocaleString();
+      const podTotalEl = document.getElementById('podTotalAmountText');
+      if (podTotalEl) podTotalEl.textContent = '₦' + grandTotal.toLocaleString();
 
       const summaryActions = document.getElementById('cartSummaryActions');
       const box = document.getElementById('cartItems');
@@ -3827,6 +3974,7 @@
       }
 
       prefillCustomerCheckout();
+      updateShippingFee();
       document.getElementById('cartSummaryActions').classList.add('hidden');
       document.getElementById('checkoutForm').classList.remove('hidden');
       document.getElementById('cartDrawerHeading').textContent = 'Waybill & Checkout';
@@ -3874,10 +4022,16 @@
         destination = `${address}, ${city}, ${state}, ${country}`;
       }
 
-      const paidBank = document.getElementById('paidBankSelect').value.trim();
-      const senderRef = document.getElementById('senderRefInput').value.trim();
-      if (!paidBank || !senderRef) {
-        return alert('Please select the Sekiflex bank account you transferred to and enter the sender name/reference.');
+      const isPod = paymentOption === 'pod' && isAkwaIbomCourierSelected();
+      let paidBank = '';
+      let senderRef = '';
+
+      if (!isPod) {
+        paidBank = document.getElementById('paidBankSelect').value.trim();
+        senderRef = document.getElementById('senderRefInput').value.trim();
+        if (!paidBank || !senderRef) {
+          return alert('Please select the Sekiflex bank account you transferred to and enter the sender name/reference.');
+        }
       }
 
       const btn = document.getElementById('submitBtn');
@@ -3897,9 +4051,11 @@
       const custName = document.getElementById('custName').value.trim() || currentCustomer.name;
       const custEmail = document.getElementById('custEmail').value.trim() || currentCustomer.email;
       const custPhone = document.getElementById('custPhone').value.trim() || currentCustomer.phone;
-      const paymentNote = `${paidBank} | Sender/Ref: ${senderRef}`;
+      const paymentNote = isPod
+        ? `Payment on Delivery (Akwa Ibom) | Total Due on Delivery: ₦${total.toLocaleString()}`
+        : `${paidBank} | Sender/Ref: ${senderRef}`;
       const orderStatus = 'Order processing';
-      const payStatus = 'Awaiting payment';
+      const payStatus = isPod ? 'Pay on delivery (pending)' : 'Awaiting payment';
 
       const { data: order, error } = await sb.from('orders').insert({
         tracking_number: tracking,
@@ -3923,7 +4079,7 @@
 
       if (error) {
         btn.disabled = false;
-        btn.textContent = 'I Have Paid — Confirm Order';
+        btn.textContent = isPod ? 'Confirm Pay on Delivery Order' : 'I Have Paid — Confirm Order';
         return alert('Error placing order: ' + error.message);
       }
 
@@ -3961,16 +4117,16 @@
       }
 
       const waOrderText = encodeURIComponent(
-        `Hello Sekiflex Collections! I have completed payment for my order.\n` +
+        `Hello Sekiflex Collections! I have placed an order.\n` +
         `Tracking Code: ${tracking}\n` +
         `Status: ${orderStatus} (${payStatus})\n` +
         `Name: ${custName}\n` +
         `Items: ${summary}\n` +
         `Product Links:\n${productLinksText}\n` +
         `Method: ${fulfillmentMode === 'pickup' ? 'Walk-In Store Pickup (Urua Ekpa, Uyo)' : destination}\n` +
-        `Amount Paid: ₦${total.toLocaleString()}\n` +
-        `Paid To: ${paidBank}\n` +
-        `Sender/Ref: ${senderRef}`
+        `Total Amount (incl. shipping): ₦${total.toLocaleString()}\n` +
+        `Payment Option: ${isPod ? 'Payment on Delivery (Akwa Ibom)' : paidBank}\n` +
+        (isPod ? '' : `Sender/Ref: ${senderRef}`)
       );
       document.getElementById('orderWhatsappConfirmBtn').href = `https://wa.me/${STORE_WHATSAPP_NUMBER}?text=${waOrderText}`;
 
@@ -3992,6 +4148,7 @@
       saveCart();
       document.getElementById('checkoutForm').reset();
       prefillCustomerCheckout();
+      paymentOption = 'transfer';
       setFulfillmentMode('delivery');
       toggleCart(false);
       btn.disabled = false;
