@@ -38,10 +38,13 @@
     }
 
     .catalog-img-smooth {
-      opacity: 1;
+      opacity: 1 !important;
+      animation: none !important;
+      transition: none !important;
       image-rendering: -webkit-optimize-contrast;
       image-rendering: high-quality;
       transform: translateZ(0);
+      backface-visibility: hidden;
     }
 
     @keyframes trackZoomPulse {
@@ -1082,7 +1085,7 @@
   <div id="productDetailModal" onclick="if(event.target === this) closeProductDetailModal();" class="fixed inset-0 z-[75] hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
     <div class="bg-[#14110c] border border-amber-400/35 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
       <div class="relative bg-stone-950">
-        <img id="detailModalImg" src="" alt="" onerror="handleCatalogImgError(this, this.alt)" class="w-full max-h-72 object-contain object-top mx-auto bg-stone-950" />
+        <img id="detailModalImg" src="" alt="" onerror="handleCatalogImgError(this, this.alt)" class="catalog-img-smooth w-full max-h-72 object-contain object-top mx-auto bg-stone-950" />
         <button type="button" onclick="closeProductDetailModal()"
           class="absolute top-3 right-3 w-8 h-8 rounded-full bg-stone-900/90 hover:bg-stone-800 text-white font-bold text-base border border-white/15 flex items-center justify-center">
           &times;
@@ -1340,11 +1343,11 @@
     let featuredAutoTimer = null;
     let featuredPauseUntil = 0;
     let lastRotationSlot = -1;
-    let pendingHomeRotation = false;
-    let isUserScrolling = false;
-    let catalogTouchLockedUntil = 0;
+    let isScreenScrollingOrTouching = false;
+    let screenFreezeUntil = 0;
     let lockedCatalogOrderIds = null;
-    let scrollIdleTimer = null;
+    let lockedFeaturedOrderIds = null;
+    let screenIdleTimer = null;
     let allowWebsiteExit = false;
 
     const SEKIFLEX_INFO_PAGES = {
@@ -1745,47 +1748,31 @@
       });
     }
 
-    function lockCatalogAndCategoriesWhileBrowsing(durationMs = 45000) {
-      catalogTouchLockedUntil = Date.now() + durationMs;
-      pendingHomeRotation = false;
+    function markScreenActive(durationMs = 4500) {
+      isScreenScrollingOrTouching = true;
+      screenFreezeUntil = Date.now() + durationMs;
+      clearTimeout(screenIdleTimer);
+      screenIdleTimer = setTimeout(() => {
+        isScreenScrollingOrTouching = false;
+      }, 1500);
     }
 
-    function isCatalogOrCategoryLocked() {
-      return isUserScrolling || Date.now() < catalogTouchLockedUntil;
+    function isScreenFrozenForCustomer() {
+      return isScreenScrollingOrTouching || Date.now() < screenFreezeUntil;
     }
 
     function bindScrollPauseWatcher() {
       if (window.__skfScrollWatcherBound) return;
       window.__skfScrollWatcherBound = true;
 
-      const onScrollActivity = () => {
-        isUserScrolling = true;
-        lockCatalogAndCategoriesWhileBrowsing(45000);
-        clearTimeout(scrollIdleTimer);
-        scrollIdleTimer = setTimeout(() => {
-          isUserScrolling = false;
-        }, 2500);
+      const onAnyScreenTouchOrScroll = () => {
+        markScreenActive(4500);
       };
 
-      const onCatalogOrCategoryTouch = (ev) => {
-        const target = ev.target;
-        if (!target || typeof target.closest !== 'function') return;
-        // Touching or interacting anywhere in catalog, categories, or split category screen locks their order
-        // Featured strip (#featuredStripSection) continues scrolling uninterrupted
-        if (
-          target.closest('#catalogSection') ||
-          target.closest('#categoryBar') ||
-          target.closest('#splitCategoryStoreView') ||
-          target.closest('#navCatBtn')
-        ) {
-          lockCatalogAndCategoriesWhileBrowsing(60000);
-        }
-      };
-
-      window.addEventListener('scroll', onScrollActivity, { passive: true });
-      document.addEventListener('touchmove', onScrollActivity, { passive: true });
-      document.addEventListener('touchstart', onCatalogOrCategoryTouch, { passive: true });
-      document.addEventListener('pointerdown', onCatalogOrCategoryTouch, { passive: true });
+      window.addEventListener('scroll', onAnyScreenTouchOrScroll, { passive: true });
+      document.addEventListener('touchmove', onAnyScreenTouchOrScroll, { passive: true });
+      document.addEventListener('touchstart', onAnyScreenTouchOrScroll, { passive: true });
+      document.addEventListener('pointerdown', onAnyScreenTouchOrScroll, { passive: true });
     }
 
     function bindCategoryDelegationOnce() {
@@ -1857,12 +1844,15 @@
 
     function warmUpTopImages(list) {
       if (!Array.isArray(list) || !list.length) return;
-      list.slice(0, 16).forEach(p => {
+      list.slice(0, 20).forEach(p => {
         const src = (p.images && p.images[0]) || p.image_url;
         if (!src) return;
         const pre = new Image();
         pre.decoding = 'sync';
         pre.src = src;
+        if (typeof pre.decode === 'function') {
+          pre.decode().catch(() => {});
+        }
       });
     }
 
@@ -2126,7 +2116,7 @@
       if (featuredAutoTimer) clearInterval(featuredAutoTimer);
 
       featuredAutoTimer = setInterval(() => {
-        if (Date.now() < featuredPauseUntil) return;
+        if (isScreenFrozenForCustomer() || Date.now() < featuredPauseUntil) return;
         const sec = document.getElementById('featuredStripSection');
         if (!sec || sec.classList.contains('hidden')) return;
 
@@ -2142,14 +2132,16 @@
       }, 2800);
     }
 
-    function getRotatedProducts(list) {
+    function getRotatedProducts(list, saltOffset = 0, freezeKey = 'catalog') {
       if (!Array.isArray(list) || list.length <= 1) return list || [];
 
-      // Keep catalog & category order completely frozen while customer is touching or scrolling
-      if (isCatalogOrCategoryLocked() && Array.isArray(lockedCatalogOrderIds) && lockedCatalogOrderIds.length) {
+      const existingLock = freezeKey === 'featured' ? lockedFeaturedOrderIds : lockedCatalogOrderIds;
+
+      // Freeze catalog, categories, and featured items while customer is touching or scrolling screen
+      if (isScreenFrozenForCustomer() && Array.isArray(existingLock) && existingLock.length) {
         const mapById = new Map(list.map(item => [String(item.id), item]));
         const ordered = [];
-        lockedCatalogOrderIds.forEach(id => {
+        existingLock.forEach(id => {
           const found = mapById.get(String(id));
           if (found) {
             ordered.push(found);
@@ -2160,7 +2152,7 @@
         return ordered;
       }
 
-      const slot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000));
+      const slot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000)) + saltOffset;
       const items = [...list];
       const n = items.length;
 
@@ -2176,7 +2168,13 @@
         items[i] = items[j];
         items[j] = tmp;
       }
-      lockedCatalogOrderIds = items.map(p => String(p.id));
+
+      const ids = items.map(p => String(p.id));
+      if (freezeKey === 'featured') {
+        lockedFeaturedOrderIds = ids;
+      } else {
+        lockedCatalogOrderIds = ids;
+      }
       return items;
     }
 
@@ -2186,18 +2184,19 @@
         if (slot !== lastRotationSlot && allProducts.length > 1) {
           lastRotationSlot = slot;
 
-          // Never reshuffle catalog or categories while the customer is touching/scrolling them
-          if (isCatalogOrCategoryLocked()) {
+          // Freeze catalog, categories, and featured swaps while customer is scrolling/touching screen
+          if (isScreenFrozenForCustomer()) {
             return;
           }
 
+          renderFeaturedStrip(allProducts);
           applyCatalogFilters();
 
           if (!document.getElementById('splitCategoryStoreView').classList.contains('hidden')) {
             renderSplitCategoryPanel();
           }
         }
-      }, 5000);
+      }, 4000);
     }
 
     function applySocialLinks() {
@@ -2436,7 +2435,7 @@
       showOnlyMainView('storeMainWrapper');
       setActiveBottomTab('home');
       armStoreBackGuard();
-      lockCatalogAndCategoriesWhileBrowsing(60000);
+      markScreenActive(6000);
 
       const img = (prod.images && prod.images[0]) || prod.image_url || getFallbackPhotoUrl(0);
       const out = (prod.stock_quantity !== null && prod.stock_quantity <= 0);
@@ -2677,7 +2676,7 @@
     function openSplitCategoryStore() {
       closeAllDrawers();
       armStoreBackGuard();
-      lockCatalogAndCategoriesWhileBrowsing(60000);
+      markScreenActive(6000);
       setActiveBottomTab('categories');
       showOnlyMainView('splitCategoryStoreView');
       renderSplitCategorySidebar();
@@ -2706,7 +2705,7 @@
 
     function selectSplitCategory(key) {
       splitSelectedCatKey = key;
-      lockCatalogAndCategoriesWhileBrowsing(60000);
+      markScreenActive(6000);
       renderSplitCategorySidebar();
       renderSplitCategoryPanel();
     }
@@ -2718,7 +2717,7 @@
       if (!grid) return;
 
       const q = (document.getElementById('splitCategorySearchInput')?.value || '').trim().toLowerCase();
-      const rotatedAll = getRotatedProducts(allProducts);
+      const rotatedAll = getRotatedProducts(allProducts, 0, 'catalog');
 
       if (q) {
         titleEl.textContent = `Search: "${q}"`;
@@ -2844,7 +2843,7 @@
       closeAllDrawers();
       showOnlyMainView('storeMainWrapper');
       categoryBrowseMode = true;
-      lockCatalogAndCategoriesWhileBrowsing(60000);
+      markScreenActive(6000);
       setActiveBottomTab('home');
       filterCategory(catId);
       setTimeout(() => {
@@ -2934,7 +2933,7 @@
 
       if (searchQuery || pictureSearchScores) {
         armStoreBackGuard();
-        lockCatalogAndCategoriesWhileBrowsing(60000);
+        markScreenActive(6000);
         document.getElementById('heroCarouselSection').classList.add('hidden');
         document.getElementById('featuredStripSection').classList.add('hidden');
       } else {
@@ -2972,7 +2971,7 @@
     }
 
     function applyCatalogFilters() {
-      let filtered = getRotatedProducts(allProducts);
+      let filtered = getRotatedProducts(allProducts, 0, 'catalog');
 
       if (activeCategory !== 'ALL') {
         filtered = filtered.filter(p => String(p.category_id) === String(activeCategory));
@@ -3595,7 +3594,7 @@
         btn.textContent = `${c.name} (${countInCat})`;
         btn.onclick = () => {
           categoryBrowseMode = true;
-          lockCatalogAndCategoriesWhileBrowsing(60000);
+          markScreenActive(6000);
           filterCategory(c.id, btn);
           document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
         };
@@ -3712,10 +3711,10 @@
       if (catId === 'ALL') categoryBrowseMode = false;
       if (catId !== 'ALL') {
         armStoreBackGuard();
-        lockCatalogAndCategoriesWhileBrowsing(60000);
+        markScreenActive(6000);
       }
       document.querySelectorAll('.cat-btn').forEach(b => {
-        b.className = 'cat-btn bg-[#16130f] border border-amber-400/20 text-stone-300 text-[11px] font-semibold px-3 py-1 rounded-full whitespace-nowrap';
+        b.className = 'cat-btn bg-[#16130f] border border-amber-400/20 text-stone-300 text-[11px] px-3 py-1 rounded-full whitespace-nowrap';
       });
       if (activeBtn) {
         activeBtn.className = 'cat-btn bg-amber-500 text-stone-950 text-[11px] font-extrabold px-3 py-1 rounded-full whitespace-nowrap';
@@ -3733,7 +3732,8 @@
         return;
       }
       sec.classList.remove('hidden');
-      strip.innerHTML = list.slice(0, 8).map((p) => {
+      const rotatedFeatured = getRotatedProducts(list, 17, 'featured');
+      strip.innerHTML = rotatedFeatured.slice(0, 10).map((p) => {
         const img = (p.images && p.images[0]) || p.image_url || '';
         const { effectivePrice, originalPrice } = getProductPricing(p);
         const safeName = String(p.name || 'Product').replace(/"/g, '&quot;').replace(/'/g, "\\'");
