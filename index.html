@@ -1016,8 +1016,8 @@
             </button>
           </div>
 
-          <p id="podAvailabilityHint" class="text-[10px] text-stone-400">
-            Payment on Delivery is available for <strong class="text-amber-300">Akwa Ibom</strong> courier deliveries only (shipping included in total).
+          <p id="podAvailabilityHint" class="text-[10px] font-semibold text-rose-400">
+            Payment on Delivery is available for Akwa Ibom courier deliveries only (shipping included in total).
           </p>
 
           <!-- Bank Transfer Fields -->
@@ -3422,12 +3422,12 @@
       }
 
       if (hintEl) {
-        if (fulfillmentMode === 'pickup') {
-          hintEl.innerHTML = 'Store Pickup is <strong>FREE (₦0)</strong> at Urua Ekpa, Uyo. Complete bank transfer to confirm your pickup order.';
-        } else if (podEligible) {
-          hintEl.innerHTML = '<strong>Akwa Ibom selected:</strong> You can pay by Bank Transfer or choose <strong>Pay on Delivery</strong> (shipping fee included in total).';
+        if (podEligible) {
+          hintEl.className = 'text-[10px] font-semibold text-emerald-400';
+          hintEl.innerHTML = '✓ Pay on Delivery is available for <strong>Akwa Ibom</strong> courier deliveries (shipping included in total).';
         } else {
-          hintEl.innerHTML = 'Pay on Delivery is available for <strong>Akwa Ibom</strong> courier deliveries only. Select <strong>Nigeria → Akwa Ibom</strong> to enable it.';
+          hintEl.className = 'text-[10px] font-semibold text-rose-400';
+          hintEl.innerHTML = 'Pay on Delivery is available for <strong>Akwa Ibom</strong> courier deliveries only (shipping included in total).';
         }
       }
 
@@ -3667,7 +3667,7 @@
       if (catId === 'ALL') categoryBrowseMode = false;
       if (catId !== 'ALL') armStoreBackGuard();
       document.querySelectorAll('.cat-btn').forEach(b => {
-        b.className = 'cat-btn bg-[#16130f] border border-amber-400/20 text-stone-300 text-[11px] font-semibold px-3 py-1 rounded-full whitespace-nowrap';
+        b.className = 'cat-btn bg-[#16130f] border border-amber-400/20 text-stone-300 text-[11px] px-3 py-1 rounded-full whitespace-nowrap';
       });
       if (activeBtn) {
         activeBtn.className = 'cat-btn bg-amber-500 text-stone-950 text-[11px] font-extrabold px-3 py-1 rounded-full whitespace-nowrap';
