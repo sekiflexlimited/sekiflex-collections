@@ -1,3 +1,32 @@
+// Allow reload anytime; only confirm on rapid/repeated Back presses to leave
+window.onbeforeunload = null;
+
+(function setupBackGuard() {
+  let lastBackPressTime = 0;
+  try {
+    if (!window.history.state || !window.history.state.sekiflexBackGuard) {
+      window.history.pushState({ sekiflexBackGuard: true }, "");
+    }
+  } catch (e) {}
+
+  window.addEventListener("popstate", () => {
+    const now = Date.now();
+    if (now - lastBackPressTime < 1500) {
+      const leave = window.confirm("Leave Sekiflex Collections?");
+      if (!leave) {
+        try {
+          window.history.pushState({ sekiflexBackGuard: true }, "");
+        } catch (e) {}
+      }
+    } else {
+      lastBackPressTime = now;
+      try {
+        window.history.pushState({ sekiflexBackGuard: true }, "");
+      } catch (e) {}
+    }
+  });
+})();
+
 document.addEventListener("DOMContentLoaded", async () => {
   // SEKIFLEX COLLECTIONS — STAFF AND CUSTOMER SYSTEM
 
