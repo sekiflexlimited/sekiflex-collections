@@ -93,13 +93,6 @@
       border-radius: 9999px 9999px 0 0;
       margin: 0 auto -2px;
     }
-    .skf-bag-body {
-      border-radius: 6px 6px 14px 14px;
-      background: linear-gradient(160deg, #3a2208 0%, #161008 100%);
-      border: 1.5px solid rgba(251, 191, 36, 0.75);
-      padding: 5px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.7);
-    }
 
     /* Promo 1: Price/boutique hang-tag shape */
     .skf-tag-promo {
@@ -130,12 +123,12 @@
       box-shadow: 0 6px 14px rgba(0, 0, 0, 0.7);
     }
 
-    /* Compact matching catalog/category items starting from 8,000 down on the left sidebar */
+    /* Compact matched left-sidebar items that align evenly with right rows */
     .skf-side-auto-card {
       border-radius: 10px;
       background: linear-gradient(160deg, #1e1810 0%, #110e09 100%);
       border: 1px solid rgba(245, 158, 11, 0.25);
-      padding: 6px 4px;
+      padding: 5px 4px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
@@ -144,8 +137,8 @@
     }
 
     .skf-side-mini-thumb {
-      width: 58px;
-      height: 58px;
+      width: 54px;
+      height: 54px;
       border-radius: 9999px;
       overflow: hidden;
       background: #1b1712;
@@ -208,7 +201,7 @@
       background: #0d0c0a;
     }
     .skf-cat-sidebar {
-      width: 104px;
+      width: 102px;
       flex-shrink: 0;
       background: #14110c;
       border-right: 1px solid rgba(245, 158, 11, 0.25);
@@ -257,8 +250,8 @@
     }
     .skf-cat-thumb-wrap {
       position: relative;
-      width: 76px;
-      height: 76px;
+      width: 74px;
+      height: 74px;
       max-width: 100%;
       margin: 0 auto 6px;
       border-radius: 9999px;
@@ -2601,7 +2594,7 @@
       });
     }
 
-    function renderWallHungPromoCards(rightTileCount = 12, matchingItemsPool = null) {
+    function renderWallHungPromoCards(rightTileCount = 9, matchingItemsPool = null) {
       const wrap = document.getElementById('wallHungPromoCardsList');
       if (!wrap) return;
 
@@ -2610,7 +2603,7 @@
         ? wallPromoCards.slice(0, DEFAULT_WALL_PROMO_CARDS.length)
         : DEFAULT_WALL_PROMO_CARDS;
 
-      // Only the 4 shaped promo cards at top
+      // Only the 4 shaped promo cards on top
       const pinnedHtml = baseList.map((card, idx) => {
         const def = DEFAULT_WALL_PROMO_CARDS[idx % DEFAULT_WALL_PROMO_CARDS.length];
         const fallbackProd = fixedPool[idx % Math.max(1, fixedPool.length)];
@@ -2627,7 +2620,7 @@
 
         const innerCardHtml = `
           <div class="${shapeClass}">
-            <div class="relative w-full h-12 rounded-lg overflow-hidden bg-stone-950">
+            <div class="relative w-full h-11 rounded-lg overflow-hidden bg-stone-950">
               <span class="absolute top-1 left-1 z-10 ${badgeBg} text-[6.5px] font-black px-1.5 py-0.2 rounded-full uppercase shadow">
                 ${tag}
               </span>
@@ -2648,13 +2641,13 @@
           </div>`;
       }).join('');
 
-      // Matching category/catalog items starting right below the 4 promos, made small to match right side cleanly
+      // Compact items starting right below the 4 promos, matched to right side rows so both columns land together
       const matchPool = (Array.isArray(matchingItemsPool) && matchingItemsPool.length)
         ? matchingItemsPool
         : getRotatedProducts(fixedPool, 0, 'catalog');
 
       const rightRows = Math.max(1, Math.ceil(rightTileCount / 3));
-      const matchingCount = Math.min(matchPool.length, Math.max(4, rightRows * 2));
+      const matchingCount = Math.min(matchPool.length, Math.max(3, rightRows));
       const miniItemsHtml = [];
 
       for (let i = 0; i < matchingCount && matchPool.length > 0; i++) {
@@ -2671,7 +2664,7 @@
                 ? `<img src="${img}" alt="" decoding="sync" data-fb-idx="${i}" onerror="handleCatalogImgError(this, '${safeProdName}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
                 : renderBrandedPlaceholderHtml(p.name)}
             </div>
-            <p class="text-[8.5px] font-semibold text-stone-200 line-clamp-1 mt-1 w-full">${p.name}</p>
+            <p class="text-[8.5px] font-semibold text-stone-200 line-clamp-1 mt-0.5 w-full">${p.name}</p>
             <p class="text-[8.5px] font-extrabold text-amber-400">₦${effectivePrice.toLocaleString()}</p>
           </div>`);
       }
@@ -2746,7 +2739,13 @@
           renderWallHungPromoCards(3, rotatedAll);
           return;
         }
-        grid.innerHTML = matches.map((p, idx) => {
+        const filledSearch = [...matches];
+        let sIdx = 0;
+        while (filledSearch.length % 3 !== 0 && rotatedAll.length > 0) {
+          filledSearch.push(rotatedAll[sIdx % rotatedAll.length]);
+          sIdx++;
+        }
+        grid.innerHTML = filledSearch.map((p, idx) => {
           const img = (p.images && p.images[0]) || p.image_url || '';
           const { effectivePrice } = getProductPricing(p);
           return `
@@ -2758,7 +2757,7 @@
               <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
             </div>`;
         }).join('');
-        renderWallHungPromoCards(matches.length, matches);
+        renderWallHungPromoCards(filledSearch.length, matches);
         return;
       }
 
@@ -2796,7 +2795,7 @@
         });
 
         const combined = [...catTiles, ...poolTiles];
-        const minFillCount = Math.max(12, combined.length);
+        const minFillCount = Math.max(9, Math.ceil(combined.length / 3) * 3);
         let fillIdx = 0;
         while (combined.length < minFillCount && rotatedAll.length > 0) {
           const p = rotatedAll[fillIdx % rotatedAll.length];
@@ -2831,7 +2830,7 @@
       }
 
       const catRows = [];
-      const targetLen = Math.max(9, sourcePool.length);
+      const targetLen = Math.max(9, Math.ceil(sourcePool.length / 3) * 3);
       for (let i = 0; i < targetLen; i++) {
         const p = sourcePool[i % sourcePool.length];
         const img = (p.images && p.images[0]) || p.image_url || '';
