@@ -123,12 +123,12 @@
       box-shadow: 0 6px 14px rgba(0, 0, 0, 0.7);
     }
 
-    /* Compact matched left-sidebar items that align evenly with right rows */
+    /* Clean compact left-sidebar cards that match right-side spacing without extra gaps */
     .skf-side-auto-card {
       border-radius: 10px;
-      background: linear-gradient(160deg, #1e1810 0%, #110e09 100%);
-      border: 1px solid rgba(245, 158, 11, 0.25);
-      padding: 5px 4px;
+      background: linear-gradient(160deg, #1b1610 0%, #110e09 100%);
+      border: 1px solid rgba(245, 158, 11, 0.22);
+      padding: 6px 4px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
@@ -137,8 +137,8 @@
     }
 
     .skf-side-mini-thumb {
-      width: 54px;
-      height: 54px;
+      width: 56px;
+      height: 56px;
       border-radius: 9999px;
       overflow: hidden;
       background: #1b1712;
@@ -196,12 +196,12 @@
 
     .skf-cat-layout {
       display: flex;
-      align-items: stretch;
+      align-items: flex-start;
       min-height: calc(100vh - 115px);
       background: #0d0c0a;
     }
     .skf-cat-sidebar {
-      width: 102px;
+      width: 104px;
       flex-shrink: 0;
       background: #14110c;
       border-right: 1px solid rgba(245, 158, 11, 0.25);
@@ -237,7 +237,7 @@
     .skf-cat-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px 6px;
+      gap: 14px 6px;
       align-items: start;
     }
     .skf-cat-cell {
@@ -2144,7 +2144,6 @@
 
       const existingLock = freezeKey === 'featured' ? lockedFeaturedOrderIds : lockedCatalogOrderIds;
 
-      // Freeze catalog, categories, and featured items while customer is touching or scrolling screen
       if (isScreenFrozenForCustomer() && Array.isArray(existingLock) && existingLock.length) {
         const mapById = new Map(list.map(item => [String(item.id), item]));
         const ordered = [];
@@ -2191,7 +2190,6 @@
         if (slot !== lastRotationSlot && allProducts.length > 1) {
           lastRotationSlot = slot;
 
-          // Freeze catalog, categories, and featured swaps while customer is scrolling/touching screen
           if (isScreenFrozenForCustomer()) {
             return;
           }
@@ -2603,7 +2601,6 @@
         ? wallPromoCards.slice(0, DEFAULT_WALL_PROMO_CARDS.length)
         : DEFAULT_WALL_PROMO_CARDS;
 
-      // Only the 4 shaped promo cards on top
       const pinnedHtml = baseList.map((card, idx) => {
         const def = DEFAULT_WALL_PROMO_CARDS[idx % DEFAULT_WALL_PROMO_CARDS.length];
         const fallbackProd = fixedPool[idx % Math.max(1, fixedPool.length)];
@@ -2641,17 +2638,16 @@
           </div>`;
       }).join('');
 
-      // Compact items starting right below the 4 promos, matched to right side rows so both columns land together
       const matchPool = (Array.isArray(matchingItemsPool) && matchingItemsPool.length)
         ? matchingItemsPool
         : getRotatedProducts(fixedPool, 0, 'catalog');
 
       const rightRows = Math.max(1, Math.ceil(rightTileCount / 3));
-      const matchingCount = Math.min(matchPool.length, Math.max(3, rightRows));
+      const matchingCount = Math.min(matchPool.length, rightRows);
       const miniItemsHtml = [];
 
-      for (let i = 0; i < matchingCount && matchPool.length > 0; i++) {
-        const p = matchPool[i % matchPool.length];
+      for (let i = 0; i < matchingCount; i++) {
+        const p = matchPool[i];
         const img = (p.images && p.images[0]) || p.image_url || getFallbackPhotoUrl(i);
         const { effectivePrice } = getProductPricing(p);
         const safeProdId = String(p.id).replace(/"/g, '&quot;');
@@ -2736,16 +2732,10 @@
         countEl.textContent = `${matches.length} item${matches.length === 1 ? '' : 's'}`;
         if (!matches.length) {
           grid.innerHTML = '<p class="col-span-3 text-center text-xs text-stone-400 py-8">No matching items found.</p>';
-          renderWallHungPromoCards(3, rotatedAll);
+          renderWallHungPromoCards(0, []);
           return;
         }
-        const filledSearch = [...matches];
-        let sIdx = 0;
-        while (filledSearch.length % 3 !== 0 && rotatedAll.length > 0) {
-          filledSearch.push(rotatedAll[sIdx % rotatedAll.length]);
-          sIdx++;
-        }
-        grid.innerHTML = filledSearch.map((p, idx) => {
+        grid.innerHTML = matches.map((p, idx) => {
           const img = (p.images && p.images[0]) || p.image_url || '';
           const { effectivePrice } = getProductPricing(p);
           return `
@@ -2757,7 +2747,7 @@
               <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
             </div>`;
         }).join('');
-        renderWallHungPromoCards(filledSearch.length, matches);
+        renderWallHungPromoCards(matches.length, matches);
         return;
       }
 
@@ -2795,23 +2785,6 @@
         });
 
         const combined = [...catTiles, ...poolTiles];
-        const minFillCount = Math.max(9, Math.ceil(combined.length / 3) * 3);
-        let fillIdx = 0;
-        while (combined.length < minFillCount && rotatedAll.length > 0) {
-          const p = rotatedAll[fillIdx % rotatedAll.length];
-          const img = (p.images && p.images[0]) || p.image_url || '';
-          const { effectivePrice } = getProductPricing(p);
-          combined.push(`
-            <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
-              <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
-                ${renderSplitThumbInner(img, p.name, fillIdx + 2)}
-              </div>
-              <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
-              <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
-            </div>`);
-          fillIdx++;
-        }
-
         grid.innerHTML = combined.join('');
         renderWallHungPromoCards(combined.length, rotatedAll);
         return;
@@ -2825,25 +2798,22 @@
       const sourcePool = items.length ? items : rotatedAll;
       if (!sourcePool.length) {
         grid.innerHTML = '<p class="col-span-3 text-center text-xs text-stone-400 py-8">No items available yet.</p>';
-        renderWallHungPromoCards(3, []);
+        renderWallHungPromoCards(0, []);
         return;
       }
 
-      const catRows = [];
-      const targetLen = Math.max(9, Math.ceil(sourcePool.length / 3) * 3);
-      for (let i = 0; i < targetLen; i++) {
-        const p = sourcePool[i % sourcePool.length];
+      const catRows = sourcePool.map((p, i) => {
         const img = (p.images && p.images[0]) || p.image_url || '';
         const { effectivePrice } = getProductPricing(p);
-        catRows.push(`
+        return `
           <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
             <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
               ${renderSplitThumbInner(img, p.name, i)}
             </div>
             <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
             <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
-          </div>`);
-      }
+          </div>`;
+      });
       grid.innerHTML = catRows.join('');
       renderWallHungPromoCards(catRows.length, sourcePool);
     }
