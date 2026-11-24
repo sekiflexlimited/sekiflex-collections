@@ -136,11 +136,10 @@
     }
   </style>
   <style id="sekiflex-info-modal-styles">
-    /* Hidden on Home/Categories/Cart; shown only when Account view is active */
     #sekiflex-info-bar {
       display: none !important;
       background: #0d0b08 !important;
-      padding: 4px 14px 104px !important;
+      padding: 6px 14px 104px !important;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
       color: #f8f5f0 !important;
     }
@@ -233,7 +232,6 @@
       line-height: 1.5 !important;
     }
 
-    /* Fullscreen/Centered Dark Modal when an item is tapped */
     #sekiflex-info-modal-backdrop {
       position: fixed !important;
       inset: 0 !important;
@@ -326,46 +324,14 @@
   <div id="sekiflex-info-bar" aria-label="Sekiflex Collections Information, Policies, and Socials">
     <div id="sekiflex-info-bar-inner">
 
-      <p class="sekiflex-group-label">NEED ASSISTANCE?</p>
-      <div class="sekiflex-dark-card">
-        <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="delivery">
-          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">🚚</span><span>Delivery &amp; Uyo Store Pickup</span></span>
-          <span class="sekiflex-row-arrow">›</span>
-        </div>
-        <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="support">
-          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">🎧</span><span>Help &amp; Customer Support</span></span>
-          <span class="sekiflex-row-arrow">›</span>
-        </div>
-      </div>
-
       <p class="sekiflex-group-label">SEKIFLEX INFORMATION &amp; POLICIES</p>
       <div class="sekiflex-dark-card">
-        <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="orders">
-          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">📦</span><span>Orders &amp; Live Tracking</span></span>
-          <span class="sekiflex-row-arrow">›</span>
-        </div>
-        <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="inbox">
-          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">🔔</span><span>Inbox &amp; Promo Alerts</span></span>
-          <span class="sekiflex-row-arrow">›</span>
-        </div>
-        <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="reviews">
-          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">⭐</span><span>Ratings &amp; Reviews</span></span>
-          <span class="sekiflex-row-arrow">›</span>
-        </div>
-        <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="privacy">
-          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">🛡️</span><span>Privacy Policy</span></span>
-          <span class="sekiflex-row-arrow">›</span>
-        </div>
         <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="refunds">
           <span class="sekiflex-row-left"><span class="sekiflex-row-icon">💳</span><span>Refund, Returns &amp; Payment Policy</span></span>
           <span class="sekiflex-row-arrow">›</span>
         </div>
         <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="terms">
           <span class="sekiflex-row-left"><span class="sekiflex-row-icon">📄</span><span>Terms &amp; Conditions</span></span>
-          <span class="sekiflex-row-arrow">›</span>
-        </div>
-        <div role="button" tabindex="0" class="sekiflex-dark-row" data-info-section="about">
-          <span class="sekiflex-row-left"><span class="sekiflex-row-icon">👑</span><span>About Sekiflex Collections</span></span>
           <span class="sekiflex-row-arrow">›</span>
         </div>
       </div>
@@ -418,6 +384,38 @@
 
   <script id="sekiflex-full-shop-script">
     (function () {
+      // Allow page reload anytime; only guard against repeated/rapid Back presses
+      window.onbeforeunload = null;
+      const origAddEventListener = window.addEventListener.bind(window);
+      window.addEventListener = function (type, listener, options) {
+        if (type === "beforeunload") return;
+        return origAddEventListener(type, listener, options);
+      };
+
+      let lastBackPressTime = 0;
+      try {
+        if (!window.history.state || !window.history.state.sekiflexGuard) {
+          window.history.pushState({ sekiflexGuard: true }, "");
+        }
+      } catch (e) {}
+
+      window.addEventListener("popstate", function () {
+        const now = Date.now();
+        if (now - lastBackPressTime < 1500) {
+          const leave = window.confirm("Leave Sekiflex Collections?");
+          if (!leave) {
+            try {
+              window.history.pushState({ sekiflexGuard: true }, "");
+            } catch (e) {}
+          }
+        } else {
+          lastBackPressTime = now;
+          try {
+            window.history.pushState({ sekiflexGuard: true }, "");
+          } catch (e) {}
+        }
+      });
+
       const INFO_SECTIONS = {
         about: {
           title: "About Sekiflex Collections",
@@ -876,33 +874,11 @@
         const appText = (appRoot.textContent || "").toLowerCase();
         const isAccountPage =
           appText.includes("my sekiflex account") ||
-          (appText.includes("login / register") && appText.includes("live chat") && appText.includes("whatsapp"));
+          appText.includes("need assistance?") ||
+          appText.includes("about sekiflex collections");
 
         if (isAccountPage) {
           infoBar.classList.add("is-account-active");
-
-          // Hide duplicate old account menu cards inside #app while keeping Login/Register, Live Chat & WhatsApp intact
-          appRoot.querySelectorAll("div, section").forEach((el) => {
-            if (el.closest("#sekiflex-info-bar") || el.closest("#sekiflex-info-modal")) return;
-            const txt = (el.textContent || "").toLowerCase().trim();
-            if (txt === "need assistance?" || txt === "my sekiflex account") {
-              el.style.setProperty("display", "none", "important");
-            }
-          });
-
-          appRoot.querySelectorAll("a, button, div, li").forEach((el) => {
-            if (el.closest("#sekiflex-info-bar") || el.closest("#sekiflex-info-modal")) return;
-            const txt = (el.textContent || "").toLowerCase();
-            if (
-              (txt.includes("delivery & uyo store pickup") && txt.includes("help & customer support")) ||
-              (txt.includes("orders & live tracking") && txt.includes("about sekiflex collections"))
-            ) {
-              // Ensure this container does not wrap Login/Register, Live Chat, or WhatsApp
-              if (!txt.includes("login / register") && !txt.includes("live chat") && !txt.includes("whatsapp")) {
-                el.style.setProperty("display", "none", "important");
-              }
-            }
-          });
         } else {
           infoBar.classList.remove("is-account-active");
         }
