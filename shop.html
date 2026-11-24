@@ -136,12 +136,17 @@
     }
   </style>
   <style id="sekiflex-info-modal-styles">
-    /* Black & Gold Grouped Card Design matching Account screen */
+    /* Hidden on Home/Categories/Cart; shown only when Account view is active */
     #sekiflex-info-bar {
+      display: none !important;
       background: #0d0b08 !important;
-      padding: 16px 14px 104px !important;
+      padding: 4px 14px 104px !important;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
       color: #f8f5f0 !important;
+    }
+
+    #sekiflex-info-bar.is-account-active {
+      display: block !important;
     }
 
     #sekiflex-info-bar-inner {
@@ -318,7 +323,7 @@
 <body>
   <div id="app"></div>
 
-  <footer id="sekiflex-info-bar" aria-label="Sekiflex Collections Information, Policies, and Socials">
+  <div id="sekiflex-info-bar" aria-label="Sekiflex Collections Information, Policies, and Socials">
     <div id="sekiflex-info-bar-inner">
 
       <p class="sekiflex-group-label">NEED ASSISTANCE?</p>
@@ -396,7 +401,7 @@
 
       <p id="sekiflex-info-bar-copy">Sekiflex Collections • Operating under Sekiflex Limited • Uyo, Akwa Ibom State, Nigeria • Website &amp; Mobile App</p>
     </div>
-  </footer>
+  </div>
 
   <div id="sekiflex-info-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="sekiflex-info-modal-title">
     <div id="sekiflex-info-modal">
@@ -813,6 +818,7 @@
       const modalTitle = document.getElementById("sekiflex-info-modal-title");
       const modalBody = document.getElementById("sekiflex-info-modal-body");
       const closeBtn = document.getElementById("sekiflex-info-modal-close");
+      const infoBar = document.getElementById("sekiflex-info-bar");
 
       function openInfoSection(key) {
         const section = INFO_SECTIONS[key];
@@ -863,11 +869,52 @@
         return null;
       }
 
+      function syncAccountView() {
+        const appRoot = document.getElementById("app");
+        if (!appRoot || !infoBar) return;
+
+        const appText = (appRoot.textContent || "").toLowerCase();
+        const isAccountPage =
+          appText.includes("my sekiflex account") ||
+          (appText.includes("login / register") && appText.includes("live chat") && appText.includes("whatsapp"));
+
+        if (isAccountPage) {
+          infoBar.classList.add("is-account-active");
+
+          // Hide duplicate old account menu cards inside #app while keeping Login/Register, Live Chat & WhatsApp intact
+          appRoot.querySelectorAll("div, section").forEach((el) => {
+            if (el.closest("#sekiflex-info-bar") || el.closest("#sekiflex-info-modal")) return;
+            const txt = (el.textContent || "").toLowerCase().trim();
+            if (txt === "need assistance?" || txt === "my sekiflex account") {
+              el.style.setProperty("display", "none", "important");
+            }
+          });
+
+          appRoot.querySelectorAll("a, button, div, li").forEach((el) => {
+            if (el.closest("#sekiflex-info-bar") || el.closest("#sekiflex-info-modal")) return;
+            const txt = (el.textContent || "").toLowerCase();
+            if (
+              (txt.includes("delivery & uyo store pickup") && txt.includes("help & customer support")) ||
+              (txt.includes("orders & live tracking") && txt.includes("about sekiflex collections"))
+            ) {
+              // Ensure this container does not wrap Login/Register, Live Chat, or WhatsApp
+              if (!txt.includes("login / register") && !txt.includes("live chat") && !txt.includes("whatsapp")) {
+                el.style.setProperty("display", "none", "important");
+              }
+            }
+          });
+        } else {
+          infoBar.classList.remove("is-account-active");
+        }
+      }
+
       function cleanStorefrontDom() {
         document.querySelectorAll("img").forEach((img) => {
           img.removeAttribute("width");
           img.removeAttribute("height");
         });
+
+        syncAccountView();
 
         const promoContainers = document.querySelectorAll(
           '[class*="announcement"], [class*="promo"], [class*="wall"], [id*="announcement"], [id*="promo"], [id*="wall"]'
