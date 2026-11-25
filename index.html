@@ -22,7 +22,19 @@
   <script src="supabase-config.js"></script>
   <script src="app.js"></script>
   <style>
-    html, body { max-width: 100%; overflow-x: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+    input, textarea, select {
+      user-select: text;
+      -webkit-user-select: text;
+      -webkit-touch-callout: default;
+    }
     .font-editorial { font-family: 'Playfair Display', serif; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -959,6 +971,23 @@
         <p class="text-[10px] text-stone-400 pt-1">
           Sekiflex Collections • Proudly operating under <span class="text-amber-300 font-semibold">Sekiflex Limited</span>
         </p>
+      </div>
+
+      <!-- RESTRICTED STAFF & ADMIN LOGIN AREA BELOW SOCIAL LINKS -->
+      <div class="bg-red-950/35 border border-red-500/45 rounded-2xl p-4 space-y-2.5">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-[10px] font-black uppercase tracking-wider text-rose-300 bg-rose-500/15 border border-rose-400/35 px-2.5 py-0.5 rounded-full">
+            ⚠️ Restricted Staff &amp; Admin Only
+          </span>
+        </div>
+        <p class="text-xs font-bold text-rose-200 leading-snug">
+          Warning: Only Sekiflex Collections Staff and Admin have access here. Customers must not open or attempt to use this portal.
+        </p>
+        <a href="store-admin.html"
+          class="w-full bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950 font-extrabold text-xs py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow transition">
+          <span>🔐</span>
+          <span>Staff &amp; Admin Login →</span>
+        </a>
       </div>
     </div>
   </div>
@@ -2360,9 +2389,9 @@
         }
         grid.innerHTML = matches.map((p, idx) => {
           const img = getOwnProductImage(p);
-          const safeId = encodeURIComponent(String(p.id));
+          const safeId = String(p.id).replace(/"/g, '&quot;');
           return `
-            <div data-action="prod" data-val="${decodeURIComponent(safeId).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
+            <div data-action="prod" data-val="${safeId}" class="skf-cat-cell group">
               <div class="skf-cat-thumb-wrap group-hover:scale-105 transition">
                 ${renderSplitThumbInner(img, p.name, idx)}
               </div>
@@ -2387,8 +2416,9 @@
 
       const poolTiles = rotatedAll.map((p, idx) => {
         const img = getOwnProductImage(p);
+        const safeId = String(p.id).replace(/"/g, '&quot;');
         return `
-          <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
+          <div data-action="prod" data-val="${safeId}" class="skf-cat-cell group">
             <div class="skf-cat-thumb-wrap group-hover:scale-105 transition">
               ${renderSplitThumbInner(img, p.name, idx + 1)}
             </div>
