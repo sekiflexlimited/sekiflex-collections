@@ -1564,12 +1564,6 @@
 
     function handleCatalogImgError(imgEl, labelText = 'Sekiflex') {
       if (!imgEl) return;
-      const nextFallback = getFallbackPhotoUrl((Number(imgEl.dataset.fbIdx) || 0) + 1);
-      if (nextFallback && imgEl.src !== nextFallback && (Number(imgEl.dataset.fbIdx) || 0) < 3) {
-        imgEl.dataset.fbIdx = String((Number(imgEl.dataset.fbIdx) || 0) + 1);
-        imgEl.src = nextFallback;
-        return;
-      }
       imgEl.style.display = 'none';
       if (imgEl.parentElement) {
         imgEl.parentElement.innerHTML = renderBrandedPlaceholderHtml(labelText);
@@ -1588,19 +1582,6 @@
           pre.decode().catch(() => {});
         }
       });
-    }
-
-    function getMinuteSlotOffset(salt = 0) {
-      return Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000)) + salt;
-    }
-
-    function pickRotatingProductImage(slotIdx, fallbackIdx = 0) {
-      const imgs = (allProducts || [])
-        .map(p => (p?.images && p.images[0]) || p?.image_url || '')
-        .filter(Boolean);
-      if (!imgs.length) return '';
-      const pos = Math.abs((slotIdx * 3) + fallbackIdx) % imgs.length;
-      return imgs[pos];
     }
 
     function handleCategoryPromoBoxClick(idx) {
@@ -1643,11 +1624,11 @@
     function refreshStaticHeroSlideMedia() {
       renderCategoryViewTopAndMedallions();
       if (!Array.isArray(allProducts) || !allProducts.length) return;
-      const slot = getMinuteSlotOffset(5);
       const appBox = document.getElementById('heroSlideApparelMedia');
       const accBox = document.getElementById('heroSlideAccessoriesMedia');
-      const img1 = pickRotatingProductImage(slot, 0);
-      const img2 = pickRotatingProductImage(slot, 1);
+      const img1 = (allProducts[0]?.images && allProducts[0].images[0]) || allProducts[0]?.image_url || '';
+      const prod2 = allProducts[1] || allProducts[0];
+      const img2 = (prod2?.images && prod2.images[0]) || prod2?.image_url || '';
 
       if (appBox && img1) {
         appBox.innerHTML = `<img src="${img1}" alt="" loading="eager" decoding="sync" class="catalog-img-smooth w-full h-full object-cover object-top" />`;
@@ -1902,7 +1883,6 @@
           lastRotationSlot = slot;
           if (isScreenFrozenForCustomer()) return;
 
-          refreshStaticHeroSlideMedia();
           renderFeaturedStrip(allProducts);
           applyCatalogFilters();
 
@@ -2266,7 +2246,6 @@
 
       const q = (document.getElementById('splitCategorySearchInput')?.value || '').trim().toLowerCase();
       const rotatedAll = getRotatedProducts(allProducts, 0, 'catalog');
-      const minuteSlot = getMinuteSlotOffset(2);
 
       if (q) {
         const matches = rotatedAll.filter(p => {
@@ -2278,7 +2257,7 @@
           return;
         }
         grid.innerHTML = matches.map((p, idx) => {
-          const img = pickRotatingProductImage(minuteSlot, idx) || (p.images && p.images[0]) || p.image_url || '';
+          const img = (p.images && p.images[0]) || p.image_url || '';
           return `
             <div data-action="catalog" data-val="ALL" class="skf-cat-cell group">
               <div class="skf-cat-thumb-wrap group-hover:scale-105 transition">
@@ -2291,7 +2270,9 @@
       }
 
       const catTiles = allCategories.map((c, idx) => {
-        const img = pickRotatingProductImage(minuteSlot, idx);
+        const sampleProd = rotatedAll.find(p => String(p.category_id) === String(c.id))
+          || allProducts.find(p => String(p.category_id) === String(c.id));
+        const img = (sampleProd?.images && sampleProd.images[0]) || sampleProd?.image_url || '';
         return `
           <div data-action="cat" data-val="${String(c.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
             <div class="skf-cat-thumb-wrap group-hover:scale-105 transition">
@@ -2302,7 +2283,7 @@
       });
 
       const poolTiles = rotatedAll.map((p, idx) => {
-        const img = pickRotatingProductImage(minuteSlot, idx + allCategories.length);
+        const img = (p.images && p.images[0]) || p.image_url || '';
         return `
           <div data-action="catalog" data-val="ALL" class="skf-cat-cell group">
             <div class="skf-cat-thumb-wrap group-hover:scale-105 transition">
@@ -3031,9 +3012,8 @@
       }
       sec.classList.remove('hidden');
       const rotatedFeatured = getRotatedProducts(list, 17, 'featured');
-      const minuteSlot = getMinuteSlotOffset(7);
-      strip.innerHTML = rotatedFeatured.slice(0, 10).map((p, idx) => {
-        const img = pickRotatingProductImage(minuteSlot, idx) || (p.images && p.images[0]) || p.image_url || '';
+      strip.innerHTML = rotatedFeatured.slice(0, 10).map((p) => {
+        const img = (p.images && p.images[0]) || p.image_url || '';
         const { effectivePrice, originalPrice } = getProductPricing(p);
         const safeName = String(p.name || 'Product').replace(/"/g, '&quot;').replace(/'/g, "\\'");
         const priceDisplay = originalPrice !== null
@@ -3063,9 +3043,8 @@
         return;
       }
 
-      const minuteSlot = getMinuteSlotOffset(11);
       grid.innerHTML = list.map((p, idx) => {
-        const img = pickRotatingProductImage(minuteSlot, idx) || (p.images && p.images[0]) || p.image_url || '';
+        const img = (p.images && p.images[0]) || p.image_url || '';
         const out = (p.stock_quantity !== null && p.stock_quantity <= 0);
         const safeName = String(p.name || 'Product').replace(/"/g, '&quot;').replace(/'/g, "\\'");
         const safeId = String(p.id).replace(/'/g, "\\'");
