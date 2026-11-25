@@ -1142,8 +1142,8 @@
     </div>
   </div>
 
-  <!-- PRODUCT DETAIL MODAL -->
-  <div id="productDetailModal" onclick="if(event.target === this) closeProductDetailModal();" class="fixed inset-0 z-[75] hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
+  <!-- PRODUCT DETAIL MODAL (HIGHEST LAYER z-[95] SO NOTHING BLOCKS IT) -->
+  <div id="productDetailModal" onclick="if(event.target === this) closeProductDetailModal();" class="fixed inset-0 z-[95] hidden bg-black/85 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
     <div class="bg-[#14110c] border border-amber-400/35 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
       <div class="relative bg-stone-950">
         <img id="detailModalImg" src="" alt="" loading="eager" decoding="sync" onerror="handleCatalogImgError(this, this.alt)" class="catalog-img-smooth w-full max-h-72 object-contain object-top mx-auto bg-stone-950" />
@@ -1525,7 +1525,7 @@
       document.addEventListener('pointerdown', onAnyScreenTouchOrScroll, { passive: true });
     }
 
-    function bindCategoryDelegationOnce() {
+    function bindProductAndCategoryDelegationOnce() {
       const splitGrid = document.getElementById('splitCategoryGrid');
       if (splitGrid && !splitGrid.dataset.delegated) {
         splitGrid.dataset.delegated = '1';
@@ -1539,6 +1539,29 @@
           } else {
             jumpToAllItems();
           }
+        });
+      }
+
+      const featStrip = document.getElementById('featuredHorizontalList');
+      if (featStrip && !featStrip.dataset.delegated) {
+        featStrip.dataset.delegated = '1';
+        featStrip.addEventListener('click', (ev) => {
+          const card = ev.target.closest('[data-product-id]');
+          if (!card) return;
+          const pid = card.getAttribute('data-product-id');
+          if (pid) openProductDetail(pid);
+        });
+      }
+
+      const prodGrid = document.getElementById('productsGrid');
+      if (prodGrid && !prodGrid.dataset.delegated) {
+        prodGrid.dataset.delegated = '1';
+        prodGrid.addEventListener('click', (ev) => {
+          if (ev.target.closest('button')) return;
+          const card = ev.target.closest('[data-product-id]');
+          if (!card) return;
+          const pid = card.getAttribute('data-product-id');
+          if (pid) openProductDetail(pid);
         });
       }
     }
@@ -2085,8 +2108,6 @@
     function openProductDetail(productId) {
       const prod = allProducts.find(p => String(p.id) === String(productId));
       if (!prod) return;
-      showOnlyMainView('storeMainWrapper');
-      setActiveBottomTab('home');
       armStoreBackGuard();
       markScreenActive(6000);
 
@@ -2141,7 +2162,8 @@
         closeProductDetailModal();
       };
 
-      document.getElementById('productDetailModal').classList.remove('hidden');
+      const modal = document.getElementById('productDetailModal');
+      modal.classList.remove('hidden');
     }
 
     function closeProductDetailModal() {
@@ -2913,7 +2935,7 @@
     async function init() {
       bindBackButtonGuardsOnce();
       bindScrollPauseWatcher();
-      bindCategoryDelegationOnce();
+      bindProductAndCategoryDelegationOnce();
       trackLiveVisitorHeartbeat();
       lastRotationSlot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000));
       applySocialLinks();
@@ -3016,6 +3038,7 @@
         const img = (p.images && p.images[0]) || p.image_url || '';
         const { effectivePrice, originalPrice } = getProductPricing(p);
         const safeName = String(p.name || 'Product').replace(/"/g, '&quot;').replace(/'/g, "\\'");
+        const safeAttrId = String(p.id).replace(/"/g, '&quot;');
         const priceDisplay = originalPrice !== null
           ? `<div class="flex items-baseline gap-1 mt-0.5 flex-wrap"><span class="text-xs font-extrabold text-amber-400">₦${effectivePrice.toLocaleString()}</span><span class="text-[10px] text-stone-400 line-through">₦${originalPrice.toLocaleString()}</span></div>`
           : `<p class="text-xs font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>`;
@@ -3023,7 +3046,7 @@
           ? `<img src="${img}" alt="" loading="eager" decoding="sync" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
           : renderBrandedPlaceholderHtml(p.name);
         return `
-          <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="shrink-0 w-32 sm:w-36 bg-[#18140e] rounded-xl overflow-hidden border border-amber-400/25 flex flex-col justify-between cursor-pointer hover:border-amber-400 transition shadow-sm">
+          <div data-product-id="${safeAttrId}" class="shrink-0 w-32 sm:w-36 bg-[#18140e] rounded-xl overflow-hidden border border-amber-400/25 flex flex-col justify-between cursor-pointer hover:border-amber-400 transition shadow-sm">
             <div class="w-full h-28 bg-stone-950 flex items-center justify-center overflow-hidden">
               ${mediaInner}
             </div>
@@ -3048,6 +3071,7 @@
         const out = (p.stock_quantity !== null && p.stock_quantity <= 0);
         const safeName = String(p.name || 'Product').replace(/"/g, '&quot;').replace(/'/g, "\\'");
         const safeId = String(p.id).replace(/'/g, "\\'");
+        const safeAttrId = String(p.id).replace(/"/g, '&quot;');
         const isLiked = likedIds.includes(String(p.id));
         const { effectivePrice, originalPrice } = getProductPricing(p);
 
@@ -3056,7 +3080,7 @@
           : `<div class="skf-market-img-tall">${renderBrandedPlaceholderHtml(p.name)}</div>`;
 
         return `
-          <div onclick="openProductDetail('${safeId}')" class="skf-market-card">
+          <div data-product-id="${safeAttrId}" class="skf-market-card">
             <div class="skf-catalog-photo-box">
               <button type="button" onclick="toggleLikeProduct('${safeId}', this, event)"
                 aria-label="Favorite ${safeName}"
