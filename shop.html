@@ -350,7 +350,7 @@
 </head>
 <body class="sekiflex-luxury-bg text-stone-100 antialiased pb-24">
 
-  <!-- LEAVE WEBSITE CONFIRMATION MODAL (BACK BUTTON ONLY) -->
+  <!-- LEAVE WEBSITE CONFIRMATION MODAL -->
   <div id="leaveConfirmModal" class="fixed inset-0 z-[90] hidden bg-black/85 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-[#16130f] border border-amber-400/50 rounded-3xl max-w-xs w-full p-5 text-center space-y-4 shadow-2xl">
       <div class="space-y-1.5">
@@ -740,7 +740,7 @@
     </div>
   </div>
 
-  <!-- CATEGORY VIEW (4 ADMIN-CONTROLLED PROMO BOXES + TIGHT SHOP BY CATEGORY CIRCLES THAT GO TO CATALOG) -->
+  <!-- CATEGORY VIEW (4 ADMIN-CONTROLLED PROMO BOXES + TIGHT SHOP BY CATEGORY CIRCLES) -->
   <div id="splitCategoryStoreView" class="hidden">
     <header class="sticky top-0 z-40 bg-[#0d0c0a]/95 backdrop-blur-md border-b border-amber-400/35 px-3 py-2 shadow-lg">
       <div class="max-w-5xl mx-auto flex items-center gap-2">
@@ -760,7 +760,6 @@
     </header>
 
     <div class="max-w-5xl mx-auto px-3 pt-2.5 pb-24 space-y-3">
-      <!-- 4 Top Promo Boxes (Admin-controlled, never auto-replaced) -->
       <section id="categoryTopFourSpotlight" class="skf-cat-promo4-grid">
         <div onclick="handleCategoryPromoBoxClick(0)" class="skf-cat-promo4-card">
           <div class="space-y-1 flex-1 min-w-0">
@@ -799,7 +798,6 @@
         </div>
       </section>
 
-      <!-- Shop by Category Section — Clicking Any Circle Goes to Explore Catalog -->
       <section class="luxury-glass-card border border-amber-400/35 rounded-2xl p-3 space-y-3">
         <div class="flex items-center justify-center">
           <div class="skf-cat-banner-pill">
@@ -891,12 +889,13 @@
             </span>
             <span class="text-amber-400 font-bold">›</span>
           </button>
-          <button type="button" onclick="openInfoModal('inbox')" class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+          <button type="button" onclick="enableCustomerPushNotifications(true)"
+            class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
             <span class="flex items-center gap-3 text-xs font-bold text-stone-100">
               <span>🔔</span>
               <span>Inbox &amp; Promotional Alerts</span>
             </span>
-            <span class="text-amber-400 font-bold">›</span>
+            <span id="pushAlertStatusBadge" class="text-[10px] font-extrabold text-amber-400">Enable ›</span>
           </button>
           <button type="button" onclick="openInfoModal('reviews')" class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
             <span class="flex items-center gap-3 text-xs font-bold text-stone-100">
@@ -1451,6 +1450,70 @@
       }
     };
 
+    function getOwnProductImage(prod) {
+      if (!prod) return '';
+      if (Array.isArray(prod.images) && prod.images.length) {
+        const firstImg = prod.images.find(Boolean);
+        if (firstImg) return firstImg;
+      }
+      return prod.image_url || '';
+    }
+
+    function updatePushBadge() {
+      const badge = document.getElementById('pushAlertStatusBadge');
+      if (!badge) return;
+      if (!('Notification' in window)) {
+        badge.textContent = 'Unsupported';
+        return;
+      }
+      if (Notification.permission === 'granted') {
+        badge.textContent = 'Enabled ✓';
+        badge.className = 'text-[10px] font-extrabold text-emerald-400';
+      } else if (Notification.permission === 'denied') {
+        badge.textContent = 'Blocked';
+        badge.className = 'text-[10px] font-extrabold text-rose-400';
+      } else {
+        badge.textContent = 'Enable ›';
+        badge.className = 'text-[10px] font-extrabold text-amber-400';
+      }
+    }
+
+    async function enableCustomerPushNotifications(showFeedback = false, customTitle = '', customBody = '') {
+      if (!('Notification' in window)) {
+        if (showFeedback) alert('Push notifications are not supported on this browser.');
+        return;
+      }
+
+      if (typeof window.enableSekiflexPush === 'function') {
+        try {
+          await window.enableSekiflexPush({
+            customerEmail: currentCustomer?.email || null,
+            customerPhone: currentCustomer?.phone || null,
+            isAdmin: false,
+            silent: !showFeedback
+          });
+        } catch (e) {}
+      }
+
+      if (Notification.permission === 'default' && showFeedback) {
+        await Notification.requestPermission();
+      }
+
+      updatePushBadge();
+
+      if (Notification.permission === 'granted' && customTitle) {
+        try {
+          new Notification(customTitle, { body: customBody || 'Sekiflex Collections update' });
+        } catch (nErr) {}
+      } else if (showFeedback) {
+        if (Notification.permission === 'granted') {
+          alert('Push alerts are active for orders, promos & updates.');
+        } else {
+          alert('Allow notifications in your browser to receive order & promo alerts.');
+        }
+      }
+    }
+
     function pushBackTrapState() {
       if (allowWebsiteExit) return;
       try {
@@ -1469,6 +1532,12 @@
       if (window.__skfBackGuardBound) return;
       window.__skfBackGuardBound = true;
       pushBackTrapState();
+
+      const reArm = () => {
+        if (!allowWebsiteExit) pushBackTrapState();
+      };
+      document.addEventListener('pointerdown', reArm, { passive: true });
+      document.addEventListener('touchstart', reArm, { passive: true });
 
       window.addEventListener('popstate', () => {
         if (allowWebsiteExit) return;
@@ -1499,6 +1568,13 @@
         }
         pushBackTrapState();
         openLeaveConfirmModal();
+      });
+
+      window.addEventListener('beforeunload', (e) => {
+        if (allowWebsiteExit) return;
+        e.preventDefault();
+        e.returnValue = 'Do you really want to leave Sekiflex Collections?';
+        return e.returnValue;
       });
     }
 
@@ -1536,6 +1612,8 @@
           const val = cell.getAttribute('data-val') || '';
           if (action === 'cat') {
             shopSpecificCategoryFromSplit(val);
+          } else if (action === 'prod') {
+            openProductDetail(val);
           } else {
             jumpToAllItems();
           }
@@ -1546,7 +1624,7 @@
     function getFallbackPhotoUrl(seedIdx = 0) {
       if (!Array.isArray(allProducts) || !allProducts.length) return '';
       const imgs = allProducts
-        .map(p => (p?.images && p.images[0]) || p?.image_url || '')
+        .map(p => getOwnProductImage(p))
         .filter(Boolean);
       if (!imgs.length) return '';
       return imgs[Math.abs(seedIdx) % imgs.length];
@@ -1579,7 +1657,7 @@
     function warmUpTopImages(list) {
       if (!Array.isArray(list) || !list.length) return;
       list.slice(0, 28).forEach(p => {
-        const src = (p.images && p.images[0]) || p.image_url;
+        const src = getOwnProductImage(p);
         if (!src) return;
         const pre = new Image();
         pre.decoding = 'sync';
@@ -1594,22 +1672,12 @@
       return Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000)) + salt;
     }
 
-    function pickRotatingProductImage(slotIdx, fallbackIdx = 0) {
-      const imgs = (allProducts || [])
-        .map(p => (p?.images && p.images[0]) || p?.image_url || '')
-        .filter(Boolean);
-      if (!imgs.length) return '';
-      const pos = Math.abs((slotIdx * 3) + fallbackIdx) % imgs.length;
-      return imgs[pos];
-    }
-
     function handleCategoryPromoBoxClick(idx) {
       const savedCard = Array.isArray(wallPromoCards) ? wallPromoCards[idx] : null;
       const targetCat = (savedCard && savedCard.categoryKey) || 'ALL';
       shopSpecificCategoryFromSplit(targetCat);
     }
 
-    // 4 Promo Boxes stay strictly pinned to admin/saved promo images & never auto-rotate
     function renderCategoryViewTopAndMedallions() {
       for (let i = 0; i < 4; i++) {
         const titleEl = document.getElementById(`catPromoTitle${i}`);
@@ -1619,7 +1687,9 @@
         const title = (savedCard && savedCard.title) || def?.title || 'Promo';
         if (titleEl) titleEl.textContent = title;
 
-        const img = (savedCard && savedCard.image && savedCard.image.trim()) || liveBannerMediaUrls[i] || '';
+        const img = (savedCard && savedCard.image && savedCard.image.trim())
+          || liveBannerMediaUrls[i]
+          || (allProducts[i] ? getOwnProductImage(allProducts[i]) : '');
         if (box && img) {
           box.innerHTML = `<img src="${img}" alt="" loading="eager" decoding="sync" class="catalog-img-smooth w-full h-full object-cover object-top" />`;
         }
@@ -1643,11 +1713,11 @@
     function refreshStaticHeroSlideMedia() {
       renderCategoryViewTopAndMedallions();
       if (!Array.isArray(allProducts) || !allProducts.length) return;
-      const slot = getMinuteSlotOffset(5);
       const appBox = document.getElementById('heroSlideApparelMedia');
       const accBox = document.getElementById('heroSlideAccessoriesMedia');
-      const img1 = pickRotatingProductImage(slot, 0);
-      const img2 = pickRotatingProductImage(slot, 1);
+      const img1 = getOwnProductImage(allProducts[0]);
+      const prod2 = allProducts[1] || allProducts[0];
+      const img2 = getOwnProductImage(prod2);
 
       if (appBox && img1) {
         appBox.innerHTML = `<img src="${img1}" alt="" loading="eager" decoding="sync" class="catalog-img-smooth w-full h-full object-cover object-top" />`;
@@ -1663,11 +1733,13 @@
     }
 
     async function shareProductLink(productId, productName) {
+      const prod = allProducts.find(p => String(p.id) === String(productId));
+      const cleanName = (prod && prod.name) || productName || 'this item';
       const url = getProductShareUrl(productId);
-      const text = `Check out ${productName || 'this item'} on Sekiflex Collections:`;
+      const text = `Check out ${cleanName} on Sekiflex Collections:`;
       try {
         if (navigator.share) {
-          await navigator.share({ title: productName || 'Sekiflex Collections', text, url });
+          await navigator.share({ title: cleanName, text, url });
           return;
         }
       } catch (err) {
@@ -1675,18 +1747,21 @@
       }
       try {
         await navigator.clipboard.writeText(url);
-        alert('Product share link copied: ' + url);
+        alert('Product link copied for ' + cleanName + ':\n' + url);
       } catch (e) {
         prompt('Copy this product link:', url);
       }
     }
 
     function openSharedProductFromUrl() {
+      if (!Array.isArray(allProducts) || !allProducts.length) return;
       try {
         const params = new URLSearchParams(window.location.search);
         const sharedId = params.get('product');
-        if (sharedId && allProducts.some(p => String(p.id) === String(sharedId))) {
-          openProductDetail(sharedId);
+        if (!sharedId) return;
+        const matched = allProducts.find(p => String(p.id) === String(sharedId));
+        if (matched) {
+          openProductDetail(matched.id);
         }
       } catch (e) {}
     }
@@ -1706,7 +1781,11 @@
       const modal = document.getElementById('leaveConfirmModal');
       if (modal) modal.classList.add('hidden');
       allowWebsiteExit = true;
-      window.location.replace('https://www.google.com');
+      if (window.history.length > 1) {
+        window.history.go(-1);
+      } else {
+        window.close();
+      }
     }
 
     function hasAnyOverlayOpen() {
@@ -1996,7 +2075,7 @@
             .filter(w => w.length >= 3);
 
           for (const prod of allProducts) {
-            const imgUrl = (prod.images && prod.images[0]) || prod.image_url || '';
+            const imgUrl = getOwnProductImage(prod);
             let score = 0;
             if (querySig && imgUrl) {
               const prodSig = await loadImageForVisualMatch(imgUrl);
@@ -2080,7 +2159,8 @@
         return;
       }
       const sum = storeReviews.reduce((acc, r) => acc + (Number(r.rating) || 5), 0);
-      avgEl.textContent = (sum / storeReviews.length).toFixed(1);
+      const avg = (sum / storeReviews.length).toFixed(1);
+      avgEl.textContent = avg;
       countEl.textContent = `${storeReviews.length} review${storeReviews.length === 1 ? '' : 's'}`;
       container.innerHTML = storeReviews.map(r => {
         const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
@@ -2103,6 +2183,7 @@
     }
 
     function openProductDetail(productId) {
+      if (!productId) return;
       const prod = allProducts.find(p => String(p.id) === String(productId));
       if (!prod) return;
       showOnlyMainView('storeMainWrapper');
@@ -2110,12 +2191,13 @@
       armStoreBackGuard();
       markScreenActive(6000);
 
-      const img = (prod.images && prod.images[0]) || prod.image_url || getFallbackPhotoUrl(0);
+      const img = getOwnProductImage(prod);
       const out = (prod.stock_quantity !== null && prod.stock_quantity <= 0);
       const catObj = allCategories.find(c => String(c.id) === String(prod.category_id));
 
       const detailImg = document.getElementById('detailModalImg');
       detailImg.style.display = '';
+      detailImg.dataset.fbIdx = '0';
       detailImg.src = img;
       detailImg.alt = prod.name || 'Product';
       document.getElementById('detailModalName').textContent = prod.name || 'Product';
@@ -2266,7 +2348,6 @@
 
       const q = (document.getElementById('splitCategorySearchInput')?.value || '').trim().toLowerCase();
       const rotatedAll = getRotatedProducts(allProducts, 0, 'catalog');
-      const minuteSlot = getMinuteSlotOffset(2);
 
       if (q) {
         const matches = rotatedAll.filter(p => {
@@ -2278,9 +2359,10 @@
           return;
         }
         grid.innerHTML = matches.map((p, idx) => {
-          const img = pickRotatingProductImage(minuteSlot, idx) || (p.images && p.images[0]) || p.image_url || '';
+          const img = getOwnProductImage(p);
+          const safeId = encodeURIComponent(String(p.id));
           return `
-            <div data-action="catalog" data-val="ALL" class="skf-cat-cell group">
+            <div data-action="prod" data-val="${decodeURIComponent(safeId).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
               <div class="skf-cat-thumb-wrap group-hover:scale-105 transition">
                 ${renderSplitThumbInner(img, p.name, idx)}
               </div>
@@ -2291,7 +2373,9 @@
       }
 
       const catTiles = allCategories.map((c, idx) => {
-        const img = pickRotatingProductImage(minuteSlot, idx);
+        const sampleProd = rotatedAll.find(p => String(p.category_id) === String(c.id))
+          || allProducts.find(p => String(p.category_id) === String(c.id));
+        const img = getOwnProductImage(sampleProd);
         return `
           <div data-action="cat" data-val="${String(c.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
             <div class="skf-cat-thumb-wrap group-hover:scale-105 transition">
@@ -2302,9 +2386,9 @@
       });
 
       const poolTiles = rotatedAll.map((p, idx) => {
-        const img = pickRotatingProductImage(minuteSlot, idx + allCategories.length);
+        const img = getOwnProductImage(p);
         return `
-          <div data-action="catalog" data-val="ALL" class="skf-cat-cell group">
+          <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
             <div class="skf-cat-thumb-wrap group-hover:scale-105 transition">
               ${renderSplitThumbInner(img, p.name, idx + 1)}
             </div>
@@ -2350,6 +2434,7 @@
         openCartReview();
       } else if (tab === 'account') {
         armStoreBackGuard();
+        updatePushBadge();
         showOnlyMainView('accountFullPageView');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
@@ -2643,9 +2728,8 @@
       document.getElementById('accountSignInActionBtn').classList.add('hidden');
       document.getElementById('accountSignOutActionBtn').classList.remove('hidden');
       prefillCustomerCheckout();
-      if ("Notification" in window && Notification.permission === "granted" && typeof window.enableSekiflexPush === "function") {
-        window.enableSekiflexPush({ customerEmail: currentCustomer.email, customerPhone: currentCustomer.phone, isAdmin: false, silent: true });
-      }
+      updatePushBadge();
+      enableCustomerPushNotifications(false);
     }
 
     function completeAuthAndBounceBack(user, profile) {
@@ -2933,6 +3017,7 @@
       bindBackButtonGuardsOnce();
       bindScrollPauseWatcher();
       bindCategoryDelegationOnce();
+      updatePushBadge();
       trackLiveVisitorHeartbeat();
       lastRotationSlot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000));
       applySocialLinks();
@@ -3031,19 +3116,19 @@
       }
       sec.classList.remove('hidden');
       const rotatedFeatured = getRotatedProducts(list, 17, 'featured');
-      const minuteSlot = getMinuteSlotOffset(7);
       strip.innerHTML = rotatedFeatured.slice(0, 10).map((p, idx) => {
-        const img = pickRotatingProductImage(minuteSlot, idx) || (p.images && p.images[0]) || p.image_url || '';
+        const img = getOwnProductImage(p);
         const { effectivePrice, originalPrice } = getProductPricing(p);
         const safeName = String(p.name || 'Product').replace(/"/g, '&quot;').replace(/'/g, "\\'");
+        const safeId = String(p.id).replace(/'/g, "\\'");
         const priceDisplay = originalPrice !== null
           ? `<div class="flex items-baseline gap-1 mt-0.5 flex-wrap"><span class="text-xs font-extrabold text-amber-400">₦${effectivePrice.toLocaleString()}</span><span class="text-[10px] text-stone-400 line-through">₦${originalPrice.toLocaleString()}</span></div>`
           : `<p class="text-xs font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>`;
         const mediaInner = img
-          ? `<img src="${img}" alt="" loading="eager" decoding="sync" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
+          ? `<img src="${img}" alt="" loading="eager" decoding="sync" data-fb-idx="${idx}" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
           : renderBrandedPlaceholderHtml(p.name);
         return `
-          <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="shrink-0 w-32 sm:w-36 bg-[#18140e] rounded-xl overflow-hidden border border-amber-400/25 flex flex-col justify-between cursor-pointer hover:border-amber-400 transition shadow-sm">
+          <div data-product-id="${safeId}" onclick="openProductDetail('${safeId}')" class="shrink-0 w-32 sm:w-36 bg-[#18140e] rounded-xl overflow-hidden border border-amber-400/25 flex flex-col justify-between cursor-pointer hover:border-amber-400 transition shadow-sm">
             <div class="w-full h-28 bg-stone-950 flex items-center justify-center overflow-hidden">
               ${mediaInner}
             </div>
@@ -3063,9 +3148,8 @@
         return;
       }
 
-      const minuteSlot = getMinuteSlotOffset(11);
       grid.innerHTML = list.map((p, idx) => {
-        const img = pickRotatingProductImage(minuteSlot, idx) || (p.images && p.images[0]) || p.image_url || '';
+        const img = getOwnProductImage(p);
         const out = (p.stock_quantity !== null && p.stock_quantity <= 0);
         const safeName = String(p.name || 'Product').replace(/"/g, '&quot;').replace(/'/g, "\\'");
         const safeId = String(p.id).replace(/'/g, "\\'");
@@ -3077,7 +3161,7 @@
           : `<div class="skf-market-img-tall">${renderBrandedPlaceholderHtml(p.name)}</div>`;
 
         return `
-          <div onclick="openProductDetail('${safeId}')" class="skf-market-card">
+          <div data-product-id="${safeId}" data-product-line="${safeId}" onclick="openProductDetail('${safeId}')" class="skf-market-card">
             <div class="skf-catalog-photo-box">
               <button type="button" onclick="toggleLikeProduct('${safeId}', this, event)"
                 aria-label="Favorite ${safeName}"
@@ -3228,7 +3312,7 @@
 
       box.innerHTML = cart.map((item, i) => {
         const matchedProd = allProducts.find(p => String(p.id) === String(item.id));
-        const thumbImg = (matchedProd?.images && matchedProd.images[0]) || matchedProd?.image_url || '';
+        const thumbImg = getOwnProductImage(matchedProd);
         return `
           <div class="luxury-glass-card p-3 rounded-2xl border border-amber-400/25 space-y-2.5">
             <div class="flex items-start gap-3">
@@ -3390,6 +3474,12 @@
           }
         });
       } catch (notifyErr) {}
+
+      enableCustomerPushNotifications(
+        false,
+        'Sekiflex Collections — Order Confirmed',
+        `Tracking ${tracking} (${orderStatus}).`
+      );
 
       const waOrderText = encodeURIComponent(
         `Hello Sekiflex Collections! I have placed an order.\nTracking Code: ${tracking}\nStatus: ${orderStatus} (${payStatus})\nName: ${custName}\nItems: ${summary}\nProduct Links:\n${productLinksText}\nMethod: ${fulfillmentMode === 'pickup' ? 'Walk-In Store Pickup (Urua Ekpa, Uyo)' : destination}\nTotal Amount (incl. shipping): ₦${total.toLocaleString()}\nPayment Option: ${isPod ? 'Payment on Delivery (Akwa Ibom)' : paidBank}\n` + (isPod ? '' : `Sender/Ref: ${senderRef}`)
