@@ -1458,6 +1458,79 @@
       window.location.href = STAFF_ADMIN_PORTAL_URL;
     }
 
+    function normalizeEmailRecord(val) {
+      return String(val || '').trim().toLowerCase();
+    }
+
+    function normalizePhoneRecord(val) {
+      let digits = String(val || '').replace(/\D+/g, '');
+      if (digits.startsWith('234') && digits.length === 13) {
+        digits = '0' + digits.slice(3);
+      }
+      return digits;
+    }
+
+    function recordKnownCustomerLocally(email, phone) {
+      try {
+        const cleanEmail = normalizeEmailRecord(email);
+        const cleanPhone = normalizePhoneRecord(phone);
+        const existing = JSON.parse(localStorage.getItem('sekiflex_known_customers_v1') || '[]');
+        if (!existing.some(r => (cleanEmail && r.email === cleanEmail) || (cleanPhone && r.phone === cleanPhone))) {
+          existing.push({ email: cleanEmail, phone: cleanPhone });
+          localStorage.setItem('sekiflex_known_customers_v1', JSON.stringify(existing));
+        }
+      } catch (e) {}
+    }
+
+    async function findExistingCustomerRecord(email, phone) {
+      const cleanEmail = normalizeEmailRecord(email);
+      const cleanPhone = normalizePhoneRecord(phone);
+
+      try {
+        const localRecords = JSON.parse(localStorage.getItem('sekiflex_known_customers_v1') || '[]');
+        const localEmailHit = cleanEmail && localRecords.some(r => normalizeEmailRecord(r.email) === cleanEmail);
+        const localPhoneHit = cleanPhone && localRecords.some(r => normalizePhoneRecord(r.phone) === cleanPhone);
+        if (localEmailHit || localPhoneHit) {
+          return { emailMatched: Boolean(localEmailHit), phoneMatched: Boolean(localPhoneHit) };
+        }
+      } catch (e) {}
+
+      let emailMatched = false;
+      let phoneMatched = false;
+
+      try {
+        if (cleanEmail) {
+          const { data: byEmail } = await sb
+            .from('customer_profiles')
+            .select('id, email, phone')
+            .ilike('email', cleanEmail)
+            .limit(1);
+          if (Array.isArray(byEmail) && byEmail.length > 0) {
+            emailMatched = true;
+            recordKnownCustomerLocally(byEmail[0].email, byEmail[0].phone);
+          }
+        }
+
+        if (cleanPhone) {
+          const { data: profilesSample } = await sb
+            .from('customer_profiles')
+            .select('id, email, phone')
+            .limit(500);
+          if (Array.isArray(profilesSample)) {
+            const foundPhone = profilesSample.find(p => normalizePhoneRecord(p.phone) === cleanPhone);
+            if (foundPhone) {
+              phoneMatched = true;
+              recordKnownCustomerLocally(foundPhone.email, foundPhone.phone);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Duplicate profile lookup skipped:', err);
+      }
+
+      return { emailMatched, phoneMatched };
+    }
+
     const SEKIFLEX_INFO_PAGES = {
       about: {
         title: 'About Sekiflex Collections',
@@ -2668,14 +2741,42 @@
       const phone = document.getElementById('regPhone').value.trim();
       const password = document.getElementById('regPassword').value;
       if (!fullName) return showAuthMessage('Please enter your full name.', true);
+
       btn.disabled = true;
+      btn.textContent = 'Checking Existing Records...';
+
+      const existingMatch = await findExistingCustomerRecord(email, phone);
+      if (existingMatch.emailMatched && existingMatch.phoneMatched) {
+        btn.disabled = false;
+        btn.textContent = 'Register & Go to Checkout →';
+        return showAuthMessage('This email address and phone number already opened an account in our records. Please sign in instead.', true);
+      }
+      if (existingMatch.emailMatched) {
+        btn.disabled = false;
+        btn.textContent = 'Register & Go to Checkout →';
+        return showAuthMessage('This email address is already in our records. Please sign in or use another email.', true);
+      }
+      if (existingMatch.phoneMatched) {
+        btn.disabled = false;
+        btn.textContent = 'Register & Go to Checkout →';
+        return showAuthMessage('This phone number is already in our records. Please sign in or use another phone number.', true);
+      }
+
       btn.textContent = 'Sending Registration Code...';
       const { data, error } = await sb.auth.signUp({
         email, password, options: { data: { full_name: fullName, display_name: fullName, phone } }
       });
       btn.disabled = false;
       btn.textContent = 'Register & Go to Checkout →';
-      if (error) return showAuthMessage(error.message, true);
+      if (error) {
+        const errMsg = String(error.message || '');
+        if (/already registered|already exists|user already/i.test(errMsg)) {
+          return showAuthMessage('This email address is already in our records. Please sign in instead.', true);
+        }
+        return showAuthMessage(errMsg, true);
+      }
+
+      recordKnownCustomerLocally(email, phone);
       pendingSignupData = { name: fullName, email, phone };
       document.getElementById('otpTargetEmail').textContent = email;
       if (data?.session && data?.user) {
@@ -2702,6 +2803,7 @@
         const chosenPhone = pendingSignupData.phone || data.user.user_metadata?.phone || '';
         if (chosenName) await sb.auth.updateUser({ data: { full_name: chosenName, display_name: chosenName, phone: chosenPhone } });
         await sb.from('customer_profiles').upsert({ id: data.user.id, full_name: chosenName || data.user.email.split('@')[0], email: pendingSignupData.email, phone: chosenPhone });
+        recordKnownCustomerLocally(pendingSignupData.email, chosenPhone);
         completeAuthAndBounceBack(data.user, { full_name: chosenName, email: pendingSignupData.email, phone: chosenPhone });
       }
     }
@@ -2725,6 +2827,7 @@
       btn.textContent = 'Sign In & Go to Checkout →';
       if (error) return showAuthMessage(error.message, true);
       const { data: profile } = await sb.from('customer_profiles').select('*').eq('id', data.user.id).maybeSingle();
+      recordKnownCustomerLocally(profile?.email || data.user.email, profile?.phone || data.user.user_metadata?.phone);
       completeAuthAndBounceBack(data.user, profile);
     }
 
@@ -2773,6 +2876,7 @@
         email: profile?.email || user.email || '',
         phone: profile?.phone || user.user_metadata?.phone || ''
       };
+      recordKnownCustomerLocally(currentCustomer.email, currentCustomer.phone);
       document.getElementById('topWelcomeGreeting').textContent = `Hello, ${firstName}`;
       document.getElementById('menuCustomerName').textContent = exactFullName;
       document.getElementById('menuCustomerEmail').textContent = currentCustomer.email;
