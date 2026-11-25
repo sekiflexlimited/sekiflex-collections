@@ -69,14 +69,14 @@
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .skf-cat-promo4-card {
       position: relative;
       border-radius: 22px 14px 22px 14px;
       padding: 10px;
-      min-height: 114px;
+      min-height: 112px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -118,8 +118,8 @@
     }
 
     .skf-cat-promo4-thumb {
-      width: 66px;
-      height: 80px;
+      width: 64px;
+      height: 78px;
       border-radius: 14px;
       overflow: hidden;
       flex-shrink: 0;
@@ -127,69 +127,21 @@
       background: #18140e;
     }
 
-    /* Shop by Category Title Pill & Full-Width Tight 4-Column Circle Medallions */
+    /* Shop by Category Pill matching 107830.png */
     .skf-cat-banner-pill {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
       background: linear-gradient(90deg, #1b150d 0%, #2c200e 50%, #1b150d 100%);
-      border: 1.5px solid #fbbf24;
+      border: 2px solid #fbbf24;
       border-radius: 9999px;
-      padding: 5px 18px;
+      padding: 5px 22px;
       font-family: 'Playfair Display', serif;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 800;
       color: #ffffff;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
-    }
-
-    .skf-cat-4col-medallions {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px 8px;
-      align-items: start;
-    }
-
-    .skf-medallion-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      cursor: pointer;
-      min-width: 0;
-    }
-
-    .skf-medallion-circle {
-      width: 100%;
-      max-width: 78px;
-      aspect-ratio: 1 / 1;
-      border-radius: 9999px;
-      overflow: hidden;
-      border: 2.5px solid #fbbf24;
-      background: #18140e;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    }
-
-    .skf-medallion-circle img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: top;
-      display: block;
-    }
-
-    .skf-medallion-name {
-      margin-top: 5px;
-      font-size: 10px;
-      font-weight: 700;
-      line-height: 1.2;
-      color: #f5f5f4;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      width: 100%;
+      box-shadow: 0 0 14px rgba(251, 191, 36, 0.35), 0 4px 14px rgba(0, 0, 0, 0.5);
     }
 
     .skf-hero-slide {
@@ -291,31 +243,14 @@
       background: linear-gradient(180deg, #fcd34d 0%, #f59e0b 100%);
     }
 
-    .skf-cat-tab {
-      text-align: left;
-      padding: 6px 10px;
-      font-size: 10.5px;
-      line-height: 1.25;
-      border-radius: 9999px;
-      border: 1px solid rgba(245, 158, 11, 0.25);
-      color: #d6d3d1;
-      background: #14110c;
-      white-space: nowrap;
-      transition: all 0.15s ease;
-    }
-    .skf-cat-tab.is-active {
-      background: #f59e0b;
-      color: #0d0c0a;
-      font-weight: 800;
-      border-color: #fbbf24;
-    }
-
+    /* Tight 4-Column Circle Medallions Matching 107830.png */
     .skf-cat-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px 8px;
+      gap: 10px 8px;
       align-items: start;
     }
+
     .skf-cat-cell {
       display: flex;
       flex-direction: column;
@@ -324,22 +259,24 @@
       cursor: pointer;
       min-width: 0;
     }
+
     .skf-cat-thumb-wrap {
       position: relative;
       width: 100%;
-      max-width: 78px;
+      max-width: 82px;
       aspect-ratio: 1 / 1;
       margin: 0 auto 5px;
       border-radius: 9999px;
       background: #1b1712;
       border: 2.5px solid #fbbf24;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 12px rgba(251, 191, 36, 0.4), 0 4px 12px rgba(0, 0, 0, 0.55);
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
+
     .skf-cat-thumb-wrap img {
       width: 100%;
       height: 100%;
@@ -348,6 +285,22 @@
       display: block;
       image-rendering: -webkit-optimize-contrast;
       image-rendering: high-quality;
+    }
+
+    .skf-cat-pill-label {
+      display: inline-block;
+      width: 100%;
+      background: rgba(20, 16, 10, 0.92);
+      border: 1px solid rgba(251, 191, 36, 0.55);
+      border-radius: 9999px;
+      padding: 2px 6px;
+      font-size: 9.5px;
+      font-weight: 700;
+      line-height: 1.2;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .skf-policy-wrap h4 {
@@ -787,7 +740,7 @@
     </div>
   </div>
 
-  <!-- CATEGORY VIEW (4 PROMO BOXES + SHOP BY CATEGORY + FULL-WIDTH 4-COL CIRCLE MEDALLIONS, NO EMPTY LEFT SPACE) -->
+  <!-- CATEGORY VIEW (4 PROMO BOXES + TIGHT SHOP BY CATEGORY 4-COL CIRCLE MEDALLIONS MATCHING 107830.png) -->
   <div id="splitCategoryStoreView" class="hidden">
     <header class="sticky top-0 z-40 bg-[#0d0c0a]/95 backdrop-blur-md border-b border-amber-400/35 px-3 py-2 shadow-lg">
       <div class="max-w-5xl mx-auto flex items-center gap-2">
@@ -846,24 +799,15 @@
         </div>
       </section>
 
-      <!-- Shop by Category Section — Full-Width Tight 4-Column Medallions (No Empty Left Column) -->
+      <!-- Shop by Category Section — Clean Centered Pill + Tight 4-Column Circle Medallions (No Extra Gaps) -->
       <section class="luxury-glass-card border border-amber-400/35 rounded-2xl p-3 space-y-3">
-        <div class="flex items-center justify-between gap-2 flex-wrap">
+        <div class="flex items-center justify-center">
           <div class="skf-cat-banner-pill">
             <span class="text-amber-400 text-xs">✦</span>
-            <span id="splitActiveCategoryTitle">Shop by Category</span>
+            <span>Shop by Category</span>
             <span class="text-amber-400 text-xs">✦</span>
           </div>
-          <div class="flex items-center gap-2">
-            <span id="splitActiveCategoryCount" class="text-[10px] text-amber-300 font-semibold"></span>
-            <button type="button" id="splitShopAllInCatBtn" onclick="shopSelectedSplitCategory()"
-              class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-2.5 py-1 rounded-full transition shrink-0">
-              View Catalog →
-            </button>
-          </div>
         </div>
-
-        <div id="splitCategorySidebar" class="flex gap-1.5 overflow-x-auto no-scrollbar pb-0.5"></div>
 
         <div id="splitCategoryGrid" class="skf-cat-grid"></div>
       </section>
@@ -2314,35 +2258,12 @@
       setActiveBottomTab('categories');
       showOnlyMainView('splitCategoryStoreView');
       renderCategoryViewTopAndMedallions();
-      renderSplitCategorySidebar();
       renderSplitCategoryPanel();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function renderSplitCategorySidebar() {
-      const rail = document.getElementById('splitCategorySidebar');
-      if (!rail) return;
-      const tabs = [
-        { key: 'FEATURED', label: 'All Circles' },
-        ...allCategories.map(c => ({ key: String(c.id), label: c.name }))
-      ];
-      rail.innerHTML = tabs.map(t => {
-        const active = String(splitSelectedCatKey) === String(t.key);
-        return `<button type="button" onclick="selectSplitCategory('${t.key.replace(/'/g, "\\'")}')" class="skf-cat-tab ${active ? 'is-active' : ''}">${t.label}</button>`;
-      }).join('');
-    }
-
-    function selectSplitCategory(key) {
-      splitSelectedCatKey = key;
-      markScreenActive(6000);
-      renderSplitCategorySidebar();
-      renderSplitCategoryPanel();
-    }
-
     function renderSplitCategoryPanel() {
       const grid = document.getElementById('splitCategoryGrid');
-      const titleEl = document.getElementById('splitActiveCategoryTitle');
-      const countEl = document.getElementById('splitActiveCategoryCount');
       if (!grid) return;
 
       const q = (document.getElementById('splitCategorySearchInput')?.value || '').trim().toLowerCase();
@@ -2350,87 +2271,50 @@
       const minuteSlot = getMinuteSlotOffset(2);
 
       if (q) {
-        titleEl.textContent = `Search: "${q}"`;
         const matches = rotatedAll.filter(p => {
           const catObj = allCategories.find(c => String(c.id) === String(p.category_id));
           return `${p.name || ''} ${p.description || ''} ${catObj ? catObj.name : ''}`.toLowerCase().includes(q);
         });
-        countEl.textContent = `${matches.length} item${matches.length === 1 ? '' : 's'}`;
         if (!matches.length) {
           grid.innerHTML = '<p class="col-span-4 text-center text-xs text-stone-400 py-8">No matching items found.</p>';
           return;
         }
         grid.innerHTML = matches.map((p, idx) => {
           const img = pickRotatingProductImage(minuteSlot, idx) || (p.images && p.images[0]) || p.image_url || '';
-          const { effectivePrice } = getProductPricing(p);
           return `
             <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
-              <div class="skf-cat-thumb-wrap group-hover:border-amber-300 transition">
+              <div class="skf-cat-thumb-wrap group-hover:scale-105 transition">
                 ${renderSplitThumbInner(img, p.name, idx)}
               </div>
-              <p class="text-[10.5px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
-              <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
+              <span class="skf-cat-pill-label">${p.name}</span>
             </div>`;
         }).join('');
         return;
       }
 
-      if (splitSelectedCatKey === 'FEATURED') {
-        titleEl.textContent = 'Shop by Category';
-        countEl.textContent = `${allProducts.length} items`;
+      const catTiles = allCategories.map((c, idx) => {
+        const img = pickRotatingProductImage(minuteSlot, idx);
+        return `
+          <div data-action="cat" data-val="${String(c.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
+            <div class="skf-cat-thumb-wrap group-hover:scale-105 transition">
+              ${renderSplitThumbInner(img, c.name, idx)}
+            </div>
+            <span class="skf-cat-pill-label">${c.name}</span>
+          </div>`;
+      });
 
-        const catTiles = allCategories.map((c, idx) => {
-          const img = pickRotatingProductImage(minuteSlot, idx);
-          const count = allProducts.filter(p => String(p.category_id) === String(c.id)).length;
-          return `
-            <div data-action="cat" data-val="${String(c.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
-              <div class="skf-cat-thumb-wrap group-hover:border-amber-300 transition">
-                ${renderSplitThumbInner(img, c.name, idx)}
-              </div>
-              <p class="text-[10.5px] font-bold text-stone-100 line-clamp-2 leading-tight w-full">${c.name}</p>
-              <p class="text-[9.5px] text-amber-400 font-semibold mt-0.5">${count} item${count === 1 ? '' : 's'}</p>
-            </div>`;
-        });
-
-        const poolTiles = rotatedAll.map((p, idx) => {
-          const img = pickRotatingProductImage(minuteSlot, idx + allCategories.length);
-          const { effectivePrice } = getProductPricing(p);
-          return `
-            <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
-              <div class="skf-cat-thumb-wrap group-hover:border-amber-300 transition">
-                ${renderSplitThumbInner(img, p.name, idx + 1)}
-              </div>
-              <p class="text-[10.5px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
-              <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
-            </div>`;
-        });
-
-        grid.innerHTML = [...catTiles, ...poolTiles].join('');
-        return;
-      }
-
-      const catObj = allCategories.find(c => String(c.id) === String(splitSelectedCatKey));
-      titleEl.textContent = catObj ? catObj.name : 'Category Items';
-      const items = rotatedAll.filter(p => String(p.category_id) === String(splitSelectedCatKey));
-      countEl.textContent = `${items.length} item${items.length === 1 ? '' : 's'}`;
-      const sourcePool = items.length ? items : rotatedAll;
-      if (!sourcePool.length) {
-        grid.innerHTML = '<p class="col-span-4 text-center text-xs text-stone-400 py-8">No items available yet.</p>';
-        return;
-      }
-
-      grid.innerHTML = sourcePool.map((p, i) => {
-        const img = pickRotatingProductImage(minuteSlot, i);
-        const { effectivePrice } = getProductPricing(p);
+      const poolTiles = rotatedAll.map((p, idx) => {
+        const img = pickRotatingProductImage(minuteSlot, idx + allCategories.length);
         return `
           <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
-            <div class="skf-cat-thumb-wrap group-hover:border-amber-300 transition">
-              ${renderSplitThumbInner(img, p.name, i)}
+            <div class="skf-cat-thumb-wrap group-hover:scale-105 transition">
+              ${renderSplitThumbInner(img, p.name, idx + 1)}
             </div>
-            <p class="text-[10.5px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
-            <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
+            <span class="skf-cat-pill-label">${p.name}</span>
           </div>`;
-      }).join('');
+      });
+
+      grid.innerHTML = [...catTiles, ...poolTiles].join('');
     }
 
     function submitSplitCategorySearch(e) {
@@ -2450,11 +2334,6 @@
         if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
         else window.scrollTo({ top: 0, behavior: 'smooth' });
       }, 60);
-    }
-
-    function shopSelectedSplitCategory() {
-      if (splitSelectedCatKey === 'FEATURED') shopSpecificCategoryFromSplit('ALL');
-      else shopSpecificCategoryFromSplit(splitSelectedCatKey);
     }
 
     function switchBottomTab(tab) {
@@ -3031,7 +2910,6 @@
       });
 
       if (!document.getElementById('splitCategoryStoreView').classList.contains('hidden')) {
-        renderSplitCategorySidebar();
         renderSplitCategoryPanel();
       }
     }
