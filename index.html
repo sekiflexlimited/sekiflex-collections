@@ -64,86 +64,77 @@
       animation: trackZoomPulse 2.1s infinite ease-in-out;
     }
 
-    @keyframes skfPromoShake {
-      0%, 72%, 100% { transform: rotate(0deg) scale(1); }
-      76% { transform: rotate(-2.5deg) scale(1.03); }
-      80% { transform: rotate(2.5deg) scale(1.04); }
-      84% { transform: rotate(-2deg) scale(1.03); }
-      88% { transform: rotate(2deg) scale(1.02); }
-      92% { transform: rotate(-1deg) scale(1.01); }
-    }
-
-    .skf-promo-shake-card {
-      animation: skfPromoShake 3.2s infinite ease-in-out;
-      transform-origin: center center;
-      cursor: pointer;
-    }
-    .skf-promo-shake-card:nth-child(2) { animation-delay: 0.7s; }
-    .skf-promo-shake-card:nth-child(3) { animation-delay: 1.4s; }
-    .skf-promo-shake-card:nth-child(4) { animation-delay: 2.1s; }
-
-    /* Category View Top 4 Spotlight Grid (matches screenshot 107696_2.png) */
-    .skf-cat-top4-grid {
+    /* Category View Top 4 Promo Boxes (matching 107724.png) */
+    .skf-cat-promo4-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
       margin-bottom: 12px;
     }
 
-    .skf-cat-top4-card {
+    .skf-cat-promo4-card {
       position: relative;
-      border-radius: 20px;
+      border-radius: 22px 14px 22px 14px;
       padding: 10px;
-      min-height: 112px;
+      min-height: 114px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
       cursor: pointer;
       overflow: hidden;
-      background: linear-gradient(155deg, rgba(38, 28, 13, 0.96) 0%, rgba(16, 13, 9, 0.98) 100%);
-      border: 1.5px solid rgba(251, 191, 36, 0.55);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(251, 191, 36, 0.25);
+      background:
+        radial-gradient(circle at 25% 15%, rgba(251, 191, 36, 0.24), transparent 60%),
+        linear-gradient(155deg, #241a0c 0%, #14100a 65%, #0b0906 100%);
+      border: 2px solid #f59e0b;
+      box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.65),
+        0 0 12px rgba(245, 158, 11, 0.28),
+        inset 0 1px 0 rgba(253, 224, 71, 0.35);
       transition: transform 0.2s ease, border-color 0.2s ease;
     }
 
-    .skf-cat-top4-card:hover {
+    .skf-cat-promo4-card:hover {
       transform: translateY(-2px);
       border-color: #fbbf24;
     }
 
-    .skf-cat-top4-btn {
+    .skf-cat-promo4-tag-shape {
+      border-radius: 6px 22px 22px 6px;
+    }
+
+    .skf-cat-promo4-pill {
       display: inline-flex;
       align-items: center;
       gap: 3px;
-      background: #14110c;
+      background: #0d0c0a;
       color: #ffffff;
-      border: 1px solid rgba(251, 191, 36, 0.75);
+      border: 1.5px solid #fbbf24;
       border-radius: 9999px;
-      padding: 3px 9px;
+      padding: 3px 10px;
       font-size: 9.5px;
       font-weight: 800;
       width: fit-content;
     }
 
-    .skf-cat-top4-thumb {
-      width: 64px;
-      height: 78px;
+    .skf-cat-promo4-thumb {
+      width: 66px;
+      height: 80px;
       border-radius: 14px;
       overflow: hidden;
       flex-shrink: 0;
-      border: 1px solid rgba(251, 191, 36, 0.45);
+      border: 1.5px solid rgba(251, 191, 36, 0.65);
       background: #18140e;
     }
 
-    /* Shop by Category 4-Column Tight Medallion Grid */
+    /* Shop by Category Title Pill & Tight 4-Column Circle Medallions */
     .skf-cat-banner-pill {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
       background: linear-gradient(90deg, #1b150d 0%, #2c200e 50%, #1b150d 100%);
-      border: 1.5px solid rgba(251, 191, 36, 0.65);
+      border: 1.5px solid #fbbf24;
       border-radius: 9999px;
       padding: 5px 18px;
       font-family: 'Playfair Display', serif;
@@ -175,9 +166,9 @@
       aspect-ratio: 1 / 1;
       border-radius: 9999px;
       overflow: hidden;
-      border: 2px solid #fbbf24;
+      border: 2.5px solid #fbbf24;
       background: #18140e;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     }
 
     .skf-medallion-circle img {
@@ -201,71 +192,6 @@
       width: 100%;
     }
 
-    /* Promo 0: Boutique shopping bag silhouette with top handles */
-    .skf-bag-promo {
-      position: relative;
-      padding-top: 8px;
-    }
-    .skf-bag-handles {
-      width: 28px;
-      height: 9px;
-      border: 2px solid #fbbf24;
-      border-bottom: none;
-      border-radius: 9999px 9999px 0 0;
-      margin: 0 auto -2px;
-    }
-
-    /* Promo 1: Price/boutique hang-tag shape */
-    .skf-tag-promo {
-      position: relative;
-      border-radius: 4px 16px 16px 4px;
-      background: linear-gradient(155deg, #102a24 0%, #0a1412 100%);
-      border: 1.5px solid rgba(52, 211, 153, 0.65);
-      border-left: 4px solid #34d399;
-      padding: 5px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.7);
-    }
-
-    /* Promo 2: Pill / arch boutique frame */
-    .skf-arch-promo {
-      border-radius: 22px 22px 10px 10px;
-      background: linear-gradient(160deg, #331222 0%, #15080f 100%);
-      border: 1.5px dashed rgba(251, 113, 133, 0.8);
-      padding: 5px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.7);
-    }
-
-    /* Promo 3: Tilted gold showcase frame */
-    .skf-frame-promo {
-      border-radius: 12px;
-      background: linear-gradient(160deg, #142238 0%, #09101a 100%);
-      border: 2px solid rgba(250, 204, 21, 0.6);
-      padding: 5px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.7);
-    }
-
-    .skf-side-auto-card {
-      border-radius: 10px;
-      background: linear-gradient(160deg, #1b1610 0%, #110e09 100%);
-      border: 1px solid rgba(245, 158, 11, 0.22);
-      padding: 6px 4px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .skf-side-mini-thumb {
-      width: 56px;
-      height: 56px;
-      border-radius: 9999px;
-      overflow: hidden;
-      background: #1b1712;
-      border: 1.5px solid rgba(245, 158, 11, 0.45);
-      flex-shrink: 0;
-    }
-
     .skf-hero-slide {
       width: 88%;
       max-width: 440px;
@@ -274,7 +200,7 @@
       scroll-snap-align: start;
     }
 
-    /* Catalog Cards — 2-Column Layout Matching Screenshot 107700_2.png in Previous Gold */
+    /* Catalog Cards — 2-Column Layout Matching Screenshot in Previous Gold */
     .products-grid-home {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -407,8 +333,8 @@
     }
     .skf-cat-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px 6px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px 6px;
       align-items: start;
     }
     .skf-cat-cell {
@@ -421,13 +347,14 @@
     }
     .skf-cat-thumb-wrap {
       position: relative;
-      width: 74px;
-      height: 74px;
-      max-width: 100%;
-      margin: 0 auto 6px;
+      width: 100%;
+      max-width: 72px;
+      aspect-ratio: 1 / 1;
+      margin: 0 auto 5px;
       border-radius: 9999px;
       background: #1b1712;
-      border: 1.5px solid rgba(245, 158, 11, 0.45);
+      border: 2px solid #fbbf24;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
       overflow: hidden;
       display: flex;
       align-items: center;
@@ -881,7 +808,7 @@
     </div>
   </div>
 
-  <!-- CATEGORY VIEW (MATCHING SCREENSHOT 107696_2.png: TOP 4 CARDS + SHOP BY CATEGORY 4-COL MEDALLIONS + SPLIT BROWSER) -->
+  <!-- CATEGORY VIEW (MATCHING 107724.png: 4 PROMO BOXES AT TOP + SHOP BY CATEGORY + 4-COL CIRCLE MEDALLIONS) -->
   <div id="splitCategoryStoreView" class="hidden">
     <header class="sticky top-0 z-40 bg-[#0d0c0a]/95 backdrop-blur-md border-b border-amber-400/35 px-3 py-2 shadow-lg">
       <div class="max-w-5xl mx-auto flex items-center gap-2">
@@ -901,42 +828,46 @@
     </header>
 
     <div class="max-w-5xl mx-auto px-3 pt-2.5">
-      <!-- Top 4 Spotlight Cards (matches top 4 in screenshot 107696_2.png) -->
-      <section id="categoryTopFourSpotlight" class="skf-cat-top4-grid">
-        <div onclick="shopSpecificCategoryFromSplit('ALL')" class="skf-cat-top4-card">
+      <!-- 4 Top Promo Boxes (act as your promos & match screenshot 107724.png) -->
+      <section id="categoryTopFourSpotlight" class="skf-cat-promo4-grid">
+        <div onclick="handleCategoryPromoBoxClick(0)" class="skf-cat-promo4-card">
           <div class="space-y-1 flex-1 min-w-0">
-            <p class="font-editorial text-xs sm:text-sm font-extrabold text-white leading-tight">New Arrivals</p>
-            <span class="skf-cat-top4-btn">Shop Now →</span>
+            <span class="text-[8px] font-extrabold uppercase tracking-wider text-amber-300 block">♛ Promo</span>
+            <p id="catPromoTitle0" class="font-editorial text-xs sm:text-sm font-extrabold text-white leading-tight line-clamp-2">New Arrivals</p>
+            <span class="skf-cat-promo4-pill">Shop Now →</span>
           </div>
-          <div id="catSpotlightImg0" class="skf-cat-top4-thumb flex items-center justify-center text-amber-400 font-editorial font-extrabold">SC</div>
+          <div id="catSpotlightImg0" class="skf-cat-promo4-thumb flex items-center justify-center text-amber-400 font-editorial font-extrabold">SC</div>
         </div>
 
-        <div onclick="openSplitCategoryStore()" class="skf-cat-top4-card">
+        <div onclick="handleCategoryPromoBoxClick(1)" class="skf-cat-promo4-card">
           <div class="space-y-1 flex-1 min-w-0">
-            <p class="font-editorial text-xs sm:text-sm font-extrabold text-white leading-tight">Men's Wear</p>
-            <span class="skf-cat-top4-btn">Shop Now →</span>
+            <span class="text-[8px] font-extrabold uppercase tracking-wider text-amber-300 block">♛ Promo</span>
+            <p id="catPromoTitle1" class="font-editorial text-xs sm:text-sm font-extrabold text-white leading-tight line-clamp-2">Men's Wear</p>
+            <span class="skf-cat-promo4-pill">Shop Now →</span>
           </div>
-          <div id="catSpotlightImg1" class="skf-cat-top4-thumb flex items-center justify-center text-amber-400 font-editorial font-extrabold">♛</div>
+          <div id="catSpotlightImg1" class="skf-cat-promo4-thumb flex items-center justify-center text-amber-400 font-editorial font-extrabold">♛</div>
         </div>
 
-        <div onclick="shopSpecificCategoryFromSplit('ALL')" class="skf-cat-top4-card">
+        <div onclick="handleCategoryPromoBoxClick(2)" class="skf-cat-promo4-card skf-cat-promo4-tag-shape">
           <div class="space-y-1 flex-1 min-w-0">
-            <p class="font-editorial text-xs sm:text-sm font-extrabold text-white leading-tight">Best Deals</p>
-            <span class="skf-cat-top4-btn">Shop Now →</span>
+            <span class="text-[8px] font-extrabold uppercase tracking-wider text-amber-300 block">♛ Promo</span>
+            <p id="catPromoTitle2" class="font-editorial text-xs sm:text-sm font-extrabold text-white leading-tight line-clamp-2">Best Deals</p>
+            <span class="skf-cat-promo4-pill">Shop Now →</span>
           </div>
-          <div id="catSpotlightImg2" class="skf-cat-top4-thumb flex items-center justify-center text-amber-400 font-extrabold">✦</div>
+          <div id="catSpotlightImg2" class="skf-cat-promo4-thumb flex items-center justify-center text-amber-400 font-extrabold">✦</div>
         </div>
 
-        <div onclick="shopSpecificCategoryFromSplit('ALL')" class="skf-cat-top4-card">
+        <div onclick="handleCategoryPromoBoxClick(3)" class="skf-cat-promo4-card">
           <div class="space-y-1 flex-1 min-w-0">
-            <p class="font-editorial text-xs sm:text-sm font-extrabold text-white leading-tight">Fashion for Everyone</p>
-            <span class="skf-cat-top4-btn">Shop Now →</span>
+            <span class="text-[8px] font-extrabold uppercase tracking-wider text-amber-300 block">♛ Promo</span>
+            <p id="catPromoTitle3" class="font-editorial text-xs sm:text-sm font-extrabold text-white leading-tight line-clamp-2">Fashion for Everyone</p>
+            <span class="skf-cat-promo4-pill">Shop Now →</span>
           </div>
-          <div id="catSpotlightImg3" class="skf-cat-top4-thumb flex items-center justify-center text-amber-400 font-extrabold">🛍️</div>
+          <div id="catSpotlightImg3" class="skf-cat-promo4-thumb flex items-center justify-center text-amber-400 font-extrabold">🛍️</div>
         </div>
       </section>
 
-      <!-- Shop by Category Header + 4-Column Tight Medallion Grid -->
+      <!-- Shop by Category Header + Tight 4-Column Circle Medallions -->
       <section class="luxury-glass-card border border-amber-400/35 rounded-2xl p-3 mb-2.5 space-y-2.5">
         <div class="flex items-center justify-center">
           <div class="skf-cat-banner-pill">
@@ -952,13 +883,6 @@
     <div class="max-w-5xl mx-auto skf-cat-layout">
       <aside class="skf-cat-sidebar no-scrollbar">
         <div id="splitCategorySidebar"></div>
-
-        <div class="mt-2.5 pt-2 border-t border-amber-400/25 space-y-2 select-none">
-          <div class="px-0.5 flex items-center justify-between">
-            <span class="text-[8.5px] font-extrabold uppercase tracking-wider text-amber-400">✦ Promo</span>
-          </div>
-          <div id="wallHungPromoCardsList" class="space-y-2"></div>
-        </div>
       </aside>
 
       <main class="skf-cat-main">
@@ -1523,10 +1447,10 @@
     const AKWA_IBOM_SHIPPING_FEE = 2000;
 
     const DEFAULT_WALL_PROMO_CARDS = [
-      { id: 'wall_1', title: 'Hot Drops', tag: 'NEW IN', badgeBg: 'bg-amber-400 text-stone-950', titleColor: 'text-amber-300', shapeClass: 'skf-bag-promo', hasBagHandles: true, image: '', categoryKey: 'ALL' },
-      { id: 'wall_2', title: 'Luxury Fits', tag: 'DEAL', badgeBg: 'bg-emerald-400 text-stone-950', titleColor: 'text-emerald-300', shapeClass: 'skf-tag-promo', hasBagHandles: false, image: '', categoryKey: 'ALL' },
-      { id: 'wall_3', title: 'Footwear Edit', tag: 'HOT', badgeBg: 'bg-rose-500 text-white', titleColor: 'text-rose-300', shapeClass: 'skf-arch-promo', hasBagHandles: false, image: '', categoryKey: 'ALL' },
-      { id: 'wall_4', title: 'Watches & Bags', tag: 'VIP', badgeBg: 'bg-yellow-300 text-stone-950', titleColor: 'text-yellow-200', shapeClass: 'skf-frame-promo', hasBagHandles: false, image: '', categoryKey: 'ALL' }
+      { id: 'wall_1', title: 'New Arrivals', image: '', categoryKey: 'ALL' },
+      { id: 'wall_2', title: "Men's Wear", image: '', categoryKey: 'ALL' },
+      { id: 'wall_3', title: 'Best Deals', image: '', categoryKey: 'ALL' },
+      { id: 'wall_4', title: 'Fashion for Everyone', image: '', categoryKey: 'ALL' }
     ];
 
     const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
@@ -2002,22 +1926,6 @@
     }
 
     function bindCategoryDelegationOnce() {
-      const promoList = document.getElementById('wallHungPromoCardsList');
-      if (promoList && !promoList.dataset.delegated) {
-        promoList.dataset.delegated = '1';
-        promoList.addEventListener('click', (ev) => {
-          const autoCard = ev.target.closest('[data-auto-prod]');
-          if (autoCard) {
-            openProductDetail(autoCard.getAttribute('data-auto-prod') || '');
-            return;
-          }
-          const cardEl = ev.target.closest('[data-promo-cat]');
-          if (!cardEl) return;
-          const catTarget = cardEl.getAttribute('data-promo-cat') || 'ALL';
-          shopSpecificCategoryFromSplit(catTarget);
-        });
-      }
-
       const splitGrid = document.getElementById('splitCategoryGrid');
       if (splitGrid && !splitGrid.dataset.delegated) {
         splitGrid.dataset.delegated = '1';
@@ -2082,10 +1990,21 @@
       });
     }
 
+    function handleCategoryPromoBoxClick(idx) {
+      const savedCard = Array.isArray(wallPromoCards) ? wallPromoCards[idx] : null;
+      const targetCat = (savedCard && savedCard.categoryKey) || 'ALL';
+      shopSpecificCategoryFromSplit(targetCat);
+    }
+
     function renderCategoryViewTopAndMedallions() {
       for (let i = 0; i < 4; i++) {
+        const titleEl = document.getElementById(`catPromoTitle${i}`);
         const box = document.getElementById(`catSpotlightImg${i}`);
         const savedCard = Array.isArray(wallPromoCards) ? wallPromoCards[i] : null;
+        const def = DEFAULT_WALL_PROMO_CARDS[i];
+        const title = (savedCard && savedCard.title) || def?.title || 'Promo';
+        if (titleEl) titleEl.textContent = title;
+
         const prod = allProducts[i] || allProducts[0];
         const img = (savedCard && savedCard.image && savedCard.image.trim())
           || liveBannerMediaUrls[i]
@@ -2866,82 +2785,6 @@
       });
     }
 
-    function renderWallHungPromoCards(rightTileCount = 9, matchingItemsPool = null) {
-      const wrap = document.getElementById('wallHungPromoCardsList');
-      if (!wrap) return;
-
-      const fixedPool = Array.isArray(allProducts) ? allProducts : [];
-      const baseList = (Array.isArray(wallPromoCards) && wallPromoCards.length >= DEFAULT_WALL_PROMO_CARDS.length)
-        ? wallPromoCards.slice(0, DEFAULT_WALL_PROMO_CARDS.length)
-        : DEFAULT_WALL_PROMO_CARDS;
-
-      const pinnedHtml = baseList.map((card, idx) => {
-        const def = DEFAULT_WALL_PROMO_CARDS[idx % DEFAULT_WALL_PROMO_CARDS.length];
-        const fallbackProd = fixedPool[idx % Math.max(1, fixedPool.length)];
-        const fallbackImg = fallbackProd ? ((fallbackProd.images && fallbackProd.images[0]) || fallbackProd.image_url || '') : '';
-        const bannerImg = liveBannerMediaUrls[idx % Math.max(1, liveBannerMediaUrls.length)] || '';
-        const img = (card.image && card.image.trim()) || bannerImg || fallbackImg || getFallbackPhotoUrl(idx);
-        const title = card.title || def.title;
-        const tag = card.tag || def.tag;
-        const badgeBg = card.badgeBg || def.badgeBg;
-        const titleColor = card.titleColor || def.titleColor;
-        const shapeClass = card.shapeClass || def.shapeClass;
-        const hasBagHandles = idx === 0;
-        const targetCat = card.categoryKey || 'ALL';
-
-        const innerCardHtml = `
-          <div class="${shapeClass}">
-            <div class="relative w-full h-11 rounded-lg overflow-hidden bg-stone-950">
-              <span class="absolute top-1 left-1 z-10 ${badgeBg} text-[6.5px] font-black px-1.5 py-0.2 rounded-full uppercase shadow">
-                ${tag}
-              </span>
-              ${img
-                ? `<img src="${img}" alt="" loading="eager" decoding="sync" data-fb-idx="${idx}" onerror="handleCatalogImgError(this, '${title.replace(/'/g, "\\'")}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
-                : renderBrandedPlaceholderHtml(title)}
-            </div>
-            <div class="pt-1 text-center">
-              <p class="text-[8.5px] font-extrabold ${titleColor} truncate">${title}</p>
-            </div>
-          </div>`;
-
-        return `
-          <div data-promo-cat="${String(targetCat).replace(/"/g, '&quot;')}"
-            class="skf-promo-shake-card ${hasBagHandles ? 'skf-bag-promo' : ''}" title="${title}">
-            ${hasBagHandles ? '<div class="skf-bag-handles"></div>' : ''}
-            ${innerCardHtml}
-          </div>`;
-      }).join('');
-
-      const matchPool = (Array.isArray(matchingItemsPool) && matchingItemsPool.length)
-        ? matchingItemsPool
-        : getRotatedProducts(fixedPool, 0, 'catalog');
-
-      const rightRows = Math.max(1, Math.ceil(rightTileCount / 3));
-      const matchingCount = Math.min(matchPool.length, rightRows);
-      const miniItemsHtml = [];
-
-      for (let i = 0; i < matchingCount; i++) {
-        const p = matchPool[i];
-        const img = (p.images && p.images[0]) || p.image_url || getFallbackPhotoUrl(i);
-        const { effectivePrice } = getProductPricing(p);
-        const safeProdId = String(p.id).replace(/"/g, '&quot;');
-        const safeProdName = String(p.name || 'Catalog Item').replace(/'/g, "\\'");
-
-        miniItemsHtml.push(`
-          <div data-auto-prod="${safeProdId}" class="skf-side-auto-card">
-            <div class="skf-side-mini-thumb">
-              ${img
-                ? `<img src="${img}" alt="" loading="eager" decoding="sync" data-fb-idx="${i}" onerror="handleCatalogImgError(this, '${safeProdName}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
-                : renderBrandedPlaceholderHtml(p.name)}
-            </div>
-            <p class="text-[8.5px] font-semibold text-stone-200 line-clamp-1 mt-0.5 w-full">${p.name}</p>
-            <p class="text-[8.5px] font-extrabold text-amber-400">₦${effectivePrice.toLocaleString()}</p>
-          </div>`);
-      }
-
-      wrap.innerHTML = pinnedHtml + miniItemsHtml.join('');
-    }
-
     function renderSplitThumbInner(img, labelText, seedIdx = 0) {
       const safeLabel = String(labelText || 'Sekiflex').replace(/'/g, "\\'");
       const chosenImg = img || getFallbackPhotoUrl(seedIdx);
@@ -3006,8 +2849,7 @@
         });
         countEl.textContent = `${matches.length} item${matches.length === 1 ? '' : 's'}`;
         if (!matches.length) {
-          grid.innerHTML = '<p class="col-span-3 text-center text-xs text-stone-400 py-8">No matching items found.</p>';
-          renderWallHungPromoCards(0, []);
+          grid.innerHTML = '<p class="col-span-4 text-center text-xs text-stone-400 py-8">No matching items found.</p>';
           return;
         }
         grid.innerHTML = matches.map((p, idx) => {
@@ -3015,14 +2857,13 @@
           const { effectivePrice } = getProductPricing(p);
           return `
             <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
-              <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
+              <div class="skf-cat-thumb-wrap group-hover:border-amber-300 transition">
                 ${renderSplitThumbInner(img, p.name, idx)}
               </div>
-              <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
+              <p class="text-[10.5px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
               <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
             </div>`;
         }).join('');
-        renderWallHungPromoCards(matches.length, matches);
         return;
       }
 
@@ -3038,11 +2879,11 @@
           return `
             <div data-action="cat" data-val="${String(c.id).replace(/"/g, '&quot;')}"
               class="skf-cat-cell group">
-              <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
+              <div class="skf-cat-thumb-wrap group-hover:border-amber-300 transition">
                 ${renderSplitThumbInner(img, c.name, idx)}
               </div>
-              <p class="text-[11px] font-bold text-stone-100 line-clamp-2 leading-tight w-full">${c.name}</p>
-              <p class="text-[10px] text-amber-400 font-semibold mt-0.5">${count} item${count === 1 ? '' : 's'}</p>
+              <p class="text-[10.5px] font-bold text-stone-100 line-clamp-2 leading-tight w-full">${c.name}</p>
+              <p class="text-[9.5px] text-amber-400 font-semibold mt-0.5">${count} item${count === 1 ? '' : 's'}</p>
             </div>`;
         });
 
@@ -3051,17 +2892,15 @@
           const { effectivePrice } = getProductPricing(p);
           return `
             <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
-              <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
+              <div class="skf-cat-thumb-wrap group-hover:border-amber-300 transition">
                 ${renderSplitThumbInner(img, p.name, idx + 1)}
               </div>
-              <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
+              <p class="text-[10.5px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
               <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
             </div>`;
         });
 
-        const combined = [...catTiles, ...poolTiles];
-        grid.innerHTML = combined.join('');
-        renderWallHungPromoCards(combined.length, rotatedAll);
+        grid.innerHTML = [...catTiles, ...poolTiles].join('');
         return;
       }
 
@@ -3072,25 +2911,22 @@
 
       const sourcePool = items.length ? items : rotatedAll;
       if (!sourcePool.length) {
-        grid.innerHTML = '<p class="col-span-3 text-center text-xs text-stone-400 py-8">No items available yet.</p>';
-        renderWallHungPromoCards(0, []);
+        grid.innerHTML = '<p class="col-span-4 text-center text-xs text-stone-400 py-8">No items available yet.</p>';
         return;
       }
 
-      const catRows = sourcePool.map((p, i) => {
+      grid.innerHTML = sourcePool.map((p, i) => {
         const img = (p.images && p.images[0]) || p.image_url || '';
         const { effectivePrice } = getProductPricing(p);
         return `
           <div data-action="prod" data-val="${String(p.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
-            <div class="skf-cat-thumb-wrap group-hover:border-amber-400 transition">
+            <div class="skf-cat-thumb-wrap group-hover:border-amber-300 transition">
               ${renderSplitThumbInner(img, p.name, i)}
             </div>
-            <p class="text-[11px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
+            <p class="text-[10.5px] font-semibold text-stone-100 line-clamp-2 leading-tight w-full">${p.name}</p>
             <p class="text-[10px] font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
           </div>`;
-      });
-      grid.innerHTML = catRows.join('');
-      renderWallHungPromoCards(catRows.length, sourcePool);
+      }).join('');
     }
 
     function submitSplitCategorySearch(e) {
@@ -3666,8 +3502,6 @@
 
       if (!document.getElementById('splitCategoryStoreView').classList.contains('hidden')) {
         renderSplitCategoryPanel();
-      } else {
-        renderWallHungPromoCards();
       }
       currentBannerSlideIdx = 0;
       const carousel = document.getElementById('bannerCarousel');
@@ -3894,7 +3728,6 @@
       applySocialLinks();
       selectStarRating(5);
       renderReviews();
-      renderWallHungPromoCards();
       populateNigeriaStates();
       applyFreeShippingState(freeShippingMode);
       renderCart();
@@ -3906,7 +3739,6 @@
         warmUpTopImages(allProducts);
         refreshStaticHeroSlideMedia();
         renderFeaturedStrip(allProducts);
-        renderWallHungPromoCards();
         applyCatalogFilters();
         openSharedProductFromUrl();
       }
@@ -3926,7 +3758,6 @@
           warmUpTopImages(allProducts);
           refreshStaticHeroSlideMedia();
           renderFeaturedStrip(allProducts);
-          renderWallHungPromoCards();
           applyCatalogFilters();
           openSharedProductFromUrl();
         } else if (!allProducts.length) {
