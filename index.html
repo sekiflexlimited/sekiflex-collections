@@ -1008,7 +1008,7 @@
           </a>
         </div>
         <p class="text-[10px] text-stone-400 pt-1">
-          Sekiflex Collections • Proudly operating under <span class="text-amber-300 font-semibold">Sekiflex Limited</span>[span_2](start_span)[span_2](end_span)
+          Sekiflex Collections • Proudly operating under <span class="text-amber-300 font-semibold">Sekiflex Limited</span>
         </p>
       </div>
 
@@ -1558,6 +1558,55 @@
     let screenIdleTimer = null;
     let allowWebsiteExit = false;
 
+    function lockStaffSessionState() {}
+
+    function openProtectedStaffAdminPortal() {
+      window.location.href = STAFF_ADMIN_PORTAL_URL;
+    }
+
+    function normalizeEmailRecord(val) {
+      return String(val || '').trim().toLowerCase();
+    }
+
+    function recordKnownCustomerLocally(email, phone) {
+      try {
+        const cleanEmail = normalizeEmailRecord(email);
+        const cleanPhone = String(phone || '').replace(/\D/g, '');
+        if (!cleanEmail && !cleanPhone) return;
+        const list = JSON.parse(localStorage.getItem('sekiflex_known_customers_v1') || '[]');
+        const idx = list.findIndex(r => (cleanEmail && normalizeEmailRecord(r.email) === cleanEmail) || (cleanPhone && String(r.phone || '').replace(/\D/g, '') === cleanPhone));
+        if (idx >= 0) {
+          list[idx] = { email: cleanEmail || list[idx].email, phone: cleanPhone || list[idx].phone };
+        } else {
+          list.push({ email: cleanEmail, phone: cleanPhone });
+        }
+        localStorage.setItem('sekiflex_known_customers_v1', JSON.stringify(list));
+      } catch (e) {}
+    }
+
+    async function findExistingCustomerRecord(email, phone) {
+      const cleanEmail = normalizeEmailRecord(email);
+      const cleanPhone = String(phone || '').replace(/\D/g, '');
+      let emailMatched = false;
+      let phoneMatched = false;
+      try {
+        const list = JSON.parse(localStorage.getItem('sekiflex_known_customers_v1') || '[]');
+        if (cleanEmail && list.some(r => normalizeEmailRecord(r.email) === cleanEmail)) emailMatched = true;
+        if (cleanPhone && list.some(r => String(r.phone || '').replace(/\D/g, '') === cleanPhone)) phoneMatched = true;
+      } catch (e) {}
+      try {
+        if (cleanEmail) {
+          const { data } = await sb.from('customer_profiles').select('id').ilike('email', cleanEmail).limit(1);
+          if (Array.isArray(data) && data.length > 0) emailMatched = true;
+        }
+        if (cleanPhone) {
+          const { data } = await sb.from('customer_profiles').select('id, phone').limit(50);
+          if (Array.isArray(data) && data.some(r => String(r.phone || '').replace(/\D/g, '') === cleanPhone)) phoneMatched = true;
+        }
+      } catch (e) {}
+      return { emailMatched, phoneMatched };
+    }
+
     const SAFETY_BLOCK_HTML = `
       <div class="mt-3 p-3 rounded-xl bg-amber-500/10 border border-amber-400/35 text-[11px] space-y-1">
         <p class="font-extrabold text-amber-300">Official Contact &amp; Safety Notice</p>
@@ -1575,11 +1624,11 @@
         html: `
           <span class="skf-policy-badge" style="color:#fbbf24;border-color:rgba(251,191,36,0.45);">More Than Fashion • Operated by Sekiflex Limited</span>
           <h4 style="color:#fbbf24;">Welcome to Sekiflex Collections</h4>
-          <p><strong>Sekiflex Collections</strong> is a fashion and lifestyle brand operated by <strong>Sekiflex Limited</strong>[span_3](start_span)[span_3](end_span), built on vision, ambition, creativity, and customer trust in Nigeria and around the world.</p>
+          <p><strong>Sekiflex Collections</strong> is a fashion and lifestyle brand operated by <strong>Sekiflex Limited</strong>, built on vision, ambition, creativity, and customer trust in Nigeria and around the world.</p>
           <h4 style="color:#34d399;">The Story Behind the Brand</h4>
           <p>What started as a vision to create a fashion and lifestyle shopping destination is growing into a broader platform serving customers locally and internationally across multiple categories.</p>
           <h4 style="color:#38bdf8;">Meet the Founder &amp; CEO</h4>
-          <p><strong>Wisdom Etim</strong>, popularly known as <strong>Sekiflex</strong>, is the Founder and Chief Executive Officer (CEO) of <strong>Sekiflex Limited</strong>[span_4](start_span)[span_4](end_span) and the creative mind behind <strong>Sekiflex Collections</strong>.</p>
+          <p><strong>Wisdom Etim</strong>, popularly known as <strong>Sekiflex</strong>, is the Founder and Chief Executive Officer (CEO) of <strong>Sekiflex Limited</strong> and the creative mind behind <strong>Sekiflex Collections</strong>.</p>
           <h4 style="color:#c084fc;">What We Stand For</h4>
           <ul>
             <li><strong class="text-amber-300">Quality &amp; Value:</strong> Stylish, dependable products curated for everyday confidence.</li>
@@ -1670,7 +1719,7 @@
         html: `
           <span class="skf-policy-badge" style="color:#38bdf8;border-color:rgba(56,189,248,0.45);">Effective Date: 25 November 2026 • Sekiflex Limited</span>
           <h4 style="color:#38bdf8;">1–4. Information We Collect &amp; Use</h4>
-          <p><strong>Sekiflex Collections</strong> (a brand of <strong>Sekiflex Limited</strong>[span_5](start_span)[span_5](end_span), founded by <strong>Wisdom Etim / Sekiflex</strong>) collects account, delivery, order, payment reference, and technical data to process orders, provide tracking, support customers, prevent fraud, and improve services.</p>
+          <p><strong>Sekiflex Collections</strong> (a brand of <strong>Sekiflex Limited</strong>, founded by <strong>Wisdom Etim / Sekiflex</strong>) collects account, delivery, order, payment reference, and technical data to process orders, provide tracking, support customers, prevent fraud, and improve services.</p>
           <h4 style="color:#f87171;">5. Anti-Scam &amp; Official Channel Policy</h4>
           <p>Official channels are <a href="https://sekiflexcollections.com" target="_blank" rel="noopener" class="underline text-amber-300">https://sekiflexcollections.com</a>, <a href="mailto:${STORE_EMAIL}" class="underline text-amber-300">${STORE_EMAIL}</a>, and WhatsApp <a href="${STORE_WHATSAPP_URL}" target="_blank" rel="noopener" class="underline text-emerald-300">+234 906 903 7617</a>. Never pay personal accounts or share passwords, PINs, or OTPs.</p>
           <h4 style="color:#34d399;">6–20. Protection, Sharing, Rights &amp; NDPA 2023</h4>
@@ -1698,7 +1747,7 @@
         html: `
           <span class="skf-policy-badge" style="color:#fbbf24;border-color:rgba(251,191,36,0.45);">Effective Date: 25 November 2026 • Sekiflex Limited</span>
           <h4 style="color:#fbbf24;">1–4. Business Status, Acceptance &amp; Accounts</h4>
-          <p><strong>Sekiflex Collections</strong> is a brand of <strong>Sekiflex Limited</strong>[span_6](start_span)[span_6](end_span), founded by CEO <strong>Wisdom Etim (Sekiflex)</strong>. Using our website or app, registering an account, or placing an order means you accept these Terms &amp; Conditions and provide accurate information.</p>
+          <p><strong>Sekiflex Collections</strong> is a brand of <strong>Sekiflex Limited</strong>, founded by CEO <strong>Wisdom Etim (Sekiflex)</strong>. Using our website or app, registering an account, or placing an order means you accept these Terms &amp; Conditions and provide accurate information.</p>
           <h4 style="color:#34d399;">5–12. Products, Pricing, Orders, Payment &amp; Delivery</h4>
           <p>Listings, pricing, availability, Uyo-only Payment on Delivery, shipping estimates, tracking, and cancellation/return rules apply as stated. Minor screen/lighting colour differences do not automatically make an item defective.</p>
           <h4 style="color:#c084fc;">13–27. Conduct, IP, Liability, Force Majeure &amp; Nigerian Law</h4>
@@ -1928,10 +1977,6 @@
           pre.decode().catch(() => {});
         }
       });
-    }
-
-    function getMinuteSlotOffset(salt = 0) {
-      return Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000)) + salt;
     }
 
     function handleCategoryPromoBoxClick(idx) {
