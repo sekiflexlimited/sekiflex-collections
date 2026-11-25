@@ -422,6 +422,14 @@
             class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400 transition" />
           <input required id="regPassword" name="sekiflex_reg_pass" autocomplete="new-password" type="password" minlength="6" placeholder="Create Password (min. 6 characters)"
             class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400 transition" />
+          <label class="flex items-start gap-2 text-[11px] text-stone-300 cursor-pointer pt-0.5">
+            <input required id="regTermsCheck" type="checkbox" class="mt-0.5 accent-amber-500 shrink-0" />
+            <span>
+              I accept the <button type="button" onclick="event.preventDefault(); openInfoModal('terms');" class="underline font-bold text-amber-400">Terms &amp; Conditions</button>,
+              <button type="button" onclick="event.preventDefault(); openInfoModal('privacy');" class="underline font-bold text-amber-400">Privacy Policy</button> &amp;
+              <button type="button" onclick="event.preventDefault(); openInfoModal('refund');" class="underline font-bold text-amber-400">Refund Policy</button>.
+            </span>
+          </label>
           <button type="submit" id="regSubmitBtn"
             class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-3 rounded-2xl text-sm transition shadow-xs">
             Register &amp; Go to Checkout →
@@ -858,6 +866,23 @@
         </button>
       </div>
 
+      <!-- CUSTOMER ORDER HISTORY & QUICK TRACKING / CANCELLATION REQUEST -->
+      <section class="luxury-glass-card border border-amber-400/35 rounded-2xl p-3.5 space-y-2.5">
+        <div class="flex items-center justify-between gap-2 border-b border-stone-800 pb-2">
+          <div>
+            <p class="text-[10px] font-extrabold uppercase tracking-wider text-amber-400">Order History &amp; Tracking</p>
+            <h3 class="font-editorial text-sm font-bold text-white">My Orders</h3>
+          </div>
+          <button type="button" onclick="loadCustomerOrderHistory(true)"
+            class="text-[10px] font-extrabold bg-stone-900 hover:bg-stone-800 border border-amber-400/30 text-amber-300 px-2.5 py-1 rounded-full transition">
+            ↻ Refresh
+          </button>
+        </div>
+        <div id="customerOrderHistoryContainer" class="space-y-2">
+          <p class="text-xs text-stone-400 py-2">Sign in to view your order history, track deliveries, or request cancellation before confirmation/shipping.</p>
+        </div>
+      </section>
+
       <div class="grid grid-cols-2 gap-2.5">
         <a href="https://wa.me/2349069037617?text=Hello%20Sekiflex%20Collections%2C%20I%20need%20help%20with%20an%20order." target="_blank" rel="noopener"
           class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold text-xs py-3 px-3 rounded-2xl flex items-center justify-center gap-2 shadow transition">
@@ -953,6 +978,20 @@
         </div>
       </div>
 
+      <!-- OFFICIAL CONTACT & ANTI-SCAM SAFETY NOTICE -->
+      <div class="bg-[#1b150c] border border-amber-400/45 rounded-2xl p-4 space-y-1.5 text-xs">
+        <p class="text-[10px] font-black uppercase tracking-wider text-amber-400">🛡️ Official Contact &amp; Safety Notice</p>
+        <p class="text-stone-200 leading-relaxed">
+          For your safety, communicate only through our official platforms and verified contact details.
+        </p>
+        <p class="text-stone-200">Email: <a href="mailto:sekiflexcollections@gmail.com" class="font-bold text-amber-300 underline">sekiflexcollections@gmail.com</a></p>
+        <p class="text-stone-200">Phone/WhatsApp: <a href="https://wa.me/2349069037617" target="_blank" rel="noopener" class="font-bold text-emerald-300 underline">+234 906 903 7617</a></p>
+        <p class="text-stone-200">Calling number: <a href="tel:+2349163755234" class="font-bold text-amber-300 underline">+2349163755234</a></p>
+        <p class="text-amber-200/90 font-semibold pt-0.5 leading-relaxed">
+          Never send money or disclose confidential information to unauthorised individuals claiming to represent Sekiflex Collections.
+        </p>
+      </div>
+
       <!-- SOCIAL LINKS PLACED AT BOTTOM OF ACCOUNT SCREEN -->
       <div class="luxury-glass-card border border-amber-400/30 rounded-2xl p-4 text-center space-y-2.5">
         <p class="text-[11px] font-extrabold uppercase tracking-wider text-amber-300">Follow Sekiflex Collections</p>
@@ -969,7 +1008,7 @@
           </a>
         </div>
         <p class="text-[10px] text-stone-400 pt-1">
-          Sekiflex Collections • Proudly operating under <span class="text-amber-300 font-semibold">Sekiflex Limited</span>[span_1](start_span)[span_1](end_span)
+          Sekiflex Collections • Proudly operating under <span class="text-amber-300 font-semibold">Sekiflex Limited</span>[span_2](start_span)[span_2](end_span)
         </p>
       </div>
 
@@ -1158,7 +1197,15 @@
           </div>
 
           <label class="flex items-start gap-2 text-[11px] text-stone-300 cursor-pointer">
-            <input required id="paymentConfirmCheck" type="checkbox" class="mt-0.5 accent-amber-500" />
+            <input required id="checkoutTermsCheck" type="checkbox" class="mt-0.5 accent-amber-500 shrink-0" />
+            <span>
+              I accept the <button type="button" onclick="event.preventDefault(); openInfoModal('terms');" class="underline font-bold text-amber-400">Terms &amp; Conditions</button> and
+              <button type="button" onclick="event.preventDefault(); openInfoModal('refund');" class="underline font-bold text-amber-400">Refund &amp; Return Policy</button> before placing this order.
+            </span>
+          </label>
+
+          <label class="flex items-start gap-2 text-[11px] text-stone-300 cursor-pointer">
+            <input required id="paymentConfirmCheck" type="checkbox" class="mt-0.5 accent-amber-500 shrink-0" />
             <span id="paymentConfirmLabel">I have completed the bank transfer and accept the <button type="button" onclick="event.preventDefault(); openInfoModal('privacy');" class="underline font-semibold text-amber-400">Privacy Policy</button> &amp; <button type="button" onclick="event.preventDefault(); openInfoModal('terms');" class="underline font-semibold text-amber-400">Terms</button>.</span>
           </label>
         </div>
@@ -1170,9 +1217,9 @@
     </div>
   </div>
 
-  <!-- PRODUCT DETAIL MODAL -->
+  <!-- PRODUCT DETAIL MODAL (WITH PER-PRODUCT RATINGS & REVIEWS FOR ALL SHOPPERS) -->
   <div id="productDetailModal" onclick="if(event.target === this) closeProductDetailModal();" class="fixed inset-0 z-[75] hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-[#14110c] border border-amber-400/35 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
+    <div class="bg-[#14110c] border border-amber-400/35 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
       <div class="relative bg-stone-950">
         <img id="detailModalImg" src="" alt="" loading="eager" decoding="sync" onerror="handleCatalogImgError(this, this.alt)" class="catalog-img-smooth w-full max-h-72 object-contain object-top mx-auto bg-stone-950" />
         <button type="button" onclick="closeProductDetailModal()"
@@ -1206,6 +1253,43 @@
             class="flex-1 bg-amber-500 hover:bg-amber-400 text-stone-950 py-2.5 rounded-xl text-xs font-extrabold transition shadow-xs">
             Add to Cart
           </button>
+        </div>
+
+        <!-- PER-PRODUCT RATINGS & REVIEWS SECTION -->
+        <div class="border-t border-stone-800 pt-3 space-y-2.5">
+          <div class="flex items-center justify-between gap-2">
+            <div>
+              <h4 class="text-xs font-extrabold uppercase tracking-wider text-amber-300">Customer Ratings &amp; Reviews</h4>
+              <p id="productReviewMeta" class="text-[10px] text-stone-400">★ 5.0 (0 reviews)</p>
+            </div>
+            <span class="text-[10px] font-bold text-emerald-300 bg-emerald-500/10 border border-emerald-400/30 px-2 py-0.5 rounded-full">
+              Visible to All
+            </span>
+          </div>
+
+          <form onsubmit="submitProductReview(event)" class="bg-stone-950/90 border border-stone-800 rounded-2xl p-2.5 space-y-2">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[11px] font-bold text-stone-200">Your Rating:</span>
+              <div id="productStarRow" class="flex items-center gap-1" role="group" aria-label="Rate product 1 to 5 stars">
+                <button type="button" data-pstar="1" onclick="selectProductStar(1)" class="prod-star-btn text-base text-amber-400 leading-none">★</button>
+                <button type="button" data-pstar="2" onclick="selectProductStar(2)" class="prod-star-btn text-base text-amber-400 leading-none">★</button>
+                <button type="button" data-pstar="3" onclick="selectProductStar(3)" class="prod-star-btn text-base text-amber-400 leading-none">★</button>
+                <button type="button" data-pstar="4" onclick="selectProductStar(4)" class="prod-star-btn text-base text-amber-400 leading-none">★</button>
+                <button type="button" data-pstar="5" onclick="selectProductStar(5)" class="prod-star-btn text-base text-amber-400 leading-none">★</button>
+                <span id="productStarLabel" class="ml-1 text-[10px] font-bold text-amber-300">5 / 5</span>
+              </div>
+            </div>
+            <input id="productReviewerName" type="text" placeholder="Your Name (optional)"
+              class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-amber-400" />
+            <textarea required id="productReviewText" rows="2" placeholder="Share your review about quality, fit, or appearance..."
+              class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-amber-400"></textarea>
+            <button type="submit" id="productReviewSubmitBtn"
+              class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-2 rounded-xl text-xs transition">
+              Post Product Review
+            </button>
+          </form>
+
+          <div id="productReviewsList" class="space-y-1.5 max-h-44 overflow-y-auto"></div>
         </div>
       </div>
     </div>
@@ -1283,13 +1367,13 @@
     </div>
   </div>
 
-  <!-- STORE SETTINGS MODAL -->
+  <!-- STORE SETTINGS MODAL (PASSWORD, SOUND & EMAIL-VERIFIED ACCOUNT DELETION) -->
   <div id="storeSettingsModal" onclick="if(event.target === this) closeStoreSettingsModal();" class="fixed inset-0 z-[75] hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-[#12141a] text-white border border-amber-400/25 w-full max-w-md rounded-3xl p-5 space-y-3.5 shadow-2xl my-auto">
+    <div class="bg-[#12141a] text-white border border-amber-400/25 w-full max-w-md rounded-3xl p-5 space-y-3.5 shadow-2xl my-auto max-h-[88vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
         <div>
           <h3 class="font-editorial text-lg font-bold text-white">Account Settings</h3>
-          <p class="text-[11px] text-stone-400">Password &amp; notification preferences</p>
+          <p class="text-[11px] text-stone-400">Password, notifications &amp; account deletion</p>
         </div>
         <button type="button" onclick="closeStoreSettingsModal()" class="w-7 h-7 rounded-full bg-stone-900 hover:bg-stone-800 text-stone-400 hover:text-white font-bold text-base">&times;</button>
       </div>
@@ -1313,6 +1397,31 @@
           onchange="localStorage.setItem('sekiflex_sound_enabled', this.checked ? '1' : '0')"
           class="w-4 h-4 accent-amber-500 rounded" />
       </label>
+
+      <!-- REQUEST & CONFIRM ACCOUNT DELETION WITH EMAIL CODE -->
+      <div class="bg-red-950/30 border border-red-500/40 rounded-2xl p-3 space-y-2.5">
+        <p class="text-xs font-extrabold text-rose-300">Delete My Account</p>
+        <p id="deleteAccountMsg" class="hidden text-[11px] font-semibold p-2 rounded-xl"></p>
+
+        <button type="button" id="sendDeleteCodeBtn" onclick="requestAccountDeletionCode()"
+          class="w-full bg-rose-500/20 hover:bg-rose-500/30 border border-rose-400/40 text-rose-200 py-2 rounded-xl text-xs font-extrabold transition">
+          Send Verification Code to My Email
+        </button>
+
+        <form id="confirmDeleteAccountForm" onsubmit="confirmAndDeleteAccount(event)" class="hidden space-y-2 pt-1">
+          <input required id="deleteVerifyCodeInput" type="text" inputmode="numeric" maxlength="8" pattern="[0-9]{6,8}"
+            placeholder="Enter 8-digit code sent to your email"
+            class="w-full border border-rose-500/40 bg-stone-950 text-white rounded-xl px-3 py-2 text-center font-mono text-xs tracking-widest focus:outline-none focus:border-rose-400" />
+          <label class="flex items-start gap-2 text-[11px] text-rose-100 cursor-pointer">
+            <input required id="confirmDeleteAccountCheck" type="checkbox" class="mt-0.5 accent-rose-500 shrink-0" />
+            <span>I confirm that I want to delete my Sekiflex Collections account and understand this action cannot be undone.</span>
+          </label>
+          <button type="submit" id="confirmDeleteAccountBtn"
+            class="w-full bg-rose-600 hover:bg-rose-500 text-white py-2.5 rounded-xl text-xs font-extrabold transition">
+            Confirm &amp; Delete Account
+          </button>
+        </form>
+      </div>
 
       <button type="button" onclick="closeStoreSettingsModal()" class="w-full bg-stone-800 hover:bg-stone-700 text-white py-2.5 rounded-xl text-xs font-bold">
         Done
@@ -1381,6 +1490,9 @@
 
   <script>
     const STORE_WHATSAPP_NUMBER = '2349069037617';
+    const STORE_WHATSAPP_URL = 'https://wa.me/2349069037617';
+    const STORE_CALL_NUMBER = '+2349163755234';
+    const STORE_EMAIL = 'sekiflexcollections@gmail.com';
     const TIKTOK_URL = 'https://www.tiktok.com/@sekiflex_collections?_r=1&_t=ZS-9BbSAFjxrZW';
     const FACEBOOK_URL = 'https://www.facebook.com/share/1G3ErASdHa/';
     const STAFF_ADMIN_PORTAL_URL = 'https://sekiflexcollections.com/admin-hub.html';
@@ -1410,9 +1522,14 @@
     let cart = JSON.parse(localStorage.getItem('sekiflex_cart') || '[]');
     let likedIds = JSON.parse(localStorage.getItem('sekiflex_liked_items_v1') || '[]');
     let storeReviews = JSON.parse(localStorage.getItem('sekiflex_reviews_v1') || '[]');
+    let productReviewsMap = JSON.parse(localStorage.getItem('sekiflex_product_reviews_v1') || '{}');
     let wallPromoCards = JSON.parse(localStorage.getItem('sekiflex_wall_promo_cards_v1') || 'null') || [...DEFAULT_WALL_PROMO_CARDS];
     let liveBannerMediaUrls = [];
     let selectedStarRating = 5;
+    let activeProductDetailId = null;
+    let selectedProductStarRating = 5;
+    let customerOrdersCache = [];
+    let pendingDeleteCode = '';
     let activeCategory = 'ALL';
     let categoryBrowseMode = false;
     let splitSelectedCatKey = 'FEATURED';
@@ -1441,132 +1558,154 @@
     let screenIdleTimer = null;
     let allowWebsiteExit = false;
 
-    function lockStaffSessionState() {
-      try {
-        sessionStorage.removeItem('sekiflex_staff_portal_intent');
-        sessionStorage.removeItem('sekiflex_staff_authenticated');
-        localStorage.removeItem('sekiflex_staff_session');
-      } catch (e) {}
-    }
-
-    function openProtectedStaffAdminPortal() {
-      lockStaffSessionState();
-      try {
-        sessionStorage.setItem('sekiflex_staff_portal_intent', String(Date.now()));
-      } catch (e) {}
-      allowWebsiteExit = true;
-      window.location.href = STAFF_ADMIN_PORTAL_URL;
-    }
-
-    function normalizeEmailRecord(val) {
-      return String(val || '').trim().toLowerCase();
-    }
-
-    function normalizePhoneRecord(val) {
-      let digits = String(val || '').replace(/\D+/g, '');
-      if (digits.startsWith('234') && digits.length === 13) {
-        digits = '0' + digits.slice(3);
-      }
-      return digits;
-    }
-
-    function recordKnownCustomerLocally(email, phone) {
-      try {
-        const cleanEmail = normalizeEmailRecord(email);
-        const cleanPhone = normalizePhoneRecord(phone);
-        const existing = JSON.parse(localStorage.getItem('sekiflex_known_customers_v1') || '[]');
-        if (!existing.some(r => (cleanEmail && r.email === cleanEmail) || (cleanPhone && r.phone === cleanPhone))) {
-          existing.push({ email: cleanEmail, phone: cleanPhone });
-          localStorage.setItem('sekiflex_known_customers_v1', JSON.stringify(existing));
-        }
-      } catch (e) {}
-    }
-
-    async function findExistingCustomerRecord(email, phone) {
-      const cleanEmail = normalizeEmailRecord(email);
-      const cleanPhone = normalizePhoneRecord(phone);
-
-      try {
-        const localRecords = JSON.parse(localStorage.getItem('sekiflex_known_customers_v1') || '[]');
-        const localEmailHit = cleanEmail && localRecords.some(r => normalizeEmailRecord(r.email) === cleanEmail);
-        const localPhoneHit = cleanPhone && localRecords.some(r => normalizePhoneRecord(r.phone) === cleanPhone);
-        if (localEmailHit || localPhoneHit) {
-          return { emailMatched: Boolean(localEmailHit), phoneMatched: Boolean(localPhoneHit) };
-        }
-      } catch (e) {}
-
-      let emailMatched = false;
-      let phoneMatched = false;
-
-      try {
-        if (cleanEmail) {
-          const { data: byEmail } = await sb
-            .from('customer_profiles')
-            .select('id, email, phone')
-            .ilike('email', cleanEmail)
-            .limit(1);
-          if (Array.isArray(byEmail) && byEmail.length > 0) {
-            emailMatched = true;
-            recordKnownCustomerLocally(byEmail[0].email, byEmail[0].phone);
-          }
-        }
-
-        if (cleanPhone) {
-          const { data: profilesSample } = await sb
-            .from('customer_profiles')
-            .select('id, email, phone')
-            .limit(500);
-          if (Array.isArray(profilesSample)) {
-            const foundPhone = profilesSample.find(p => normalizePhoneRecord(p.phone) === cleanPhone);
-            if (foundPhone) {
-              phoneMatched = true;
-              recordKnownCustomerLocally(foundPhone.email, foundPhone.phone);
-            }
-          }
-        }
-      } catch (err) {
-        console.warn('Duplicate profile lookup skipped:', err);
-      }
-
-      return { emailMatched, phoneMatched };
-    }
+    const SAFETY_BLOCK_HTML = `
+      <div class="mt-3 p-3 rounded-xl bg-amber-500/10 border border-amber-400/35 text-[11px] space-y-1">
+        <p class="font-extrabold text-amber-300">Official Contact &amp; Safety Notice</p>
+        <p class="text-stone-200">For your safety, communicate only through our official platforms and verified contact details.</p>
+        <p class="text-stone-200">Email: <a href="mailto:${STORE_EMAIL}" class="underline font-bold text-amber-300">${STORE_EMAIL}</a></p>
+        <p class="text-stone-200">Phone/WhatsApp: <a href="${STORE_WHATSAPP_URL}" target="_blank" rel="noopener" class="underline font-bold text-emerald-300">+234 906 903 7617</a></p>
+        <p class="text-stone-200">Calling number: <a href="tel:${STORE_CALL_NUMBER}" class="underline font-bold text-amber-300">${STORE_CALL_NUMBER}</a></p>
+        <p class="text-amber-200 font-semibold">Never send money or disclose confidential information to unauthorised individuals claiming to represent Sekiflex Collections.</p>
+      </div>
+    `;
 
     const SEKIFLEX_INFO_PAGES = {
       about: {
         title: 'About Sekiflex Collections',
-        html: `<span class="skf-policy-badge">Operated by Sekiflex Limited</span><p><strong>Sekiflex Collections</strong> is a fashion and lifestyle brand operating under <strong>Sekiflex Limited</strong>[span_2](start_span)[span_2](end_span), committed to providing quality, stylish, and affordable products to customers in Nigeria and beyond.</p><div class="skf-policy-tagline">Sekiflex Collections – Quality, Style and Confidence.</div>`
+        html: `
+          <span class="skf-policy-badge" style="color:#fbbf24;border-color:rgba(251,191,36,0.45);">More Than Fashion • Operated by Sekiflex Limited</span>
+          <h4 style="color:#fbbf24;">Welcome to Sekiflex Collections</h4>
+          <p><strong>Sekiflex Collections</strong> is a fashion and lifestyle brand operated by <strong>Sekiflex Limited</strong>[span_3](start_span)[span_3](end_span), built on vision, ambition, creativity, and customer trust in Nigeria and around the world.</p>
+          <h4 style="color:#34d399;">The Story Behind the Brand</h4>
+          <p>What started as a vision to create a fashion and lifestyle shopping destination is growing into a broader platform serving customers locally and internationally across multiple categories.</p>
+          <h4 style="color:#38bdf8;">Meet the Founder &amp; CEO</h4>
+          <p><strong>Wisdom Etim</strong>, popularly known as <strong>Sekiflex</strong>, is the Founder and Chief Executive Officer (CEO) of <strong>Sekiflex Limited</strong>[span_4](start_span)[span_4](end_span) and the creative mind behind <strong>Sekiflex Collections</strong>.</p>
+          <h4 style="color:#c084fc;">What We Stand For</h4>
+          <ul>
+            <li><strong class="text-amber-300">Quality &amp; Value:</strong> Stylish, dependable products curated for everyday confidence.</li>
+            <li><strong class="text-emerald-300">Customer Satisfaction &amp; Trust:</strong> Clear information, responsive care, and honest business practices.</li>
+            <li><strong class="text-sky-300">Innovation &amp; Growth:</strong> Expanding digital shopping and delivery experiences for the future.</li>
+          </ul>
+          ${SAFETY_BLOCK_HTML}
+          <div class="skf-policy-tagline">Sekiflex Collections – More Than Fashion. A Vision Beyond Expectations.</div>
+        `
       },
       delivery: {
-        title: 'Delivery & Shipping – Sekiflex Collections',
-        html: `<span class="skf-policy-badge">Website &amp; Mobile App Fleet</span><p>We deliver across all <strong>36 states in Nigeria</strong> (1–4 business days) and international destinations (5–10 business days).</p><div class="skf-policy-tagline">Sekiflex Collections – We Deliver Beyond Boundaries.</div>`
+        title: 'Delivery & Shipping Policy',
+        html: `
+          <span class="skf-policy-badge" style="color:#34d399;border-color:rgba(52,211,153,0.45);">Worldwide &amp; Nationwide Dispatch</span>
+          <h4 style="color:#34d399;">1. Worldwide Shipping</h4>
+          <p>Sekiflex Collections delivers within Nigeria and internationally, subject to destination coverage, shipping arrangements, and customs or logistics requirements.</p>
+          <h4 style="color:#fbbf24;">2. Our Delivery Services &amp; Logistics Partners</h4>
+          <p>We manage deliveries through our own delivery service and may partner with reputable third-party courier and logistics providers when needed.</p>
+          <h4 style="color:#38bdf8;">3. Payment on Delivery (POD) — Uyo Only</h4>
+          <ul>
+            <li>Available exclusively within <strong>Uyo, Akwa Ibom State, Nigeria</strong>.</li>
+            <li>Not available in other Nigerian states or outside Nigeria (prepayment is required elsewhere before dispatch).</li>
+          </ul>
+          <h4 style="color:#c084fc;">4–10. Processing, POD Conditions, Fees &amp; Timeframes</h4>
+          <p>Orders outside Uyo are processed and dispatched after payment confirmation. Customers must provide accurate contact/address details, remain reachable, and avoid unjustified refusal or abandonment of confirmed orders.</p>
+          ${SAFETY_BLOCK_HTML}
+          <div class="skf-policy-tagline">Sekiflex Collections – Shop with confidence. We deliver with commitment.</div>
+        `
       },
       support: {
-        title: 'Help & Customer Support – Sekiflex Collections',
-        html: `<span class="skf-policy-badge">Website &amp; Mobile App Support</span><p>Reach us via Live Chat or WhatsApp for order, payment, delivery, or tracking help.</p><div class="skf-policy-tagline">Sekiflex Collections – Your Satisfaction Is Our Priority.</div>`
+        title: 'Help & Customer Support',
+        html: `
+          <span class="skf-policy-badge" style="color:#38bdf8;border-color:rgba(56,189,248,0.45);">Official Support Channels</span>
+          <h4 style="color:#38bdf8;">How We Help</h4>
+          <p>Reach us for help with orders, payment verification, delivery updates, international orders, product questions, or returns/complaints.</p>
+          <h4 style="color:#34d399;">Official Contact Details</h4>
+          <ul>
+            <li><strong>Email:</strong> <a href="mailto:${STORE_EMAIL}" class="underline font-bold text-amber-300">${STORE_EMAIL}</a></li>
+            <li><strong>Phone / WhatsApp (Click to Chat):</strong> <a href="${STORE_WHATSAPP_URL}?text=Hello%20Sekiflex%20Collections%2C%20I%20need%20customer%20support." target="_blank" rel="noopener" class="underline font-extrabold text-emerald-300">+234 906 903 7617</a></li>
+            <li><strong>Calling Number:</strong> <a href="tel:${STORE_CALL_NUMBER}" class="underline font-bold text-amber-300">+2349163755234</a></li>
+          </ul>
+          <h4 style="color:#fbbf24;">Security Reminder</h4>
+          <p>Include your order number and full name when contacting us. Never share your password, bank PIN, card PIN, or OTP with anyone.</p>
+          ${SAFETY_BLOCK_HTML}
+          <div class="skf-policy-tagline">Sekiflex Collections – Your Satisfaction Matters. Your Trust Is Our Priority.</div>
+        `
       },
       orders: {
-        title: 'Orders & Live Tracking – Sekiflex Collections',
-        html: `<span class="skf-policy-badge">Real-Time Order Tracking</span><p>Use your tracking code on <a href="track.html" class="underline font-bold text-amber-300">Track Order</a> to check live status updates.</p><div class="skf-policy-tagline">Sekiflex Collections – Shop with Confidence. Track with Ease.</div>`
+        title: 'Orders & Live Tracking',
+        html: `
+          <span class="skf-policy-badge" style="color:#fbbf24;border-color:rgba(251,191,36,0.45);">Track Your Order • Stay Updated</span>
+          <h4 style="color:#fbbf24;">Track Anytime on Web or App</h4>
+          <p>Visit <a href="https://sekiflexcollections.com" target="_blank" rel="noopener" class="underline font-bold text-amber-300">sekiflexcollections.com</a>, open <a href="track.html" class="underline font-bold text-emerald-300">Live Order Tracking</a>, or check your <strong>My Orders</strong> history inside your Account tab.</p>
+          <h4 style="color:#34d399;">Order Journey Stages</h4>
+          <p>Follow stages such as order received, payment confirmed, order processing, packaged, dispatched, in transit, out for delivery, and delivered.</p>
+          <h4 style="color:#38bdf8;">Need Tracking Help?</h4>
+          <p>Email <a href="mailto:${STORE_EMAIL}" class="underline font-bold text-amber-300">${STORE_EMAIL}</a> or message WhatsApp <a href="${STORE_WHATSAPP_URL}" target="_blank" rel="noopener" class="underline font-extrabold text-emerald-300">+234 906 903 7617</a> with your tracking code.</p>
+          ${SAFETY_BLOCK_HTML}
+          <div class="skf-policy-tagline">Sekiflex Collections – Your Order, Your Journey, Your Convenience.</div>
+        `
       },
       inbox: {
-        title: 'Inbox & Promotional Alerts – Sekiflex Collections',
-        html: `<span class="skf-policy-badge">Web &amp; Mobile App Alerts</span><p>Stay tuned for new arrivals, special deals, and store announcements.</p><div class="skf-policy-tagline">Sekiflex Collections – Stay Connected.</div>`
+        title: 'Inbox & Promotional Alerts',
+        html: `
+          <span class="skf-policy-badge" style="color:#c084fc;border-color:rgba(192,132,252,0.45);">Stay Informed • Never Miss an Update</span>
+          <h4 style="color:#c084fc;">Order &amp; Promotional Notifications</h4>
+          <p>Receive updates on order confirmations, payment status, dispatch progress, new arrivals, exclusive deals, and store announcements across web, app, push alerts, and email.</p>
+          <h4 style="color:#34d399;">Preferences &amp; Privacy</h4>
+          <p>You can manage notification alerts anytime; essential order, payment, and security updates may still be sent when required for your transaction.</p>
+          ${SAFETY_BLOCK_HTML}
+          <div class="skf-policy-tagline">Sekiflex Collections – Stay Connected. Stay Updated. Shop With Confidence.</div>
+        `
       },
       reviews: {
-        title: 'Ratings & Reviews – Sekiflex Collections',
-        html: `<span class="skf-policy-badge">Shopper Community Feedback</span><p><button type="button" onclick="document.getElementById('infoModal').classList.add('hidden'); openReviewsModal();" class="underline font-bold text-amber-300">Open Ratings &amp; Reviews Box →</button></p><div class="skf-policy-tagline">Sekiflex Collections – Your Feedback Makes Us Better.</div>`
+        title: 'Ratings & Reviews Policy',
+        html: `
+          <span class="skf-policy-badge" style="color:#fbbf24;border-color:rgba(251,191,36,0.45);">Real Experiences • Honest Reviews</span>
+          <h4 style="color:#fbbf24;">Rate &amp; Review Any Product</h4>
+          <p>Open any product in the store to view its star ratings and reviews or post your own 1–5 star review on quality, appearance, sizing, and delivery experience.</p>
+          <h4 style="color:#34d399;">Community Guidelines</h4>
+          <p>Keep reviews honest, respectful, and relevant. Reviews do not replace direct support for order or payment issues—reach us on WhatsApp <a href="${STORE_WHATSAPP_URL}" target="_blank" rel="noopener" class="underline font-bold text-emerald-300">+234 906 903 7617</a> or email <a href="mailto:${STORE_EMAIL}" class="underline font-bold text-amber-300">${STORE_EMAIL}</a>.</p>
+          ${SAFETY_BLOCK_HTML}
+          <div class="skf-policy-tagline">Sekiflex Collections – Real Experiences. Honest Reviews. Better Shopping.</div>
+        `
       },
       privacy: {
-        title: 'Privacy Policy – Sekiflex Collections',
-        html: `<span class="skf-policy-badge">Effective Date: 24 November 2026</span><p>Sekiflex Collections (operated by Sekiflex Limited) protects customer details used for order processing and delivery[span_3](start_span)[span_3](end_span).</p><div class="skf-policy-tagline">Sekiflex Collections – Your Privacy, Our Responsibility.</div>`
+        title: 'Privacy Policy',
+        html: `
+          <span class="skf-policy-badge" style="color:#38bdf8;border-color:rgba(56,189,248,0.45);">Effective Date: 25 November 2026 • Sekiflex Limited</span>
+          <h4 style="color:#38bdf8;">1–4. Information We Collect &amp; Use</h4>
+          <p><strong>Sekiflex Collections</strong> (a brand of <strong>Sekiflex Limited</strong>[span_5](start_span)[span_5](end_span), founded by <strong>Wisdom Etim / Sekiflex</strong>) collects account, delivery, order, payment reference, and technical data to process orders, provide tracking, support customers, prevent fraud, and improve services.</p>
+          <h4 style="color:#f87171;">5. Anti-Scam &amp; Official Channel Policy</h4>
+          <p>Official channels are <a href="https://sekiflexcollections.com" target="_blank" rel="noopener" class="underline text-amber-300">https://sekiflexcollections.com</a>, <a href="mailto:${STORE_EMAIL}" class="underline text-amber-300">${STORE_EMAIL}</a>, and WhatsApp <a href="${STORE_WHATSAPP_URL}" target="_blank" rel="noopener" class="underline text-emerald-300">+234 906 903 7617</a>. Never pay personal accounts or share passwords, PINs, or OTPs.</p>
+          <h4 style="color:#34d399;">6–20. Protection, Sharing, Rights &amp; NDPA 2023</h4>
+          <p>We do not sell personal data as a business practice, share only what is needed with payment/delivery/platform providers, honor applicable privacy rights under the Nigeria Data Protection Act 2023, and support account deletion requests via <a href="mailto:${STORE_EMAIL}" class="underline text-amber-300">${STORE_EMAIL}</a>.</p>
+          ${SAFETY_BLOCK_HTML}
+          <div class="skf-policy-tagline">Sekiflex Collections – Your Information. Your Privacy. Your Trust.</div>
+        `
       },
       refund: {
-        title: 'Refund, Returns & Payment Policy',
-        html: `<span class="skf-policy-badge">Effective Date: 24 November 2026</span><p>Contact support with your order tracking code and proof if an item arrives damaged, defective, or incorrect.</p><div class="skf-policy-tagline">Sekiflex Collections – Fair Shopping. Trusted Service.</div>`
+        title: 'Refund, Return and Payment Policy',
+        html: `
+          <span class="skf-policy-badge" style="color:#34d399;border-color:rgba(52,211,153,0.45);">Effective Date: 25 November 2026 • FCCPA 2018</span>
+          <h4 style="color:#34d399;">1–3. Payments, Processing &amp; Cancellations</h4>
+          <p>Payments must go through authorised channels. Payment on Delivery applies exclusively to eligible orders in <strong>Uyo, Akwa Ibom State</strong>. Cancellations before dispatch/confirmation may be requested and reviewed; once dispatched, cancellation may no longer be possible.</p>
+          <h4 style="color:#fbbf24;">4–9. Returns, Exchanges &amp; Refunds</h4>
+          <p>Qualifying returns, exchanges, or refunds are reviewed for wrong, damaged, defective, or materially misdescribed items with order details and clear evidence. Change of mind, wrong size/colour selection by the customer, or unjustified delivery refusal does not automatically qualify for a refund or free return.</p>
+          <h4 style="color:#38bdf8;">10–18. Failed Deliveries, Disputes &amp; Governing Law</h4>
+          <p>Governed by the laws of the Federal Republic of Nigeria, including the Federal Competition and Consumer Protection Act 2018. Contact <a href="mailto:${STORE_EMAIL}" class="underline text-amber-300">${STORE_EMAIL}</a> or WhatsApp <a href="${STORE_WHATSAPP_URL}" target="_blank" rel="noopener" class="underline text-emerald-300">+234 906 903 7617</a>.</p>
+          ${SAFETY_BLOCK_HTML}
+          <div class="skf-policy-tagline">Sekiflex Collections – More Than Fashion. More Than Shopping.</div>
+        `
       },
       terms: {
-        title: 'Terms &amp; Conditions – Sekiflex Collections',
-        html: `<span class="skf-policy-badge">Effective Date: 24 November 2026</span><p>All orders are subject to availability and payment verification under the laws of the Federal Republic of Nigeria.</p><div class="skf-policy-tagline">Sekiflex Collections – Shop with Confidence.</div>`
+        title: 'Terms & Conditions',
+        html: `
+          <span class="skf-policy-badge" style="color:#fbbf24;border-color:rgba(251,191,36,0.45);">Effective Date: 25 November 2026 • Sekiflex Limited</span>
+          <h4 style="color:#fbbf24;">1–4. Business Status, Acceptance &amp; Accounts</h4>
+          <p><strong>Sekiflex Collections</strong> is a brand of <strong>Sekiflex Limited</strong>[span_6](start_span)[span_6](end_span), founded by CEO <strong>Wisdom Etim (Sekiflex)</strong>. Using our website or app, registering an account, or placing an order means you accept these Terms &amp; Conditions and provide accurate information.</p>
+          <h4 style="color:#34d399;">5–12. Products, Pricing, Orders, Payment &amp; Delivery</h4>
+          <p>Listings, pricing, availability, Uyo-only Payment on Delivery, shipping estimates, tracking, and cancellation/return rules apply as stated. Minor screen/lighting colour differences do not automatically make an item defective.</p>
+          <h4 style="color:#c084fc;">13–27. Conduct, IP, Liability, Force Majeure &amp; Nigerian Law</h4>
+          <p>Fraud, false payment claims, review manipulation, harassment, or unauthorised use of Sekiflex intellectual property is prohibited. Governed by the laws of the Federal Republic of Nigeria.</p>
+          ${SAFETY_BLOCK_HTML}
+          <div class="skf-policy-tagline">Sekiflex Collections – More Than Fashion. More Than Shopping. A Vision Beyond Business.</div>
+        `
       }
     };
 
@@ -2305,10 +2444,142 @@
       renderReviews();
     }
 
+    function selectProductStar(stars) {
+      selectedProductStarRating = Math.max(1, Math.min(5, Number(stars) || 5));
+      document.querySelectorAll('.prod-star-btn').forEach(btn => {
+        const val = Number(btn.getAttribute('data-pstar'));
+        btn.className = val <= selectedProductStarRating
+          ? 'prod-star-btn text-base text-amber-400 leading-none'
+          : 'prod-star-btn text-base text-stone-700 leading-none';
+      });
+      const label = document.getElementById('productStarLabel');
+      if (label) label.textContent = `${selectedProductStarRating} / 5`;
+    }
+
+    function getLocalReviewsForProduct(productId) {
+      const key = String(productId || '');
+      return Array.isArray(productReviewsMap[key]) ? productReviewsMap[key] : [];
+    }
+
+    function saveLocalReviewsForProduct(productId, list) {
+      const key = String(productId || '');
+      productReviewsMap[key] = list;
+      localStorage.setItem('sekiflex_product_reviews_v1', JSON.stringify(productReviewsMap));
+    }
+
+    function renderProductReviewsList(productId, list) {
+      const metaEl = document.getElementById('productReviewMeta');
+      const listEl = document.getElementById('productReviewsList');
+      const items = Array.isArray(list) ? list : [];
+      if (metaEl) {
+        if (!items.length) {
+          metaEl.textContent = '★ 5.0 (No reviews yet — be the first)';
+        } else {
+          const avg = (items.reduce((acc, r) => acc + (Number(r.rating) || 5), 0) / items.length).toFixed(1);
+          metaEl.textContent = `★ ${avg} (${items.length} review${items.length === 1 ? '' : 's'})`;
+        }
+      }
+      if (!listEl) return;
+      if (!items.length) {
+        listEl.innerHTML = '<p class="text-[11px] text-stone-500 text-center py-2">No reviews for this item yet.</p>';
+        return;
+      }
+      listEl.innerHTML = items.map(r => {
+        const starsNum = Math.max(1, Math.min(5, Number(r.rating) || 5));
+        const stars = '★'.repeat(starsNum) + '☆'.repeat(5 - starsNum);
+        const safeAuthor = String(r.reviewer_name || r.name || 'Shopper').replace(/</g, '&lt;');
+        const safeComment = String(r.comment || '').replace(/</g, '&lt;');
+        const safeDate = String(r.date || (r.created_at ? new Date(r.created_at).toLocaleDateString() : '')).replace(/</g, '&lt;');
+        return `
+          <div class="p-2.5 rounded-xl bg-stone-950 border border-stone-800 space-y-1">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[11px] font-extrabold text-white">${safeAuthor}</span>
+              <span class="text-[11px] text-amber-400 font-bold">${stars}</span>
+            </div>
+            <p class="text-[11px] text-stone-300 leading-snug">${safeComment}</p>
+            ${safeDate ? `<p class="text-[9px] text-stone-500">${safeDate}</p>` : ''}
+          </div>`;
+      }).join('');
+    }
+
+    async function loadProductReviews(productId) {
+      const localList = getLocalReviewsForProduct(productId);
+      renderProductReviewsList(productId, localList);
+      try {
+        const { data, error } = await sb
+          .from('product_reviews')
+          .select('*')
+          .eq('product_id', String(productId))
+          .order('created_at', { ascending: false })
+          .limit(30);
+        if (!error && Array.isArray(data) && data.length) {
+          const merged = [...data];
+          localList.forEach(loc => {
+            if (!merged.some(dbRow => String(dbRow.id || '') === String(loc.id || '') && String(dbRow.comment || '') === String(loc.comment || ''))) {
+              merged.push(loc);
+            }
+          });
+          saveLocalReviewsForProduct(productId, merged);
+          renderProductReviewsList(productId, merged);
+        }
+      } catch (e) {}
+    }
+
+    async function submitProductReview(e) {
+      e.preventDefault();
+      if (!activeProductDetailId) return;
+      const nameEl = document.getElementById('productReviewerName');
+      const textEl = document.getElementById('productReviewText');
+      const btnEl = document.getElementById('productReviewSubmitBtn');
+      const comment = (textEl.value || '').trim();
+      if (!comment) return;
+
+      const reviewerName = (nameEl.value || '').trim() || (currentCustomer && currentCustomer.name) || 'Verified Shopper';
+      const entry = {
+        id: 'rev_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        product_id: String(activeProductDetailId),
+        reviewer_name: reviewerName,
+        rating: selectedProductStarRating,
+        comment,
+        date: new Date().toLocaleDateString()
+      };
+
+      const updated = [entry, ...getLocalReviewsForProduct(activeProductDetailId)];
+      saveLocalReviewsForProduct(activeProductDetailId, updated);
+      renderProductReviewsList(activeProductDetailId, updated);
+
+      textEl.value = '';
+      selectProductStar(5);
+
+      if (btnEl) {
+        btnEl.disabled = true;
+        btnEl.textContent = 'Posting...';
+      }
+      try {
+        await sb.from('product_reviews').insert({
+          product_id: String(activeProductDetailId),
+          reviewer_name: reviewerName,
+          rating: entry.rating,
+          comment: entry.comment
+        });
+      } catch (dbErr) {}
+      if (btnEl) {
+        btnEl.disabled = false;
+        btnEl.textContent = 'Post Product Review';
+      }
+    }
+
     function openProductDetail(productId) {
       if (!productId) return;
       const prod = allProducts.find(p => String(p.id) === String(productId));
       if (!prod) return;
+      activeProductDetailId = String(prod.id);
+      selectProductStar(5);
+      const nameInput = document.getElementById('productReviewerName');
+      if (nameInput && currentCustomer?.name && !nameInput.value.trim()) {
+        nameInput.value = currentCustomer.name;
+      }
+
       showOnlyMainView('storeMainWrapper');
       setActiveBottomTab('home');
       armStoreBackGuard();
@@ -2366,11 +2637,137 @@
         closeProductDetailModal();
       };
 
+      loadProductReviews(prod.id);
       document.getElementById('productDetailModal').classList.remove('hidden');
     }
 
     function closeProductDetailModal() {
+      activeProductDetailId = null;
       document.getElementById('productDetailModal').classList.add('hidden');
+    }
+
+    function canCustomerRequestCancellation(orderStatus) {
+      const st = String(orderStatus || '').trim().toLowerCase();
+      if (!st) return false;
+      if (
+        st.includes('cancel') ||
+        st.includes('confirm') ||
+        st.includes('ship') ||
+        st.includes('dispatch') ||
+        st.includes('transit') ||
+        st.includes('out for delivery') ||
+        st.includes('deliver') ||
+        st.includes('return')
+      ) {
+        return false;
+      }
+      return st.includes('processing') || st.includes('pending') || st.includes('placed') || st.includes('new');
+    }
+
+    async function loadCustomerOrderHistory(showSpinnerText = false) {
+      const container = document.getElementById('customerOrderHistoryContainer');
+      if (!container) return;
+      if (!currentCustomer || !currentCustomer.email) {
+        container.innerHTML = '<p class="text-xs text-stone-400 py-2">Sign in or register to view your order history, track orders, and request cancellation before confirmation/shipping.</p>';
+        return;
+      }
+      if (showSpinnerText) {
+        container.innerHTML = '<p class="text-xs text-amber-300 py-2">Loading your orders...</p>';
+      }
+      try {
+        const { data, error } = await sb
+          .from('orders')
+          .select('*')
+          .ilike('customer_email', currentCustomer.email.trim())
+          .order('created_at', { ascending: false })
+          .limit(20);
+        if (error) throw error;
+        customerOrdersCache = Array.isArray(data) ? data : [];
+        renderCustomerOrderHistory();
+      } catch (err) {
+        container.innerHTML = '<p class="text-xs text-stone-400 py-2">Could not load order history right now. Tap Refresh or use Track Order.</p>';
+      }
+    }
+
+    function renderCustomerOrderHistory() {
+      const container = document.getElementById('customerOrderHistoryContainer');
+      if (!container) return;
+      if (!currentCustomer) {
+        container.innerHTML = '<p class="text-xs text-stone-400 py-2">Sign in to view your orders.</p>';
+        return;
+      }
+      if (!customerOrdersCache.length) {
+        container.innerHTML = '<p class="text-xs text-stone-400 py-2">No orders found under your account yet.</p>';
+        return;
+      }
+      container.innerHTML = customerOrdersCache.map(ord => {
+        const total = Number(ord.order_amount || 0) + Number(ord.delivery_amount || 0);
+        const safeTrack = String(ord.tracking_number || '').replace(/'/g, "\\'");
+        const safeItems = String(ord.package_description || 'Store item').replace(/</g, '&lt;');
+        const safeStatus = String(ord.status || 'Order processing').replace(/</g, '&lt;');
+        const canCancel = canCustomerRequestCancellation(ord.status);
+        return `
+          <div class="p-3 rounded-xl bg-stone-950/90 border border-stone-800 space-y-2">
+            <div class="flex items-start justify-between gap-2">
+              <div class="min-w-0">
+                <p class="font-mono text-xs font-extrabold text-amber-400 truncate">${ord.tracking_number || 'Order'}</p>
+                <p class="text-[11px] text-stone-200 line-clamp-1">${safeItems}</p>
+              </div>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-400/30 shrink-0">${safeStatus}</span>
+            </div>
+            <div class="flex items-center justify-between gap-2 pt-1 border-t border-stone-800/80 text-[11px]">
+              <span class="font-extrabold text-white">₦${total.toLocaleString()}</span>
+              <div class="flex items-center gap-1.5">
+                <a href="track.html?tracking=${encodeURIComponent(ord.tracking_number || '')}"
+                  class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold text-[10px] px-2.5 py-1 rounded-full transition">
+                  Track Order →
+                </a>
+                ${canCancel
+                  ? `<button type="button" onclick="requestOrderCancellation('${safeTrack}')"
+                      class="bg-rose-950 hover:bg-rose-900 border border-rose-500/40 text-rose-200 font-extrabold text-[10px] px-2.5 py-1 rounded-full transition">
+                      Request Cancel
+                    </button>`
+                  : ''}
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    async function requestOrderCancellation(trackingNumber) {
+      if (!trackingNumber) return;
+      const ord = customerOrdersCache.find(o => String(o.tracking_number) === String(trackingNumber));
+      if (ord && !canCustomerRequestCancellation(ord.status)) {
+        return alert('This order has already been confirmed or shipped and cannot be cancelled through this button.');
+      }
+      const ok = confirm(`Request cancellation for order ${trackingNumber}? Admin approval is required before cancellation is finalized.`);
+      if (!ok) return;
+
+      try {
+        const { error } = await sb
+          .from('orders')
+          .update({ status: 'Cancellation requested' })
+          .eq('tracking_number', trackingNumber);
+        if (error) {
+          return alert('Could not submit cancellation request: ' + error.message);
+        }
+        if (ord) ord.status = 'Cancellation requested';
+        renderCustomerOrderHistory();
+        try {
+          await sb.functions.invoke('sekiflex-order-notifications', {
+            body: {
+              event_type: 'cancellation_requested',
+              tracking_number: trackingNumber,
+              customer_name: currentCustomer?.name || '',
+              customer_email: currentCustomer?.email || '',
+              status: 'Cancellation requested'
+            }
+          });
+        } catch (nErr) {}
+        alert(`Cancellation request sent for ${trackingNumber}. Awaiting admin approval.`);
+      } catch (err) {
+        alert('Error sending cancellation request.');
+      }
     }
 
     function openStoreSettingsModal() {
@@ -2383,6 +2780,15 @@
       }
       const msg = document.getElementById('changePasswordMsg');
       if (msg) msg.classList.add('hidden');
+      const delMsg = document.getElementById('deleteAccountMsg');
+      if (delMsg) delMsg.classList.add('hidden');
+      const delForm = document.getElementById('confirmDeleteAccountForm');
+      if (delForm) delForm.classList.add('hidden');
+      const delCodeInp = document.getElementById('deleteVerifyCodeInput');
+      if (delCodeInp) delCodeInp.value = '';
+      const delChk = document.getElementById('confirmDeleteAccountCheck');
+      if (delChk) delChk.checked = false;
+      pendingDeleteCode = '';
       document.getElementById('accountNewPassword').value = '';
       document.getElementById('accountConfirmPassword').value = '';
       document.getElementById('storeSettingsModal').classList.remove('hidden');
@@ -2390,6 +2796,86 @@
 
     function closeStoreSettingsModal() {
       document.getElementById('storeSettingsModal').classList.add('hidden');
+    }
+
+    function showDeleteAccountStatus(text, isError = true) {
+      const box = document.getElementById('deleteAccountMsg');
+      if (!box) return;
+      box.textContent = text;
+      box.className = `text-[11px] font-semibold p-2 rounded-xl ${isError ? 'bg-red-950/80 text-red-200 border border-red-500/30' : 'bg-emerald-950/80 text-emerald-200 border border-emerald-500/30'}`;
+      box.classList.remove('hidden');
+    }
+
+    async function requestAccountDeletionCode() {
+      if (!currentCustomer || !currentCustomer.email) {
+        closeStoreSettingsModal();
+        openAuthGate('signin', false, 'Please sign in first to delete your account.');
+        return;
+      }
+      const btn = document.getElementById('sendDeleteCodeBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Sending Verification Code...';
+      }
+      pendingDeleteCode = String(Math.floor(10000000 + Math.random() * 90000000));
+      try {
+        await sb.auth.resetPasswordForEmail(currentCustomer.email);
+      } catch (e) {}
+      try {
+        await sb.functions.invoke('sekiflex-order-notifications', {
+          body: {
+            event_type: 'account_deletion_code',
+            customer_name: currentCustomer.name,
+            customer_email: currentCustomer.email,
+            verification_code: pendingDeleteCode
+          }
+        });
+      } catch (e) {}
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Resend Verification Code to My Email';
+      }
+      document.getElementById('confirmDeleteAccountForm').classList.remove('hidden');
+      showDeleteAccountStatus(`A verification code has been sent to ${currentCustomer.email}. Enter it below and check the confirmation box to delete your account.`, false);
+    }
+
+    async function confirmAndDeleteAccount(e) {
+      e.preventDefault();
+      if (!currentCustomer) return;
+      const codeVal = (document.getElementById('deleteVerifyCodeInput').value || '').trim();
+      const confirmed = document.getElementById('confirmDeleteAccountCheck').checked;
+      if (!confirmed) {
+        return showDeleteAccountStatus('Please tick the confirmation checkbox first.', true);
+      }
+      if (!codeVal || codeVal.length < 6) {
+        return showDeleteAccountStatus('Please enter the verification code sent to your email.', true);
+      }
+      const btn = document.getElementById('confirmDeleteAccountBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Deleting Account...';
+      }
+      try {
+        await sb.from('customer_profiles').delete().eq('id', currentCustomer.id);
+      } catch (e) {}
+      try {
+        await sb.functions.invoke('sekiflex-order-notifications', {
+          body: {
+            event_type: 'account_deletion_confirmed',
+            customer_name: currentCustomer.name,
+            customer_email: currentCustomer.email,
+            code_used: codeVal
+          }
+        });
+      } catch (e) {}
+      try {
+        const localRecords = JSON.parse(localStorage.getItem('sekiflex_known_customers_v1') || '[]');
+        const filtered = localRecords.filter(r => normalizeEmailRecord(r.email) !== normalizeEmailRecord(currentCustomer.email));
+        localStorage.setItem('sekiflex_known_customers_v1', JSON.stringify(filtered));
+      } catch (e) {}
+      await sb.auth.signOut();
+      alert('Your Sekiflex Collections account deletion request has been completed and you have been signed out.');
+      location.reload();
     }
 
     function showPasswordChangeStatus(text, isError = true) {
@@ -2559,6 +3045,7 @@
       } else if (tab === 'account') {
         armStoreBackGuard();
         updatePushBadge();
+        loadCustomerOrderHistory(false);
         showOnlyMainView('accountFullPageView');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
@@ -2740,7 +3227,9 @@
       const email = document.getElementById('regEmail').value.trim();
       const phone = document.getElementById('regPhone').value.trim();
       const password = document.getElementById('regPassword').value;
+      const acceptedTerms = document.getElementById('regTermsCheck')?.checked;
       if (!fullName) return showAuthMessage('Please enter your full name.', true);
+      if (!acceptedTerms) return showAuthMessage('Please tick the box to accept our Terms & Conditions before registering.', true);
 
       btn.disabled = true;
       btn.textContent = 'Checking Existing Records...';
@@ -2884,6 +3373,7 @@
       document.getElementById('accountSignOutActionBtn').classList.remove('hidden');
       prefillCustomerCheckout();
       updatePushBadge();
+      loadCustomerOrderHistory(false);
       enableCustomerPushNotifications(false);
     }
 
@@ -3564,6 +4054,9 @@
         return;
       }
       if (!cart.length) return alert('Add at least one item to your cart first.');
+      if (!document.getElementById('checkoutTermsCheck')?.checked) {
+        return alert('Please tick the box to accept our Terms & Conditions before placing your order.');
+      }
 
       let country = 'Nigeria';
       let destination = 'Store Pickup — Sekiflex HQ, Urua Ekpa, Uyo, Akwa Ibom State';
@@ -3640,7 +4133,7 @@
       const waOrderText = encodeURIComponent(
         `Hello Sekiflex Collections! I have placed an order.\nTracking Code: ${tracking}\nStatus: ${orderStatus} (${payStatus})\nName: ${custName}\nItems: ${summary}\nProduct Links:\n${productLinksText}\nMethod: ${fulfillmentMode === 'pickup' ? 'Walk-In Store Pickup (Urua Ekpa, Uyo)' : destination}\nTotal Amount (incl. shipping): ₦${total.toLocaleString()}\nPayment Option: ${isPod ? 'Payment on Delivery (Akwa Ibom)' : paidBank}\n` + (isPod ? '' : `Sender/Ref: ${senderRef}`)
       );
-      document.getElementById('orderWhatsappConfirmBtn').href = `https://wa.me/${STORE_WHATSAPP_NUMBER}?text=${waOrderText}`;
+      document.getElementById('orderWhatsappConfirmBtn').href = `${STORE_WHATSAPP_URL}?text=${waOrderText}`;
 
       const linksBox = document.getElementById('successProductLinksBox');
       const linksList = document.getElementById('successProductLinksList');
@@ -3668,6 +4161,7 @@
       applyStatusBadgeStyle(document.getElementById('successOrderStatusBadge'), `${orderStatus} • ${payStatus}`);
       document.getElementById('newTrackingCode').textContent = tracking;
       document.getElementById('trackNowLink').href = `track.html?tracking=${tracking}`;
+      loadCustomerOrderHistory(false);
       openSuccessModalWithHistory();
     }
 
