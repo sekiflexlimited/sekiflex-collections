@@ -216,6 +216,17 @@
         🔔 Enable Order Alerts
       </button>
 
+      <!-- CUSTOMER CANCELLATION APPROVAL QUEUE -->
+      <div id="cancellation-requests-box" style="margin-top:16px;padding:14px;border:1px solid #e5c07b;border-radius:10px;background:#fffbf0;color:#17191d;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;">
+          <strong style="font-size:13px;">Customer Cancellation Requests</strong>
+          <button type="button" id="refresh-cancel-requests" class="btn btn-outline" style="padding:6px 10px;font-size:12px;">Check Requests</button>
+        </div>
+        <div id="cancellation-requests-list">
+          <p class="small-note">No pending cancellation requests right now.</p>
+        </div>
+      </div>
+
       <label for="order-search">Search by tracking number, customer or destination</label>
       <input id="order-search" type="search" placeholder="Search orders..." style="width:100%;height:48px;padding:0 13px;border:1px solid #dcd6ca;margin-top:8px;font:inherit;font-size:12px;">
 
@@ -227,8 +238,8 @@
 </main>
 
 <footer class="site-footer">
-  <p>Powered by <strong>SEKIFLEX LIMITED</strong></p>
-  <small>© <span id="year"></span> Sekiflex Limited. All rights reserved.</small>
+  <p>Powered by <strong>SEKIFLEX LIMITED</strong>[span_1](start_span)[span_1](end_span)</p>
+  <small>© <span id="year"></span> Sekiflex Limited. All rights reserved[span_2](start_span)[span_2](end_span).</small>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -259,6 +270,9 @@
     const loginForm = document.getElementById("admin-login-form");
     const emailInput = document.getElementById("admin-email");
     const msgEl = document.getElementById("login-message");
+    const cancelListEl = document.getElementById("cancellation-requests-list");
+    const refreshCancelBtn = document.getElementById("refresh-cancel-requests");
+    const refreshOrdersBtn = document.getElementById("refresh-orders");
 
     if (dashSection) {
       dashSection.hidden = true;
@@ -276,6 +290,94 @@
     function isAdminEmail(email) {
       return ALLOWED_ADMIN_EMAILS.includes(String(email || "").trim().toLowerCase());
     }
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    async function loadCancellationRequests() {
+      if (!cancelListEl || !sbClient || typeof sbClient.from !== "function") return;
+      try {
+        const { data, error } = await sbClient
+          .from("orders")
+          .select("*")
+          .ilike("status", "cancellation requested")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+        const rows = Array.isArray(data) ? data : [];
+        if (!rows.length) {
+          cancelListEl.innerHTML = '<p class="small-note" style="margin:0;">No pending cancellation requests right now.</p>';
+          return;
+        }
+
+        cancelListEl.innerHTML = rows.map((ord) => {
+          const track = String(ord.tracking_number || "");
+          const safeTrackJs = track.replace(/'/g, "\\'");
+          const total = Number(ord.order_amount || 0) + Number(ord.delivery_amount || 0);
+          return `
+            <div style="border:1px solid #e6dcc8;border-radius:8px;padding:10px;margin-top:8px;background:#ffffff;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap;">
+                <div>
+                  <strong style="font-size:13px;">${escapeHtml(track)}</strong> — <span>${escapeHtml(ord.customer_name || "Customer")}</span>
+                  <div style="font-size:12px;color:#4b5563;margin-top:2px;">${escapeHtml(ord.package_description || "")} • Total: ${escapeHtml(ord.currency || "NGN")} ${total.toLocaleString()}</div>
+                  <div style="font-size:11px;color:#6b7280;margin-top:2px;">Destination: ${escapeHtml(ord.destination || "")}</div>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <button type="button" onclick="window.skfDecideCancellation('${safeTrackJs}', 'approve')"
+                    style="padding:6px 12px;border:none;border-radius:6px;background:#16a34a;color:#fff;font-weight:700;font-size:12px;cursor:pointer;">
+                    Approve Cancellation
+                  </button>
+                  <button type="button" onclick="window.skfDecideCancellation('${safeTrackJs}', 'decline')"
+                    style="padding:6px 12px;border:1px solid #dc2626;border-radius:6px;background:#fff;color:#dc2626;font-weight:700;font-size:12px;cursor:pointer;">
+                    Decline Cancellation
+                  </button>
+                </div>
+              </div>
+            </div>`;
+        }).join("");
+      } catch (err) {
+        cancelListEl.innerHTML = '<p class="small-note" style="margin:0;">Unable to load cancellation requests right now.</p>';
+      }
+    }
+
+    window.skfDecideCancellation = async function (trackingNumber, decision) {
+      if (!trackingNumber || !sbClient) return;
+      const isApprove = decision === "approve";
+      const nextStatus = isApprove ? "Cancelled" : "Order processing";
+      const confirmMsg = isApprove
+        ? `Approve cancellation for order ${trackingNumber}? Status will become Cancelled.`
+        : `Decline cancellation for order ${trackingNumber}? Status will return to Order processing.`;
+      if (!confirm(confirmMsg)) return;
+
+      const { error } = await sbClient
+        .from("orders")
+        .update({ status: nextStatus })
+        .eq("tracking_number", trackingNumber);
+
+      if (error) {
+        return alert("Failed to update order status: " + error.message);
+      }
+
+      try {
+        if (sbClient.functions && typeof sbClient.functions.invoke === "function") {
+          await sbClient.functions.invoke("sekiflex-order-notifications", {
+            body: {
+              event_type: isApprove ? "cancellation_approved" : "cancellation_declined",
+              tracking_number: trackingNumber,
+              status: nextStatus
+            }
+          });
+        }
+      } catch (e) {}
+
+      await loadCancellationRequests();
+      if (refreshOrdersBtn) refreshOrdersBtn.click();
+    };
 
     function blockNonAdmin(reason) {
       if (dashSection) {
@@ -303,6 +405,14 @@
         dashSection.hidden = false;
         dashSection.style.display = "block";
       }
+      loadCancellationRequests();
+    }
+
+    if (refreshCancelBtn) {
+      refreshCancelBtn.addEventListener("click", loadCancellationRequests);
+    }
+    if (refreshOrdersBtn) {
+      refreshOrdersBtn.addEventListener("click", () => setTimeout(loadCancellationRequests, 400));
     }
 
     async function verifyAdminSession() {
