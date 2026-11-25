@@ -17,6 +17,14 @@
       background-color: #0f1115;
       background-image: radial-gradient(circle at 50% 0%, rgba(217, 155, 38, 0.2) 0%, rgba(15, 17, 21, 0.96) 45%, #0b0c0f 100%);
       min-height: 100vh;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+    input, textarea, select {
+      user-select: text;
+      -webkit-user-select: text;
+      -webkit-touch-callout: default;
     }
     .font-editorial { font-family: 'Playfair Display', serif; }
   </style>
@@ -58,7 +66,7 @@
 
     <p id="hubErrorMsg" class="hidden text-xs font-semibold text-red-200 bg-red-950/80 border border-red-500/40 p-2.5 rounded-xl text-center"></p>
 
-    <form onsubmit="handleHubLogin(event)" class="space-y-3">
+    <form onsubmit="handleHubLogin(event)" autocomplete="off" class="space-y-3">
       <input required id="hubEmail" type="email" autocomplete="username" placeholder="Admin Email"
         class="w-full bg-stone-950 border border-stone-700 focus:border-amber-400 rounded-2xl px-4 py-3 text-sm text-white placeholder:text-stone-500 focus:outline-none" />
       <input required id="hubPassword" type="password" autocomplete="current-password" placeholder="Admin Password"
@@ -178,11 +186,12 @@
   </div>
 
   <footer class="text-center text-[11px] text-stone-500 pt-4">
-    Powered by <strong class="text-stone-300">SEKIFLEX LIMITED</strong>
+    Powered by <strong class="text-stone-300">SEKIFLEX LIMITED</strong>[span_1](start_span)[span_1](end_span)
   </footer>
 
   <script>
     const ALLOWED_ADMIN_EMAILS = ["sekiflexcollections@gmail.com"];
+    const HUB_ACTIVE_KEY = "sekiflex_hub_active_session_v1";
     const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
     let monitorInterval = null;
     let realtimeChannel = null;
@@ -320,18 +329,81 @@
     function showLogin() {
       if (monitorInterval) clearInterval(monitorInterval);
       if (realtimeChannel) sb.removeChannel(realtimeChannel);
+      try {
+        sessionStorage.removeItem(HUB_ACTIVE_KEY);
+        sessionStorage.removeItem("sekiflex_staff_portal_intent");
+      } catch (e) {}
+      const pwEl = document.getElementById("hubPassword");
+      if (pwEl) pwEl.value = "";
       document.getElementById("hubDashBox").classList.add("hidden");
       document.getElementById("hubLoginBox").classList.remove("hidden");
     }
 
+    async function lockHubImmediately() {
+      showLogin();
+      try {
+        await sb.auth.signOut();
+      } catch (e) {}
+    }
+
+    function bindHubStrictSecurityOnce() {
+      if (window.__skfHubSecurityBound) return;
+      window.__skfHubSecurityBound = true;
+
+      document.addEventListener("contextmenu", (e) => e.preventDefault());
+      document.addEventListener("copy", (e) => {
+        if (!["INPUT", "TEXTAREA"].includes(document.activeElement?.tagName)) e.preventDefault();
+      });
+      document.addEventListener("cut", (e) => {
+        if (!["INPUT", "TEXTAREA"].includes(document.activeElement?.tagName)) e.preventDefault();
+      });
+      document.addEventListener("paste", (e) => {
+        if (!["INPUT", "TEXTAREA"].includes(document.activeElement?.tagName)) e.preventDefault();
+      });
+      document.addEventListener("keydown", (e) => {
+        const key = String(e.key || "").toLowerCase();
+        if (
+          key === "printscreen" ||
+          ((e.ctrlKey || e.metaKey) && ["p", "s", "u"].includes(key)) ||
+          ((e.ctrlKey || e.metaKey) && e.shiftKey && ["i", "j", "c"].includes(key))
+        ) {
+          e.preventDefault();
+        }
+      });
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          lockHubImmediately();
+        }
+      });
+
+      window.addEventListener("pagehide", () => {
+        lockHubImmediately();
+      });
+
+      window.addEventListener("pageshow", (ev) => {
+        if (ev.persisted) {
+          lockHubImmediately();
+        }
+      });
+    }
+
     async function checkHubSession() {
+      bindHubStrictSecurityOnce();
+      let activeThisVisit = false;
+      try {
+        activeThisVisit = sessionStorage.getItem(HUB_ACTIVE_KEY) === "1";
+      } catch (e) {}
+
       const { data: { session } } = await sb.auth.getSession();
-      if (session?.user && isAdmin(session.user)) {
+      if (session?.user && isAdmin(session.user) && activeThisVisit) {
         showDashboard(session.user.email);
       } else {
         if (session?.user) {
           await sb.auth.signOut();
-          showHubError("Access denied: Only authorized admin or staff can sign in here.");
+          if (!isAdmin(session.user)) {
+            showHubError("Access denied: Only authorized admin or staff can sign in here.");
+          }
         }
         showLogin();
       }
@@ -362,12 +434,15 @@
         return showHubError("Access denied: Only authorized admin or staff can sign in here.");
       }
 
+      try {
+        sessionStorage.setItem(HUB_ACTIVE_KEY, "1");
+      } catch (err) {}
+      document.getElementById("hubPassword").value = "";
       showDashboard(data.user.email);
     }
 
     async function handleHubLogout() {
-      await sb.auth.signOut();
-      showLogin();
+      await lockHubImmediately();
     }
 
     checkHubSession();
