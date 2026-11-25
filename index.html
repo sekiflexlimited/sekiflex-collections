@@ -983,11 +983,11 @@
         <p class="text-xs font-bold text-rose-200 leading-snug">
           Warning: Only Sekiflex Collections Staff and Admin have access here. Customers must not open or attempt to use this portal.
         </p>
-        <a href="store-admin.html"
+        <button type="button" onclick="openProtectedStaffAdminPortal()"
           class="w-full bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950 font-extrabold text-xs py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow transition">
           <span>🔐</span>
           <span>Staff &amp; Admin Login →</span>
-        </a>
+        </button>
       </div>
     </div>
   </div>
@@ -1383,6 +1383,7 @@
     const STORE_WHATSAPP_NUMBER = '2349069037617';
     const TIKTOK_URL = 'https://www.tiktok.com/@sekiflex_collections?_r=1&_t=ZS-9BbSAFjxrZW';
     const FACEBOOK_URL = 'https://www.facebook.com/share/1G3ErASdHa/';
+    const STAFF_ADMIN_PORTAL_URL = 'store-admin.html';
     const ROTATION_MINUTES = 1;
     const AKWA_IBOM_SHIPPING_FEE = 2000;
 
@@ -1439,6 +1440,23 @@
     let lockedFeaturedOrderIds = null;
     let screenIdleTimer = null;
     let allowWebsiteExit = false;
+
+    function lockStaffSessionState() {
+      try {
+        sessionStorage.removeItem('sekiflex_staff_portal_intent');
+        sessionStorage.removeItem('sekiflex_staff_authenticated');
+        localStorage.removeItem('sekiflex_staff_session');
+      } catch (e) {}
+    }
+
+    function openProtectedStaffAdminPortal() {
+      lockStaffSessionState();
+      try {
+        sessionStorage.setItem('sekiflex_staff_portal_intent', String(Date.now()));
+      } catch (e) {}
+      allowWebsiteExit = true;
+      window.location.href = STAFF_ADMIN_PORTAL_URL;
+    }
 
     const SEKIFLEX_INFO_PAGES = {
       about: {
@@ -1599,11 +1617,14 @@
         openLeaveConfirmModal();
       });
 
-      window.addEventListener('beforeunload', (e) => {
-        if (allowWebsiteExit) return;
-        e.preventDefault();
-        e.returnValue = 'Do you really want to leave Sekiflex Collections?';
-        return e.returnValue;
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          lockStaffSessionState();
+        }
+      });
+
+      window.addEventListener('pagehide', () => {
+        lockStaffSessionState();
       });
     }
 
@@ -3044,6 +3065,7 @@
     }
 
     async function init() {
+      lockStaffSessionState();
       bindBackButtonGuardsOnce();
       bindScrollPauseWatcher();
       bindCategoryDelegationOnce();
