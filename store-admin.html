@@ -13,11 +13,11 @@
 
   <!-- Login Screen -->
   <div id="loginBox" class="min-h-screen flex items-center justify-center p-4">
-    <form onsubmit="adminLogin(event)" class="bg-white p-6 rounded-2xl shadow max-w-sm w-full space-y-4">
+    <form onsubmit="adminLogin(event)" autocomplete="off" class="bg-white p-6 rounded-2xl shadow max-w-sm w-full space-y-4">
       <h1 class="text-xl font-bold text-center">Sekiflex Store Manager</h1>
       <p class="text-xs text-stone-500 text-center">Sign in with your Supabase Admin email &amp; password</p>
-      <input required id="adminEmail" type="email" placeholder="Admin Email" class="w-full border rounded-lg px-3 py-2 text-sm" />
-      <input required id="adminPass" type="password" placeholder="Password" class="w-full border rounded-lg px-3 py-2 text-sm" />
+      <input required id="adminEmail" type="email" autocomplete="off" placeholder="Admin Email" class="w-full border rounded-lg px-3 py-2 text-sm" />
+      <input required id="adminPass" type="password" autocomplete="new-password" placeholder="Password" class="w-full border rounded-lg px-3 py-2 text-sm" />
       <button type="submit" class="w-full bg-stone-900 text-white py-2.5 rounded-xl text-sm font-semibold">Sign In</button>
     </form>
   </div>
@@ -330,8 +330,50 @@
 
   <script>
     const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
+    const ADMIN_UNLOCK_KEY = 'sekiflex_admin_unlocked_v1';
     let adminProductsCache = [];
     let adminCategoriesCache = [];
+
+    function showLockedLoginOnly() {
+      try {
+        sessionStorage.removeItem(ADMIN_UNLOCK_KEY);
+        sessionStorage.removeItem('sekiflex_staff_portal_intent');
+      } catch (e) {}
+      const dash = document.getElementById('dashBox');
+      const login = document.getElementById('loginBox');
+      const passInput = document.getElementById('adminPass');
+      if (dash) dash.classList.add('hidden');
+      if (login) login.classList.remove('hidden');
+      if (passInput) passInput.value = '';
+    }
+
+    async function enforceStrictAdminLockOnExit() {
+      showLockedLoginOnly();
+      try {
+        await sb.auth.signOut();
+      } catch (e) {}
+    }
+
+    function bindStrictAdminSessionGuardsOnce() {
+      if (window.__skfAdminStrictGuardsBound) return;
+      window.__skfAdminStrictGuardsBound = true;
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          enforceStrictAdminLockOnExit();
+        }
+      });
+
+      window.addEventListener('pagehide', () => {
+        enforceStrictAdminLockOnExit();
+      });
+
+      window.addEventListener('pageshow', (ev) => {
+        if (ev.persisted) {
+          enforceStrictAdminLockOnExit();
+        }
+      });
+    }
 
     const DEFAULT_ADMIN_WALL_CARDS = [
       {
@@ -516,26 +558,43 @@
     }
 
     async function checkSession() {
+      bindStrictAdminSessionGuardsOnce();
+      let unlockedThisVisit = false;
+      try {
+        unlockedThisVisit = sessionStorage.getItem(ADMIN_UNLOCK_KEY) === '1';
+      } catch (e) {}
+
       const { data: { session } } = await sb.auth.getSession();
-      if (session) {
+      if (session && unlockedThisVisit) {
         document.getElementById('loginBox').classList.add('hidden');
         document.getElementById('dashBox').classList.remove('hidden');
         loadData();
+      } else {
+        if (session && !unlockedThisVisit) {
+          try { await sb.auth.signOut(); } catch (e) {}
+        }
+        showLockedLoginOnly();
       }
     }
 
     async function adminLogin(e) {
       e.preventDefault();
-      const { error } = await sb.auth.signInWithPassword({
+      const { data, error } = await sb.auth.signInWithPassword({
         email: document.getElementById('adminEmail').value.trim(),
         password: document.getElementById('adminPass').value
       });
       if (error) return alert(error.message);
+      if (!data?.session) return alert('Could not verify admin session.');
+      try {
+        sessionStorage.setItem(ADMIN_UNLOCK_KEY, '1');
+      } catch (err) {}
+      document.getElementById('adminPass').value = '';
       checkSession();
     }
 
     async function logout() {
-      await sb.auth.signOut();
+      showLockedLoginOnly();
+      try { await sb.auth.signOut(); } catch (e) {}
       location.reload();
     }
 
