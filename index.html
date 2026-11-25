@@ -51,6 +51,17 @@
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(251, 191, 36, 0.14);
     }
 
+    .skf-hero-locked-video {
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+    .skf-hero-locked-video::-webkit-media-controls {
+      display: none !important;
+      -webkit-appearance: none;
+    }
+
     .catalog-img-smooth {
       opacity: 1 !important;
       animation: none !important;
@@ -581,10 +592,10 @@
 
     <div class="max-w-5xl mx-auto px-3 pt-2 space-y-2.5">
 
-      <!-- HERO SECTION VIDEO BANNER (ADMIN CONTROLLED) -->
+      <!-- HERO SECTION VIDEO BANNER (24/7 AUTOPLAY, LOCKED FROM PAUSE, OFFLINE CACHED) -->
       <section id="heroVideoSection" class="hidden rounded-2xl overflow-hidden bg-[#16130f] border border-amber-400/35 shadow-lg">
-        <video id="heroVideoPlayer" controls autoplay muted loop playsinline
-          class="w-full max-h-56 sm:max-h-72 object-cover object-top bg-black"></video>
+        <video id="heroVideoPlayer" autoplay muted loop playsinline disablePictureInPicture controlsList="nodownload noplaybackrate noremoteplayback"
+          class="skf-hero-locked-video w-full max-h-56 sm:max-h-72 object-cover object-top bg-black"></video>
       </section>
 
       <!-- JUMIA-STYLE PEEK HERO PROMO SLIDER + PAGINATION DOTS + RIDER & CARGO -->
@@ -1594,6 +1605,9 @@
     let screenIdleTimer = null;
     let allowWebsiteExit = false;
     let __skfAlertResolver = null;
+    const HERO_VIDEO_CACHE_NAME = 'sekiflex-hero-video-cache-v1';
+    let heroVideoKeepAliveTimer = null;
+    let heroActiveBlobUrl = '';
 
     function showSkfAlert(message, title = 'Sekiflex Collections') {
       return new Promise((resolve) => {
@@ -1986,6 +2000,8 @@
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
           lockStaffSessionState();
+        } else {
+          enforceHeroVideoPlayback();
         }
       });
 
@@ -3646,33 +3662,146 @@
       updateShippingFee();
     }
 
-    async function loadStoreBanner() {
-      const [{ data: banner }, { data: banner2 }, { data: freeShipRow }] = await Promise.all([
-        sb.from('store_settings').select('*').eq('id', 'main').maybeSingle(),
-        sb.from('store_settings').select('*').eq('id', 'second').maybeSingle(),
-        sb.from('store_settings').select('*').eq('id', 'free_shipping').maybeSingle()
-      ]);
+    async function cacheHeroVideoBlob(url) {
+      if (!url || !('caches' in window)) return;
+      try {
+        const cache = await caches.open(HERO_VIDEO_CACHE_NAME);
+        const existing = await cache.match(url);
+        if (!existing) {
+          const resp = await fetch(url, { mode: 'cors', cache: 'force-cache' });
+          if (resp && resp.ok) {
+            await cache.put(url, resp.clone());
+          }
+        }
+      } catch (e) {}
+    }
 
-      applyFreeShippingState(Boolean(freeShipRow?.banner_active));
-      liveBannerMediaUrls = [banner?.banner_image_url, banner2?.banner_image_url].filter(Boolean);
-      renderCategoryViewTopAndMedallions();
+    async function getCachedHeroVideoSrc(url) {
+      if (!url) return '';
+      if ('caches' in window) {
+        try {
+          const cache = await caches.open(HERO_VIDEO_CACHE_NAME);
+          const match = await cache.match(url);
+          if (match) {
+            const blob = await match.blob();
+            if (blob && blob.size > 0) {
+              if (heroActiveBlobUrl) {
+                try { URL.revokeObjectURL(heroActiveBlobUrl); } catch (e) {}
+              }
+              heroActiveBlobUrl = URL.createObjectURL(blob);
+              return heroActiveBlobUrl;
+            }
+          }
+        } catch (e) {}
+      }
+      return url;
+    }
 
-      applySingleBannerSlot(banner, document.getElementById('livePromoBannerCard'), document.getElementById('livePromoText'), document.getElementById('livePromoImg'), 'gold');
-      applySingleBannerSlot(banner2, document.getElementById('livePromoBanner2Card'), document.getElementById('livePromo2Text'), document.getElementById('livePromo2Img'), 'gold');
-
+    function enforceHeroVideoPlayback() {
       const heroSec = document.getElementById('heroVideoSection');
       const heroPlayer = document.getElementById('heroVideoPlayer');
-      const localHero = JSON.parse(localStorage.getItem('sekiflex_hero_video_v1') || 'null');
-      const heroActive = banner?.hero_video_active ?? localHero?.active ?? false;
-      const heroUrl = banner?.hero_video_url || localHero?.url || '';
+      if (!heroSec || !heroPlayer || heroSec.classList.contains('hidden')) return;
+      heroPlayer.controls = false;
+      heroPlayer.removeAttribute('controls');
+      heroPlayer.muted = true;
+      heroPlayer.defaultMuted = true;
+      heroPlayer.loop = true;
+      heroPlayer.autoplay = true;
+      heroPlayer.playsInline = true;
+      if (heroPlayer.paused) {
+        const p = heroPlayer.play();
+        if (p && typeof p.catch === 'function') p.catch(() => {});
+      }
+    }
 
-      if (heroSec && heroPlayer) {
-        if (heroActive && heroUrl) {
-          if (heroPlayer.src !== heroUrl) heroPlayer.src = heroUrl;
-          heroSec.classList.remove('hidden');
-        } else {
-          heroPlayer.pause();
-          heroSec.classList.add('hidden');
+    function bindHeroVideoGuards(heroPlayer) {
+      if (!heroPlayer || heroPlayer.dataset.skf247Bound) return;
+      heroPlayer.dataset.skf247Bound = '1';
+
+      const lockAndPlay = () => {
+        heroPlayer.controls = false;
+        heroPlayer.removeAttribute('controls');
+        heroPlayer.muted = true;
+        heroPlayer.loop = true;
+        const p = heroPlayer.play();
+        if (p && typeof p.catch === 'function') p.catch(() => {});
+      };
+
+      heroPlayer.addEventListener('pause', lockAndPlay);
+      heroPlayer.addEventListener('contextmenu', (ev) => ev.preventDefault());
+      heroPlayer.addEventListener('seeking', () => {
+        if (!heroPlayer.dataset.skfAllowSeek) {
+          lockAndPlay();
+        }
+      });
+      heroPlayer.addEventListener('error', async () => {
+        const stored = JSON.parse(localStorage.getItem('sekiflex_hero_video_v1') || 'null');
+        const rawUrl = stored?.url || '';
+        if (rawUrl) {
+          const fallbackSrc = await getCachedHeroVideoSrc(rawUrl);
+          if (fallbackSrc && heroPlayer.src !== fallbackSrc) {
+            heroPlayer.src = fallbackSrc;
+            lockAndPlay();
+          }
+        }
+      });
+
+      if (heroVideoKeepAliveTimer) clearInterval(heroVideoKeepAliveTimer);
+      heroVideoKeepAliveTimer = setInterval(enforceHeroVideoPlayback, 1500);
+    }
+
+    async function renderHeroVideoBanner(heroActive, heroUrl) {
+      const heroSec = document.getElementById('heroVideoSection');
+      const heroPlayer = document.getElementById('heroVideoPlayer');
+      if (!heroSec || !heroPlayer) return;
+
+      bindHeroVideoGuards(heroPlayer);
+
+      if (heroActive && heroUrl) {
+        localStorage.setItem('sekiflex_hero_video_v1', JSON.stringify({ active: true, url: heroUrl }));
+        heroSec.classList.remove('hidden');
+        const currentDatasetUrl = heroPlayer.dataset.skfSourceUrl || '';
+        if (currentDatasetUrl !== heroUrl) {
+          heroPlayer.dataset.skfSourceUrl = heroUrl;
+          const cachedSrc = await getCachedHeroVideoSrc(heroUrl);
+          heroPlayer.src = cachedSrc || heroUrl;
+          heroPlayer.load();
+        }
+        enforceHeroVideoPlayback();
+        cacheHeroVideoBlob(heroUrl);
+      } else {
+        localStorage.setItem('sekiflex_hero_video_v1', JSON.stringify({ active: false, url: heroUrl || '' }));
+        heroPlayer.dataset.skfSourceUrl = '';
+        heroSec.classList.add('hidden');
+      }
+    }
+
+    async function loadStoreBanner() {
+      const localHero = JSON.parse(localStorage.getItem('sekiflex_hero_video_v1') || 'null');
+      if (localHero && localHero.active && localHero.url) {
+        await renderHeroVideoBanner(true, localHero.url);
+      }
+
+      try {
+        const [{ data: banner }, { data: banner2 }, { data: freeShipRow }] = await Promise.all([
+          sb.from('store_settings').select('*').eq('id', 'main').maybeSingle(),
+          sb.from('store_settings').select('*').eq('id', 'second').maybeSingle(),
+          sb.from('store_settings').select('*').eq('id', 'free_shipping').maybeSingle()
+        ]);
+
+        applyFreeShippingState(Boolean(freeShipRow?.banner_active));
+        liveBannerMediaUrls = [banner?.banner_image_url, banner2?.banner_image_url].filter(Boolean);
+        renderCategoryViewTopAndMedallions();
+
+        applySingleBannerSlot(banner, document.getElementById('livePromoBannerCard'), document.getElementById('livePromoText'), document.getElementById('livePromoImg'), 'gold');
+        applySingleBannerSlot(banner2, document.getElementById('livePromoBanner2Card'), document.getElementById('livePromo2Text'), document.getElementById('livePromo2Img'), 'gold');
+
+        const heroActive = banner?.hero_video_active ?? localHero?.active ?? false;
+        const heroUrl = banner?.hero_video_url || localHero?.url || '';
+        await renderHeroVideoBanner(Boolean(heroActive), heroUrl);
+      } catch (err) {
+        if (localHero && localHero.active && localHero.url) {
+          await renderHeroVideoBanner(true, localHero.url);
         }
       }
 
@@ -3903,6 +4032,8 @@
       if (allCategories.length) renderCategoryButtons(allCategories);
       updateShippingFee();
 
+      await loadStoreBanner();
+
       try {
         const [{ data: products }, { data: zones }, { data: cats }] = await Promise.all([
           sb.from('products').select('*').eq('is_active', true).order('created_at', { ascending: false }),
@@ -3932,14 +4063,13 @@
           localStorage.setItem('sekiflex_cats_cache', JSON.stringify(cats));
           renderCategoryButtons(cats);
         }
-
-        await loadStoreBanner();
       } catch (err) {
         console.warn('Store sync fallback:', err);
       }
 
       startBannerAutoShift();
       startFeaturedAutoScroll();
+      enforceHeroVideoPlayback();
 
       try {
         const { data: { session } } = await sb.auth.getSession();
