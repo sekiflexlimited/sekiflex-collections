@@ -84,6 +84,27 @@
       font-size: 12px;
       display: block;
     }
+
+    .wa-support-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+      padding: 11px 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .wa-support-btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.95;
+    }
   </style>
 </head>
 
@@ -153,10 +174,21 @@
 
     <div class="tracking-help">
       <span class="help-icon">i</span>
-      <p>
-        <strong>Don't have your SC number?</strong><br>
-        Contact Sekiflex Collections Support on WhatsApp: <strong>09069037617</strong>.
-      </p>
+      <div>
+        <p>
+          <strong>Need help or don't have your SC number?</strong><br>
+          Tap below to chat directly with Sekiflex Collections Support on WhatsApp (<strong>09069037617</strong>).
+        </p>
+        <a
+          id="trackWhatsappBtn"
+          class="wa-support-btn"
+          href="https://wa.me/2349069037617?text=Hello%20Sekiflex%20Collections%2C%20I%20need%20help%20with%20my%20order."
+          target="_blank"
+          rel="noopener"
+        >
+          💬 Contact Support on WhatsApp
+        </a>
+      </div>
     </div>
 
     <a class="back-link" href="index.html">
@@ -182,11 +214,28 @@
     document.getElementById('year').textContent = new Date().getFullYear();
     const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
 
+    const trackNumInput = document.getElementById('tracking-number');
+    const trackWaBtn = document.getElementById('trackWhatsappBtn');
+
+    function syncTrackWhatsAppLink(codeOverride) {
+      if (!trackWaBtn) return;
+      const code = (codeOverride || (trackNumInput ? trackNumInput.value : '') || '').trim().toUpperCase();
+      const message = code
+        ? `Hello Sekiflex Collections, I need help with my order (${code}).`
+        : 'Hello Sekiflex Collections, I need help with my order.';
+      trackWaBtn.href = `https://wa.me/2349069037617?text=${encodeURIComponent(message)}`;
+    }
+
+    if (trackNumInput) {
+      trackNumInput.addEventListener('input', () => syncTrackWhatsAppLink());
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const prefillCode = urlParams.get('tracking');
     if (prefillCode) {
-      document.getElementById('tracking-number').value = prefillCode.trim().toUpperCase();
+      trackNumInput.value = prefillCode.trim().toUpperCase();
     }
+    syncTrackWhatsAppLink();
 
     function getStatusClass(text) {
       const val = String(text || '').toLowerCase();
@@ -208,12 +257,13 @@
 
     document.getElementById('tracking-form').addEventListener('submit', async function (e) {
       e.preventDefault();
-      const rawCode = document.getElementById('tracking-number').value.trim().toUpperCase();
+      const rawCode = trackNumInput.value.trim().toUpperCase();
       const last4 = document.getElementById('phone-last4').value.trim();
       const msgEl = document.getElementById('tracking-message');
       const resEl = document.getElementById('tracking-result');
       const btn = document.getElementById('trackSubmitBtn');
 
+      syncTrackWhatsAppLink(rawCode);
       msgEl.textContent = '';
       resEl.innerHTML = '';
 
@@ -259,6 +309,7 @@
       const totalPaid = Number(data.order_amount || 0) + Number(data.delivery_amount || 0);
       const delNote = (data.delivery_instructions || '').trim();
       const colNote = (data.collection_instructions || '').trim();
+      const orderWaHref = `https://wa.me/2349069037617?text=${encodeURIComponent(`Hello Sekiflex Collections, I have a question about my order ${data.tracking_number} (${orderStatus}).`)}`;
 
       resEl.innerHTML = `
         <div class="order-card">
@@ -301,6 +352,12 @@
             <span class="order-label">Total Amount</span>
             <strong>₦${totalPaid.toLocaleString()}</strong>
           </div>` : ''}
+
+          <div style="margin-top: 14px; text-align: center;">
+            <a href="${orderWaHref}" target="_blank" rel="noopener" class="wa-support-btn">
+              💬 Need Help With This Order? Chat on WhatsApp
+            </a>
+          </div>
         </div>
       `;
     });
