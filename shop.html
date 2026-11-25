@@ -22,19 +22,7 @@
   <script src="supabase-config.js"></script>
   <script src="app.js"></script>
   <style>
-    html, body {
-      max-width: 100%;
-      overflow-x: hidden;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      -webkit-user-select: none;
-      user-select: none;
-      -webkit-touch-callout: none;
-    }
-    input, textarea, select {
-      -webkit-user-select: text;
-      user-select: text;
-      -webkit-touch-callout: default;
-    }
+    html, body { max-width: 100%; overflow-x: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
     .font-editorial { font-family: 'Playfair Display', serif; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -59,7 +47,6 @@
       image-rendering: high-quality;
       transform: translateZ(0);
       backface-visibility: hidden;
-      pointer-events: none;
     }
 
     @keyframes trackZoomPulse {
@@ -315,9 +302,194 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
+    .skf-policy-wrap h4 {
+      color: #fbbf24;
+      font-size: 12.5px;
+      font-weight: 800;
+      margin: 12px 0 4px 0;
+    }
+    .skf-policy-wrap h4:first-of-type {
+      margin-top: 4px;
+    }
+    .skf-policy-wrap p {
+      margin: 0 0 8px 0;
+      color: #d6d3d1;
+    }
+    .skf-policy-wrap ul {
+      margin: 0 0 10px 0;
+      padding-left: 16px;
+      list-style-type: disc;
+    }
+    .skf-policy-wrap li {
+      margin-bottom: 4px;
+      color: #d6d3d1;
+    }
+    .skf-policy-badge {
+      display: inline-block;
+      background: rgba(245, 158, 11, 0.14);
+      color: #fbbf24;
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      padding: 3px 9px;
+      border-radius: 9999px;
+      font-size: 10px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .skf-policy-tagline {
+      margin-top: 12px;
+      padding: 9px 12px;
+      border-radius: 12px;
+      background: rgba(245, 158, 11, 0.1);
+      border-left: 3px solid #f59e0b;
+      color: #fcd34d;
+      font-weight: 700;
+      font-size: 11.5px;
+    }
   </style>
 </head>
-<body class="sekiflex-luxury-bg text-stone-100 antialiased pb-24" oncontextmenu="return false;">
+<body class="sekiflex-luxury-bg text-stone-100 antialiased pb-24">
+
+  <!-- LEAVE WEBSITE CONFIRMATION MODAL (BACK BUTTON ONLY) -->
+  <div id="leaveConfirmModal" class="fixed inset-0 z-[90] hidden bg-black/85 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-[#16130f] border border-amber-400/50 rounded-3xl max-w-xs w-full p-5 text-center space-y-4 shadow-2xl">
+      <div class="space-y-1.5">
+        <p class="text-[10px] font-extrabold uppercase tracking-widest text-amber-400">Sekiflex Collections</p>
+        <h3 class="font-editorial text-lg font-bold text-white">Leaving Sekiflex Collections?</h3>
+        <p class="text-xs text-stone-300 leading-relaxed">Do you really want to leave our website and mobile platform?</p>
+      </div>
+      <div class="grid grid-cols-2 gap-2.5">
+        <button type="button" onclick="confirmLeaveWebsiteNo()"
+          class="py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-extrabold transition">
+          No, Stay
+        </button>
+        <button type="button" onclick="confirmLeaveWebsiteYes()"
+          class="py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 border border-amber-400/25 text-stone-200 text-xs font-bold transition">
+          Yes, Leave
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTER / SIGN IN MODAL (FOR CHECKOUT OR ACCOUNT) -->
+  <div id="customerAuthGate" class="fixed inset-0 z-[80] hidden bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-[#12141a] border border-amber-400/35 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
+      <div class="bg-gradient-to-r from-stone-950 via-[#181510] to-amber-950/80 text-white px-6 py-4 text-center space-y-1 relative border-b border-amber-400/20">
+        <button type="button" onclick="closeAuthGate()" aria-label="Close sign in window"
+          class="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold text-lg flex items-center justify-center">
+          &times;
+        </button>
+        <h2 class="font-editorial text-xl font-bold tracking-wide">
+          Sekiflex <span class="text-amber-400 italic font-semibold">Collections</span>
+        </h2>
+        <p id="authSubtitle" class="text-xs text-stone-300 leading-relaxed">
+          Please register an account or log in first to continue to checkout.
+        </p>
+      </div>
+
+      <div class="p-5 space-y-4">
+        <div id="authTabsRow" class="grid grid-cols-2 gap-1.5 bg-stone-950 border border-stone-800 p-1 rounded-2xl">
+          <button type="button" id="tabSignUpBtn" onclick="switchAuthView('signup')"
+            class="py-2 rounded-xl text-xs font-extrabold bg-amber-500 text-stone-950 shadow-2xs transition">
+            Register
+          </button>
+          <button type="button" id="tabSignInBtn" onclick="switchAuthView('signin')"
+            class="py-2 rounded-xl text-xs font-extrabold text-stone-400 hover:text-white transition">
+            Sign In
+          </button>
+        </div>
+
+        <p id="authGateMsg" class="hidden text-xs font-semibold text-center p-2.5 rounded-xl"></p>
+
+        <form id="customerSignUpForm" autocomplete="off" onsubmit="handleCustomerSignUp(event)" class="space-y-2.5">
+          <input required id="regName" name="sekiflex_reg_fullname" autocomplete="new-password" type="text" placeholder="Your Full Name (e.g. Daniel Okafor)"
+            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400 transition" />
+          <input required id="regEmail" name="sekiflex_reg_email" autocomplete="off" type="email" placeholder="Email Address"
+            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400 transition" />
+          <input required id="regPhone" name="sekiflex_reg_phone" autocomplete="off" type="tel" placeholder="Phone / WhatsApp Number (e.g. 08012345678)"
+            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400 transition" />
+          <input required id="regPassword" name="sekiflex_reg_pass" autocomplete="new-password" type="password" minlength="6" placeholder="Create Password (min. 6 characters)"
+            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400 transition" />
+          <button type="submit" id="regSubmitBtn"
+            class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-3 rounded-2xl text-sm transition shadow-xs">
+            Register &amp; Go to Checkout →
+          </button>
+        </form>
+
+        <form id="verifyOtpForm" autocomplete="off" onsubmit="handleVerifySignupOtp(event)" class="hidden space-y-3">
+          <div class="bg-amber-500/10 border border-amber-400/30 rounded-2xl p-3 text-center text-xs text-stone-200">
+            We sent an 8-digit registration code to <strong id="otpTargetEmail" class="text-amber-300"></strong>
+          </div>
+          <input required id="signupOtpCode" type="text" inputmode="numeric" maxlength="8" pattern="[0-9]{6,8}"
+            placeholder="Enter 8-digit code"
+            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-3 text-center font-mono text-lg tracking-[0.3em] font-bold text-white focus:outline-none focus:border-amber-400" />
+          <button type="submit" id="verifyOtpBtn"
+            class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-3 rounded-2xl text-sm transition shadow-xs">
+            Verify &amp; Go to Checkout →
+          </button>
+          <div class="flex items-center justify-between text-xs pt-1">
+            <button type="button" onclick="resendSignupCode()" class="font-bold text-amber-400 hover:underline">
+              Resend Code
+            </button>
+            <button type="button" onclick="switchAuthView('signup')" class="text-stone-400 hover:underline">
+              Change Email
+            </button>
+          </div>
+        </form>
+
+        <form id="customerSignInForm" onsubmit="handleCustomerSignIn(event)" class="hidden space-y-2.5">
+          <input required id="loginEmail" type="email" placeholder="Customer Email Address"
+            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400 transition" />
+          <input required id="loginPassword" type="password" placeholder="Password"
+            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400 transition" />
+          <div class="text-right">
+            <button type="button" onclick="switchAuthView('forgot')" class="text-xs font-bold text-amber-400 hover:underline">
+              Forgot Password?
+            </button>
+          </div>
+          <button type="submit" id="loginSubmitBtn"
+            class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-3 rounded-2xl text-sm transition shadow-xs">
+            Sign In &amp; Go to Checkout →
+          </button>
+        </form>
+
+        <form id="forgotRequestForm" onsubmit="handleSendResetCode(event)" class="hidden space-y-3">
+          <p class="text-xs text-stone-300 text-center">Enter your registered email to receive an 8-digit password reset code.</p>
+          <input required id="forgotEmail" type="email" placeholder="Registered Email Address"
+            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400 transition" />
+          <button type="submit" id="sendResetBtn"
+            class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-3 rounded-2xl text-sm transition shadow-xs">
+            Send Reset Code →
+          </button>
+          <button type="button" onclick="switchAuthView('signin')" class="w-full text-xs text-stone-400 hover:underline">
+            ← Back to Sign In
+          </button>
+        </form>
+
+        <form id="forgotVerifyForm" autocomplete="off" onsubmit="handleCompletePasswordReset(event)" class="hidden space-y-3">
+          <div class="bg-amber-500/10 border border-amber-400/30 rounded-2xl p-2.5 text-center text-xs text-stone-200">
+            Enter the 8-digit code sent to <strong id="resetTargetEmail" class="text-amber-300"></strong>
+          </div>
+          <input required id="resetOtpCode" type="text" inputmode="numeric" maxlength="8" pattern="[0-9]{6,8}"
+            placeholder="8-digit reset code"
+            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-center font-mono text-base tracking-[0.25em] font-bold text-white focus:outline-none focus:border-amber-400" />
+          <input required id="resetNewPassword" type="password" minlength="6" placeholder="New Password (min. 6 characters)"
+            class="w-full bg-stone-950 focus:bg-stone-900 border border-stone-800 rounded-2xl px-4 py-2.5 text-sm text-white placeholder:text-stone-500 focus:outline-none focus:border-amber-400" />
+          <button type="submit" id="completeResetBtn"
+            class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-3 rounded-2xl text-sm transition shadow-xs">
+            Update Password &amp; Go to Checkout →
+          </button>
+          <button type="button" onclick="switchAuthView('signin')" class="w-full text-xs text-stone-400 hover:underline">
+            ← Back to Sign In
+          </button>
+        </form>
+
+        <div class="pt-2 border-t border-stone-800 flex items-center justify-center text-[11px] text-stone-400">
+          <button type="button" onclick="closeAuthGate()" class="font-bold text-amber-400 hover:underline">← Back to Storefront</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- MAIN STOREFRONT -->
   <div id="storeMainWrapper">
@@ -371,12 +543,149 @@
             Search
           </button>
         </form>
+
+        <div id="pictureSearchBanner" class="hidden items-center justify-between gap-2 bg-[#1a1611] border border-amber-400/35 rounded-2xl px-3 py-1.5 text-xs">
+          <div class="flex items-center gap-2 min-w-0">
+            <img id="pictureSearchPreviewImg" src="" alt="Uploaded search photo" loading="eager" decoding="sync" class="w-8 h-8 rounded-lg object-cover object-top border border-amber-400/40 shrink-0" />
+            <div class="min-w-0">
+              <p class="font-bold text-white truncate">Photo Match</p>
+              <p id="pictureSearchStatusText" class="text-[10px] text-amber-300 truncate">Showing closest products</p>
+            </div>
+          </div>
+          <button type="button" onclick="clearPictureSearch()" class="bg-amber-500 text-stone-950 text-[10px] font-extrabold px-2.5 py-1 rounded-full shrink-0">
+            Clear
+          </button>
+        </div>
       </div>
     </header>
 
     <div class="max-w-5xl mx-auto px-3 pt-2 space-y-2.5">
 
-      <!-- FEATURED SHOWCASE STRIP -->
+      <!-- HERO SECTION VIDEO BANNER (ADMIN CONTROLLED) -->
+      <section id="heroVideoSection" class="hidden rounded-2xl overflow-hidden bg-[#16130f] border border-amber-400/35 shadow-lg">
+        <video id="heroVideoPlayer" controls autoplay muted loop playsinline
+          class="w-full max-h-56 sm:max-h-72 object-cover object-top bg-black"></video>
+      </section>
+
+      <!-- JUMIA-STYLE PEEK HERO PROMO SLIDER + PAGINATION DOTS + RIDER & CARGO -->
+      <section id="heroCarouselSection" class="space-y-1.5">
+        <div id="bannerCarousel" class="flex gap-2.5 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar pr-4">
+
+          <div id="livePromoBannerCard" class="promo-slide skf-hero-slide hidden rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-3 flex items-center justify-between gap-2.5 border border-amber-400/50 shadow-lg overflow-hidden">
+            <div class="space-y-1 flex-1 min-w-0 flex flex-col justify-between">
+              <span class="inline-block text-[8px] font-extrabold uppercase tracking-widest bg-gradient-to-r from-amber-400 to-yellow-300 text-stone-950 px-2 py-0.5 rounded-full w-fit">
+                ✦ Featured Promo
+              </span>
+              <p id="livePromoText" class="font-editorial text-xs sm:text-sm font-bold leading-snug line-clamp-2 text-amber-50"></p>
+              <button type="button" onclick="jumpToAllItems()" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-3 py-1 rounded-full transition shadow-sm w-fit">
+                Shop Now →
+              </button>
+            </div>
+            <img id="livePromoImg" src="" alt="" loading="eager" decoding="sync" onerror="this.classList.add('hidden')" class="hidden w-24 sm:w-28 h-24 sm:h-28 object-cover object-top rounded-xl border border-amber-400/50 shrink-0 shadow-md" />
+          </div>
+
+          <div id="livePromoBanner2Card" class="promo-slide skf-hero-slide hidden rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-3 flex items-center justify-between gap-2.5 border border-amber-400/45 shadow-lg overflow-hidden">
+            <div class="space-y-1 flex-1 min-w-0 flex flex-col justify-between">
+              <span class="inline-block text-[8px] font-extrabold uppercase tracking-widest bg-amber-500/25 text-amber-300 border border-amber-400/40 px-2 py-0.5 rounded-full w-fit">
+                ✦ Store Announcement
+              </span>
+              <p id="livePromo2Text" class="font-editorial text-xs sm:text-sm font-bold leading-snug line-clamp-2 text-amber-50"></p>
+              <button type="button" onclick="jumpToAllItems()" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-3 py-1 rounded-full transition shadow-sm w-fit">
+                Explore Picks →
+              </button>
+            </div>
+            <img id="livePromo2Img" src="" alt="" loading="eager" decoding="sync" onerror="this.classList.add('hidden')" class="hidden w-24 sm:w-28 h-24 sm:h-28 object-cover object-top rounded-xl border border-amber-400/50 shrink-0 shadow-md" />
+          </div>
+
+          <div onclick="jumpToAllItems()" class="promo-slide skf-hero-slide cursor-pointer rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-3 flex items-center justify-between gap-2.5 border border-amber-400/50 shadow-lg overflow-hidden">
+            <div class="space-y-1 flex-1 min-w-0">
+              <span class="inline-block text-[8px] font-extrabold uppercase tracking-widest bg-gradient-to-r from-amber-400 to-yellow-300 text-stone-950 px-2 py-0.5 rounded-full">
+                ✦ Luxury Apparel
+              </span>
+              <h2 class="font-editorial text-sm sm:text-base font-bold leading-tight text-amber-50">
+                Dresses, Knits &amp; Denim
+              </h2>
+              <p class="text-[10px] text-amber-100/85 line-clamp-1">Fresh chic styles curated for daily glam</p>
+              <span class="inline-flex items-center gap-1 bg-amber-500 text-stone-950 text-[10px] font-extrabold px-3 py-1 rounded-full mt-0.5">
+                Shop Now →
+              </span>
+            </div>
+            <div id="heroSlideApparelMedia" class="w-24 sm:w-28 h-24 sm:h-28 rounded-xl border border-amber-400/50 shrink-0 shadow-md bg-[#1c150c] overflow-hidden flex items-center justify-center">
+              <span class="text-2xl font-editorial font-extrabold text-amber-400">SC</span>
+            </div>
+          </div>
+
+          <div onclick="openSplitCategoryStore()" class="promo-slide skf-hero-slide cursor-pointer rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-3 flex items-center justify-between gap-2.5 border border-amber-400/50 shadow-lg overflow-hidden">
+            <div class="space-y-1 flex-1 min-w-0">
+              <span class="inline-block text-[8px] font-extrabold uppercase tracking-widest bg-amber-500/25 text-amber-300 border border-amber-400/40 px-2 py-0.5 rounded-full">
+                ✦ Complete The Look
+              </span>
+              <h2 class="font-editorial text-sm sm:text-base font-bold leading-tight text-amber-50">
+                Shoes, Bags &amp; Watches
+              </h2>
+              <p class="text-[10px] text-amber-100/85 line-clamp-1">Statement pieces to finish every outfit</p>
+              <span class="inline-flex items-center gap-1 bg-amber-500 text-stone-950 text-[10px] font-extrabold px-3 py-1 rounded-full mt-0.5">
+                Browse Categories →
+              </span>
+            </div>
+            <div id="heroSlideAccessoriesMedia" class="w-24 sm:w-28 h-24 sm:h-28 rounded-xl border border-amber-400/50 shrink-0 shadow-md bg-[#1c150c] overflow-hidden flex items-center justify-center">
+              <span class="text-2xl text-amber-400">♛</span>
+            </div>
+          </div>
+
+          <div onclick="window.location.href='track.html'" role="button" tabindex="0"
+            class="promo-slide skf-hero-slide cursor-pointer rounded-2xl bg-gradient-to-br from-[#33220a] via-[#1f160b] to-[#120e09] text-white p-3 flex items-center justify-between gap-2 border border-amber-400/50 hover:border-amber-300 transition shadow-lg overflow-hidden">
+            <div class="space-y-1 flex-1 min-w-0">
+              <span class="inline-block text-[8px] font-extrabold uppercase tracking-widest bg-gradient-to-r from-amber-400 to-yellow-300 text-stone-950 px-2 py-0.5 rounded-full">
+                SEKIFLEX FLEET
+              </span>
+              <h2 class="font-editorial text-sm sm:text-base font-bold leading-tight text-amber-50">
+                Bike Rider &amp; Cargo Truck
+              </h2>
+              <p class="text-[10px] text-amber-100/85 line-clamp-1">Fast dispatch from Uyo nationwide</p>
+              <a href="track.html" onclick="event.stopPropagation();"
+                class="track-zoom-btn inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-3 py-1 rounded-full transition mt-0.5">
+                <span>📦</span>
+                <span>Track Order →</span>
+              </a>
+            </div>
+
+            <div class="relative w-32 sm:w-40 h-24 sm:h-28 rounded-xl overflow-hidden border border-amber-400/50 shrink-0 shadow-md bg-gradient-to-b from-[#281e0e] via-[#18120b] to-[#0d0a07] flex flex-col justify-between p-1">
+              <div class="flex items-center justify-between gap-1 px-1">
+                <span class="text-[7px] font-black tracking-wider uppercase text-amber-300 truncate">SEKIFLEX</span>
+                <span class="text-[7px] font-extrabold bg-emerald-500/20 text-emerald-300 px-1 rounded-full shrink-0">LIVE</span>
+              </div>
+              <svg viewBox="0 0 240 112" class="w-full h-14 overflow-visible" role="img" aria-label="Sekiflex dispatch bike and cargo truck">
+                <line x1="0" y1="101" x2="240" y2="101" stroke="#f59e0b" stroke-opacity="0.45" stroke-width="2" />
+                <g transform="translate(116, 30)">
+                  <rect x="0" y="6" width="76" height="48" rx="6" fill="#1c160e" stroke="#f59e0b" stroke-width="2" />
+                  <text x="38" y="27" text-anchor="middle" fill="#fbbf24" font-size="8" font-weight="900">SEKIFLEX</text>
+                  <text x="38" y="42" text-anchor="middle" fill="#fde68a" font-size="6" font-weight="700">CARGO</text>
+                  <path d="M76 22 L98 22 L106 36 L106 54 L76 54 Z" fill="#231c12" stroke="#fbbf24" stroke-width="1.8" />
+                  <circle cx="18" cy="57" r="10" fill="#0d0a07" stroke="#fbbf24" stroke-width="2.2" />
+                  <circle cx="89" cy="57" r="10" fill="#0d0a07" stroke="#fbbf24" stroke-width="2.2" />
+                </g>
+                <g transform="translate(8, 22)">
+                  <circle cx="52" cy="14" r="7.5" fill="#fbbf24" />
+                  <rect x="6" y="22" width="38" height="27" rx="5" fill="#f59e0b" />
+                  <path d="M36 47 L56 45 L71 33 L76 58" fill="none" stroke="#fbbf24" stroke-width="3.2" stroke-linecap="round" />
+                  <circle cx="24" cy="61" r="14.5" fill="none" stroke="#fbbf24" stroke-width="3" />
+                  <circle cx="77" cy="61" r="14.5" fill="none" stroke="#fbbf24" stroke-width="3" />
+                </g>
+              </svg>
+              <div class="px-1 py-0.5 bg-amber-500/15 rounded flex items-center justify-between text-[8px] font-extrabold text-amber-300">
+                <span>🏍️ Rider</span>
+                <span>🚚 Cargo</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div id="heroPaginationDots" class="flex items-center justify-center gap-1.5 pt-0.5"></div>
+      </section>
+
+      <!-- COMPACT TOP SCROLLING SHOWCASE STRIP -->
       <section id="featuredStripSection" class="luxury-glass-card rounded-2xl overflow-hidden border border-amber-400/35">
         <div class="px-3 py-1.5 border-b border-amber-400/20 flex items-center justify-between bg-amber-500/10">
           <h2 class="text-[10px] font-extrabold uppercase tracking-widest text-amber-300">✦ Featured</h2>
@@ -384,11 +693,27 @@
             All Items →
           </button>
         </div>
-        <div id="featuredHorizontalList" class="p-2 flex gap-2 overflow-x-auto scroll-smooth no-scrollbar"></div>
+        <div id="featuredHorizontalList" class="p-2 flex gap-2 overflow-x-auto scroll-smooth no-scrollbar">
+        </div>
       </section>
 
-      <!-- CATEGORY BAR & CATALOG -->
+      <!-- CATEGORY BAR & MARKETPLACE-STYLE PRODUCT SHOWCASE -->
       <section id="catalogSection" class="space-y-2 scroll-mt-24">
+        <div id="categoryViewBanner" class="hidden rounded-2xl bg-gradient-to-r from-[#281d0d] via-[#1c150c] to-amber-950/60 border border-amber-400/40 px-3 py-2 flex items-center justify-between gap-2">
+          <div class="min-w-0">
+            <p class="text-[9px] font-bold uppercase tracking-widest text-amber-400">Sekiflex Store Categories</p>
+            <p id="categoryViewSubtitle" class="text-xs text-stone-200 truncate">Filtered category showcase</p>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button type="button" onclick="openSplitCategoryStore()" class="text-[10px] font-extrabold bg-amber-500 text-stone-950 px-2.5 py-1 rounded-full">
+              All Categories
+            </button>
+            <button type="button" onclick="filterCategory('ALL')" class="text-[10px] font-extrabold bg-stone-900 hover:bg-stone-800 text-amber-300 border border-amber-400/30 px-2.5 py-1 rounded-full">
+              Home Grid
+            </button>
+          </div>
+        </div>
+
         <div class="flex items-center justify-between gap-2">
           <h2 id="catalogHeading" class="font-editorial font-bold text-sm sm:text-base text-amber-300">All Items</h2>
           <span id="productResultCount" class="text-[10px] font-medium text-amber-100/70 shrink-0"></span>
@@ -398,13 +723,24 @@
           <button type="button" onclick="filterCategory('ALL', this)" class="cat-btn bg-amber-500 text-stone-950 text-[11px] font-extrabold px-3 py-1 rounded-full whitespace-nowrap">All Items</button>
         </div>
 
-        <div id="productsGrid" class="products-grid-home"></div>
+        <div id="productsGrid" class="products-grid-home">
+          <div class="skf-market-card p-2 space-y-2">
+            <div class="w-full h-36 bg-stone-900/70 rounded-xl"></div>
+            <div class="h-3 bg-stone-900/70 rounded w-3/4"></div>
+            <div class="h-7 bg-stone-900/70 rounded-lg w-full"></div>
+          </div>
+          <div class="skf-market-card p-2 space-y-2">
+            <div class="w-full h-36 bg-stone-900/70 rounded-xl"></div>
+            <div class="h-3 bg-stone-900/70 rounded w-2/3"></div>
+            <div class="h-7 bg-stone-900/70 rounded-lg w-full"></div>
+          </div>
+        </div>
       </section>
 
     </div>
   </div>
 
-  <!-- CATEGORY VIEW (4 ADMIN-CONTROLLED PROMO BOXES + TIGHT SHOP BY CATEGORY CIRCLES) -->
+  <!-- CATEGORY VIEW (4 ADMIN-CONTROLLED PROMO BOXES + TIGHT SHOP BY CATEGORY CIRCLES THAT GO TO CATALOG) -->
   <div id="splitCategoryStoreView" class="hidden">
     <header class="sticky top-0 z-40 bg-[#0d0c0a]/95 backdrop-blur-md border-b border-amber-400/35 px-3 py-2 shadow-lg">
       <div class="max-w-5xl mx-auto flex items-center gap-2">
@@ -412,13 +748,19 @@
           class="bg-stone-900 hover:bg-stone-800 border border-amber-400/35 text-amber-300 text-xs font-bold px-3 py-1.5 rounded-full shrink-0">
           ← Home
         </button>
-        <input id="splitCategorySearchInput" type="search" placeholder="Search Sekiflex Collections..."
-          oninput="renderSplitCategoryPanel()"
-          class="flex-1 bg-[#19150f] border border-amber-400/35 focus:border-amber-400 rounded-full px-3.5 py-1.5 text-xs text-white placeholder:text-stone-400 focus:outline-none" />
+        <form onsubmit="submitSplitCategorySearch(event)" class="flex-1 flex items-center gap-1.5">
+          <input id="splitCategorySearchInput" type="search" placeholder="Search Sekiflex Collections..."
+            oninput="renderSplitCategoryPanel()"
+            class="w-full bg-[#19150f] border border-amber-400/35 focus:border-amber-400 rounded-full px-3.5 py-1.5 text-xs text-white placeholder:text-stone-400 focus:outline-none" />
+          <button type="submit" class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-extrabold px-3 py-1.5 rounded-full shrink-0">
+            Search
+          </button>
+        </form>
       </div>
     </header>
 
     <div class="max-w-5xl mx-auto px-3 pt-2.5 pb-24 space-y-3">
+      <!-- 4 Top Promo Boxes (Admin-controlled, never auto-replaced) -->
       <section id="categoryTopFourSpotlight" class="skf-cat-promo4-grid">
         <div onclick="handleCategoryPromoBoxClick(0)" class="skf-cat-promo4-card">
           <div class="space-y-1 flex-1 min-w-0">
@@ -457,6 +799,7 @@
         </div>
       </section>
 
+      <!-- Shop by Category Section — Clicking Any Circle Goes to Explore Catalog -->
       <section class="luxury-glass-card border border-amber-400/35 rounded-2xl p-3 space-y-3">
         <div class="flex items-center justify-center">
           <div class="skf-cat-banner-pill">
@@ -465,70 +808,357 @@
             <span class="text-amber-400 text-xs">✦</span>
           </div>
         </div>
+
         <div id="splitCategoryGrid" class="skf-cat-grid"></div>
       </section>
     </div>
   </div>
 
-  <!-- CART VIEW -->
-  <div id="cartFullPageView" class="hidden min-h-screen pb-24">
-    <header class="sticky top-0 z-40 bg-[#0d0c0a]/95 backdrop-blur-md border-b border-amber-400/25 px-3 py-2.5 shadow-lg">
-      <div class="max-w-2xl mx-auto flex items-center justify-between gap-2">
-        <button type="button" onclick="switchBottomTab('home')"
-          class="bg-stone-900 hover:bg-stone-800 border border-amber-400/25 text-amber-300 text-xs font-bold px-3 py-1.5 rounded-full">
-          ← Back
-        </button>
-        <h1 id="cartDrawerHeading" class="font-editorial text-base font-bold text-white">Cart</h1>
-        <span class="text-xs font-bold text-amber-400" id="cartSubTotalTop">₦0</span>
-      </div>
-    </header>
-    <div class="max-w-2xl mx-auto px-3 pt-3 space-y-3">
-      <div id="cartItems" class="space-y-2.5"></div>
-    </div>
-  </div>
-
-  <!-- ACCOUNT VIEW -->
+  <!-- FULL-SCREEN SCROLLABLE ACCOUNT VIEW -->
   <div id="accountFullPageView" class="hidden min-h-screen pb-28">
     <header class="sticky top-0 z-40 bg-[#0d0c0a]/95 backdrop-blur-md border-b border-amber-400/25 px-3 py-2.5 shadow-lg">
       <div class="max-w-2xl mx-auto flex items-center justify-between gap-2">
-        <button type="button" onclick="switchBottomTab('home')"
-          class="bg-stone-900 hover:bg-stone-800 border border-amber-400/25 text-amber-300 text-xs font-bold px-3 py-1.5 rounded-full">
-          ← Home
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="switchBottomTab('home')"
+            class="bg-stone-900 hover:bg-stone-800 border border-amber-400/25 text-amber-300 text-xs font-bold px-3 py-1.5 rounded-full">
+            ← Home
+          </button>
+          <h1 class="font-editorial text-base font-bold text-white">My Account</h1>
+        </div>
+        <button type="button" onclick="openStoreSettingsModal()"
+          class="bg-stone-900 hover:bg-stone-800 border border-amber-400/30 text-amber-300 text-xs font-bold px-3 py-1.5 rounded-full">
+          ⚙️ Settings
         </button>
-        <h1 class="font-editorial text-base font-bold text-white">My Account</h1>
-        <span class="text-[11px] text-amber-300">Sekiflex Limited</span>
       </div>
     </header>
-    <div class="max-w-2xl mx-auto px-3 pt-3 space-y-3">
-      <div class="luxury-glass-card rounded-2xl p-4 space-y-2">
-        <p class="text-sm font-bold text-amber-300">Sekiflex Collections</p>
-        <p class="text-xs text-stone-300">Customer support &amp; order tracking via WhatsApp or Track Order.</p>
-        <a href="https://wa.me/2349069037617" target="_blank" rel="noopener"
-          class="inline-block bg-amber-500 text-stone-950 text-xs font-extrabold px-4 py-2 rounded-xl">
-          Chat on WhatsApp
+
+    <div class="max-w-2xl mx-auto px-3 pt-3 space-y-3.5">
+      <div class="luxury-glass-card border border-amber-400/35 rounded-2xl p-4 flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <h2 id="menuCustomerName" class="font-editorial text-lg font-bold text-amber-300 truncate">Welcome</h2>
+          <p id="menuCustomerEmail" class="text-xs text-stone-300 truncate">Sign in or register to manage orders across web &amp; app</p>
+        </div>
+        <button type="button" id="accountSignInActionBtn" onclick="openAuthGate('signup', false)"
+          class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-extrabold px-4 py-2.5 rounded-xl shrink-0 transition shadow">
+          Login / Register
+        </button>
+        <button type="button" id="accountSignOutActionBtn" onclick="customerLogout()"
+          class="hidden bg-red-950/80 border border-red-500/40 text-red-200 text-xs font-extrabold px-3.5 py-2 rounded-xl shrink-0 transition">
+          Sign Out
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2.5">
+        <a href="https://wa.me/2349069037617?text=Hello%20Sekiflex%20Collections%2C%20I%20need%20help%20with%20an%20order." target="_blank" rel="noopener"
+          class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold text-xs py-3 px-3 rounded-2xl flex items-center justify-center gap-2 shadow transition">
+          <span>💬</span>
+          <span>Live Chat</span>
         </a>
+        <a href="https://wa.me/2349069037617" target="_blank" rel="noopener"
+          class="bg-[#16130f] hover:bg-[#211b13] border border-emerald-400/45 text-emerald-300 font-extrabold text-xs py-3 px-3 rounded-2xl flex items-center justify-center gap-2 transition">
+          <span>📱</span>
+          <span>WhatsApp</span>
+        </a>
+      </div>
+
+      <div class="space-y-1.5">
+        <p class="text-[11px] font-extrabold uppercase tracking-wider text-amber-400/85 px-1">Need Assistance?</p>
+        <div class="luxury-glass-card border border-amber-400/25 rounded-2xl divide-y divide-stone-800/80 overflow-hidden">
+          <button type="button" onclick="openInfoModal('delivery')" class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+            <span class="flex items-center gap-3 text-xs font-bold text-stone-100">
+              <span>🚚</span>
+              <span>Delivery &amp; Shipping</span>
+            </span>
+            <span class="text-amber-400 font-bold">›</span>
+          </button>
+          <button type="button" onclick="openInfoModal('support')" class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+            <span class="flex items-center gap-3 text-xs font-bold text-stone-100">
+              <span>🎧</span>
+              <span>Help &amp; Customer Support</span>
+            </span>
+            <span class="text-amber-400 font-bold">›</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="space-y-1.5">
+        <p class="text-[11px] font-extrabold uppercase tracking-wider text-amber-400/85 px-1">My Sekiflex Account</p>
+        <div class="luxury-glass-card border border-amber-400/25 rounded-2xl divide-y divide-stone-800/80 overflow-hidden">
+          <button type="button" onclick="openInfoModal('orders')" class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+            <span class="flex items-center gap-3 text-xs font-bold text-stone-100">
+              <span>📦</span>
+              <span>Orders &amp; Live Tracking</span>
+            </span>
+            <span class="text-amber-400 font-bold">›</span>
+          </button>
+          <button type="button" onclick="openInfoModal('inbox')" class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+            <span class="flex items-center gap-3 text-xs font-bold text-stone-100">
+              <span>🔔</span>
+              <span>Inbox &amp; Promotional Alerts</span>
+            </span>
+            <span class="text-amber-400 font-bold">›</span>
+          </button>
+          <button type="button" onclick="openInfoModal('reviews')" class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+            <span class="flex items-center gap-3 text-xs font-bold text-stone-100">
+              <span>⭐</span>
+              <span>Ratings &amp; Reviews</span>
+            </span>
+            <span class="text-amber-400 font-bold">›</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="space-y-1.5">
+        <p class="text-[11px] font-extrabold uppercase tracking-wider text-amber-400/85 px-1">Company &amp; Policies</p>
+        <div class="luxury-glass-card border border-amber-400/25 rounded-2xl divide-y divide-stone-800/80 overflow-hidden">
+          <button type="button" onclick="openInfoModal('about')" class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+            <span class="flex items-center gap-3 text-xs font-bold text-stone-100">
+              <span>👑</span>
+              <span>About Sekiflex Collections</span>
+            </span>
+            <span class="text-amber-400 font-bold">›</span>
+          </button>
+          <button type="button" onclick="openInfoModal('privacy')" class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+            <span class="flex items-center gap-3 text-xs font-bold text-stone-100">
+              <span>🛡️</span>
+              <span>Privacy Policy</span>
+            </span>
+            <span class="text-amber-400 font-bold">›</span>
+          </button>
+          <button type="button" onclick="openInfoModal('refund')" class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+            <span class="flex items-center gap-3 text-xs font-bold text-stone-100">
+              <span>💳</span>
+              <span>Refund, Returns &amp; Payment Policy</span>
+            </span>
+            <span class="text-amber-400 font-bold">›</span>
+          </button>
+          <button type="button" onclick="openInfoModal('terms')" class="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+            <span class="flex items-center gap-3 text-xs font-bold text-stone-100">
+              <span>📜</span>
+              <span>Terms &amp; Conditions</span>
+            </span>
+            <span class="text-amber-400 font-bold">›</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- SOCIAL LINKS PLACED AT BOTTOM OF ACCOUNT SCREEN -->
+      <div class="luxury-glass-card border border-amber-400/30 rounded-2xl p-4 text-center space-y-2.5">
+        <p class="text-[11px] font-extrabold uppercase tracking-wider text-amber-300">Follow Sekiflex Collections</p>
+        <div class="grid grid-cols-2 gap-2.5 text-xs font-extrabold">
+          <a href="https://www.facebook.com/share/1G3ErASdHa/" target="_blank" rel="noopener"
+            class="flex items-center justify-center gap-2 bg-[#1a1610] hover:bg-amber-500/15 border border-amber-400/35 text-amber-200 py-2.5 px-3 rounded-xl transition">
+            <span class="text-[#1877F2] text-sm">●</span>
+            <span>Facebook</span>
+          </a>
+          <a href="https://www.tiktok.com/@sekiflex_collections?_r=1&_t=ZS-9BbSAFjxrZW" target="_blank" rel="noopener"
+            class="flex items-center justify-center gap-2 bg-[#1a1610] hover:bg-amber-500/15 border border-amber-400/35 text-white py-2.5 px-3 rounded-xl transition">
+            <span class="text-amber-400 text-sm">♪</span>
+            <span>TikTok</span>
+          </a>
+        </div>
+        <p class="text-[10px] text-stone-400 pt-1">
+          Sekiflex Collections • Proudly operating under <span class="text-amber-300 font-semibold">Sekiflex Limited</span>
+        </p>
       </div>
     </div>
   </div>
 
-  <!-- PRODUCT DETAIL MODAL (ALWAYS ON TOP z-[999]) -->
-  <div id="productDetailModal" onclick="if(event.target === this) closeProductDetailModal();"
-    class="fixed inset-0 z-[999] hidden bg-black/85 flex items-end sm:items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-[#14110c] border-2 border-amber-400/60 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
+  <!-- FULL-SCREEN SCROLLABLE CART & CHECKOUT VIEW -->
+  <div id="cartFullPageView" class="hidden min-h-screen pb-24">
+    <header class="sticky top-0 z-40 bg-[#0d0c0a]/95 backdrop-blur-md border-b border-amber-400/25 px-3 py-2.5 shadow-lg">
+      <div class="max-w-2xl mx-auto flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5">
+          <button type="button" onclick="skfHandleKeepShopping(event)"
+            class="bg-stone-900 hover:bg-stone-800 border border-amber-400/25 text-amber-300 text-xs font-bold px-3 py-1.5 rounded-full">
+            ← Back
+          </button>
+          <h1 id="cartDrawerHeading" class="font-editorial text-base font-bold text-white">Cart</h1>
+        </div>
+        <button type="button" onclick="skfHandleKeepShopping(event)" class="text-xs font-bold text-amber-300 hover:underline">
+          Keep Shopping
+        </button>
+      </div>
+    </header>
+
+    <div class="max-w-2xl mx-auto px-3 pt-3 space-y-3">
+      <div id="freeShippingPromoBanner" class="hidden rounded-2xl bg-emerald-950/80 border border-emerald-400/45 px-3.5 py-2.5 text-center">
+        <p class="text-xs font-extrabold text-emerald-300">🎉 FREE SHIPPING PROMO IS ACTIVE — Delivery Fee Waived (₦0)!</p>
+      </div>
+
+      <div class="luxury-glass-card border border-amber-400/30 rounded-2xl p-3.5 space-y-1.5">
+        <p class="text-[10px] font-extrabold uppercase tracking-widest text-amber-400">Cart Summary</p>
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-stone-300">Subtotal</span>
+          <strong id="cartReviewSubTotal" class="text-base font-extrabold text-amber-400">₦0</strong>
+        </div>
+      </div>
+
+      <div id="cartItems" class="space-y-2.5"></div>
+
+      <div id="cartSummaryActions" class="flex items-center gap-2.5 pt-1">
+        <a href="tel:09069037617" aria-label="Call Sekiflex"
+          class="w-12 h-11 rounded-2xl bg-[#16130f] border border-amber-400/40 text-amber-400 flex items-center justify-center text-base shrink-0">
+          📞
+        </a>
+        <button type="button" id="openWaybillBtn" onclick="skfHandleProceedToCheckout(event)"
+          class="flex-1 h-11 bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950 font-extrabold rounded-2xl text-xs sm:text-sm transition shadow-lg">
+          Checkout (<span id="checkoutBtnTotalLabel">₦0</span>)
+        </button>
+      </div>
+
+      <form id="checkoutForm" autocomplete="off" onsubmit="placeOrder(event)" class="hidden space-y-2.5 luxury-glass-card border border-amber-400/35 rounded-2xl p-3.5">
+        <div class="flex items-center justify-between pb-1.5 border-b border-stone-800">
+          <h3 class="font-bold text-xs uppercase tracking-wider text-amber-300">Waybill &amp; Payment</h3>
+          <button type="button" onclick="backToCartReviewOnly()" class="text-xs font-bold text-amber-400 hover:underline">
+            ← Recheck Cart
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-1.5 bg-[#12141a] p-1 rounded-xl border border-stone-800">
+          <button type="button" id="btnDeliveryMode" onclick="setFulfillmentMode('delivery')"
+            class="py-1.5 px-2.5 rounded-lg text-xs font-bold bg-amber-500 text-stone-950 transition">
+            Courier Delivery
+          </button>
+          <button type="button" id="btnPickupMode" onclick="setFulfillmentMode('pickup')"
+            class="py-1.5 px-2.5 rounded-lg text-xs font-bold text-stone-300 hover:text-white transition">
+            Store Pickup (Free)
+          </button>
+        </div>
+
+        <input required id="custName" name="sekiflex_order_recipient" autocomplete="off" type="text" placeholder="Recipient Full Name" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-amber-400" />
+        <input required id="custEmail" name="sekiflex_order_email" autocomplete="off" type="email" placeholder="Email Address (for tracking receipt)" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-amber-400" />
+        <input required id="custPhone" name="sekiflex_order_phone" autocomplete="off" type="tel" placeholder="Phone / WhatsApp Number" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-amber-400" />
+
+        <div id="deliveryFields" class="space-y-2">
+          <div class="grid grid-cols-2 gap-2">
+            <select required id="custCountry" onchange="handleCountryChange()" class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-2.5 py-2.5 text-xs focus:outline-none focus:border-amber-400">
+              <option value="Nigeria">Nigeria</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="United States">United States</option>
+              <option value="Canada">Canada</option>
+              <option value="Ghana">Ghana</option>
+            </select>
+
+            <select required id="custStateSelect" onchange="updateShippingFee()" class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-2.5 py-2.5 text-xs focus:outline-none focus:border-amber-400">
+              <option value="">Select State...</option>
+            </select>
+
+            <input id="custStateText" oninput="updateShippingFee()" type="text" placeholder="State / Province" class="hidden w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-amber-400" />
+          </div>
+
+          <input required id="custCity" type="text" placeholder="City" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-amber-400" />
+          <input required id="custAddress" type="text" placeholder="Full Street Delivery Address" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-amber-400" />
+        </div>
+
+        <div id="pickupInfoBox" class="hidden bg-amber-500/10 border border-amber-400/30 rounded-xl p-2.5 text-xs space-y-1">
+          <p class="font-bold text-amber-300 text-xs">Store Pickup — Uyo HQ (FREE)</p>
+          <p class="text-stone-200 text-[11px]">Urua Ekpa, Uyo, Akwa Ibom State</p>
+          <p class="text-stone-400 text-[11px]">Mon–Sat: 7:30 AM – 9:00 PM &bull; Sun: 2:00 PM – 9:00 PM</p>
+        </div>
+
+        <input id="custNotes" type="text" placeholder="Delivery/pickup note or size preference (optional)" class="w-full border border-stone-800 bg-[#12141a] text-white placeholder:text-stone-500 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-amber-400" />
+
+        <div class="bg-[#12141a] rounded-xl p-2.5 text-xs space-y-1 border border-stone-800">
+          <div class="flex justify-between text-stone-400"><span>Items Subtotal:</span><span id="subTotalText" class="font-semibold text-white">₦0</span></div>
+          <div class="flex justify-between text-stone-400"><span>Delivery (<span id="estDaysText">select state</span>):</span><span id="shipFeeText" class="font-semibold text-white">—</span></div>
+          <div class="flex justify-between font-bold text-sm border-t border-stone-800 pt-1"><span>Total to Pay:</span><span id="grandTotalText" class="text-amber-400">₦0</span></div>
+        </div>
+
+        <div class="border border-amber-400/25 bg-[#12141a] rounded-xl p-2.5 space-y-2.5">
+          <p class="text-[11px] font-bold text-amber-300">Select Payment Option:</p>
+
+          <div class="grid grid-cols-2 gap-1.5 bg-stone-950 p-1 rounded-xl border border-stone-800">
+            <button type="button" id="btnPayTransfer" onclick="setPaymentOption('transfer')"
+              class="py-2 px-2 rounded-lg text-[11px] font-extrabold bg-amber-500 text-stone-950 transition">
+              Bank Transfer
+            </button>
+            <button type="button" id="btnPayOnDelivery" onclick="setPaymentOption('pod')"
+              class="py-2 px-2 rounded-lg text-[11px] font-bold text-stone-300 hover:text-white transition">
+              Pay on Delivery
+            </button>
+          </div>
+
+          <p id="podAvailabilityHint" class="text-[10px] font-semibold text-rose-400">
+            Payment on Delivery is available for Akwa Ibom courier deliveries only (shipping included in total).
+          </p>
+
+          <div id="bankTransferFields" class="space-y-2">
+            <p class="text-[11px] text-stone-300">Transfer <span class="font-bold text-amber-400" id="payBoxAmountText">₦0</span> to:</p>
+
+            <div class="bg-stone-950 border border-stone-800 rounded-xl p-2 flex items-center justify-between gap-2">
+              <div class="text-xs">
+                <p class="font-bold text-white">Stanbic IBTC</p>
+                <p class="font-mono font-bold text-xs text-amber-400">0084620625</p>
+                <p class="text-[10px] text-stone-400">Sekiflex Collections</p>
+              </div>
+              <button type="button" onclick="copyAcct('0084620625', 'Stanbic IBTC', this)"
+                class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-2.5 py-1.5 rounded-lg shrink-0 transition">
+                Copy
+              </button>
+            </div>
+
+            <div class="bg-stone-950 border border-stone-800 rounded-xl p-2 flex items-center justify-between gap-2">
+              <div class="text-xs">
+                <p class="font-bold text-white">OPay</p>
+                <p class="font-mono font-bold text-xs text-amber-400">9163755234</p>
+                <p class="text-[10px] text-stone-400">Sekiflex Collections</p>
+              </div>
+              <button type="button" onclick="copyAcct('9163755234', 'OPay', this)"
+                class="bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-extrabold px-2.5 py-1.5 rounded-lg shrink-0 transition">
+                Copy
+              </button>
+            </div>
+
+            <select required id="paidBankSelect" class="w-full border border-stone-800 bg-stone-950 text-white rounded-xl px-2.5 py-2.5 text-xs focus:outline-none focus:border-amber-400">
+              <option value="">Select Account You Transferred To...</option>
+              <option value="Stanbic IBTC (0084620625)">Paid to Stanbic IBTC — 0084620625</option>
+              <option value="OPay (9163755234)">Paid to OPay — 9163755234</option>
+            </select>
+
+            <input required id="senderRefInput" type="text" placeholder="Sender Account Name or Transfer Reference" class="w-full border border-stone-800 bg-stone-950 text-white placeholder:text-stone-500 rounded-xl px-2.5 py-2.5 text-xs focus:outline-none focus:border-amber-400" />
+          </div>
+
+          <div id="podInfoFields" class="hidden bg-amber-500/10 border border-amber-400/35 rounded-xl p-2.5 space-y-1 text-xs">
+            <p class="font-extrabold text-amber-300">Payment on Delivery — Akwa Ibom State</p>
+            <p class="text-[11px] text-stone-200">
+              Total to pay upon delivery (items + shipping): <strong id="podTotalAmountText" class="text-amber-300">₦0</strong>
+            </p>
+            <p class="text-[10px] text-stone-300">
+              Please keep your phone reachable and have the full total ready when our dispatch rider arrives in Akwa Ibom.
+            </p>
+          </div>
+
+          <label class="flex items-start gap-2 text-[11px] text-stone-300 cursor-pointer">
+            <input required id="paymentConfirmCheck" type="checkbox" class="mt-0.5 accent-amber-500" />
+            <span id="paymentConfirmLabel">I have completed the bank transfer and accept the <button type="button" onclick="event.preventDefault(); openInfoModal('privacy');" class="underline font-semibold text-amber-400">Privacy Policy</button> &amp; <button type="button" onclick="event.preventDefault(); openInfoModal('terms');" class="underline font-semibold text-amber-400">Terms</button>.</span>
+          </label>
+        </div>
+
+        <button type="submit" id="submitBtn" class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-3 rounded-xl text-xs transition shadow-2xs">
+          I Have Paid — Confirm Order
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- PRODUCT DETAIL MODAL -->
+  <div id="productDetailModal" onclick="if(event.target === this) closeProductDetailModal();" class="fixed inset-0 z-[75] hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
+    <div class="bg-[#14110c] border border-amber-400/35 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl my-auto">
       <div class="relative bg-stone-950">
-        <img id="detailModalImg" src="" alt="" loading="eager" decoding="sync"
-          class="catalog-img-smooth w-full max-h-72 object-contain object-top mx-auto bg-stone-950" />
+        <img id="detailModalImg" src="" alt="" loading="eager" decoding="sync" onerror="handleCatalogImgError(this, this.alt)" class="catalog-img-smooth w-full max-h-72 object-contain object-top mx-auto bg-stone-950" />
         <button type="button" onclick="closeProductDetailModal()"
-          class="absolute top-3 right-3 w-8 h-8 rounded-full bg-stone-900 text-white font-bold text-base border border-amber-400/40 flex items-center justify-center">
+          class="absolute top-3 right-3 w-8 h-8 rounded-full bg-stone-900/90 hover:bg-stone-800 text-white font-bold text-base border border-white/15 flex items-center justify-center">
           &times;
         </button>
+        <span id="detailModalCategory" class="hidden absolute bottom-3 left-3 bg-stone-950/90 text-amber-300 border border-amber-400/30 text-[10px] font-bold px-2.5 py-0.5 rounded-full"></span>
       </div>
 
       <div class="p-4 space-y-3">
         <div class="flex items-start justify-between gap-3">
           <div>
             <h3 id="detailModalName" class="font-editorial text-lg font-bold text-white leading-snug"></h3>
-            <p id="detailModalStock" class="text-[11px] font-semibold text-emerald-400 mt-0.5">In Stock</p>
+            <p id="detailModalStock" class="text-[11px] font-semibold text-emerald-400 mt-0.5"></p>
           </div>
           <div id="detailModalPriceBlock" class="text-right shrink-0"></div>
         </div>
@@ -537,10 +1167,15 @@
 
         <div class="flex gap-2 pt-1">
           <button type="button" onclick="closeProductDetailModal()"
-            class="px-4 py-2.5 rounded-xl border border-stone-700 text-xs font-bold text-stone-300">
+            class="px-3.5 py-2.5 rounded-xl border border-stone-700 text-xs font-bold text-stone-300 hover:bg-stone-800 transition">
             Close
           </button>
-          <button type="button" id="detailAddToCartBtn" class="skf-catalog-add-btn flex-1">
+          <button type="button" id="detailShareBtn"
+            class="px-3.5 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 border border-amber-400/35 text-xs font-extrabold text-amber-300 transition">
+            Share
+          </button>
+          <button type="button" id="detailAddToCartBtn"
+            class="flex-1 bg-amber-500 hover:bg-amber-400 text-stone-950 py-2.5 rounded-xl text-xs font-extrabold transition shadow-xs">
             Add to Cart
           </button>
         </div>
@@ -549,56 +1184,573 @@
   </div>
 
   <!-- FIXED BOTTOM NAVIGATION BAR -->
-  <nav id="bottomFixedNav" class="fixed bottom-0 inset-x-0 z-50 bg-[#0d0c0a]/95 backdrop-blur-md border-t border-amber-400/30">
+  <nav id="bottomFixedNav" class="fixed bottom-0 inset-x-0 z-50 bg-[#0d0c0a]/95 backdrop-blur-md border-t border-amber-400/30 shadow-[0_-4px_16px_rgba(0,0,0,0.5)]">
     <div class="max-w-5xl mx-auto grid grid-cols-4 h-16">
       <button type="button" id="navHomeBtn" onclick="switchBottomTab('home')"
-        class="flex flex-col items-center justify-center gap-1 text-amber-400 font-bold text-[11px]">
-        <span>🏠</span>
+        class="flex flex-col items-center justify-center gap-1 text-amber-400 font-bold text-[11px] transition">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3 2 12h3v8h6v-6h2v6h6v-8h3L12 3z"/></svg>
         <span>Home</span>
       </button>
 
       <button type="button" id="navCatBtn" onclick="switchBottomTab('categories')"
-        class="flex flex-col items-center justify-center gap-1 text-stone-400 font-semibold text-[11px]">
-        <span>🗂️</span>
+        class="flex flex-col items-center justify-center gap-1 text-stone-400 hover:text-amber-300 font-semibold text-[11px] transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
         <span>Categories</span>
       </button>
 
       <button type="button" id="navCartBtn" onclick="switchBottomTab('cart')"
-        class="relative flex flex-col items-center justify-center gap-1 text-stone-400 font-semibold text-[11px]">
+        class="relative flex flex-col items-center justify-center gap-1 text-stone-400 hover:text-amber-300 font-semibold text-[11px] transition">
         <div class="relative">
-          <span>🛒</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           <span id="cartCount" class="absolute -top-1.5 -right-2.5 bg-amber-500 text-stone-950 text-[9px] font-extrabold min-w-[17px] h-[17px] px-1 rounded-full flex items-center justify-center">0</span>
         </div>
         <span>Cart</span>
       </button>
 
       <button type="button" id="navAccountBtn" onclick="switchBottomTab('account')"
-        class="flex flex-col items-center justify-center gap-1 text-stone-400 font-semibold text-[11px]">
-        <span>👤</span>
+        class="flex flex-col items-center justify-center gap-1 text-stone-400 hover:text-amber-300 font-semibold text-[11px] transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         <span>Account</span>
       </button>
     </div>
   </nav>
 
+  <!-- REVIEWS MODAL -->
+  <div id="reviewsModal" onclick="if(event.target === this) closeReviewsModal();" class="fixed inset-0 z-[75] hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
+    <div class="bg-[#12141a] text-white border border-amber-400/25 w-full max-w-md rounded-3xl p-5 space-y-3.5 shadow-2xl my-auto max-h-[85vh] overflow-y-auto">
+      <div class="flex items-center justify-between gap-2 border-b border-stone-800 pb-2.5">
+        <div>
+          <h3 class="font-editorial text-lg font-bold text-white">Ratings &amp; Reviews</h3>
+          <p id="reviewCountText" class="text-[11px] text-stone-400">0 reviews</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-extrabold text-amber-400">★ <span id="avgRatingText" class="text-white">5.0</span></span>
+          <button type="button" onclick="closeReviewsModal()" class="w-7 h-7 rounded-full bg-stone-900 text-stone-400 hover:text-white font-bold text-base">&times;</button>
+        </div>
+      </div>
+
+      <form onsubmit="submitCustomerReview(event)" class="bg-stone-950 border border-stone-800 rounded-2xl p-3 space-y-2">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-xs font-bold text-stone-200">Rating:</span>
+          <div id="starSelectorRow" class="flex items-center gap-1" role="group" aria-label="Select 1 to 5 stars">
+            <button type="button" data-star="1" onclick="selectStarRating(1)" class="star-btn text-lg text-amber-400 leading-none">★</button>
+            <button type="button" data-star="2" onclick="selectStarRating(2)" class="star-btn text-lg text-amber-400 leading-none">★</button>
+            <button type="button" data-star="3" onclick="selectStarRating(3)" class="star-btn text-lg text-amber-400 leading-none">★</button>
+            <button type="button" data-star="4" onclick="selectStarRating(4)" class="star-btn text-lg text-amber-400 leading-none">★</button>
+            <button type="button" data-star="5" onclick="selectStarRating(5)" class="star-btn text-lg text-amber-400 leading-none">★</button>
+            <span id="selectedStarLabel" class="ml-1 text-[11px] font-bold text-amber-300">5 / 5</span>
+          </div>
+        </div>
+        <input id="reviewAuthorInput" type="text" placeholder="Your Name (optional)"
+          class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
+        <textarea required id="reviewCommentInput" rows="2" placeholder="Write your review..."
+          class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400"></textarea>
+        <button type="submit"
+          class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold py-2 rounded-xl text-xs transition">
+          Post Review
+        </button>
+      </form>
+
+      <div id="reviewsListContainer" class="space-y-2"></div>
+    </div>
+  </div>
+
+  <!-- STORE SETTINGS MODAL -->
+  <div id="storeSettingsModal" onclick="if(event.target === this) closeStoreSettingsModal();" class="fixed inset-0 z-[75] hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
+    <div class="bg-[#12141a] text-white border border-amber-400/25 w-full max-w-md rounded-3xl p-5 space-y-3.5 shadow-2xl my-auto">
+      <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
+        <div>
+          <h3 class="font-editorial text-lg font-bold text-white">Account Settings</h3>
+          <p class="text-[11px] text-stone-400">Password &amp; notification preferences</p>
+        </div>
+        <button type="button" onclick="closeStoreSettingsModal()" class="w-7 h-7 rounded-full bg-stone-900 hover:bg-stone-800 text-stone-400 hover:text-white font-bold text-base">&times;</button>
+      </div>
+
+      <form onsubmit="handleAccountPasswordChange(event)" class="bg-stone-950 border border-stone-800 rounded-2xl p-3 space-y-2">
+        <p class="text-xs font-bold text-amber-300">Change Password</p>
+        <p id="changePasswordMsg" class="hidden text-[11px] font-semibold p-2 rounded-xl"></p>
+        <input required id="accountNewPassword" type="password" minlength="6" placeholder="New Password (min. 6 chars)"
+          class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
+        <input required id="accountConfirmPassword" type="password" minlength="6" placeholder="Confirm New Password"
+          class="w-full border border-stone-800 bg-[#12141a] text-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400" />
+        <button type="submit" id="saveNewPasswordBtn"
+          class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 py-2 rounded-xl text-xs font-extrabold transition">
+          Update Password
+        </button>
+      </form>
+
+      <label class="flex items-center justify-between p-3 rounded-2xl bg-stone-950 border border-stone-800 text-stone-200 cursor-pointer text-xs font-bold">
+        <span>Sound Alerts</span>
+        <input type="checkbox" id="prefSoundToggle"
+          onchange="localStorage.setItem('sekiflex_sound_enabled', this.checked ? '1' : '0')"
+          class="w-4 h-4 accent-amber-500 rounded" />
+      </label>
+
+      <button type="button" onclick="closeStoreSettingsModal()" class="w-full bg-stone-800 hover:bg-stone-700 text-white py-2.5 rounded-xl text-xs font-bold">
+        Done
+      </button>
+    </div>
+  </div>
+
+  <!-- ABOUT / DELIVERY / SUPPORT / ORDERS / INBOX / REVIEWS / PRIVACY / REFUND / TERMS MODAL -->
+  <div id="infoModal" onclick="if(event.target === this) this.classList.add('hidden');" class="fixed inset-0 z-[75] hidden bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-[#12141a] text-white border border-amber-400/25 rounded-3xl max-w-md w-full p-5 space-y-3.5 shadow-2xl my-auto max-h-[85vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
+        <h3 id="infoModalTitle" class="font-editorial text-lg font-bold text-amber-300">About Sekiflex Collections</h3>
+        <button type="button" onclick="document.getElementById('infoModal').classList.add('hidden')" class="w-7 h-7 rounded-full bg-stone-900 text-stone-400 hover:text-white font-bold">&times;</button>
+      </div>
+      <div id="infoModalBody" class="skf-policy-wrap text-xs text-stone-300 leading-relaxed"></div>
+      <button type="button" onclick="document.getElementById('infoModal').classList.add('hidden')" class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 py-2.5 rounded-xl text-xs font-extrabold">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <!-- Added-to-Bag Toast Notification -->
+  <div id="bagToast" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-40 hidden bg-[#12141a] text-white px-4 py-2 rounded-full shadow-2xl border border-amber-400/35 flex items-center gap-3 text-xs whitespace-nowrap">
+    <span class="text-emerald-400 font-bold">&#10003;</span>
+    <span id="bagToastText">Added to cart</span>
+    <button type="button" onclick="hideBagToast(); openCartReview();" class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold px-3 py-1 rounded-full text-[11px] transition">
+      View Cart
+    </button>
+  </div>
+
+  <!-- Success Modal -->
+  <div id="successModal" onclick="if(event.target === this) closeSuccessModalToStore();" class="fixed inset-0 z-[80] hidden bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-[#12141a] text-white border border-amber-400/30 rounded-3xl max-w-sm w-full p-5 text-center space-y-3.5 shadow-2xl relative">
+      <button type="button" onclick="closeSuccessModalToStore()" aria-label="Back to store"
+        class="absolute top-3.5 left-3.5 inline-flex items-center gap-1 text-xs font-bold text-stone-300 hover:text-white bg-stone-900 hover:bg-stone-800 px-3 py-1 rounded-full transition">
+        ← Back
+      </button>
+      <div class="w-11 h-11 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-400/30 flex items-center justify-center mx-auto text-xl font-bold mt-2">&#10003;</div>
+      <h2 class="font-editorial text-xl font-bold text-white">Order Submitted</h2>
+      <p class="text-xs font-semibold text-amber-300 leading-relaxed">
+        Thank you for buying from Sekiflex Collections.
+      </p>
+      <p id="successOrderStatusBadge" class="inline-block text-xs font-bold px-3 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-400/30">
+        Order processing • Awaiting payment
+      </p>
+      <p class="text-xs text-stone-300">Save your tracking code below:</p>
+      <div class="bg-stone-950 border border-dashed border-amber-400/40 rounded-xl py-2.5 px-4 font-mono text-base font-bold text-amber-400" id="newTrackingCode"></div>
+      <div id="successProductLinksBox" class="hidden text-left bg-stone-950 border border-stone-800 rounded-xl p-2.5 space-y-1">
+        <p class="text-[10px] font-bold uppercase tracking-wider text-amber-400">Share Ordered Product Links</p>
+        <div id="successProductLinksList" class="text-[11px] text-stone-200 space-y-1 break-all"></div>
+      </div>
+      <a id="orderWhatsappConfirmBtn" href="https://wa.me/2349069037617" target="_blank" rel="noopener"
+         class="block w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-xl text-xs font-bold transition">
+        Send Receipt on WhatsApp
+      </a>
+      <div class="flex gap-2">
+        <button type="button" onclick="copyTracking()" class="flex-1 border border-stone-700 py-2 rounded-xl text-xs font-bold text-stone-200 hover:bg-stone-800">Copy Code</button>
+        <a id="trackNowLink" href="track.html" class="flex-1 bg-stone-950 border border-amber-400/30 text-amber-300 py-2 rounded-xl text-xs font-bold hover:bg-stone-900">Track Order</a>
+      </div>
+      <button type="button" onclick="closeSuccessModalToStore()"
+        class="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 py-2.5 rounded-xl text-xs font-extrabold transition">
+        ← Back to Store
+      </button>
+    </div>
+  </div>
+
   <script>
-    const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
-    let allProducts = JSON.parse(localStorage.getItem('sekiflex_products_cache') || '[]');
-    let allCategories = JSON.parse(localStorage.getItem('sekiflex_cats_cache') || '[]');
-    let cart = JSON.parse(localStorage.getItem('sekiflex_cart') || '[]');
-    let likedIds = JSON.parse(localStorage.getItem('sekiflex_liked_items_v1') || '[]');
-    let wallPromoCards = JSON.parse(localStorage.getItem('sekiflex_wall_promo_cards_v1') || 'null') || [
+    const STORE_WHATSAPP_NUMBER = '2349069037617';
+    const TIKTOK_URL = 'https://www.tiktok.com/@sekiflex_collections?_r=1&_t=ZS-9BbSAFjxrZW';
+    const FACEBOOK_URL = 'https://www.facebook.com/share/1G3ErASdHa/';
+    const ROTATION_MINUTES = 1;
+    const AKWA_IBOM_SHIPPING_FEE = 2000;
+
+    const DEFAULT_WALL_PROMO_CARDS = [
       { id: 'wall_1', title: 'New Arrivals', image: '', categoryKey: 'ALL' },
       { id: 'wall_2', title: "Men's Wear", image: '', categoryKey: 'ALL' },
       { id: 'wall_3', title: 'Best Deals', image: '', categoryKey: 'ALL' },
       { id: 'wall_4', title: 'Fashion for Everyone', image: '', categoryKey: 'ALL' }
     ];
+
+    const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
+    const NIGERIA_STATES = [
+      'Abia', 'Abuja (FCT)', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa',
+      'Benue', 'Borno', 'Cross River', 'Delta', 'Ebonyi', 'Edo', 'Ekiti', 'Enugu',
+      'Gombe', 'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Kogi',
+      'Kwara', 'Lagos', 'Nasarawa', 'Niger', 'Ogun', 'Ondo', 'Osun', 'Oyo',
+      'Plateau', 'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara'
+    ];
+
+    let allProducts = JSON.parse(localStorage.getItem('sekiflex_products_cache') || '[]');
+    let allCategories = JSON.parse(localStorage.getItem('sekiflex_cats_cache') || '[]');
+    let shippingZones = JSON.parse(localStorage.getItem('sekiflex_zones_cache') || '[]');
+    let freeShippingMode = localStorage.getItem('sekiflex_free_shipping_v1') === '1';
+    let cart = JSON.parse(localStorage.getItem('sekiflex_cart') || '[]');
+    let likedIds = JSON.parse(localStorage.getItem('sekiflex_liked_items_v1') || '[]');
+    let storeReviews = JSON.parse(localStorage.getItem('sekiflex_reviews_v1') || '[]');
+    let wallPromoCards = JSON.parse(localStorage.getItem('sekiflex_wall_promo_cards_v1') || 'null') || [...DEFAULT_WALL_PROMO_CARDS];
+    let liveBannerMediaUrls = [];
+    let selectedStarRating = 5;
     let activeCategory = 'ALL';
+    let categoryBrowseMode = false;
+    let splitSelectedCatKey = 'FEATURED';
     let searchQuery = '';
+    let pictureSearchScores = null;
+    let pictureSearchFileName = '';
+    let fulfillmentMode = 'delivery';
+    let paymentOption = 'transfer';
+    let currentShippingFee = 0;
+    let currentEstDays = 'select state';
+    let toastTimer = null;
+    let currentCustomer = null;
+    let returnToCheckoutAfterAuth = false;
+    let pendingSignupData = { name: '', email: '', phone: '' };
+    let pendingResetEmail = '';
+    let bannerAutoTimer = null;
+    let bannerPauseUntil = 0;
+    let currentBannerSlideIdx = 0;
+    let featuredAutoTimer = null;
+    let featuredPauseUntil = 0;
+    let lastRotationSlot = -1;
+    let isScreenScrollingOrTouching = false;
+    let screenFreezeUntil = 0;
+    let lockedCatalogOrderIds = null;
+    let lockedFeaturedOrderIds = null;
+    let screenIdleTimer = null;
+    let allowWebsiteExit = false;
+
+    const SEKIFLEX_INFO_PAGES = {
+      about: {
+        title: 'About Sekiflex Collections',
+        html: `<span class="skf-policy-badge">Operated by Sekiflex Limited</span><p><strong>Sekiflex Collections</strong> is a fashion and lifestyle brand operating under <strong>Sekiflex Limited</strong>, committed to providing quality, stylish, and affordable products to customers in Nigeria and beyond.</p><div class="skf-policy-tagline">Sekiflex Collections – Quality, Style and Confidence.</div>`
+      },
+      delivery: {
+        title: 'Delivery & Shipping – Sekiflex Collections',
+        html: `<span class="skf-policy-badge">Website &amp; Mobile App Fleet</span><p>We deliver across all <strong>36 states in Nigeria</strong> (1–4 business days) and international destinations (5–10 business days).</p><div class="skf-policy-tagline">Sekiflex Collections – We Deliver Beyond Boundaries.</div>`
+      },
+      support: {
+        title: 'Help & Customer Support – Sekiflex Collections',
+        html: `<span class="skf-policy-badge">Website &amp; Mobile App Support</span><p>Reach us via Live Chat or WhatsApp for order, payment, delivery, or tracking help.</p><div class="skf-policy-tagline">Sekiflex Collections – Your Satisfaction Is Our Priority.</div>`
+      },
+      orders: {
+        title: 'Orders & Live Tracking – Sekiflex Collections',
+        html: `<span class="skf-policy-badge">Real-Time Order Tracking</span><p>Use your tracking code on <a href="track.html" class="underline font-bold text-amber-300">Track Order</a> to check live status updates.</p><div class="skf-policy-tagline">Sekiflex Collections – Shop with Confidence. Track with Ease.</div>`
+      },
+      inbox: {
+        title: 'Inbox & Promotional Alerts – Sekiflex Collections',
+        html: `<span class="skf-policy-badge">Web &amp; Mobile App Alerts</span><p>Stay tuned for new arrivals, special deals, and store announcements.</p><div class="skf-policy-tagline">Sekiflex Collections – Stay Connected.</div>`
+      },
+      reviews: {
+        title: 'Ratings & Reviews – Sekiflex Collections',
+        html: `<span class="skf-policy-badge">Shopper Community Feedback</span><p><button type="button" onclick="document.getElementById('infoModal').classList.add('hidden'); openReviewsModal();" class="underline font-bold text-amber-300">Open Ratings &amp; Reviews Box →</button></p><div class="skf-policy-tagline">Sekiflex Collections – Your Feedback Makes Us Better.</div>`
+      },
+      privacy: {
+        title: 'Privacy Policy – Sekiflex Collections',
+        html: `<span class="skf-policy-badge">Effective Date: 24 November 2026</span><p>Sekiflex Collections (operated by Sekiflex Limited) protects customer details used for order processing and delivery.</p><div class="skf-policy-tagline">Sekiflex Collections – Your Privacy, Our Responsibility.</div>`
+      },
+      refund: {
+        title: 'Refund, Returns & Payment Policy',
+        html: `<span class="skf-policy-badge">Effective Date: 24 November 2026</span><p>Contact support with your order tracking code and proof if an item arrives damaged, defective, or incorrect.</p><div class="skf-policy-tagline">Sekiflex Collections – Fair Shopping. Trusted Service.</div>`
+      },
+      terms: {
+        title: 'Terms &amp; Conditions – Sekiflex Collections',
+        html: `<span class="skf-policy-badge">Effective Date: 24 November 2026</span><p>All orders are subject to availability and payment verification under the laws of the Federal Republic of Nigeria.</p><div class="skf-policy-tagline">Sekiflex Collections – Shop with Confidence.</div>`
+      }
+    };
+
+    function pushBackTrapState() {
+      if (allowWebsiteExit) return;
+      try {
+        const baseUrl = window.location.pathname + window.location.search + '#sekiflex-store';
+        window.history.replaceState({ sekiflexGuardRoot: true }, '', baseUrl);
+        window.history.pushState({ sekiflexGuardTrap: Date.now() }, '', baseUrl);
+      } catch (e) {}
+    }
+
+    function armStoreBackGuard() {
+      if (allowWebsiteExit) return;
+      pushBackTrapState();
+    }
+
+    function bindBackButtonGuardsOnce() {
+      if (window.__skfBackGuardBound) return;
+      window.__skfBackGuardBound = true;
+      pushBackTrapState();
+
+      window.addEventListener('popstate', () => {
+        if (allowWebsiteExit) return;
+        if (hasAnyOverlayOpen()) {
+          closeAllDrawers();
+          pushBackTrapState();
+          return;
+        }
+        const splitView = document.getElementById('splitCategoryStoreView');
+        const acctView = document.getElementById('accountFullPageView');
+        const cartView = document.getElementById('cartFullPageView');
+        if ((splitView && !splitView.classList.contains('hidden')) ||
+            (acctView && !acctView.classList.contains('hidden')) ||
+            (cartView && !cartView.classList.contains('hidden'))) {
+          switchBottomTab('home');
+          pushBackTrapState();
+          return;
+        }
+        if (activeCategory !== 'ALL' || categoryBrowseMode || searchQuery || pictureSearchScores) {
+          categoryBrowseMode = false;
+          clearPictureSearch();
+          clearSearch();
+          filterCategory('ALL');
+          setActiveBottomTab('home');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          pushBackTrapState();
+          return;
+        }
+        pushBackTrapState();
+        openLeaveConfirmModal();
+      });
+    }
+
+    function markScreenActive(durationMs = 4500) {
+      isScreenScrollingOrTouching = true;
+      screenFreezeUntil = Date.now() + durationMs;
+      clearTimeout(screenIdleTimer);
+      screenIdleTimer = setTimeout(() => {
+        isScreenScrollingOrTouching = false;
+      }, 1500);
+    }
+
+    function isScreenFrozenForCustomer() {
+      return isScreenScrollingOrTouching || Date.now() < screenFreezeUntil;
+    }
+
+    function bindScrollPauseWatcher() {
+      if (window.__skfScrollWatcherBound) return;
+      window.__skfScrollWatcherBound = true;
+      const onAnyScreenTouchOrScroll = () => markScreenActive(4500);
+      window.addEventListener('scroll', onAnyScreenTouchOrScroll, { passive: true });
+      document.addEventListener('touchmove', onAnyScreenTouchOrScroll, { passive: true });
+      document.addEventListener('touchstart', onAnyScreenTouchOrScroll, { passive: true });
+      document.addEventListener('pointerdown', onAnyScreenTouchOrScroll, { passive: true });
+    }
+
+    function bindCategoryDelegationOnce() {
+      const splitGrid = document.getElementById('splitCategoryGrid');
+      if (splitGrid && !splitGrid.dataset.delegated) {
+        splitGrid.dataset.delegated = '1';
+        splitGrid.addEventListener('click', (ev) => {
+          const cell = ev.target.closest('[data-action]');
+          if (!cell) return;
+          const action = cell.getAttribute('data-action');
+          const val = cell.getAttribute('data-val') || '';
+          if (action === 'cat') {
+            shopSpecificCategoryFromSplit(val);
+          } else {
+            jumpToAllItems();
+          }
+        });
+      }
+    }
+
+    function getFallbackPhotoUrl(seedIdx = 0) {
+      if (!Array.isArray(allProducts) || !allProducts.length) return '';
+      const imgs = allProducts
+        .map(p => (p?.images && p.images[0]) || p?.image_url || '')
+        .filter(Boolean);
+      if (!imgs.length) return '';
+      return imgs[Math.abs(seedIdx) % imgs.length];
+    }
+
+    function renderBrandedPlaceholderHtml(labelText = 'Sekiflex') {
+      const safeLabel = String(labelText || 'Sekiflex').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return `<div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#231b10] via-[#16120c] to-[#0e0c09] text-amber-300/90 p-1.5 text-center select-none"><span class="font-editorial text-xs font-extrabold tracking-wider text-amber-400">SC</span><span class="text-[8px] font-bold text-stone-300 line-clamp-2 mt-0.5">${safeLabel}</span></div>`;
+    }
+
+    function handleCatalogImgLoad(imgEl) {
+      if (!imgEl) return;
+      imgEl.classList.add('is-loaded');
+    }
+
+    function handleCatalogImgError(imgEl, labelText = 'Sekiflex') {
+      if (!imgEl) return;
+      const nextFallback = getFallbackPhotoUrl((Number(imgEl.dataset.fbIdx) || 0) + 1);
+      if (nextFallback && imgEl.src !== nextFallback && (Number(imgEl.dataset.fbIdx) || 0) < 3) {
+        imgEl.dataset.fbIdx = String((Number(imgEl.dataset.fbIdx) || 0) + 1);
+        imgEl.src = nextFallback;
+        return;
+      }
+      imgEl.style.display = 'none';
+      if (imgEl.parentElement) {
+        imgEl.parentElement.innerHTML = renderBrandedPlaceholderHtml(labelText);
+      }
+    }
+
+    function warmUpTopImages(list) {
+      if (!Array.isArray(list) || !list.length) return;
+      list.slice(0, 28).forEach(p => {
+        const src = (p.images && p.images[0]) || p.image_url;
+        if (!src) return;
+        const pre = new Image();
+        pre.decoding = 'sync';
+        pre.src = src;
+        if (typeof pre.decode === 'function') {
+          pre.decode().catch(() => {});
+        }
+      });
+    }
+
+    function getMinuteSlotOffset(salt = 0) {
+      return Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000)) + salt;
+    }
+
+    function pickRotatingProductImage(slotIdx, fallbackIdx = 0) {
+      const imgs = (allProducts || [])
+        .map(p => (p?.images && p.images[0]) || p?.image_url || '')
+        .filter(Boolean);
+      if (!imgs.length) return '';
+      const pos = Math.abs((slotIdx * 3) + fallbackIdx) % imgs.length;
+      return imgs[pos];
+    }
+
+    function handleCategoryPromoBoxClick(idx) {
+      const savedCard = Array.isArray(wallPromoCards) ? wallPromoCards[idx] : null;
+      const targetCat = (savedCard && savedCard.categoryKey) || 'ALL';
+      shopSpecificCategoryFromSplit(targetCat);
+    }
+
+    // 4 Promo Boxes stay strictly pinned to admin/saved promo images & never auto-rotate
+    function renderCategoryViewTopAndMedallions() {
+      for (let i = 0; i < 4; i++) {
+        const titleEl = document.getElementById(`catPromoTitle${i}`);
+        const box = document.getElementById(`catSpotlightImg${i}`);
+        const savedCard = Array.isArray(wallPromoCards) ? wallPromoCards[i] : null;
+        const def = DEFAULT_WALL_PROMO_CARDS[i];
+        const title = (savedCard && savedCard.title) || def?.title || 'Promo';
+        if (titleEl) titleEl.textContent = title;
+
+        const img = (savedCard && savedCard.image && savedCard.image.trim()) || liveBannerMediaUrls[i] || '';
+        if (box && img) {
+          box.innerHTML = `<img src="${img}" alt="" loading="eager" decoding="sync" class="catalog-img-smooth w-full h-full object-cover object-top" />`;
+        }
+      }
+    }
+
+    function toggleLikeProduct(productId, btnEl, ev) {
+      if (ev) ev.stopPropagation();
+      const idStr = String(productId);
+      const existsIdx = likedIds.indexOf(idStr);
+      if (existsIdx >= 0) likedIds.splice(existsIdx, 1);
+      else likedIds.push(idStr);
+      localStorage.setItem('sekiflex_liked_items_v1', JSON.stringify(likedIds));
+      if (btnEl) {
+        const nowLiked = likedIds.includes(idStr);
+        btnEl.classList.toggle('is-liked', nowLiked);
+        btnEl.textContent = nowLiked ? '♥' : '♡';
+      }
+    }
+
+    function refreshStaticHeroSlideMedia() {
+      renderCategoryViewTopAndMedallions();
+      if (!Array.isArray(allProducts) || !allProducts.length) return;
+      const slot = getMinuteSlotOffset(5);
+      const appBox = document.getElementById('heroSlideApparelMedia');
+      const accBox = document.getElementById('heroSlideAccessoriesMedia');
+      const img1 = pickRotatingProductImage(slot, 0);
+      const img2 = pickRotatingProductImage(slot, 1);
+
+      if (appBox && img1) {
+        appBox.innerHTML = `<img src="${img1}" alt="" loading="eager" decoding="sync" class="catalog-img-smooth w-full h-full object-cover object-top" />`;
+      }
+      if (accBox && img2) {
+        accBox.innerHTML = `<img src="${img2}" alt="" loading="eager" decoding="sync" class="catalog-img-smooth w-full h-full object-cover object-top" />`;
+      }
+    }
+
+    function getProductShareUrl(productId) {
+      const base = `${window.location.origin}${window.location.pathname}`;
+      return `${base}?product=${encodeURIComponent(String(productId))}`;
+    }
+
+    async function shareProductLink(productId, productName) {
+      const url = getProductShareUrl(productId);
+      const text = `Check out ${productName || 'this item'} on Sekiflex Collections:`;
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: productName || 'Sekiflex Collections', text, url });
+          return;
+        }
+      } catch (err) {
+        if (err && err.name === 'AbortError') return;
+      }
+      try {
+        await navigator.clipboard.writeText(url);
+        alert('Product share link copied: ' + url);
+      } catch (e) {
+        prompt('Copy this product link:', url);
+      }
+    }
+
+    function openSharedProductFromUrl() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const sharedId = params.get('product');
+        if (sharedId && allProducts.some(p => String(p.id) === String(sharedId))) {
+          openProductDetail(sharedId);
+        }
+      } catch (e) {}
+    }
+
+    function openLeaveConfirmModal() {
+      const modal = document.getElementById('leaveConfirmModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function confirmLeaveWebsiteNo() {
+      const modal = document.getElementById('leaveConfirmModal');
+      if (modal) modal.classList.add('hidden');
+      pushBackTrapState();
+    }
+
+    function confirmLeaveWebsiteYes() {
+      const modal = document.getElementById('leaveConfirmModal');
+      if (modal) modal.classList.add('hidden');
+      allowWebsiteExit = true;
+      window.location.replace('https://www.google.com');
+    }
+
+    function hasAnyOverlayOpen() {
+      return ['leaveConfirmModal', 'customerAuthGate', 'productDetailModal', 'storeSettingsModal', 'infoModal', 'successModal', 'reviewsModal']
+        .some(id => {
+          const el = document.getElementById(id);
+          return el && !el.classList.contains('hidden');
+        });
+    }
+
+    function openSuccessModalWithHistory() {
+      const modal = document.getElementById('successModal');
+      if (modal) modal.classList.remove('hidden');
+      armStoreBackGuard();
+    }
+
+    function closeSuccessModalToStore() {
+      const modal = document.getElementById('successModal');
+      if (modal) modal.classList.add('hidden');
+      closeAllDrawers();
+      switchBottomTab('home');
+      armStoreBackGuard();
+    }
+
+    function getStatusColor(value) {
+      const status = String(value || '').toLowerCase();
+      if (status.includes('delayed') || status.includes('returned') || status.includes('attempted') || status.includes('cancel')) return '#D93636';
+      if (status.includes('delivered') || status.includes('arrived') || status.includes('confirmed') || status.includes('ready for collection') || status.includes('payment confirmed') || status.includes('payment received')) return '#239B59';
+      return '#D6A500';
+    }
+
+    function applyStatusBadgeStyle(el, statusText) {
+      if (!el) return;
+      const color = getStatusColor(statusText);
+      el.textContent = statusText;
+      el.style.color = color;
+      el.style.border = `1px solid ${color}`;
+      el.style.backgroundColor = color === '#239B59' ? '#EAF7EF' : color === '#D93636' ? '#FDECEC' : '#FFF8DB';
+    }
 
     function getProductPricing(prod) {
       const base = Number(prod?.base_price || 0);
-      const rawSale = prod?.discount_price ?? prod?.sale_price;
       const rawCompare = prod?.compare_at_price ?? prod?.original_price ?? prod?.old_price;
+      const rawSale = prod?.discount_price ?? prod?.sale_price;
       let effectivePrice = base;
       let originalPrice = null;
       if (rawSale !== null && rawSale !== undefined && rawSale !== '') {
@@ -617,230 +1769,1320 @@
       return { effectivePrice, originalPrice };
     }
 
-    function openProductDetailById(productId) {
+    function formatPriceHtml(prod, sizeClass = 'text-xs sm:text-sm') {
+      const { effectivePrice, originalPrice } = getProductPricing(prod);
+      if (originalPrice !== null) {
+        return `<div class="flex items-baseline gap-1.5 flex-wrap"><span class="font-extrabold text-amber-400 ${sizeClass}">₦${effectivePrice.toLocaleString()}</span><span class="text-[10px] font-semibold text-stone-400 line-through">₦${originalPrice.toLocaleString()}</span></div>`;
+      }
+      return `<p class="font-extrabold text-amber-400 ${sizeClass}">₦${effectivePrice.toLocaleString()}</p>`;
+    }
+
+    function jumpToAllItems() {
+      showOnlyMainView('storeMainWrapper');
+      setActiveBottomTab('home');
+      categoryBrowseMode = false;
+      filterCategory('ALL');
+      const sec = document.getElementById('catalogSection');
+      if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function renderHeroPaginationDots(count, activeIdx = 0) {
+      const dotsWrap = document.getElementById('heroPaginationDots');
+      if (!dotsWrap) return;
+      if (count <= 1) {
+        dotsWrap.innerHTML = '';
+        return;
+      }
+      dotsWrap.innerHTML = Array.from({ length: count }).map((_, i) => `
+        <span class="h-1.5 rounded-full transition-all duration-300 ${i === activeIdx ? 'w-5 bg-amber-400' : 'w-1.5 bg-stone-600'}"></span>
+      `).join('');
+    }
+
+    function startBannerAutoShift() {
+      const carousel = document.getElementById('bannerCarousel');
+      if (!carousel) return;
+      const getVisibleSlides = () => Array.from(carousel.querySelectorAll('.promo-slide')).filter(el => !el.classList.contains('hidden'));
+      renderHeroPaginationDots(getVisibleSlides().length, currentBannerSlideIdx);
+
+      if (!carousel.dataset.autoBound) {
+        carousel.dataset.autoBound = '1';
+        const pauseAuto = () => { bannerPauseUntil = Date.now() + 6000; };
+        carousel.addEventListener('touchstart', pauseAuto, { passive: true });
+        carousel.addEventListener('pointerdown', pauseAuto, { passive: true });
+        carousel.addEventListener('mouseenter', pauseAuto);
+        carousel.addEventListener('scroll', () => {
+          const slides = getVisibleSlides();
+          if (!slides.length) return;
+          const slideW = slides[0].offsetWidth + 10;
+          const idx = Math.min(slides.length - 1, Math.max(0, Math.round(carousel.scrollLeft / Math.max(1, slideW))));
+          currentBannerSlideIdx = idx;
+          renderHeroPaginationDots(slides.length, idx);
+        }, { passive: true });
+      }
+
+      if (bannerAutoTimer) clearInterval(bannerAutoTimer);
+      bannerAutoTimer = setInterval(() => {
+        if (Date.now() < bannerPauseUntil) return;
+        const heroSec = document.getElementById('heroCarouselSection');
+        if (!heroSec || heroSec.classList.contains('hidden')) return;
+        const visibleSlides = getVisibleSlides();
+        if (visibleSlides.length <= 1) return;
+        currentBannerSlideIdx = (currentBannerSlideIdx + 1) % visibleSlides.length;
+        const target = visibleSlides[currentBannerSlideIdx];
+        carousel.scrollTo({ left: target.offsetLeft - carousel.offsetLeft, behavior: 'smooth' });
+        renderHeroPaginationDots(visibleSlides.length, currentBannerSlideIdx);
+      }, 3500);
+    }
+
+    function startFeaturedAutoScroll() {
+      const strip = document.getElementById('featuredHorizontalList');
+      if (!strip) return;
+      if (!strip.dataset.autoBound) {
+        strip.dataset.autoBound = '1';
+        const pauseFeatured = () => { featuredPauseUntil = Date.now() + 2500; };
+        strip.addEventListener('touchstart', pauseFeatured, { passive: true });
+        strip.addEventListener('pointerdown', pauseFeatured, { passive: true });
+        strip.addEventListener('mouseenter', pauseFeatured);
+      }
+      if (featuredAutoTimer) clearInterval(featuredAutoTimer);
+      featuredAutoTimer = setInterval(() => {
+        if (isScreenFrozenForCustomer() || Date.now() < featuredPauseUntil) return;
+        const sec = document.getElementById('featuredStripSection');
+        if (!sec || sec.classList.contains('hidden')) return;
+        const maxScroll = strip.scrollWidth - strip.clientWidth;
+        if (maxScroll <= 4) return;
+        const step = 150;
+        if (strip.scrollLeft + step >= maxScroll - 4) strip.scrollTo({ left: 0, behavior: 'smooth' });
+        else strip.scrollBy({ left: step, behavior: 'smooth' });
+      }, 2800);
+    }
+
+    function getRotatedProducts(list, saltOffset = 0, freezeKey = 'catalog') {
+      if (!Array.isArray(list) || list.length <= 1) return list || [];
+      const existingLock = freezeKey === 'featured' ? lockedFeaturedOrderIds : lockedCatalogOrderIds;
+
+      if (isScreenFrozenForCustomer() && Array.isArray(existingLock) && existingLock.length) {
+        const mapById = new Map(list.map(item => [String(item.id), item]));
+        const ordered = [];
+        existingLock.forEach(id => {
+          const found = mapById.get(String(id));
+          if (found) {
+            ordered.push(found);
+            mapById.delete(String(id));
+          }
+        });
+        mapById.forEach(rest => ordered.push(rest));
+        return ordered;
+      }
+
+      const slot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000)) + saltOffset;
+      const items = [...list];
+      const n = items.length;
+      let seed = (slot * 2654435761) >>> 0;
+      const nextRand = () => {
+        seed = (1664525 * seed + 1013904223) >>> 0;
+        return seed / 4294967296;
+      };
+      for (let i = n - 1; i > 0; i--) {
+        const j = Math.floor(nextRand() * (i + 1));
+        const tmp = items[i];
+        items[i] = items[j];
+        items[j] = tmp;
+      }
+      const ids = items.map(p => String(p.id));
+      if (freezeKey === 'featured') lockedFeaturedOrderIds = ids;
+      else lockedCatalogOrderIds = ids;
+      return items;
+    }
+
+    function startProductRotation() {
+      setInterval(() => {
+        const slot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000));
+        if (slot !== lastRotationSlot && allProducts.length > 1) {
+          lastRotationSlot = slot;
+          if (isScreenFrozenForCustomer()) return;
+
+          refreshStaticHeroSlideMedia();
+          renderFeaturedStrip(allProducts);
+          applyCatalogFilters();
+
+          if (!document.getElementById('splitCategoryStoreView').classList.contains('hidden')) {
+            renderSplitCategoryPanel();
+          }
+        }
+      }, 2000);
+    }
+
+    function applySocialLinks() {
+      const tt = document.getElementById('settingsTikTokLink');
+      const fb = document.getElementById('settingsFacebookLink');
+      if (tt) tt.href = TIKTOK_URL;
+      if (fb) fb.href = FACEBOOK_URL;
+    }
+
+    function triggerPictureSearch() {
+      const input = document.getElementById('pictureSearchInput');
+      if (input) {
+        input.value = '';
+        input.click();
+      }
+    }
+
+    function computeImageSignature(imgEl) {
+      return new Promise((resolve) => {
+        try {
+          const canvas = document.createElement('canvas');
+          const size = 12;
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(imgEl, 0, 0, size, size);
+          const data = ctx.getImageData(0, 0, size, size).data;
+          const vec = [];
+          for (let i = 0; i < data.length; i += 4) {
+            vec.push(data[i] / 255, data[i + 1] / 255, data[i + 2] / 255);
+          }
+          resolve(vec);
+        } catch (err) {
+          resolve(null);
+        }
+      });
+    }
+
+    function loadImageForVisualMatch(url) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = async () => resolve(await computeImageSignature(img));
+        img.onerror = () => resolve(null);
+        img.src = url;
+      });
+    }
+
+    function signatureSimilarity(vecA, vecB) {
+      if (!vecA || !vecB || vecA.length !== vecB.length || !vecA.length) return -1;
+      let diffSum = 0;
+      for (let i = 0; i < vecA.length; i++) diffSum += Math.abs(vecA[i] - vecB[i]);
+      return 1 - (diffSum / vecA.length);
+    }
+
+    async function handlePictureSearch(event) {
+      const file = event?.target?.files?.[0];
+      if (!file) return;
+      armStoreBackGuard();
+      pictureSearchFileName = (file.name || '').toLowerCase();
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const dataUrl = e.target.result;
+        const banner = document.getElementById('pictureSearchBanner');
+        const preview = document.getElementById('pictureSearchPreviewImg');
+        const statusEl = document.getElementById('pictureSearchStatusText');
+        preview.src = dataUrl;
+        statusEl.textContent = 'Scanning catalog photos...';
+        banner.classList.remove('hidden');
+        banner.classList.add('flex');
+
+        const queryImg = new Image();
+        queryImg.onload = async () => {
+          const querySig = await computeImageSignature(queryImg);
+          const scores = {};
+          let visualMatchedCount = 0;
+          const nameTokens = pictureSearchFileName
+            .replace(/\.[a-z0-9]+$/i, '')
+            .replace(/[^a-z0-9]+/gi, ' ')
+            .trim()
+            .toLowerCase()
+            .split(/\s+/)
+            .filter(w => w.length >= 3);
+
+          for (const prod of allProducts) {
+            const imgUrl = (prod.images && prod.images[0]) || prod.image_url || '';
+            let score = 0;
+            if (querySig && imgUrl) {
+              const prodSig = await loadImageForVisualMatch(imgUrl);
+              if (prodSig) {
+                score = signatureSimilarity(querySig, prodSig);
+                visualMatchedCount += 1;
+              }
+            }
+            if (nameTokens.length) {
+              const catObj = allCategories.find(c => c.id === prod.category_id);
+              const hay = `${prod.name || ''} ${prod.description || ''} ${catObj ? catObj.name : ''} ${imgUrl}`.toLowerCase();
+              const hits = nameTokens.filter(t => hay.includes(t)).length;
+              if (hits > 0) score = Math.max(score, 0.5 + hits * 0.15);
+            }
+            scores[String(prod.id)] = score;
+          }
+
+          pictureSearchScores = scores;
+          statusEl.textContent = visualMatchedCount > 0
+            ? `Matched against ${visualMatchedCount} photo${visualMatchedCount === 1 ? '' : 's'}`
+            : 'Showing catalog items for your photo';
+          document.getElementById('heroCarouselSection').classList.add('hidden');
+          document.getElementById('featuredStripSection').classList.add('hidden');
+          applyCatalogFilters();
+          document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+        queryImg.src = dataUrl;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearPictureSearch() {
+      pictureSearchScores = null;
+      pictureSearchFileName = '';
+      const input = document.getElementById('pictureSearchInput');
+      if (input) input.value = '';
+      const banner = document.getElementById('pictureSearchBanner');
+      banner.classList.add('hidden');
+      banner.classList.remove('flex');
+      if (!searchQuery) {
+        document.getElementById('heroCarouselSection').classList.remove('hidden');
+        if (allProducts.length) {
+          document.getElementById('featuredStripSection').classList.remove('hidden');
+          startFeaturedAutoScroll();
+        }
+      }
+      applyCatalogFilters();
+    }
+
+    function openReviewsModal() {
+      renderReviews();
+      document.getElementById('reviewsModal').classList.remove('hidden');
+      armStoreBackGuard();
+    }
+
+    function closeReviewsModal() {
+      document.getElementById('reviewsModal').classList.add('hidden');
+    }
+
+    function selectStarRating(stars) {
+      selectedStarRating = Math.max(1, Math.min(5, Number(stars) || 5));
+      document.querySelectorAll('.star-btn').forEach(btn => {
+        const val = Number(btn.getAttribute('data-star'));
+        btn.className = val <= selectedStarRating
+          ? 'star-btn text-lg text-amber-400 leading-none'
+          : 'star-btn text-lg text-stone-700 leading-none';
+      });
+      const label = document.getElementById('selectedStarLabel');
+      if (label) label.textContent = `${selectedStarRating} / 5`;
+    }
+
+    function renderReviews() {
+      const container = document.getElementById('reviewsListContainer');
+      const avgEl = document.getElementById('avgRatingText');
+      const countEl = document.getElementById('reviewCountText');
+      if (!container) return;
+      if (!storeReviews.length) {
+        avgEl.textContent = '5.0';
+        countEl.textContent = 'No reviews yet';
+        container.innerHTML = '<p class="text-xs text-stone-500 text-center py-2">No reviews yet. Be the first to leave one.</p>';
+        return;
+      }
+      const sum = storeReviews.reduce((acc, r) => acc + (Number(r.rating) || 5), 0);
+      avgEl.textContent = (sum / storeReviews.length).toFixed(1);
+      countEl.textContent = `${storeReviews.length} review${storeReviews.length === 1 ? '' : 's'}`;
+      container.innerHTML = storeReviews.map(r => {
+        const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+        return `<div class="p-3 rounded-xl bg-stone-950 border border-stone-800 space-y-1"><div class="flex items-center justify-between gap-2"><span class="text-xs font-extrabold text-white">${r.name}</span><span class="text-xs text-amber-400 font-bold">${stars}</span></div><p class="text-xs text-stone-300 leading-relaxed">${r.comment}</p><p class="text-[10px] text-stone-500">${r.date}</p></div>`;
+      }).join('');
+    }
+
+    function submitCustomerReview(e) {
+      e.preventDefault();
+      const nameInput = document.getElementById('reviewAuthorInput');
+      const commentInput = document.getElementById('reviewCommentInput');
+      const comment = (commentInput.value || '').trim();
+      if (!comment) return;
+      const author = (nameInput.value || '').trim() || (currentCustomer && currentCustomer.name) || 'Verified Shopper';
+      storeReviews.unshift({ name: author, rating: selectedStarRating, comment, date: new Date().toLocaleDateString() });
+      localStorage.setItem('sekiflex_reviews_v1', JSON.stringify(storeReviews));
+      commentInput.value = '';
+      selectStarRating(5);
+      renderReviews();
+    }
+
+    function openProductDetail(productId) {
       const prod = allProducts.find(p => String(p.id) === String(productId));
       if (!prod) return;
+      showOnlyMainView('storeMainWrapper');
+      setActiveBottomTab('home');
+      armStoreBackGuard();
+      markScreenActive(6000);
 
-      const img = (prod.images && prod.images[0]) || prod.image_url || '';
+      const img = (prod.images && prod.images[0]) || prod.image_url || getFallbackPhotoUrl(0);
       const out = (prod.stock_quantity !== null && prod.stock_quantity <= 0);
-      const { effectivePrice, originalPrice } = getProductPricing(prod);
+      const catObj = allCategories.find(c => String(c.id) === String(prod.category_id));
 
-      const modalImg = document.getElementById('detailModalImg');
-      modalImg.src = img;
-      modalImg.alt = prod.name || 'Product';
-
+      const detailImg = document.getElementById('detailModalImg');
+      detailImg.style.display = '';
+      detailImg.src = img;
+      detailImg.alt = prod.name || 'Product';
       document.getElementById('detailModalName').textContent = prod.name || 'Product';
-      document.getElementById('detailModalStock').textContent = out ? 'Sold Out' : 'In Stock';
-      document.getElementById('detailModalPriceBlock').innerHTML = originalPrice !== null
-        ? `<span class="text-base font-extrabold text-amber-400">₦${effectivePrice.toLocaleString()}</span><div class="text-[11px] text-stone-400 line-through">₦${originalPrice.toLocaleString()}</div>`
-        : `<span class="text-base font-extrabold text-amber-400">₦${effectivePrice.toLocaleString()}</span>`;
+      document.getElementById('detailModalPriceBlock').innerHTML = formatPriceHtml(prod, 'text-base');
       document.getElementById('detailModalDesc').textContent = prod.description || 'Quality item from Sekiflex Collections.';
+
+      const catBadge = document.getElementById('detailModalCategory');
+      if (catObj && catObj.name) {
+        catBadge.textContent = catObj.name;
+        catBadge.classList.remove('hidden');
+      } else {
+        catBadge.classList.add('hidden');
+      }
+
+      const stockEl = document.getElementById('detailModalStock');
+      if (out) {
+        stockEl.textContent = 'Currently Sold Out';
+        stockEl.className = 'text-[11px] font-semibold text-rose-400 mt-0.5';
+      } else if (prod.stock_quantity !== null && prod.stock_quantity !== undefined) {
+        stockEl.textContent = `In Stock (${prod.stock_quantity} available)`;
+        stockEl.className = 'text-[11px] font-semibold text-emerald-400 mt-0.5';
+      } else {
+        stockEl.textContent = 'In Stock';
+        stockEl.className = 'text-[11px] font-semibold text-emerald-400 mt-0.5';
+      }
+
+      const shareBtn = document.getElementById('detailShareBtn');
+      if (shareBtn) {
+        shareBtn.onclick = (ev) => {
+          ev.stopPropagation();
+          shareProductLink(prod.id, prod.name);
+        };
+      }
 
       const addBtn = document.getElementById('detailAddToCartBtn');
       addBtn.disabled = out;
       addBtn.textContent = out ? 'Sold Out' : 'Add to Cart';
-      addBtn.onclick = function () {
-        addToCartById(prod.id, addBtn);
+      addBtn.className = out
+        ? 'flex-1 bg-stone-800 text-stone-500 py-2.5 rounded-xl text-xs font-extrabold cursor-not-allowed'
+        : 'flex-1 bg-amber-500 hover:bg-amber-400 text-stone-950 py-2.5 rounded-xl text-xs font-extrabold transition shadow-xs';
+      addBtn.onclick = () => {
+        addToCart(prod.id, addBtn);
         closeProductDetailModal();
       };
 
       document.getElementById('productDetailModal').classList.remove('hidden');
     }
 
-    window.openProductDetail = openProductDetailById;
-
     function closeProductDetailModal() {
       document.getElementById('productDetailModal').classList.add('hidden');
     }
 
-    function toggleLikeById(productId, btnEl) {
-      const idStr = String(productId);
-      const idx = likedIds.indexOf(idStr);
-      if (idx >= 0) likedIds.splice(idx, 1);
-      else likedIds.push(idStr);
-      localStorage.setItem('sekiflex_liked_items_v1', JSON.stringify(likedIds));
-      if (btnEl) {
-        const liked = likedIds.includes(idStr);
-        btnEl.classList.toggle('is-liked', liked);
-        btnEl.textContent = liked ? '♥' : '♡';
+    function openStoreSettingsModal() {
+      applySocialLinks();
+      armStoreBackGuard();
+      const toggle = document.getElementById('prefSoundToggle');
+      if (toggle) {
+        const saved = localStorage.getItem('sekiflex_sound_enabled');
+        toggle.checked = saved === null ? true : saved === '1';
       }
+      const msg = document.getElementById('changePasswordMsg');
+      if (msg) msg.classList.add('hidden');
+      document.getElementById('accountNewPassword').value = '';
+      document.getElementById('accountConfirmPassword').value = '';
+      document.getElementById('storeSettingsModal').classList.remove('hidden');
     }
 
-    function addToCartById(productId, btnEl) {
-      const prod = allProducts.find(p => String(p.id) === String(productId));
-      if (!prod) return;
-      const { effectivePrice } = getProductPricing(prod);
-      const existing = cart.find(i => String(i.id) === String(productId));
-      if (existing) existing.qty += 1;
-      else cart.push({ id: prod.id, name: prod.name, price: effectivePrice, qty: 1 });
-      localStorage.setItem('sekiflex_cart', JSON.stringify(cart));
-      renderCart();
-      if (btnEl) {
-        const prev = btnEl.textContent;
-        btnEl.textContent = '✓ Added';
-        setTimeout(() => { btnEl.textContent = prev; }, 800);
-      }
+    function closeStoreSettingsModal() {
+      document.getElementById('storeSettingsModal').classList.add('hidden');
     }
 
-    function renderCart() {
-      const count = cart.reduce((s, i) => s + i.qty, 0);
-      const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
-      document.getElementById('cartCount').textContent = count;
-      document.getElementById('cartSubTotalTop').textContent = '₦' + sub.toLocaleString();
-      const box = document.getElementById('cartItems');
-      if (!box) return;
-      if (!cart.length) {
-        box.innerHTML = '<div class="luxury-glass-card rounded-2xl p-6 text-center text-xs text-stone-300">Your cart is empty.</div>';
+    function showPasswordChangeStatus(text, isError = true) {
+      const box = document.getElementById('changePasswordMsg');
+      box.textContent = text;
+      box.className = `text-[11px] font-semibold p-2 rounded-xl ${isError ? 'bg-red-950/80 text-red-200 border border-red-500/30' : 'bg-emerald-950/80 text-emerald-200 border border-emerald-500/30'}`;
+      box.classList.remove('hidden');
+    }
+
+    async function handleAccountPasswordChange(e) {
+      e.preventDefault();
+      if (!currentCustomer) {
+        closeStoreSettingsModal();
+        openAuthGate('signin', false);
         return;
       }
-      box.innerHTML = cart.map((item, idx) => `
-        <div class="luxury-glass-card rounded-2xl p-3 flex items-center justify-between gap-2">
-          <div class="min-w-0">
-            <p class="text-xs font-bold text-white truncate">${item.name}</p>
-            <p class="text-xs font-extrabold text-amber-400">₦${(item.price * item.qty).toLocaleString()} (${item.qty}x)</p>
-          </div>
-          <button type="button" onclick="cart.splice(${idx}, 1); localStorage.setItem('sekiflex_cart', JSON.stringify(cart)); renderCart();"
-            class="bg-stone-900 border border-amber-400/30 text-amber-300 text-[11px] font-bold px-3 py-1.5 rounded-xl">
-            Remove
-          </button>
-        </div>`).join('');
+      const newPass = document.getElementById('accountNewPassword').value;
+      const confirmPass = document.getElementById('accountConfirmPassword').value;
+      const btn = document.getElementById('saveNewPasswordBtn');
+      if (newPass.length < 6) return showPasswordChangeStatus('Password must be at least 6 characters.', true);
+      if (newPass !== confirmPass) return showPasswordChangeStatus('New password and confirmation do not match.', true);
+      btn.disabled = true;
+      btn.textContent = 'Updating Password...';
+      const { error } = await sb.auth.updateUser({ password: newPass });
+      btn.disabled = false;
+      btn.textContent = 'Update Password';
+      if (error) return showPasswordChangeStatus(error.message, true);
+      document.getElementById('accountNewPassword').value = '';
+      document.getElementById('accountConfirmPassword').value = '';
+      showPasswordChangeStatus('Your password has been updated successfully!', false);
     }
 
-    function switchBottomTab(tab) {
-      ['storeMainWrapper', 'splitCategoryStoreView', 'cartFullPageView', 'accountFullPageView'].forEach(id => {
+    function closeAllDrawers() {
+      ['storeSettingsModal', 'productDetailModal', 'reviewsModal', 'infoModal', 'customerAuthGate']
+        .forEach(id => document.getElementById(id).classList.add('hidden'));
+    }
+
+    function showOnlyMainView(viewId) {
+      ['storeMainWrapper', 'splitCategoryStoreView', 'accountFullPageView', 'cartFullPageView'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.classList.add('hidden');
+        if (!el) return;
+        if (id === viewId) el.classList.remove('hidden');
+        else el.classList.add('hidden');
       });
-      if (tab === 'categories') {
-        document.getElementById('splitCategoryStoreView').classList.remove('hidden');
-        renderCategoryViewPromos();
-        renderSplitCategoryPanel();
-      } else if (tab === 'cart') {
-        document.getElementById('cartFullPageView').classList.remove('hidden');
-        renderCart();
-      } else if (tab === 'account') {
-        document.getElementById('accountFullPageView').classList.remove('hidden');
-      } else {
-        document.getElementById('storeMainWrapper').classList.remove('hidden');
-      }
+    }
+
+    function setActiveBottomTab(tab) {
+      const ids = { home: 'navHomeBtn', categories: 'navCatBtn', cart: 'navCartBtn', account: 'navAccountBtn' };
+      Object.entries(ids).forEach(([key, elId]) => {
+        const el = document.getElementById(elId);
+        if (!el) return;
+        el.className = key === tab
+          ? 'relative flex flex-col items-center justify-center gap-1 text-amber-400 font-bold text-[11px] transition'
+          : 'relative flex flex-col items-center justify-center gap-1 text-stone-400 hover:text-amber-300 font-semibold text-[11px] transition';
+      });
+    }
+
+    function renderSplitThumbInner(img, labelText, seedIdx = 0) {
+      const safeLabel = String(labelText || 'Sekiflex').replace(/'/g, "\\'");
+      const chosenImg = img || getFallbackPhotoUrl(seedIdx);
+      if (!chosenImg) return renderBrandedPlaceholderHtml(labelText);
+      return `<img src="${chosenImg}" alt="" loading="eager" decoding="sync" data-fb-idx="${seedIdx}" onerror="handleCatalogImgError(this, '${safeLabel}')" />`;
+    }
+
+    function openSplitCategoryStore() {
+      closeAllDrawers();
+      armStoreBackGuard();
+      markScreenActive(6000);
+      setActiveBottomTab('categories');
+      showOnlyMainView('splitCategoryStoreView');
+      renderCategoryViewTopAndMedallions();
+      renderSplitCategoryPanel();
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function resetToHome(e) {
-      if (e) e.preventDefault();
-      activeCategory = 'ALL';
-      searchQuery = '';
-      document.getElementById('storeSearchInput').value = '';
-      switchBottomTab('home');
-      applyCatalogFilters();
-    }
-
-    function jumpToAllItems() {
-      activeCategory = 'ALL';
-      switchBottomTab('home');
-      applyCatalogFilters();
-      document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function renderCategoryViewPromos() {
-      for (let i = 0; i < 4; i++) {
-        const card = wallPromoCards[i];
-        const titleEl = document.getElementById(`catPromoTitle${i}`);
-        const box = document.getElementById(`catSpotlightImg${i}`);
-        if (titleEl && card?.title) titleEl.textContent = card.title;
-        if (box && card?.image) {
-          box.innerHTML = `<img src="${card.image}" alt="" loading="eager" decoding="sync" class="catalog-img-smooth w-full h-full object-cover object-top" />`;
-        }
-      }
-    }
-
-    function handleCategoryPromoBoxClick(idx) {
-      const card = wallPromoCards[idx];
-      const catKey = card?.categoryKey || 'ALL';
-      activeCategory = catKey;
-      switchBottomTab('home');
-      applyCatalogFilters();
-      document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
     }
 
     function renderSplitCategoryPanel() {
       const grid = document.getElementById('splitCategoryGrid');
       if (!grid) return;
+
       const q = (document.getElementById('splitCategorySearchInput')?.value || '').trim().toLowerCase();
+      const rotatedAll = getRotatedProducts(allProducts, 0, 'catalog');
+      const minuteSlot = getMinuteSlotOffset(2);
 
-      const catItems = allCategories.map((c) => {
-        const sampleProd = allProducts.find(p => String(p.category_id) === String(c.id));
-        const img = (sampleProd?.images && sampleProd.images[0]) || sampleProd?.image_url || '';
-        return { kind: 'cat', id: String(c.id), name: c.name, img };
+      if (q) {
+        const matches = rotatedAll.filter(p => {
+          const catObj = allCategories.find(c => String(c.id) === String(p.category_id));
+          return `${p.name || ''} ${p.description || ''} ${catObj ? catObj.name : ''}`.toLowerCase().includes(q);
+        });
+        if (!matches.length) {
+          grid.innerHTML = '<p class="col-span-4 text-center text-xs text-stone-400 py-8">No matching items found.</p>';
+          return;
+        }
+        grid.innerHTML = matches.map((p, idx) => {
+          const img = pickRotatingProductImage(minuteSlot, idx) || (p.images && p.images[0]) || p.image_url || '';
+          return `
+            <div data-action="catalog" data-val="ALL" class="skf-cat-cell group">
+              <div class="skf-cat-thumb-wrap group-hover:scale-105 transition">
+                ${renderSplitThumbInner(img, p.name, idx)}
+              </div>
+              <span class="skf-cat-pill-label">${p.name}</span>
+            </div>`;
+        }).join('');
+        return;
+      }
+
+      const catTiles = allCategories.map((c, idx) => {
+        const img = pickRotatingProductImage(minuteSlot, idx);
+        return `
+          <div data-action="cat" data-val="${String(c.id).replace(/"/g, '&quot;')}" class="skf-cat-cell group">
+            <div class="skf-cat-thumb-wrap group-hover:scale-105 transition">
+              ${renderSplitThumbInner(img, c.name, idx)}
+            </div>
+            <span class="skf-cat-pill-label">${c.name}</span>
+          </div>`;
       });
 
-      const prodItems = allProducts.map((p) => {
-        const img = (p.images && p.images[0]) || p.image_url || '';
-        return { kind: 'catalog', id: 'ALL', name: p.name, img };
+      const poolTiles = rotatedAll.map((p, idx) => {
+        const img = pickRotatingProductImage(minuteSlot, idx + allCategories.length);
+        return `
+          <div data-action="catalog" data-val="ALL" class="skf-cat-cell group">
+            <div class="skf-cat-thumb-wrap group-hover:scale-105 transition">
+              ${renderSplitThumbInner(img, p.name, idx + 1)}
+            </div>
+            <span class="skf-cat-pill-label">${p.name}</span>
+          </div>`;
       });
 
-      let combined = [...catItems, ...prodItems];
-      if (q) combined = combined.filter(item => (item.name || '').toLowerCase().includes(q));
-
-      grid.innerHTML = combined.map((item) => `
-        <div data-cat-kind="${item.kind}" data-cat-val="${item.id.replace(/"/g, '&quot;')}" class="skf-cat-cell">
-          <div class="skf-cat-thumb-wrap">
-            ${item.img ? `<img src="${item.img}" alt="" loading="eager" decoding="sync" />` : `<span class="text-xs font-bold text-amber-300">SC</span>`}
-          </div>
-          <span class="skf-cat-pill-label">${item.name}</span>
-        </div>`).join('');
+      grid.innerHTML = [...catTiles, ...poolTiles].join('');
     }
 
-    function renderCategoryBar() {
+    function submitSplitCategorySearch(e) {
+      if (e) e.preventDefault();
+      renderSplitCategoryPanel();
+    }
+
+    function shopSpecificCategoryFromSplit(catId) {
+      closeAllDrawers();
+      showOnlyMainView('storeMainWrapper');
+      categoryBrowseMode = true;
+      markScreenActive(6000);
+      setActiveBottomTab('home');
+      filterCategory(catId);
+      setTimeout(() => {
+        const sec = document.getElementById('catalogSection');
+        if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        else window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 60);
+    }
+
+    function switchBottomTab(tab) {
+      closeAllDrawers();
+      setActiveBottomTab(tab);
+      if (tab === 'home') {
+        showOnlyMainView('storeMainWrapper');
+        categoryBrowseMode = false;
+        activeCategory = 'ALL';
+        renderCategoryButtons(allCategories);
+        applyCatalogFilters();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (tab === 'categories') {
+        openSplitCategoryStore();
+      } else if (tab === 'cart') {
+        openCartReview();
+      } else if (tab === 'account') {
+        armStoreBackGuard();
+        showOnlyMainView('accountFullPageView');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function resetToHome(e) {
+      if (e) e.preventDefault();
+      categoryBrowseMode = false;
+      clearPictureSearch();
+      clearSearch();
+      filterCategory('ALL');
+      switchBottomTab('home');
+    }
+
+    function openInfoModal(type) {
+      armStoreBackGuard();
+      const title = document.getElementById('infoModalTitle');
+      const body = document.getElementById('infoModalBody');
+      const page = SEKIFLEX_INFO_PAGES[type] || SEKIFLEX_INFO_PAGES.about;
+      title.textContent = page.title;
+      body.innerHTML = page.html;
+      body.scrollTop = 0;
+      document.getElementById('infoModal').classList.remove('hidden');
+    }
+
+    function dismissMobileKeyboard() {
+      const input = document.getElementById('storeSearchInput');
+      if (input) {
+        input.setAttribute('readonly', 'readonly');
+        input.blur();
+        if (document.activeElement && typeof document.activeElement.blur === 'function') {
+          document.activeElement.blur();
+        }
+        setTimeout(() => input.removeAttribute('readonly'), 120);
+      }
+    }
+
+    function submitSearch(e) {
+      if (e) e.preventDefault();
+      dismissMobileKeyboard();
+      handleSearchInput(true);
+    }
+
+    function handleSearchInput(shouldScroll = false) {
+      const input = document.getElementById('storeSearchInput');
+      searchQuery = (input.value || '').trim().toLowerCase();
+      document.getElementById('clearSearchBtn').classList.toggle('hidden', !searchQuery);
+
+      if (searchQuery || pictureSearchScores) {
+        armStoreBackGuard();
+        markScreenActive(6000);
+        document.getElementById('heroCarouselSection').classList.add('hidden');
+        document.getElementById('featuredStripSection').classList.add('hidden');
+      } else {
+        document.getElementById('heroCarouselSection').classList.remove('hidden');
+        if (allProducts.length) {
+          document.getElementById('featuredStripSection').classList.remove('hidden');
+          startFeaturedAutoScroll();
+        }
+        startBannerAutoShift();
+      }
+      applyCatalogFilters();
+      if (shouldScroll) setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 80);
+    }
+
+    function clearSearch() {
+      const input = document.getElementById('storeSearchInput');
+      input.value = '';
+      searchQuery = '';
+      document.getElementById('clearSearchBtn').classList.add('hidden');
+      if (!pictureSearchScores) {
+        document.getElementById('heroCarouselSection').classList.remove('hidden');
+        if (allProducts.length) {
+          document.getElementById('featuredStripSection').classList.remove('hidden');
+          startFeaturedAutoScroll();
+        }
+        startBannerAutoShift();
+      }
+      applyCatalogFilters();
+    }
+
+    function applyCatalogFilters() {
+      let filtered = getRotatedProducts(allProducts, 0, 'catalog');
+      if (activeCategory !== 'ALL') {
+        filtered = filtered.filter(p => String(p.category_id) === String(activeCategory));
+      }
+      if (searchQuery) {
+        const keywords = searchQuery.split(/\s+/).filter(Boolean);
+        filtered = filtered.filter(p => {
+          const catObj = allCategories.find(c => c.id === p.category_id);
+          const haystack = `${p.name || ''} ${p.description || ''} ${catObj ? catObj.name : ''}`.toLowerCase();
+          return keywords.every(word => haystack.includes(word));
+        });
+      }
+      if (pictureSearchScores) {
+        filtered.sort((a, b) => (pictureSearchScores[String(b.id)] ?? -1) - (pictureSearchScores[String(a.id)] ?? -1));
+      }
+
+      const catBanner = document.getElementById('categoryViewBanner');
+      const catSubtitle = document.getElementById('categoryViewSubtitle');
+      const heading = document.getElementById('catalogHeading');
+      const catObj = allCategories.find(c => String(c.id) === String(activeCategory));
+      const isCategoryArrangement = categoryBrowseMode || (activeCategory !== 'ALL' && !searchQuery && !pictureSearchScores);
+
+      if (catBanner && catSubtitle) {
+        if (isCategoryArrangement) {
+          catBanner.classList.remove('hidden');
+          catSubtitle.textContent = catObj ? `${catObj.name} • Showing filtered items` : 'Showing filtered items';
+        } else {
+          catBanner.classList.add('hidden');
+        }
+      }
+
+      if (pictureSearchScores && searchQuery) heading.textContent = `Photo & "${document.getElementById('storeSearchInput').value.trim()}" Matches`;
+      else if (pictureSearchScores) heading.textContent = 'Closest Matches for Your Picture';
+      else if (searchQuery) heading.textContent = `Search results for "${document.getElementById('storeSearchInput').value.trim()}"`;
+      else if (activeCategory !== 'ALL') heading.textContent = catObj ? `${catObj.name} Collection` : 'Category Collection';
+      else heading.textContent = 'All Items';
+
+      document.getElementById('productResultCount').textContent = `${filtered.length} item${filtered.length === 1 ? '' : 's'}`;
+      renderProducts(filtered);
+    }
+
+    function openAuthGate(defaultTab = 'signup', returnToCheckout = false, noticeText = '') {
+      returnToCheckoutAfterAuth = Boolean(returnToCheckout);
+      armStoreBackGuard();
+      document.getElementById('authSubtitle').textContent = returnToCheckoutAfterAuth
+        ? 'You do not have an account or are not signed in yet — please register or log in to continue to checkout.'
+        : 'Sign in or register to your Sekiflex Collections account.';
+      switchAuthView(defaultTab);
+      if (noticeText) showAuthMessage(noticeText, true);
+      document.getElementById('customerAuthGate').classList.remove('hidden');
+    }
+
+    function closeAuthGate() {
+      returnToCheckoutAfterAuth = false;
+      document.getElementById('customerAuthGate').classList.add('hidden');
+    }
+
+    function switchAuthView(view) {
+      const views = ['customerSignUpForm', 'verifyOtpForm', 'customerSignInForm', 'forgotRequestForm', 'forgotVerifyForm'];
+      views.forEach(id => document.getElementById(id).classList.add('hidden'));
+      document.getElementById('authGateMsg').classList.add('hidden');
+
+      const tabsRow = document.getElementById('authTabsRow');
+      const upBtn = document.getElementById('tabSignUpBtn');
+      const inBtn = document.getElementById('tabSignInBtn');
+
+      if (view === 'signup' || view === 'signin') {
+        tabsRow.classList.remove('hidden');
+        if (view === 'signup') {
+          document.getElementById('customerSignUpForm').classList.remove('hidden');
+          upBtn.className = 'py-2 rounded-xl text-xs font-extrabold bg-amber-500 text-stone-950 shadow-2xs transition';
+          inBtn.className = 'py-2 rounded-xl text-xs font-extrabold text-stone-400 hover:text-white transition';
+        } else {
+          document.getElementById('customerSignInForm').classList.remove('hidden');
+          inBtn.className = 'py-2 rounded-xl text-xs font-extrabold bg-amber-500 text-stone-950 shadow-2xs transition';
+          upBtn.className = 'py-2 rounded-xl text-xs font-extrabold text-stone-400 hover:text-white transition';
+        }
+      } else {
+        tabsRow.classList.add('hidden');
+        if (view === 'verify') document.getElementById('verifyOtpForm').classList.remove('hidden');
+        if (view === 'forgot') document.getElementById('forgotRequestForm').classList.remove('hidden');
+        if (view === 'reset') document.getElementById('forgotVerifyForm').classList.remove('hidden');
+      }
+    }
+
+    function showAuthMessage(text, isError = true) {
+      const box = document.getElementById('authGateMsg');
+      box.textContent = text;
+      box.className = `text-xs font-semibold text-center p-2.5 rounded-xl ${isError ? 'bg-amber-500/15 text-amber-200 border border-amber-400/40' : 'bg-emerald-950/80 text-emerald-200 border border-emerald-500/30'}`;
+      box.classList.remove('hidden');
+    }
+
+    async function handleCustomerSignUp(e) {
+      e.preventDefault();
+      const btn = document.getElementById('regSubmitBtn');
+      const fullName = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const phone = document.getElementById('regPhone').value.trim();
+      const password = document.getElementById('regPassword').value;
+      if (!fullName) return showAuthMessage('Please enter your full name.', true);
+      btn.disabled = true;
+      btn.textContent = 'Sending Registration Code...';
+      const { data, error } = await sb.auth.signUp({
+        email, password, options: { data: { full_name: fullName, display_name: fullName, phone } }
+      });
+      btn.disabled = false;
+      btn.textContent = 'Register & Go to Checkout →';
+      if (error) return showAuthMessage(error.message, true);
+      pendingSignupData = { name: fullName, email, phone };
+      document.getElementById('otpTargetEmail').textContent = email;
+      if (data?.session && data?.user) {
+        await sb.from('customer_profiles').upsert({ id: data.user.id, full_name: fullName, email, phone });
+        completeAuthAndBounceBack(data.user, { full_name: fullName, email, phone });
+        return;
+      }
+      switchAuthView('verify');
+      showAuthMessage('8-digit registration code sent to your email!', false);
+    }
+
+    async function handleVerifySignupOtp(e) {
+      e.preventDefault();
+      const btn = document.getElementById('verifyOtpBtn');
+      const token = document.getElementById('signupOtpCode').value.trim();
+      btn.disabled = true;
+      btn.textContent = 'Verifying Code...';
+      const { data, error } = await sb.auth.verifyOtp({ email: pendingSignupData.email, token, type: 'signup' });
+      btn.disabled = false;
+      btn.textContent = 'Verify & Go to Checkout →';
+      if (error) return showAuthMessage(error.message, true);
+      if (data?.user) {
+        const chosenName = pendingSignupData.name || data.user.user_metadata?.full_name || '';
+        const chosenPhone = pendingSignupData.phone || data.user.user_metadata?.phone || '';
+        if (chosenName) await sb.auth.updateUser({ data: { full_name: chosenName, display_name: chosenName, phone: chosenPhone } });
+        await sb.from('customer_profiles').upsert({ id: data.user.id, full_name: chosenName || data.user.email.split('@')[0], email: pendingSignupData.email, phone: chosenPhone });
+        completeAuthAndBounceBack(data.user, { full_name: chosenName, email: pendingSignupData.email, phone: chosenPhone });
+      }
+    }
+
+    async function resendSignupCode() {
+      if (!pendingSignupData.email) return;
+      const { error } = await sb.auth.resend({ type: 'signup', email: pendingSignupData.email });
+      if (error) return showAuthMessage(error.message, true);
+      showAuthMessage('A fresh 8-digit code has been sent to ' + pendingSignupData.email, false);
+    }
+
+    async function handleCustomerSignIn(e) {
+      e.preventDefault();
+      const btn = document.getElementById('loginSubmitBtn');
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      btn.disabled = true;
+      btn.textContent = 'Signing In...';
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+      btn.disabled = false;
+      btn.textContent = 'Sign In & Go to Checkout →';
+      if (error) return showAuthMessage(error.message, true);
+      const { data: profile } = await sb.from('customer_profiles').select('*').eq('id', data.user.id).maybeSingle();
+      completeAuthAndBounceBack(data.user, profile);
+    }
+
+    async function handleSendResetCode(e) {
+      e.preventDefault();
+      const btn = document.getElementById('sendResetBtn');
+      const email = document.getElementById('forgotEmail').value.trim();
+      btn.disabled = true;
+      btn.textContent = 'Sending Reset Code...';
+      const { error } = await sb.auth.resetPasswordForEmail(email);
+      btn.disabled = false;
+      btn.textContent = 'Send Reset Code →';
+      if (error) return showAuthMessage(error.message, true);
+      pendingResetEmail = email;
+      document.getElementById('resetTargetEmail').textContent = email;
+      switchAuthView('reset');
+      showAuthMessage('8-digit password reset code sent to your email!', false);
+    }
+
+    async function handleCompletePasswordReset(e) {
+      e.preventDefault();
+      const btn = document.getElementById('completeResetBtn');
+      const token = document.getElementById('resetOtpCode').value.trim();
+      const newPassword = document.getElementById('resetNewPassword').value;
+      btn.disabled = true;
+      btn.textContent = 'Updating Password...';
+      const { data, error } = await sb.auth.verifyOtp({ email: pendingResetEmail, token, type: 'recovery' });
+      if (error) {
+        btn.disabled = false;
+        btn.textContent = 'Update Password & Go to Checkout →';
+        return showAuthMessage(error.message, true);
+      }
+      const { error: pwErr } = await sb.auth.updateUser({ password: newPassword });
+      btn.disabled = false;
+      btn.textContent = 'Update Password & Go to Checkout →';
+      if (pwErr) return showAuthMessage(pwErr.message, true);
+      const { data: profile } = await sb.from('customer_profiles').select('*').eq('id', data.user.id).maybeSingle();
+      completeAuthAndBounceBack(data.user, profile);
+    }
+
+    function applySignedInCustomerState(user, profile) {
+      const exactFullName = (profile?.full_name || user.user_metadata?.full_name || user.user_metadata?.display_name || (user.email ? user.email.split('@')[0] : 'Shopper')).trim();
+      const firstName = exactFullName.split(/\s+/)[0] || exactFullName;
+      currentCustomer = {
+        id: user.id, name: exactFullName, firstName,
+        email: profile?.email || user.email || '',
+        phone: profile?.phone || user.user_metadata?.phone || ''
+      };
+      document.getElementById('topWelcomeGreeting').textContent = `Hello, ${firstName}`;
+      document.getElementById('menuCustomerName').textContent = exactFullName;
+      document.getElementById('menuCustomerEmail').textContent = currentCustomer.email;
+      document.getElementById('accountSignInActionBtn').classList.add('hidden');
+      document.getElementById('accountSignOutActionBtn').classList.remove('hidden');
+      prefillCustomerCheckout();
+      if ("Notification" in window && Notification.permission === "granted" && typeof window.enableSekiflexPush === "function") {
+        window.enableSekiflexPush({ customerEmail: currentCustomer.email, customerPhone: currentCustomer.phone, isAdmin: false, silent: true });
+      }
+    }
+
+    function completeAuthAndBounceBack(user, profile) {
+      const shouldReturnCheckout = returnToCheckoutAfterAuth;
+      returnToCheckoutAfterAuth = false;
+      applySignedInCustomerState(user, profile);
+      document.getElementById('customerAuthGate').classList.add('hidden');
+      if (shouldReturnCheckout) toggleCart(true, true);
+    }
+
+    function prefillCustomerCheckout() {
+      if (!currentCustomer) return;
+      if (currentCustomer.name && !document.getElementById('custName').value.trim()) document.getElementById('custName').value = currentCustomer.name;
+      if (currentCustomer.email && !document.getElementById('custEmail').value.trim()) document.getElementById('custEmail').value = currentCustomer.email;
+      if (currentCustomer.phone && !document.getElementById('custPhone').value.trim()) document.getElementById('custPhone').value = currentCustomer.phone;
+    }
+
+    async function customerLogout() {
+      await sb.auth.signOut();
+      location.reload();
+    }
+
+    function applySingleBannerSlot(banner, cardEl, textEl, imgEl, defaultColor) {
+      if (!cardEl || !textEl || !imgEl) return;
+      if (!banner || !banner.banner_active || !banner.banner_text) {
+        cardEl.classList.add('hidden');
+        return;
+      }
+      const colorMap = {
+        gold: 'from-[#33220a] via-[#1f160b] to-[#120e09]',
+        green: 'from-[#28200b] via-[#1a160c] to-[#110f0a]',
+        red: 'from-[#30170e] via-[#1e120d] to-[#120d0a]',
+        dark: 'from-[#33220a] via-[#1f160b] to-[#120e09]'
+      };
+      const chosenGradient = colorMap[banner.banner_color] || colorMap[defaultColor] || colorMap.gold;
+      cardEl.className = `promo-slide skf-hero-slide rounded-2xl bg-gradient-to-br ${chosenGradient} text-white p-3 flex items-center justify-between gap-2.5 border border-amber-400/50 shadow-lg overflow-hidden`;
+      textEl.textContent = banner.banner_text;
+      if (banner.banner_image_url) {
+        imgEl.src = banner.banner_image_url;
+        imgEl.classList.remove('hidden');
+      } else {
+        imgEl.classList.add('hidden');
+      }
+      cardEl.classList.remove('hidden');
+    }
+
+    function applyFreeShippingState(isEnabled) {
+      freeShippingMode = Boolean(isEnabled);
+      localStorage.setItem('sekiflex_free_shipping_v1', freeShippingMode ? '1' : '0');
+      const promoBanner = document.getElementById('freeShippingPromoBanner');
+      if (promoBanner) promoBanner.classList.toggle('hidden', !freeShippingMode);
+      updateShippingFee();
+    }
+
+    async function loadStoreBanner() {
+      const [{ data: banner }, { data: banner2 }, { data: freeShipRow }] = await Promise.all([
+        sb.from('store_settings').select('*').eq('id', 'main').maybeSingle(),
+        sb.from('store_settings').select('*').eq('id', 'second').maybeSingle(),
+        sb.from('store_settings').select('*').eq('id', 'free_shipping').maybeSingle()
+      ]);
+
+      applyFreeShippingState(Boolean(freeShipRow?.banner_active));
+      liveBannerMediaUrls = [banner?.banner_image_url, banner2?.banner_image_url].filter(Boolean);
+      renderCategoryViewTopAndMedallions();
+
+      applySingleBannerSlot(banner, document.getElementById('livePromoBannerCard'), document.getElementById('livePromoText'), document.getElementById('livePromoImg'), 'gold');
+      applySingleBannerSlot(banner2, document.getElementById('livePromoBanner2Card'), document.getElementById('livePromo2Text'), document.getElementById('livePromo2Img'), 'gold');
+
+      const heroSec = document.getElementById('heroVideoSection');
+      const heroPlayer = document.getElementById('heroVideoPlayer');
+      const localHero = JSON.parse(localStorage.getItem('sekiflex_hero_video_v1') || 'null');
+      const heroActive = banner?.hero_video_active ?? localHero?.active ?? false;
+      const heroUrl = banner?.hero_video_url || localHero?.url || '';
+
+      if (heroSec && heroPlayer) {
+        if (heroActive && heroUrl) {
+          if (heroPlayer.src !== heroUrl) heroPlayer.src = heroUrl;
+          heroSec.classList.remove('hidden');
+        } else {
+          heroPlayer.pause();
+          heroSec.classList.add('hidden');
+        }
+      }
+
+      if (!document.getElementById('splitCategoryStoreView').classList.contains('hidden')) {
+        renderSplitCategoryPanel();
+      }
+      currentBannerSlideIdx = 0;
+      const carousel = document.getElementById('bannerCarousel');
+      if (carousel) carousel.scrollLeft = 0;
+      startBannerAutoShift();
+    }
+
+    function copyAcct(acctNum, bankName, btnEl) {
+      navigator.clipboard.writeText(acctNum);
+      if (btnEl) {
+        const orig = btnEl.textContent;
+        btnEl.textContent = 'Copied!';
+        btnEl.classList.add('bg-emerald-500', 'text-white');
+        setTimeout(() => {
+          btnEl.textContent = orig;
+          btnEl.classList.remove('bg-emerald-500', 'text-white');
+        }, 1400);
+      }
+    }
+
+    function populateNigeriaStates() {
+      const sel = document.getElementById('custStateSelect');
+      sel.innerHTML = '<option value="">Select State...</option>' + NIGERIA_STATES.map(st => `<option value="${st}">${st}</option>`).join('');
+    }
+
+    function isAkwaIbomCourierSelected() {
+      if (fulfillmentMode !== 'delivery') return false;
+      const country = (document.getElementById('custCountry')?.value || '').trim().toLowerCase();
+      const state = getSelectedState().toLowerCase();
+      return country === 'nigeria' && state === 'akwa ibom';
+    }
+
+    function syncPaymentOptionUi() {
+      const btnTransfer = document.getElementById('btnPayTransfer');
+      const btnPod = document.getElementById('btnPayOnDelivery');
+      const bankBox = document.getElementById('bankTransferFields');
+      const podBox = document.getElementById('podInfoFields');
+      const hintEl = document.getElementById('podAvailabilityHint');
+      const confirmLabel = document.getElementById('paymentConfirmLabel');
+      const submitBtn = document.getElementById('submitBtn');
+      const paidBankEl = document.getElementById('paidBankSelect');
+      const senderRefEl = document.getElementById('senderRefInput');
+
+      const podEligible = isAkwaIbomCourierSelected();
+      if (!podEligible && paymentOption === 'pod') paymentOption = 'transfer';
+      if (btnPod) {
+        btnPod.disabled = !podEligible;
+        btnPod.classList.toggle('opacity-45', !podEligible);
+        btnPod.classList.toggle('cursor-not-allowed', !podEligible);
+      }
+      if (hintEl) {
+        if (podEligible) {
+          hintEl.className = 'text-[10px] font-semibold text-emerald-400';
+          hintEl.innerHTML = '✓ Pay on Delivery is available for <strong>Akwa Ibom</strong> courier deliveries (shipping included in total).';
+        } else {
+          hintEl.className = 'text-[10px] font-semibold text-rose-400';
+          hintEl.innerHTML = 'Pay on Delivery is available for <strong>Akwa Ibom</strong> courier deliveries only (shipping included in total).';
+        }
+      }
+      const isPod = podEligible && paymentOption === 'pod';
+      if (btnTransfer && btnPod) {
+        if (isPod) {
+          btnPod.className = 'py-2 px-2 rounded-lg text-[11px] font-extrabold bg-amber-500 text-stone-950 transition';
+          btnTransfer.className = 'py-2 px-2 rounded-lg text-[11px] font-bold text-stone-300 hover:text-white transition';
+        } else {
+          btnTransfer.className = 'py-2 px-2 rounded-lg text-[11px] font-extrabold bg-amber-500 text-stone-950 transition';
+          btnPod.className = `py-2 px-2 rounded-lg text-[11px] font-bold text-stone-300 hover:text-white transition ${!podEligible ? 'opacity-45 cursor-not-allowed' : ''}`;
+        }
+      }
+      if (bankBox) bankBox.classList.toggle('hidden', isPod);
+      if (podBox) podBox.classList.toggle('hidden', !isPod);
+      if (paidBankEl) paidBankEl.required = !isPod;
+      if (senderRefEl) senderRefEl.required = !isPod;
+      if (confirmLabel) {
+        confirmLabel.innerHTML = isPod
+          ? 'I agree to pay the full order total upon delivery in Akwa Ibom and accept the <button type="button" onclick="event.preventDefault(); openInfoModal(\'privacy\');" class="underline font-semibold text-amber-400">Privacy Policy</button> &amp; <button type="button" onclick="event.preventDefault(); openInfoModal(\'terms\');" class="underline font-semibold text-amber-400">Terms</button>.'
+          : 'I have completed the bank transfer and accept the <button type="button" onclick="event.preventDefault(); openInfoModal(\'privacy\');" class="underline font-semibold text-amber-400">Privacy Policy</button> &amp; <button type="button" onclick="event.preventDefault(); openInfoModal(\'terms\');" class="underline font-semibold text-amber-400">Terms</button>.';
+      }
+      if (submitBtn && !submitBtn.disabled) {
+        submitBtn.textContent = isPod ? 'Confirm Pay on Delivery Order' : 'I Have Paid — Confirm Order';
+      }
+    }
+
+    function setPaymentOption(opt) {
+      if (opt === 'pod' && !isAkwaIbomCourierSelected()) {
+        alert('Payment on Delivery is available for Akwa Ibom State courier deliveries only.');
+        return;
+      }
+      paymentOption = opt === 'pod' ? 'pod' : 'transfer';
+      syncPaymentOptionUi();
+    }
+
+    function setFulfillmentMode(mode) {
+      fulfillmentMode = mode;
+      if (mode !== 'delivery') paymentOption = 'transfer';
+      const btnDel = document.getElementById('btnDeliveryMode');
+      const btnPick = document.getElementById('btnPickupMode');
+      const delFields = document.getElementById('deliveryFields');
+      const pickBox = document.getElementById('pickupInfoBox');
+      const cityEl = document.getElementById('custCity');
+      const addrEl = document.getElementById('custAddress');
+      const countryEl = document.getElementById('custCountry');
+
+      if (mode === 'pickup') {
+        btnPick.className = 'py-1.5 px-2.5 rounded-lg text-xs font-bold bg-amber-500 text-stone-950 transition';
+        btnDel.className = 'py-1.5 px-2.5 rounded-lg text-xs font-bold text-stone-300 hover:text-white transition';
+        delFields.classList.add('hidden');
+        pickBox.classList.remove('hidden');
+        countryEl.required = false;
+        document.getElementById('custStateSelect').required = false;
+        document.getElementById('custStateText').required = false;
+        cityEl.required = false;
+        addrEl.required = false;
+      } else {
+        btnDel.className = 'py-1.5 px-2.5 rounded-lg text-xs font-bold bg-amber-500 text-stone-950 transition';
+        btnPick.className = 'py-1.5 px-2.5 rounded-lg text-xs font-bold text-stone-300 hover:text-white transition';
+        delFields.classList.remove('hidden');
+        pickBox.classList.add('hidden');
+        countryEl.required = true;
+        cityEl.required = true;
+        addrEl.required = true;
+        handleCountryChange();
+        return;
+      }
+      updateShippingFee();
+    }
+
+    function handleCountryChange() {
+      const country = document.getElementById('custCountry').value;
+      const sel = document.getElementById('custStateSelect');
+      const txt = document.getElementById('custStateText');
+      if (country === 'Nigeria') {
+        sel.classList.remove('hidden');
+        sel.required = (fulfillmentMode === 'delivery');
+        txt.classList.add('hidden');
+        txt.required = false;
+        txt.value = '';
+      } else {
+        sel.classList.add('hidden');
+        sel.required = false;
+        sel.value = '';
+        txt.classList.remove('hidden');
+        txt.required = (fulfillmentMode === 'delivery');
+      }
+      updateShippingFee();
+    }
+
+    function getSelectedState() {
+      const country = document.getElementById('custCountry').value;
+      return country === 'Nigeria' ? document.getElementById('custStateSelect').value.trim() : document.getElementById('custStateText').value.trim();
+    }
+
+    function renderCategoryButtons(cats) {
+      allCategories = cats || [];
+      renderCategoryViewTopAndMedallions();
       const bar = document.getElementById('categoryBar');
       if (!bar) return;
-      bar.innerHTML = `<button type="button" data-filter-cat="ALL" class="cat-btn ${activeCategory === 'ALL' ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-[#16130f] border border-amber-400/20 text-stone-300 font-semibold'} text-[11px] px-3 py-1 rounded-full whitespace-nowrap">All Items (${allProducts.length})</button>`;
-      allCategories.forEach((c) => {
-        const count = allProducts.filter(p => String(p.category_id) === String(c.id)).length;
-        const isAct = String(activeCategory) === String(c.id);
-        bar.innerHTML += `<button type="button" data-filter-cat="${String(c.id).replace(/"/g, '&quot;')}" class="cat-btn ${isAct ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-[#16130f] border border-amber-400/20 text-stone-300 font-semibold'} text-[11px] px-3 py-1 rounded-full whitespace-nowrap">${c.name} (${count})</button>`;
+
+      bar.innerHTML = `<button type="button" onclick="categoryBrowseMode = false; filterCategory('ALL', this); document.getElementById('catalogSection').scrollIntoView({behavior:'smooth'});" class="cat-btn ${activeCategory === 'ALL' ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-[#16130f] border border-amber-400/20 text-stone-300 font-semibold'} text-[11px] px-3 py-1 rounded-full whitespace-nowrap">All Items (${allProducts.length})</button>`;
+
+      allCategories.forEach(c => {
+        const countInCat = allProducts.filter(p => String(p.category_id) === String(c.id)).length;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `cat-btn ${String(activeCategory) === String(c.id) ? 'bg-amber-500 text-stone-950 font-extrabold' : 'bg-[#16130f] border border-amber-400/20 text-stone-300 font-semibold'} text-[11px] px-3 py-1 rounded-full whitespace-nowrap`;
+        btn.textContent = `${c.name} (${countInCat})`;
+        btn.onclick = () => {
+          categoryBrowseMode = true;
+          markScreenActive(6000);
+          filterCategory(c.id, btn);
+          document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
+        };
+        bar.appendChild(btn);
       });
+
+      if (!document.getElementById('splitCategoryStoreView').classList.contains('hidden')) {
+        renderSplitCategoryPanel();
+      }
     }
 
-    function renderFeatured(list) {
+    function trackLiveVisitorHeartbeat() {
+      try {
+        let vid = localStorage.getItem('sekiflex_visitor_id');
+        if (!vid) {
+          vid = 'v_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+          localStorage.setItem('sekiflex_visitor_id', vid);
+        }
+        const ping = () => {
+          sb.from('site_visits')
+            .upsert({ visitor_id: vid, page: 'index.html', last_seen: new Date().toISOString() }, { onConflict: 'visitor_id' })
+            .then(() => {});
+        };
+        ping();
+        setInterval(ping, 60000);
+      } catch (e) {}
+    }
+
+    async function init() {
+      bindBackButtonGuardsOnce();
+      bindScrollPauseWatcher();
+      bindCategoryDelegationOnce();
+      trackLiveVisitorHeartbeat();
+      lastRotationSlot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000));
+      applySocialLinks();
+      selectStarRating(5);
+      renderReviews();
+      populateNigeriaStates();
+      applyFreeShippingState(freeShippingMode);
+      renderCart();
+      startBannerAutoShift();
+      startFeaturedAutoScroll();
+      startProductRotation();
+
+      if (allProducts.length) {
+        warmUpTopImages(allProducts);
+        refreshStaticHeroSlideMedia();
+        renderFeaturedStrip(allProducts);
+        applyCatalogFilters();
+        openSharedProductFromUrl();
+      }
+      if (allCategories.length) renderCategoryButtons(allCategories);
+      updateShippingFee();
+
+      try {
+        const [{ data: products }, { data: zones }, { data: cats }] = await Promise.all([
+          sb.from('products').select('*').eq('is_active', true).order('created_at', { ascending: false }),
+          sb.from('shipping_zones').select('*').eq('is_active', true),
+          sb.from('categories').select('*').order('name')
+        ]);
+
+        if (products) {
+          allProducts = products;
+          localStorage.setItem('sekiflex_products_cache', JSON.stringify(products));
+          warmUpTopImages(allProducts);
+          refreshStaticHeroSlideMedia();
+          renderFeaturedStrip(allProducts);
+          applyCatalogFilters();
+          openSharedProductFromUrl();
+        } else if (!allProducts.length) {
+          renderProducts([]);
+        }
+
+        if (zones) {
+          shippingZones = zones;
+          localStorage.setItem('sekiflex_zones_cache', JSON.stringify(zones));
+          updateShippingFee();
+        }
+
+        if (cats) {
+          localStorage.setItem('sekiflex_cats_cache', JSON.stringify(cats));
+          renderCategoryButtons(cats);
+        }
+
+        await loadStoreBanner();
+      } catch (err) {
+        console.warn('Store sync fallback:', err);
+      }
+
+      startBannerAutoShift();
+      startFeaturedAutoScroll();
+
+      try {
+        const { data: { session } } = await sb.auth.getSession();
+        if (session?.user) {
+          const { data: profile } = await sb.from('customer_profiles').select('*').eq('id', session.user.id).maybeSingle();
+          applySignedInCustomerState(session.user, profile);
+        }
+      } catch (authErr) {
+        console.warn('Auth session check skipped:', authErr);
+      }
+    }
+
+    function filterCategory(catId, activeBtn) {
+      activeCategory = catId;
+      if (catId === 'ALL') categoryBrowseMode = false;
+      if (catId !== 'ALL') {
+        armStoreBackGuard();
+        markScreenActive(6000);
+      }
+      document.querySelectorAll('.cat-btn').forEach(b => {
+        b.className = 'cat-btn bg-[#16130f] border border-amber-400/20 text-stone-300 text-[11px] px-3 py-1 rounded-full whitespace-nowrap';
+      });
+      if (activeBtn) {
+        activeBtn.className = 'cat-btn bg-amber-500 text-stone-950 text-[11px] font-extrabold px-3 py-1 rounded-full whitespace-nowrap';
+      } else {
+        renderCategoryButtons(allCategories);
+      }
+      applyCatalogFilters();
+    }
+
+    function renderFeaturedStrip(list) {
       const strip = document.getElementById('featuredHorizontalList');
-      if (!strip) return;
-      strip.innerHTML = (list || []).slice(0, 10).map((p) => {
-        const img = (p.images && p.images[0]) || p.image_url || '';
-        const { effectivePrice } = getProductPricing(p);
+      const sec = document.getElementById('featuredStripSection');
+      if (!list || !list.length || searchQuery || pictureSearchScores) {
+        sec.classList.add('hidden');
+        return;
+      }
+      sec.classList.remove('hidden');
+      const rotatedFeatured = getRotatedProducts(list, 17, 'featured');
+      const minuteSlot = getMinuteSlotOffset(7);
+      strip.innerHTML = rotatedFeatured.slice(0, 10).map((p, idx) => {
+        const img = pickRotatingProductImage(minuteSlot, idx) || (p.images && p.images[0]) || p.image_url || '';
+        const { effectivePrice, originalPrice } = getProductPricing(p);
+        const safeName = String(p.name || 'Product').replace(/"/g, '&quot;').replace(/'/g, "\\'");
+        const priceDisplay = originalPrice !== null
+          ? `<div class="flex items-baseline gap-1 mt-0.5 flex-wrap"><span class="text-xs font-extrabold text-amber-400">₦${effectivePrice.toLocaleString()}</span><span class="text-[10px] text-stone-400 line-through">₦${originalPrice.toLocaleString()}</span></div>`
+          : `<p class="text-xs font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>`;
+        const mediaInner = img
+          ? `<img src="${img}" alt="" loading="eager" decoding="sync" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth w-full h-full object-cover object-top" />`
+          : renderBrandedPlaceholderHtml(p.name);
         return `
-          <div data-open-prod="${String(p.id).replace(/"/g, '&quot;')}" class="shrink-0 w-32 sm:w-36 bg-[#18140e] rounded-xl overflow-hidden border border-amber-400/25 flex flex-col justify-between cursor-pointer">
-            <div class="w-full h-28 bg-stone-950 overflow-hidden">
-              ${img ? `<img src="${img}" alt="" loading="eager" decoding="sync" class="catalog-img-smooth w-full h-full object-cover object-top" />` : ''}
+          <div onclick="openProductDetail('${String(p.id).replace(/'/g, "\\'")}')" class="shrink-0 w-32 sm:w-36 bg-[#18140e] rounded-xl overflow-hidden border border-amber-400/25 flex flex-col justify-between cursor-pointer hover:border-amber-400 transition shadow-sm">
+            <div class="w-full h-28 bg-stone-950 flex items-center justify-center overflow-hidden">
+              ${mediaInner}
             </div>
             <div class="p-1.5 bg-[#16130f]">
               <p class="text-[11px] font-semibold text-white truncate">${p.name}</p>
-              <p class="text-xs font-extrabold text-amber-400 mt-0.5">₦${effectivePrice.toLocaleString()}</p>
+              ${priceDisplay}
             </div>
           </div>`;
       }).join('');
+      startFeaturedAutoScroll();
     }
 
     function renderProducts(list) {
       const grid = document.getElementById('productsGrid');
-      if (!grid) return;
       if (!list.length) {
-        grid.innerHTML = '<p class="col-span-full text-center text-stone-400 py-10 text-xs">No products found.</p>';
+        grid.innerHTML = '<p class="col-span-full text-center text-stone-400 py-12 text-xs">No matching products found.</p>';
         return;
       }
 
-      grid.innerHTML = list.map((p) => {
-        const img = (p.images && p.images[0]) || p.image_url || '';
+      const minuteSlot = getMinuteSlotOffset(11);
+      grid.innerHTML = list.map((p, idx) => {
+        const img = pickRotatingProductImage(minuteSlot, idx) || (p.images && p.images[0]) || p.image_url || '';
         const out = (p.stock_quantity !== null && p.stock_quantity <= 0);
+        const safeName = String(p.name || 'Product').replace(/"/g, '&quot;').replace(/'/g, "\\'");
+        const safeId = String(p.id).replace(/'/g, "\\'");
         const isLiked = likedIds.includes(String(p.id));
         const { effectivePrice, originalPrice } = getProductPricing(p);
-        const safeId = String(p.id).replace(/"/g, '&quot;');
+
+        const mediaInner = img
+          ? `<img src="${img}" alt="" loading="eager" decoding="sync" data-fb-idx="${idx}" onload="handleCatalogImgLoad(this)" onerror="handleCatalogImgError(this, '${safeName}')" class="catalog-img-smooth skf-market-img-tall" />`
+          : `<div class="skf-market-img-tall">${renderBrandedPlaceholderHtml(p.name)}</div>`;
 
         return `
-          <div data-open-prod="${safeId}" class="skf-market-card">
+          <div onclick="openProductDetail('${safeId}')" class="skf-market-card">
             <div class="skf-catalog-photo-box">
-              <button type="button" data-like-prod="${safeId}" class="skf-catalog-heart-btn ${isLiked ? 'is-liked' : ''}">${isLiked ? '♥' : '♡'}</button>
-              ${img ? `<img src="${img}" alt="" loading="eager" decoding="sync" class="catalog-img-smooth skf-market-img-tall" />` : `<div class="skf-market-img-tall"></div>`}
+              <button type="button" onclick="toggleLikeProduct('${safeId}', this, event)"
+                aria-label="Favorite ${safeName}"
+                class="skf-catalog-heart-btn ${isLiked ? 'is-liked' : ''}">${isLiked ? '♥' : '♡'}</button>
+              ${mediaInner}
             </div>
             <div class="p-2.5 space-y-1.5">
               <p class="text-xs text-stone-100 line-clamp-1 font-semibold">${p.name}</p>
@@ -849,13 +3091,14 @@
                   <span class="text-sm font-extrabold text-amber-400">₦${effectivePrice.toLocaleString()}</span>
                   ${originalPrice !== null ? `<span class="text-[10px] text-stone-400 line-through">₦${originalPrice.toLocaleString()}</span>` : ''}
                 </div>
-                <button type="button" ${out ? 'disabled' : ''} data-cart-prod="${safeId}"
-                  class="text-amber-300 text-xs px-1.5 py-0.5 rounded-md bg-amber-500/10 border border-amber-400/25 shrink-0">
+                <button type="button" ${out ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart('${safeId}', this);"
+                  aria-label="Quick add ${safeName}"
+                  class="text-amber-300 hover:text-amber-200 text-xs px-1.5 py-0.5 rounded-md bg-amber-500/10 border border-amber-400/25 shrink-0">
                   🛒
                 </button>
               </div>
-              <button type="button" ${out ? 'disabled' : ''} data-cart-prod="${safeId}"
-                class="${out ? 'w-full bg-stone-800 text-stone-500 text-[11px] font-extrabold py-2 rounded-full' : 'skf-catalog-add-btn'}">
+              <button type="button" ${out ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart('${safeId}', this);"
+                class="${out ? 'w-full bg-stone-800 text-stone-500 text-[11px] font-extrabold py-2 rounded-full cursor-not-allowed' : 'skf-catalog-add-btn'}">
                 ${out ? 'Sold Out' : 'Add to Cart'}
               </button>
             </div>
@@ -863,113 +3106,329 @@
       }).join('');
     }
 
-    function applyCatalogFilters() {
-      let filtered = [...allProducts];
-      if (activeCategory !== 'ALL') {
-        filtered = filtered.filter(p => String(p.category_id) === String(activeCategory));
-      }
-      if (searchQuery) {
-        filtered = filtered.filter(p => `${p.name || ''} ${p.description || ''}`.toLowerCase().includes(searchQuery));
-      }
-      const heading = document.getElementById('catalogHeading');
-      const catObj = allCategories.find(c => String(c.id) === String(activeCategory));
-      if (heading) heading.textContent = activeCategory === 'ALL' ? 'All Items' : (catObj?.name || 'Collection');
-      const countEl = document.getElementById('productResultCount');
-      if (countEl) countEl.textContent = `${filtered.length} item${filtered.length === 1 ? '' : 's'}`;
-      renderProducts(filtered);
+    function showBagToast(itemName) {
+      const toast = document.getElementById('bagToast');
+      const totalItems = cart.reduce((s, i) => s + i.qty, 0);
+      document.getElementById('bagToastText').textContent = `${itemName} added (${totalItems} in cart)`;
+      toast.classList.remove('hidden');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(hideBagToast, 3000);
     }
 
-    function handleSearchInput() {
-      searchQuery = (document.getElementById('storeSearchInput')?.value || '').trim().toLowerCase();
-      applyCatalogFilters();
+    function hideBagToast() {
+      document.getElementById('bagToast').classList.add('hidden');
     }
 
-    function submitSearch(e) {
-      if (e) e.preventDefault();
-      handleSearchInput();
+    function addToCart(productId, btnEl) {
+      const prod = allProducts.find(p => String(p.id) === String(productId));
+      if (!prod) return;
+      const { effectivePrice } = getProductPricing(prod);
+      const existing = cart.find(i => String(i.id) === String(productId));
+      if (existing) existing.qty += 1;
+      else cart.push({ id: prod.id, name: prod.name, price: effectivePrice, qty: 1 });
+      saveCart();
+
+      if (btnEl) {
+        const originalText = btnEl.textContent.trim();
+        btnEl.textContent = '✓';
+        btnEl.classList.add('bg-emerald-500', 'text-white');
+        setTimeout(() => {
+          btnEl.textContent = originalText;
+          btnEl.classList.remove('bg-emerald-500', 'text-white');
+        }, 900);
+      }
+
+      showBagToast(prod.name);
     }
 
-    function triggerPictureSearch() {
-      const inp = document.getElementById('pictureSearchInput');
-      if (inp) inp.click();
+    function removeFromCart(idx) {
+      cart.splice(idx, 1);
+      saveCart();
     }
 
-    function handlePictureSearch() {
-      document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
+    function changeQty(idx, delta) {
+      cart[idx].qty += delta;
+      if (cart[idx].qty <= 0) cart.splice(idx, 1);
+      saveCart();
     }
 
-    /* Reliable global tap capture so every product card and button always works */
-    document.addEventListener('click', function (e) {
-      const filterBtn = e.target.closest('[data-filter-cat]');
-      if (filterBtn) {
-        activeCategory = filterBtn.getAttribute('data-filter-cat') || 'ALL';
-        renderCategoryBar();
-        applyCatalogFilters();
-        return;
-      }
-
-      const likeBtn = e.target.closest('[data-like-prod]');
-      if (likeBtn) {
-        e.stopPropagation();
-        toggleLikeById(likeBtn.getAttribute('data-like-prod'), likeBtn);
-        return;
-      }
-
-      const cartBtn = e.target.closest('[data-cart-prod]');
-      if (cartBtn) {
-        e.stopPropagation();
-        addToCartById(cartBtn.getAttribute('data-cart-prod'), cartBtn);
-        return;
-      }
-
-      const catCell = e.target.closest('[data-cat-kind]');
-      if (catCell) {
-        const kind = catCell.getAttribute('data-cat-kind');
-        const val = catCell.getAttribute('data-cat-val') || 'ALL';
-        activeCategory = kind === 'cat' ? val : 'ALL';
-        switchBottomTab('home');
-        renderCategoryBar();
-        applyCatalogFilters();
-        document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
-        return;
-      }
-
-      const prodCard = e.target.closest('[data-open-prod]');
-      if (prodCard) {
-        const pid = prodCard.getAttribute('data-open-prod');
-        if (pid) openProductDetailById(pid);
-      }
-    }, true);
-
-    async function init() {
+    function saveCart() {
+      localStorage.setItem('sekiflex_cart', JSON.stringify(cart));
       renderCart();
-      if (allProducts.length) {
-        renderFeatured(allProducts);
-        applyCatalogFilters();
+    }
+
+    function updateShippingFee() {
+      if (fulfillmentMode === 'pickup') {
+        currentShippingFee = 0;
+        currentEstDays = 'Uyo HQ Pickup';
+        syncPaymentOptionUi();
+        renderCart();
+        return;
       }
-      if (allCategories.length) {
-        renderCategoryBar();
+
+      const country = (document.getElementById('custCountry').value || '').trim().toLowerCase();
+      const state = getSelectedState().toLowerCase();
+
+      if (country === 'nigeria' && !state) {
+        currentShippingFee = 0;
+        currentEstDays = 'select state';
+        syncPaymentOptionUi();
+        renderCart();
+        return;
       }
+
+      const match = shippingZones.find(z => z.country_name.toLowerCase() === country && z.state_name && z.state_name.toLowerCase() === state)
+                 || shippingZones.find(z => z.country_name.toLowerCase() === country && !z.state_name);
+
+      let baseFee = match ? Number(match.delivery_fee_ngn) : (country === 'nigeria' ? 5500 : 60000);
+      if (country === 'nigeria' && state === 'akwa ibom') {
+        baseFee = AKWA_IBOM_SHIPPING_FEE;
+      }
+
+      currentShippingFee = freeShippingMode ? 0 : baseFee;
+      currentEstDays = freeShippingMode
+        ? 'Free Shipping Promo'
+        : (match ? match.estimated_days : (country === 'nigeria' ? '1-4 business days' : '5-10 business days'));
+
+      syncPaymentOptionUi();
+      renderCart();
+    }
+
+    function renderCart() {
+      const count = cart.reduce((s, i) => s + i.qty, 0);
+      const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      const grandTotal = sub + currentShippingFee;
+      document.getElementById('cartCount').textContent = count;
+      document.getElementById('cartReviewSubTotal').textContent = '₦' + sub.toLocaleString();
+      const btnTotalLabel = document.getElementById('checkoutBtnTotalLabel');
+      if (btnTotalLabel) btnTotalLabel.textContent = '₦' + sub.toLocaleString();
+      document.getElementById('subTotalText').textContent = '₦' + sub.toLocaleString();
+
+      if (fulfillmentMode === 'pickup') document.getElementById('shipFeeText').textContent = 'FREE (₦0)';
+      else if (freeShippingMode) document.getElementById('shipFeeText').textContent = 'FREE (₦0)';
+      else document.getElementById('shipFeeText').textContent = currentShippingFee > 0 ? '₦' + currentShippingFee.toLocaleString() : '—';
+
+      document.getElementById('estDaysText').textContent = currentEstDays;
+      document.getElementById('grandTotalText').textContent = '₦' + grandTotal.toLocaleString();
+      document.getElementById('payBoxAmountText').textContent = '₦' + grandTotal.toLocaleString();
+      const podTotalEl = document.getElementById('podTotalAmountText');
+      if (podTotalEl) podTotalEl.textContent = '₦' + grandTotal.toLocaleString();
+
+      const summaryActions = document.getElementById('cartSummaryActions');
+      const box = document.getElementById('cartItems');
+      if (!cart.length) {
+        box.innerHTML = '<div class="luxury-glass-card border border-amber-400/20 rounded-2xl p-8 text-center space-y-3"><p class="text-sm font-bold text-stone-300">Your shopping cart is empty.</p><button type="button" onclick="skfHandleKeepShopping(event)" class="bg-amber-500 text-stone-950 text-xs font-extrabold px-4 py-2 rounded-full">Start Shopping</button></div>';
+        if (summaryActions) summaryActions.classList.add('hidden');
+        document.getElementById('checkoutForm').classList.add('hidden');
+        return;
+      }
+      if (summaryActions && document.getElementById('checkoutForm').classList.contains('hidden')) {
+        summaryActions.classList.remove('hidden');
+      }
+
+      box.innerHTML = cart.map((item, i) => {
+        const matchedProd = allProducts.find(p => String(p.id) === String(item.id));
+        const thumbImg = (matchedProd?.images && matchedProd.images[0]) || matchedProd?.image_url || '';
+        return `
+          <div class="luxury-glass-card p-3 rounded-2xl border border-amber-400/25 space-y-2.5">
+            <div class="flex items-start gap-3">
+              <div class="w-16 h-16 rounded-xl overflow-hidden bg-stone-950 border border-amber-400/20 shrink-0">
+                ${thumbImg
+                  ? `<img src="${thumbImg}" alt="" loading="eager" decoding="sync" class="catalog-img-smooth w-full h-full object-cover object-top" />`
+                  : renderBrandedPlaceholderHtml(item.name)}
+              </div>
+              <div class="min-w-0 flex-1 space-y-1">
+                <p class="text-xs sm:text-sm font-bold text-white line-clamp-2 leading-snug">${item.name}</p>
+                <p class="text-sm text-amber-400 font-extrabold">₦${(item.price * item.qty).toLocaleString()}</p>
+                <p class="text-[10px] font-semibold text-emerald-400">In Stock • Sekiflex Express</p>
+              </div>
+            </div>
+            <div class="flex items-center justify-between pt-2 border-t border-stone-800/80">
+              <button type="button" onclick="removeFromCart(${i})" class="inline-flex items-center gap-1 text-xs font-bold text-amber-400 hover:text-amber-300">
+                <span>🗑️</span>
+                <span>Remove</span>
+              </button>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="changeQty(${i}, -1)" class="w-7 h-7 bg-amber-500/20 hover:bg-amber-500/35 border border-amber-400/40 text-amber-300 rounded-lg font-extrabold text-sm">-</button>
+                <span class="text-xs font-extrabold w-5 text-center text-white">${item.qty}</span>
+                <button type="button" onclick="changeQty(${i}, 1)" class="w-7 h-7 bg-amber-500 hover:bg-amber-400 text-stone-950 rounded-lg font-extrabold text-sm">+</button>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function openCartReview() {
+      armStoreBackGuard();
+      backToCartReviewOnly();
+      setActiveBottomTab('cart');
+      showOnlyMainView('cartFullPageView');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function backToCartReviewOnly() {
+      document.getElementById('checkoutForm').classList.add('hidden');
+      if (cart.length) document.getElementById('cartSummaryActions').classList.remove('hidden');
+      const totalItems = cart.reduce((s, i) => s + i.qty, 0);
+      document.getElementById('cartDrawerHeading').textContent = `Cart (${totalItems})`;
+    }
+
+    function skfHandleKeepShopping(e) {
+      if (e) { e.preventDefault(); e.stopPropagation(); }
+      document.getElementById('checkoutForm').classList.add('hidden');
+      showOnlyMainView('storeMainWrapper');
+      setActiveBottomTab('home');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function skfHandleProceedToCheckout(e) {
+      if (e) { e.preventDefault(); e.stopPropagation(); }
+      if (!cart.length) return alert('Add at least one item to your cart first.');
+      if (!currentCustomer) {
+        try {
+          const { data: { session } } = await sb.auth.getSession();
+          if (session?.user) {
+            const { data: profile } = await sb.from('customer_profiles').select('*').eq('id', session.user.id).maybeSingle();
+            applySignedInCustomerState(session.user, profile);
+          }
+        } catch (err) {}
+      }
+      if (!currentCustomer) {
+        openAuthGate('signup', true, 'You do not have an account or are not signed in yet — please register an account or log in to continue to checkout.');
+        return;
+      }
+      prefillCustomerCheckout();
+      updateShippingFee();
+      document.getElementById('cartSummaryActions').classList.add('hidden');
+      document.getElementById('checkoutForm').classList.remove('hidden');
+      document.getElementById('cartDrawerHeading').textContent = 'Waybill & Checkout';
+      document.getElementById('checkoutForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function toggleCart(show, showWaybillImmediately = false) {
+      if (show) {
+        armStoreBackGuard();
+        setActiveBottomTab('cart');
+        showOnlyMainView('cartFullPageView');
+        if (showWaybillImmediately) skfHandleProceedToCheckout();
+        else backToCartReviewOnly();
+      } else {
+        skfHandleKeepShopping();
+      }
+    }
+
+    async function placeOrder(e) {
+      e.preventDefault();
+      if (!currentCustomer) {
+        openAuthGate('signup', true, 'You do not have an account or are not signed in yet — please register an account or log in to continue to checkout.');
+        return;
+      }
+      if (!cart.length) return alert('Add at least one item to your cart first.');
+
+      let country = 'Nigeria';
+      let destination = 'Store Pickup — Sekiflex HQ, Urua Ekpa, Uyo, Akwa Ibom State';
+      if (fulfillmentMode === 'delivery') {
+        country = document.getElementById('custCountry').value.trim();
+        const state = getSelectedState();
+        if (country === 'Nigeria' && !state) return alert('Please select your delivery state first.');
+        const city = document.getElementById('custCity').value.trim();
+        const address = document.getElementById('custAddress').value.trim();
+        destination = `${address}, ${city}, ${state}, ${country}`;
+      }
+
+      const isPod = paymentOption === 'pod' && isAkwaIbomCourierSelected();
+      let paidBank = '';
+      let senderRef = '';
+      if (!isPod) {
+        paidBank = document.getElementById('paidBankSelect').value.trim();
+        senderRef = document.getElementById('senderRefInput').value.trim();
+        if (!paidBank || !senderRef) return alert('Please select the Sekiflex bank account you transferred to and enter the sender name/reference.');
+      }
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Verifying & Registering Order...';
+
+      const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      const total = sub + currentShippingFee;
+      const tracking = 'SC-2026-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      const summary = cart.map(i => `${i.qty}x ${i.name}`).join('; ');
+      const productLinksEntries = cart.map(i => ({ id: i.id, name: i.name, url: getProductShareUrl(i.id) }));
+      const productLinksText = productLinksEntries.map(x => `${x.name}: ${x.url}`).join('\n');
+      const custName = document.getElementById('custName').value.trim() || currentCustomer.name;
+      const custEmail = document.getElementById('custEmail').value.trim() || currentCustomer.email;
+      const custPhone = document.getElementById('custPhone').value.trim() || currentCustomer.phone;
+      const paymentNote = isPod ? `Payment on Delivery (Akwa Ibom) | Total Due on Delivery: ₦${total.toLocaleString()}` : `${paidBank} | Sender/Ref: ${senderRef}`;
+      const orderStatus = 'Order processing';
+      const payStatus = isPod ? 'Pay on delivery (pending)' : 'Awaiting payment';
+
+      const { data: order, error } = await sb.from('orders').insert({
+        tracking_number: tracking, customer_name: custName, customer_email: custEmail, customer_phone: custPhone,
+        destination, package_description: summary, order_source: 'Sekiflex Store', payment_status: payStatus,
+        payment_reference: paymentNote, order_amount: sub, delivery_amount: currentShippingFee, status: orderStatus,
+        courier_name: fulfillmentMode === 'pickup' ? 'Walk-In Store Pickup (Uyo HQ)' : 'Sekiflex Collections Dispatch',
+        estimate_delivery: currentEstDays, country, currency: 'NGN', delivery_instructions: document.getElementById('custNotes').value.trim()
+      }).select().single();
+
+      if (error) {
+        btn.disabled = false;
+        btn.textContent = isPod ? 'Confirm Pay on Delivery Order' : 'I Have Paid — Confirm Order';
+        return alert('Error placing order: ' + error.message);
+      }
+
+      await sb.from('store_order_items').insert(
+        cart.map(i => ({ order_id: order.id, product_id: i.id, product_name: i.name, quantity: i.qty, unit_price: i.price, subtotal: i.price * i.qty }))
+      );
 
       try {
-        const [{ data: products }, { data: cats }] = await Promise.all([
-          sb.from('products').select('*').eq('is_active', true).order('created_at', { ascending: false }),
-          sb.from('categories').select('*').order('name')
-        ]);
-        if (products) {
-          allProducts = products;
-          localStorage.setItem('sekiflex_products_cache', JSON.stringify(products));
-          renderFeatured(allProducts);
-          applyCatalogFilters();
-        }
-        if (cats) {
-          allCategories = cats;
-          localStorage.setItem('sekiflex_cats_cache', JSON.stringify(cats));
-          renderCategoryBar();
-        }
-      } catch (err) {
-        console.warn('Sync notice:', err);
+        await sb.functions.invoke('sekiflex-order-notifications', {
+          body: {
+            event_type: 'new_order', tracking_number: tracking, customer_name: custName, customer_email: custEmail,
+            customer_phone: custPhone, destination, items: summary, product_links: productLinksText,
+            product_links_list: productLinksEntries, total_amount: total, payment_method: paymentNote,
+            status: orderStatus, payment_status: payStatus
+          }
+        });
+      } catch (notifyErr) {}
+
+      const waOrderText = encodeURIComponent(
+        `Hello Sekiflex Collections! I have placed an order.\nTracking Code: ${tracking}\nStatus: ${orderStatus} (${payStatus})\nName: ${custName}\nItems: ${summary}\nProduct Links:\n${productLinksText}\nMethod: ${fulfillmentMode === 'pickup' ? 'Walk-In Store Pickup (Urua Ekpa, Uyo)' : destination}\nTotal Amount (incl. shipping): ₦${total.toLocaleString()}\nPayment Option: ${isPod ? 'Payment on Delivery (Akwa Ibom)' : paidBank}\n` + (isPod ? '' : `Sender/Ref: ${senderRef}`)
+      );
+      document.getElementById('orderWhatsappConfirmBtn').href = `https://wa.me/${STORE_WHATSAPP_NUMBER}?text=${waOrderText}`;
+
+      const linksBox = document.getElementById('successProductLinksBox');
+      const linksList = document.getElementById('successProductLinksList');
+      if (linksBox && linksList && productLinksEntries.length) {
+        linksList.innerHTML = productLinksEntries.map(x => `
+          <div class="flex items-center justify-between gap-2">
+            <span class="truncate font-semibold text-white">${x.name}</span>
+            <button type="button" onclick="navigator.clipboard.writeText('${x.url.replace(/'/g, "\\'")}'); alert('Product link copied!');"
+              class="text-[10px] font-extrabold text-amber-300 hover:underline shrink-0">Copy Link</button>
+          </div>
+          <a href="${x.url}" class="block text-[10px] text-amber-400/90 underline truncate">${x.url}</a>
+        `).join('');
+        linksBox.classList.remove('hidden');
       }
+
+      cart = [];
+      saveCart();
+      document.getElementById('checkoutForm').reset();
+      prefillCustomerCheckout();
+      paymentOption = 'transfer';
+      setFulfillmentMode('delivery');
+      toggleCart(false);
+      btn.disabled = false;
+      btn.textContent = 'I Have Paid — Confirm Order';
+      applyStatusBadgeStyle(document.getElementById('successOrderStatusBadge'), `${orderStatus} • ${payStatus}`);
+      document.getElementById('newTrackingCode').textContent = tracking;
+      document.getElementById('trackNowLink').href = `track.html?tracking=${tracking}`;
+      openSuccessModalWithHistory();
+    }
+
+    function copyTracking() {
+      const code = document.getElementById('newTrackingCode').textContent;
+      navigator.clipboard.writeText(code);
+      alert('Tracking code copied: ' + code);
     }
 
     init();
