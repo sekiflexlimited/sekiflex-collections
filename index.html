@@ -866,20 +866,29 @@
         </button>
       </div>
 
-      <!-- CUSTOMER ORDER HISTORY & QUICK TRACKING / CANCELLATION REQUEST -->
-      <section class="luxury-glass-card border border-amber-400/35 rounded-2xl p-3.5 space-y-2.5">
-        <div class="flex items-center justify-between gap-2 border-b border-stone-800 pb-2">
-          <div>
-            <p class="text-[10px] font-extrabold uppercase tracking-wider text-amber-400">Order History &amp; Tracking</p>
-            <h3 class="font-editorial text-sm font-bold text-white">My Orders</h3>
+      <!-- COLLAPSIBLE ORDER HISTORY & TRACKING -->
+      <section class="luxury-glass-card border border-amber-400/35 rounded-2xl overflow-hidden">
+        <button type="button" id="orderHistoryToggleBtn" onclick="toggleOrderHistoryPanel()"
+          class="w-full px-4 py-3.5 flex items-center justify-between gap-2 text-left hover:bg-white/5 transition">
+          <span class="flex items-center gap-2.5 min-w-0">
+            <span class="text-base">📦</span>
+            <span class="text-xs font-extrabold text-amber-300 truncate">Order History &amp; Tracking</span>
+            <span id="orderHistoryCountBadge" class="hidden text-[10px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-400/35 px-2 py-0.5 rounded-full">0</span>
+          </span>
+          <span id="orderHistoryChevron" class="text-amber-400 font-bold text-sm transition-transform">›</span>
+        </button>
+
+        <div id="orderHistoryCollapsibleBody" class="hidden px-3.5 pb-3.5 pt-2 border-t border-stone-800/80 space-y-2.5">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-stone-400">Your Orders</span>
+            <button type="button" onclick="loadCustomerOrderHistory(true)"
+              class="text-[10px] font-extrabold bg-stone-900 hover:bg-stone-800 border border-amber-400/30 text-amber-300 px-2.5 py-1 rounded-full transition">
+              ↻ Refresh
+            </button>
           </div>
-          <button type="button" onclick="loadCustomerOrderHistory(true)"
-            class="text-[10px] font-extrabold bg-stone-900 hover:bg-stone-800 border border-amber-400/30 text-amber-300 px-2.5 py-1 rounded-full transition">
-            ↻ Refresh
-          </button>
-        </div>
-        <div id="customerOrderHistoryContainer" class="space-y-2">
-          <p class="text-xs text-stone-400 py-2">Sign in to view your order history, track deliveries, or request cancellation before confirmation/shipping.</p>
+          <div id="customerOrderHistoryContainer" class="space-y-2">
+            <p class="text-xs text-stone-400 py-2">Sign in to view your order history, track deliveries, or request cancellation before confirmation/shipping.</p>
+          </div>
         </div>
       </section>
 
@@ -1488,6 +1497,32 @@
     </div>
   </div>
 
+  <!-- LUXURY STYLED ALERT / CONFIRM MODAL -->
+  <div id="skfAlertModal" onclick="if(event.target === this) closeSkfAlert(false);"
+    class="fixed inset-0 z-[95] hidden bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-[#16130f] border border-amber-400/50 rounded-3xl max-w-xs w-full p-5 text-center space-y-4 shadow-2xl">
+      <div class="space-y-1.5">
+        <p class="text-[10px] font-extrabold uppercase tracking-widest text-amber-400">Sekiflex Collections</p>
+        <h3 id="skfAlertTitle" class="font-editorial text-lg font-bold text-white">Notice</h3>
+        <p id="skfAlertMessage" class="text-xs text-stone-200 leading-relaxed whitespace-pre-line"></p>
+      </div>
+      <div id="skfAlertConfirmRow" class="hidden grid-cols-2 gap-2.5">
+        <button type="button" id="skfAlertCancelBtn" onclick="closeSkfAlert(false)"
+          class="py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 border border-amber-400/25 text-stone-200 text-xs font-bold transition">
+          Cancel
+        </button>
+        <button type="button" id="skfAlertOkConfirmBtn" onclick="closeSkfAlert(true)"
+          class="py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-extrabold transition">
+          Confirm
+        </button>
+      </div>
+      <button type="button" id="skfAlertOkSingleBtn" onclick="closeSkfAlert(true)"
+        class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950 text-xs font-extrabold transition shadow">
+        OK
+      </button>
+    </div>
+  </div>
+
   <script>
     const STORE_WHATSAPP_NUMBER = '2349069037617';
     const STORE_WHATSAPP_URL = 'https://wa.me/2349069037617';
@@ -1529,6 +1564,7 @@
     let activeProductDetailId = null;
     let selectedProductStarRating = 5;
     let customerOrdersCache = [];
+    let orderHistoryExpanded = false;
     let pendingDeleteCode = '';
     let activeCategory = 'ALL';
     let categoryBrowseMode = false;
@@ -1557,6 +1593,64 @@
     let lockedFeaturedOrderIds = null;
     let screenIdleTimer = null;
     let allowWebsiteExit = false;
+    let __skfAlertResolver = null;
+
+    function showSkfAlert(message, title = 'Sekiflex Collections') {
+      return new Promise((resolve) => {
+        __skfAlertResolver = resolve;
+        const modal = document.getElementById('skfAlertModal');
+        const titleEl = document.getElementById('skfAlertTitle');
+        const msgEl = document.getElementById('skfAlertMessage');
+        const confirmRow = document.getElementById('skfAlertConfirmRow');
+        const singleBtn = document.getElementById('skfAlertOkSingleBtn');
+        if (!modal || !msgEl) {
+          alert(message);
+          resolve(true);
+          return;
+        }
+        if (titleEl) titleEl.textContent = title;
+        msgEl.textContent = String(message || '');
+        if (confirmRow) {
+          confirmRow.classList.add('hidden');
+          confirmRow.classList.remove('grid');
+        }
+        if (singleBtn) singleBtn.classList.remove('hidden');
+        modal.classList.remove('hidden');
+      });
+    }
+
+    function showSkfConfirm(message, title = 'Confirm Action', confirmLabel = 'Confirm') {
+      return new Promise((resolve) => {
+        __skfAlertResolver = resolve;
+        const modal = document.getElementById('skfAlertModal');
+        const titleEl = document.getElementById('skfAlertTitle');
+        const msgEl = document.getElementById('skfAlertMessage');
+        const confirmRow = document.getElementById('skfAlertConfirmRow');
+        const singleBtn = document.getElementById('skfAlertOkSingleBtn');
+        const okConfirmBtn = document.getElementById('skfAlertOkConfirmBtn');
+        if (!modal || !msgEl) {
+          resolve(confirm(message));
+          return;
+        }
+        if (titleEl) titleEl.textContent = title;
+        msgEl.textContent = String(message || '');
+        if (okConfirmBtn) okConfirmBtn.textContent = confirmLabel;
+        if (confirmRow) {
+          confirmRow.classList.remove('hidden');
+          confirmRow.classList.add('grid');
+        }
+        if (singleBtn) singleBtn.classList.add('hidden');
+        modal.classList.remove('hidden');
+      });
+    }
+
+    function closeSkfAlert(result) {
+      const modal = document.getElementById('skfAlertModal');
+      if (modal) modal.classList.add('hidden');
+      const resolver = __skfAlertResolver;
+      __skfAlertResolver = null;
+      if (typeof resolver === 'function') resolver(Boolean(result));
+    }
 
     function lockStaffSessionState() {}
 
@@ -1799,7 +1893,7 @@
 
     async function enableCustomerPushNotifications(showFeedback = false, customTitle = '', customBody = '') {
       if (!('Notification' in window)) {
-        if (showFeedback) alert('Push notifications are not supported on this browser.');
+        if (showFeedback) await showSkfAlert('Push notifications are not supported on this browser.', 'Notifications');
         return;
       }
 
@@ -1826,9 +1920,9 @@
         } catch (nErr) {}
       } else if (showFeedback) {
         if (Notification.permission === 'granted') {
-          alert('Push alerts are active for orders, promos & updates.');
+          await showSkfAlert('Push alerts are active for orders, promos & updates.', 'Notifications Enabled');
         } else {
-          alert('Allow notifications in your browser to receive order & promo alerts.');
+          await showSkfAlert('Allow notifications in your browser to receive order & promo alerts.', 'Notification Permission');
         }
       }
     }
@@ -2065,7 +2159,7 @@
       }
       try {
         await navigator.clipboard.writeText(url);
-        alert('Product link copied for ' + cleanName + ':\n' + url);
+        await showSkfAlert('Product link copied for ' + cleanName + ':\n' + url, 'Link Copied');
       } catch (e) {
         prompt('Copy this product link:', url);
       }
@@ -2107,7 +2201,7 @@
     }
 
     function hasAnyOverlayOpen() {
-      return ['leaveConfirmModal', 'customerAuthGate', 'productDetailModal', 'storeSettingsModal', 'infoModal', 'successModal', 'reviewsModal']
+      return ['leaveConfirmModal', 'customerAuthGate', 'productDetailModal', 'storeSettingsModal', 'infoModal', 'successModal', 'reviewsModal', 'skfAlertModal']
         .some(id => {
           const el = document.getElementById(id);
           return el && !el.classList.contains('hidden');
@@ -2702,6 +2796,23 @@
       document.getElementById('productDetailModal').classList.add('hidden');
     }
 
+    function toggleOrderHistoryPanel(forceOpen = null) {
+      const body = document.getElementById('orderHistoryCollapsibleBody');
+      const chev = document.getElementById('orderHistoryChevron');
+      if (!body) return;
+
+      orderHistoryExpanded = typeof forceOpen === 'boolean' ? forceOpen : !orderHistoryExpanded;
+      body.classList.toggle('hidden', !orderHistoryExpanded);
+
+      if (chev) {
+        chev.textContent = orderHistoryExpanded ? '⌄' : '›';
+      }
+
+      if (orderHistoryExpanded && currentCustomer && !customerOrdersCache.length) {
+        loadCustomerOrderHistory(true);
+      }
+    }
+
     function canCustomerRequestCancellation(orderStatus) {
       const st = String(orderStatus || '').trim().toLowerCase();
       if (!st) return false;
@@ -2724,7 +2835,7 @@
       const container = document.getElementById('customerOrderHistoryContainer');
       if (!container) return;
       if (!currentCustomer || !currentCustomer.email) {
-        container.innerHTML = '<p class="text-xs text-stone-400 py-2">Sign in or register to view your order history, track orders, and request cancellation before confirmation/shipping.</p>';
+        container.innerHTML = '<p class="text-xs text-stone-400 py-2">Sign in or register to view your order history, track deliveries, and request cancellation before confirmation/shipping.</p>';
         return;
       }
       if (showSpinnerText) {
@@ -2746,6 +2857,16 @@
     }
 
     function renderCustomerOrderHistory() {
+      const badge = document.getElementById('orderHistoryCountBadge');
+      if (badge) {
+        if (currentCustomer && customerOrdersCache.length) {
+          badge.textContent = String(customerOrdersCache.length);
+          badge.classList.remove('hidden');
+        } else {
+          badge.classList.add('hidden');
+        }
+      }
+
       const container = document.getElementById('customerOrderHistoryContainer');
       if (!container) return;
       if (!currentCustomer) {
@@ -2794,9 +2915,14 @@
       if (!trackingNumber) return;
       const ord = customerOrdersCache.find(o => String(o.tracking_number) === String(trackingNumber));
       if (ord && !canCustomerRequestCancellation(ord.status)) {
-        return alert('This order has already been confirmed or shipped and cannot be cancelled through this button.');
+        await showSkfAlert('This order has already been confirmed or shipped and cannot be cancelled through this button.', 'Order Status');
+        return;
       }
-      const ok = confirm(`Request cancellation for order ${trackingNumber}? Admin approval is required before cancellation is finalized.`);
+      const ok = await showSkfConfirm(
+        `Request cancellation for order ${trackingNumber}? Admin approval is required before cancellation is finalized.`,
+        'Request Cancellation',
+        'Yes, Request'
+      );
       if (!ok) return;
 
       try {
@@ -2805,7 +2931,8 @@
           .update({ status: 'Cancellation requested' })
           .eq('tracking_number', trackingNumber);
         if (error) {
-          return alert('Could not submit cancellation request: ' + error.message);
+          await showSkfAlert('Could not submit cancellation request: ' + error.message, 'Error');
+          return;
         }
         if (ord) ord.status = 'Cancellation requested';
         renderCustomerOrderHistory();
@@ -2820,9 +2947,9 @@
             }
           });
         } catch (nErr) {}
-        alert(`Cancellation request sent for ${trackingNumber}. Awaiting admin approval.`);
+        await showSkfAlert(`Cancellation request sent for ${trackingNumber}. Awaiting admin approval.`, 'Cancellation Requested');
       } catch (err) {
-        alert('Error sending cancellation request.');
+        await showSkfAlert('Error sending cancellation request.', 'Error');
       }
     }
 
@@ -2930,7 +3057,7 @@
         localStorage.setItem('sekiflex_known_customers_v1', JSON.stringify(filtered));
       } catch (e) {}
       await sb.auth.signOut();
-      alert('Your Sekiflex Collections account deletion request has been completed and you have been signed out.');
+      await showSkfAlert('Your Sekiflex Collections account deletion request has been completed and you have been signed out.', 'Account Deleted');
       location.reload();
     }
 
@@ -2965,7 +3092,7 @@
     }
 
     function closeAllDrawers() {
-      ['storeSettingsModal', 'productDetailModal', 'reviewsModal', 'infoModal', 'customerAuthGate']
+      ['storeSettingsModal', 'productDetailModal', 'reviewsModal', 'infoModal', 'customerAuthGate', 'skfAlertModal']
         .forEach(id => document.getElementById(id).classList.add('hidden'));
     }
 
@@ -3634,9 +3761,9 @@
       }
     }
 
-    function setPaymentOption(opt) {
+    async function setPaymentOption(opt) {
       if (opt === 'pod' && !isAkwaIbomCourierSelected()) {
-        alert('Payment on Delivery is available for Akwa Ibom State courier deliveries only.');
+        await showSkfAlert('Payment on Delivery is available for Akwa Ibom State courier deliveries only.', 'Pay on Delivery');
         return;
       }
       paymentOption = opt === 'pod' ? 'pod' : 'transfer';
@@ -4103,7 +4230,7 @@
 
     async function skfHandleProceedToCheckout(e) {
       if (e) { e.preventDefault(); e.stopPropagation(); }
-      if (!cart.length) return alert('Add at least one item to your cart first.');
+      if (!cart.length) return await showSkfAlert('Add at least one item to your cart first.', 'Empty Cart');
       if (!currentCustomer) {
         try {
           const { data: { session } } = await sb.auth.getSession();
@@ -4143,9 +4270,9 @@
         openAuthGate('signup', true, 'You do not have an account or are not signed in yet — please register an account or log in to continue to checkout.');
         return;
       }
-      if (!cart.length) return alert('Add at least one item to your cart first.');
+      if (!cart.length) return await showSkfAlert('Add at least one item to your cart first.', 'Empty Cart');
       if (!document.getElementById('checkoutTermsCheck')?.checked) {
-        return alert('Please tick the box to accept our Terms & Conditions before placing your order.');
+        return await showSkfAlert('Please tick the box to accept our Terms & Conditions before placing your order.', 'Terms Required');
       }
 
       let country = 'Nigeria';
@@ -4153,7 +4280,7 @@
       if (fulfillmentMode === 'delivery') {
         country = document.getElementById('custCountry').value.trim();
         const state = getSelectedState();
-        if (country === 'Nigeria' && !state) return alert('Please select your delivery state first.');
+        if (country === 'Nigeria' && !state) return await showSkfAlert('Please select your delivery state first.', 'Delivery State');
         const city = document.getElementById('custCity').value.trim();
         const address = document.getElementById('custAddress').value.trim();
         destination = `${address}, ${city}, ${state}, ${country}`;
@@ -4165,7 +4292,7 @@
       if (!isPod) {
         paidBank = document.getElementById('paidBankSelect').value.trim();
         senderRef = document.getElementById('senderRefInput').value.trim();
-        if (!paidBank || !senderRef) return alert('Please select the Sekiflex bank account you transferred to and enter the sender name/reference.');
+        if (!paidBank || !senderRef) return await showSkfAlert('Please select the Sekiflex bank account you transferred to and enter the sender name/reference.', 'Payment Details');
       }
 
       const btn = document.getElementById('submitBtn');
@@ -4196,7 +4323,7 @@
       if (error) {
         btn.disabled = false;
         btn.textContent = isPod ? 'Confirm Pay on Delivery Order' : 'I Have Paid — Confirm Order';
-        return alert('Error placing order: ' + error.message);
+        return await showSkfAlert('Error placing order: ' + error.message, 'Order Error');
       }
 
       await sb.from('store_order_items').insert(
@@ -4231,7 +4358,7 @@
         linksList.innerHTML = productLinksEntries.map(x => `
           <div class="flex items-center justify-between gap-2">
             <span class="truncate font-semibold text-white">${x.name}</span>
-            <button type="button" onclick="navigator.clipboard.writeText('${x.url.replace(/'/g, "\\'")}'); alert('Product link copied!');"
+            <button type="button" onclick="navigator.clipboard.writeText('${x.url.replace(/'/g, "\\'")}'); showSkfAlert('Product link copied!', 'Copied');"
               class="text-[10px] font-extrabold text-amber-300 hover:underline shrink-0">Copy Link</button>
           </div>
           <a href="${x.url}" class="block text-[10px] text-amber-400/90 underline truncate">${x.url}</a>
@@ -4255,10 +4382,10 @@
       openSuccessModalWithHistory();
     }
 
-    function copyTracking() {
+    async function copyTracking() {
       const code = document.getElementById('newTrackingCode').textContent;
       navigator.clipboard.writeText(code);
-      alert('Tracking code copied: ' + code);
+      await showSkfAlert('Tracking code copied: ' + code, 'Tracking Copied');
     }
 
     init();
