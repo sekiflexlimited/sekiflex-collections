@@ -1594,13 +1594,24 @@
         if (cleanEmail && list.some(r => normalizeEmailRecord(r.email) === cleanEmail)) emailMatched = true;
         if (cleanPhone && list.some(r => String(r.phone || '').replace(/\D/g, '') === cleanPhone)) phoneMatched = true;
       } catch (e) {}
+
+      const withTimeout = (promise, ms = 3000) =>
+        Promise.race([
+          promise,
+          new Promise(resolve => setTimeout(() => resolve({ data: null, error: new Error('timeout') }), ms))
+        ]);
+
       try {
         if (cleanEmail) {
-          const { data } = await sb.from('customer_profiles').select('id').ilike('email', cleanEmail).limit(1);
+          const { data } = await withTimeout(
+            sb.from('customer_profiles').select('id').ilike('email', cleanEmail).limit(1)
+          );
           if (Array.isArray(data) && data.length > 0) emailMatched = true;
         }
         if (cleanPhone) {
-          const { data } = await sb.from('customer_profiles').select('id, phone').limit(50);
+          const { data } = await withTimeout(
+            sb.from('customer_profiles').select('id, phone').limit(50)
+          );
           if (Array.isArray(data) && data.some(r => String(r.phone || '').replace(/\D/g, '') === cleanPhone)) phoneMatched = true;
         }
       } catch (e) {}
@@ -3273,53 +3284,87 @@
       const phone = document.getElementById('regPhone').value.trim();
       const password = document.getElementById('regPassword').value;
       const acceptedTerms = document.getElementById('regTermsCheck')?.checked;
-      if (!fullName) return showAuthMessage('Please enter your full name.', true);
-      if (!acceptedTerms) return showAuthMessage('Please tick the box to accept our Terms & Conditions before registering.', true);
 
-      btn.disabled = true;
-      btn.textContent = 'Checking Existing Records...';
-
-      const existingMatch = await findExistingCustomerRecord(email, phone);
-      if (existingMatch.emailMatched && existingMatch.phoneMatched) {
-        btn.disabled = false;
-        btn.textContent = 'Register & Go to Checkout →';
-        return showAuthMessage('This email address and phone number already opened an account in our records. Please sign in instead.', true);
-      }
-      if (existingMatch.emailMatched) {
-        btn.disabled = false;
-        btn.textContent = 'Register & Go to Checkout →';
-        return showAuthMessage('This email address is already in our records. Please sign in or use another email.', true);
-      }
-      if (existingMatch.phoneMatched) {
-        btn.disabled = false;
-        btn.textContent = 'Register & Go to Checkout →';
-        return showAuthMessage('This phone number is already in our records. Please sign in or use another phone number.', true);
-      }
-
-      btn.textContent = 'Sending Registration Code...';
-      const { data, error } = await sb.auth.signUp({
-        email, password, options: { data: { full_name: fullName, display_name: fullName, phone } }
-      });
-      btn.disabled = false;
-      btn.textContent = 'Register & Go to Checkout →';
-      if (error) {
-        const errMsg = String(error.message || '');
-        if (/already registered|already exists|user already/i.test(errMsg)) {
-          return showAuthMessage('This email address is already in our records. Please sign in instead.', true);
+      const resetBtn = () => {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Register & Go to Checkout →';
         }
-        return showAuthMessage(errMsg, true);
+      };
+
+      if (!fullName) {
+        resetBtn();
+        return showAuthMessage('Please enter your full name.', true);
+      }
+      if (!acceptedTerms) {
+        resetBtn();
+        return showAuthMessage('Please tick the box to accept our Terms & Conditions before registering.', true);
       }
 
-      recordKnownCustomerLocally(email, phone);
-      pendingSignupData = { name: fullName, email, phone };
-      document.getElementById('otpTargetEmail').textContent = email;
-      if (data?.session && data?.user) {
-        await sb.from('customer_profiles').upsert({ id: data.user.id, full_name: fullName, email, phone });
-        completeAuthAndBounceBack(data.user, { full_name: fullName, email, phone });
-        return;
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Checking Existing Records...';
       }
-      switchAuthView('verify');
-      showAuthMessage('8-digit registration code sent to your email!', false);
+
+      try {
+        const existingMatch = await Promise.race([
+          findExistingCustomerRecord(email, phone),
+          new Promise(resolve => setTimeout(() => resolve({ emailMatched: false, phoneMatched: false }), 3000))
+        ]);
+
+        if (existingMatch.emailMatched && existingMatch.phoneMatched) {
+          resetBtn();
+          return showAuthMessage('This email address and phone number already opened an account in our records. Please sign in instead.', true);
+        }
+        if (existingMatch.emailMatched) {
+          resetBtn();
+          return showAuthMessage('This email address is already in our records. Please sign in or use another email.', true);
+        }
+        if (existingMatch.phoneMatched) {
+          resetBtn();
+          return showAuthMessage('This phone number is already in our records. Please sign in or use another phone number.', true);
+        }
+
+        if (btn) btn.textContent = 'Sending Registration Code...';
+
+        const { data, error } = await sb.auth.signUp({
+          email,
+          password,
+          options: { data: { full_name: fullName, display_name: fullName, phone } }
+        });
+
+        resetBtn();
+
+        if (error) {
+          const errMsg = String(error.message || '');
+          if (/already registered|already exists|user already/i.test(errMsg)) {
+            return showAuthMessage('This email address is already in our records. Please sign in instead.', true);
+          }
+          return showAuthMessage(errMsg, true);
+        }
+
+        recordKnownCustomerLocally(email, phone);
+        pendingSignupData = { name: fullName, email, phone };
+        const otpEmailEl = document.getElementById('otpTargetEmail');
+        if (otpEmailEl) otpEmailEl.textContent = email;
+
+        if (data?.session && data?.user) {
+          await sb.from('customer_profiles').upsert({
+            id: data.user.id,
+            full_name: fullName,
+            email,
+            phone
+          });
+          completeAuthAndBounceBack(data.user, { full_name: fullName, email, phone });
+          return;
+        }
+
+        switchAuthView('verify');
+        showAuthMessage('8-digit registration code sent to your email!', false);
+      } catch (err) {
+        resetBtn();
+        showAuthMessage(err?.message || 'Could not complete registration. Please try again.', true);
+      }
     }
 
     async function handleVerifySignupOtp(e) {
