@@ -3147,7 +3147,119 @@
         badge.className = 'text-[10px] font-extrabold text-amber-400';
       }
     }
+    async function enableAdminOrderPushAlerts(showFeedback = false) {
+      if (!('Notification' in window)) {
+        if (showFeedback) await showSkfAlert('Push notifications are not supported on this browser.', 'Push Alerts');
+        return false;
+      }
+      let perm = Notification.permission;
+      if (perm === 'default') {
+        perm = await Notification.requestPermission();
+      }
+      if (perm !== 'granted') {
+        if (showFeedback) await showSkfAlert('Please allow browser notifications so order alerts can pop up on your screen.', 'Permission Needed');
+        return false;
+      }
+      if (typeof window.enableSekiflexPush === 'function') {
+        try {
+          await window.enableSekiflexPush({
+            customerEmail: currentCustomer?.email || STORE_EMAIL,
+            customerPhone: currentCustomer?.phone || STORE_WHATSAPP_NUMBER,
+            isAdmin: true,
+            silent: !showFeedback
+          });
+        } catch (err) {
+          console.warn('Admin push registration note:', err);
+        }
+      }
+      return true;
+    }
 
+    function showLocalScreenAlert(title, body, url = 'index.html') {
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+      const playTone = localStorage.getItem('sekiflex_sound_enabled') !== '0';
+      if (playTone) {
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(880, ctx.currentTime);
+          gain.gain.setValueAtTime(0.08, ctx.currentTime);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.16);
+        } catch (e) {}
+      }
+      if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+        navigator.serviceWorker.ready.then((reg) => {
+          reg.showNotification(title, {
+            body,
+            icon: '/manifest.json',
+            data: { url }
+          }).catch(() => {
+            try { new Notification(title, { body }); } catch (e) {}
+          });
+        }).catch(() => {
+          try { new Notification(title, { body }); } catch (e) {}
+        });
+      } else {
+        try { new Notification(title, { body }); } catch (e) {}
+      }
+    }
+
+    function watchLiveOrdersForScreenPush() {
+      if (window.__skfOrderRealtimeBound) return;
+      window.__skfOrderRealtimeBound = true;
+      try {
+        sb.channel('sekiflex-live-orders-push')
+          .on(
+            'postgres_changes',
+            { event: 'INSERT', schema: 'public', table: 'orders' },
+            (payload) => {
+              const ord = payload?.new || {};
+              const code = ord.tracking_number || 'New Order';
+              const amt = Number(ord.order_amount || 0) + Number(ord.delivery_amount || 0);
+              showLocalScreenAlert(
+                `🛍️ New Order: ${code}`,
+                `${ord.customer_name || 'Customer'} • ₦${amt.toLocaleString()} • ${ord.package_description || ''}`,
+                'track.html'
+              );
+            }
+          )
+          .subscribe();
+      } catch (e) {}
+    }
+
+    async function notifyStoreCatalogUpdate(eventType, payloadData = {}) {
+      const safeType = ['new_product', 'new_promo', 'new_discount'].includes(eventType)
+        ? eventType
+        : 'new_product';
+      try {
+        const { data, error } = await sb.functions.invoke('sekiflex-order-notifications', {
+          body: {
+            event_type: safeType,
+            title: payloadData.title || 'Sekiflex Collections Update',
+            message: payloadData.message || '',
+            product_name: payloadData.product_name || '',
+            price: payloadData.price ?? null,
+            discount_text: payloadData.discount_text || '',
+            product_url: payloadData.product_url || window.location.origin + window.location.pathname
+          }
+        });
+        if (error) {
+          console.warn('Catalog notification invoke error:', error);
+          return { ok: false, error };
+        }
+        return { ok: true, data };
+      } catch (err) {
+        console.warn('Catalog notification network error:', err);
+        return { ok: false, error: err };
+      }
+    }
+
+    
     async function enableCustomerPushNotifications(showFeedback = false, customTitle = '', customBody = '') {
       if (!('Notification' in window)) {
         if (showFeedback) await showSkfAlert('Push notifications are not supported on this browser.', 'Notifications');
