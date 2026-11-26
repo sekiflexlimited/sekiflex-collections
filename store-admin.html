@@ -36,15 +36,15 @@
       </div>
     </header>
 
-    <!-- 1-Click Auto-Migration Banner -->
-    <section class="bg-emerald-50 border border-emerald-300 p-4 rounded-2xl shadow-sm flex flex-wrap items-center justify-between gap-3">
+    <!-- 1-Click Restore from GitHub Banner -->
+    <section class="bg-amber-50 border border-amber-300 p-4 rounded-2xl shadow-sm flex flex-wrap items-center justify-between gap-3">
       <div class="space-y-0.5">
-        <h2 class="font-bold text-sm text-emerald-950">Move Old Supabase Images to GitHub (1-Click)</h2>
-        <p id="migrateStatusText" class="text-xs text-emerald-800">Tap the button to move all existing product &amp; banner images off Supabase Storage automatically.</p>
+        <h2 class="font-bold text-sm text-amber-950">Restore All Products from GitHub Images (1-Click)</h2>
+        <p id="restoreStatusText" class="text-xs text-amber-800">Tap this button to bring back all your products using the pictures already saved on GitHub.</p>
       </div>
-      <button type="button" id="migrateAllBtn" onclick="migrateOldSupabaseImages()"
-        class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2.5 rounded-xl text-xs font-bold shrink-0 transition">
-        Migrate Old Images Now →
+      <button type="button" id="restoreGitHubBtn" onclick="restoreProductsFromGitHub()"
+        class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shrink-0 transition">
+        Restore Products Now →
       </button>
     </section>
 
@@ -151,7 +151,7 @@
       <div id="adminProducts" class="space-y-2"></div>
     </section>
 
-    <!-- 2. Send Push Notification Broadcast to Customers (Collapsed Until Button Clicked) -->
+    <!-- 2. Send Push Notification Broadcast to Customers -->
     <section id="secPush" class="hidden bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-purple-600">
       <div class="flex items-center justify-between gap-2">
         <div>
@@ -185,7 +185,7 @@
       </form>
     </section>
 
-    <!-- 3. Hero Section Video Card (Collapsed Until Button Clicked) -->
+    <!-- 3. Hero Section Video Card -->
     <section id="secHeroVideo" class="hidden bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-stone-900">
       <div class="flex items-center justify-between gap-2">
         <div>
@@ -215,7 +215,7 @@
       </form>
     </section>
 
-    <!-- 4. Store Promo / Announcement Banner #1 Card (Collapsed Until Button Clicked) -->
+    <!-- 4. Announcement Banner #1 -->
     <section id="secBanner1" class="hidden bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-amber-500">
       <div class="flex items-center justify-between gap-2">
         <h2 class="font-bold text-base">Announcement Banner #1 (Store Promo)</h2>
@@ -267,7 +267,7 @@
       </form>
     </section>
 
-    <!-- 5. Second Announcement Banner #2 Card (Collapsed Until Button Clicked) -->
+    <!-- 5. Announcement Banner #2 -->
     <section id="secBanner2" class="hidden bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-emerald-600">
       <div class="flex items-center justify-between gap-2">
         <h2 class="font-bold text-base">Announcement Banner #2 (Second Scrolling Notice)</h2>
@@ -319,7 +319,7 @@
       </form>
     </section>
 
-    <!-- 6. Wall-Hung Promo Cards Manager (Collapsed Until Button Clicked) -->
+    <!-- 6. Wall-Hung Promo Cards Manager -->
     <section id="secWallCards" class="hidden bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-amber-600">
       <div class="flex flex-wrap items-center justify-between gap-2">
         <div>
@@ -339,7 +339,7 @@
       </button>
     </section>
 
-    <!-- 7. Free Shipping Promo Toggle Card (Collapsed Until Button Clicked) -->
+    <!-- 7. Free Shipping Promo Toggle Card -->
     <section id="secFreeShip" class="hidden bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-emerald-600">
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div>
@@ -356,7 +356,7 @@
       </div>
     </section>
 
-    <!-- 8. Shipping Zone Quick Add (Collapsed Until Button Clicked) -->
+    <!-- 8. Shipping Zone Quick Add -->
     <section id="secShipping" class="hidden bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-stone-700">
       <div class="flex items-center justify-between gap-2">
         <h2 class="font-bold text-base">Set Delivery Rate by State / Country</h2>
@@ -460,42 +460,83 @@
     }
 
     const DEFAULT_ADMIN_WALL_CARDS = [
-      {
-        id: 'wall_1',
-        title: 'Hot Drops',
-        tag: 'NEW IN',
-        image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=400&q=80',
-        categoryKey: 'ALL'
-      },
-      {
-        id: 'wall_2',
-        title: 'Luxury Fits',
-        tag: 'PROMO',
-        image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=400&q=80',
-        categoryKey: 'ALL'
-      },
-      {
-        id: 'wall_3',
-        title: 'Footwear Edit',
-        tag: 'HOT',
-        image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400&q=80',
-        categoryKey: 'ALL'
-      },
-      {
-        id: 'wall_4',
-        title: 'Watches & Bags',
-        tag: 'LUXURY',
-        image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80',
-        categoryKey: 'ALL'
-      },
-      {
-        id: 'wall_5',
-        title: 'Uyo Dispatch',
-        tag: 'FAST',
-        image: 'https://images.unsplash.com/photo-1617347454431-f49d7ff5c3b1?auto=format&fit=crop&w=400&q=80',
-        categoryKey: 'ALL'
-      }
+      { id: 'wall_1', title: 'Hot Drops', tag: 'NEW IN', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=400&q=80', categoryKey: 'ALL' },
+      { id: 'wall_2', title: 'Luxury Fits', tag: 'PROMO', image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=400&q=80', categoryKey: 'ALL' },
+      { id: 'wall_3', title: 'Footwear Edit', tag: 'HOT', image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400&q=80', categoryKey: 'ALL' },
+      { id: 'wall_4', title: 'Watches & Bags', tag: 'LUXURY', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80', categoryKey: 'ALL' },
+      { id: 'wall_5', title: 'Uyo Dispatch', tag: 'FAST', image: 'https://images.unsplash.com/photo-1617347454431-f49d7ff5c3b1?auto=format&fit=crop&w=400&q=80', categoryKey: 'ALL' }
     ];
+
+    async function restoreProductsFromGitHub() {
+      const btn = document.getElementById('restoreGitHubBtn');
+      const status = document.getElementById('restoreStatusText');
+      btn.disabled = true;
+      btn.textContent = 'Reading GitHub...';
+
+      try {
+        const res = await fetch('https://api.github.com/repos/sekiflexlimited/sekiflex-collections/contents/images?ref=main');
+        if (!res.ok) throw new Error('Could not read GitHub images folder (HTTP ' + res.status + ')');
+        const files = await res.json();
+
+        const imageFiles = (Array.isArray(files) ? files : []).filter(f =>
+          f.type === 'file' && /\.(jpg|jpeg|png|webp)$/i.test(f.name) && !f.name.toLowerCase().includes('banner')
+        );
+
+        if (imageFiles.length === 0) {
+          throw new Error('No product images found in GitHub images folder.');
+        }
+
+        const existingUrls = new Set(
+          adminProductsCache.flatMap(p => Array.isArray(p.images) ? p.images : [p.images]).filter(Boolean)
+        );
+
+        const toInsert = [];
+        for (const f of imageFiles) {
+          const url = `https://sekiflexcollections.com/images/${f.name}`;
+          if (existingUrls.has(url)) continue;
+
+          const cleanTitle = f.name
+            .replace(/^\d+[-_]?/, '')
+            .replace(/\.[^.]+$/, '')
+            .replace(/[-_]+/g, ' ')
+            .replace(/\b\w/g, ch => ch.toUpperCase())
+            .trim() || 'Sekiflex Collection Item';
+
+          toInsert.push({
+            name: cleanTitle,
+            base_price: 8000,
+            stock_quantity: 10,
+            description: 'Quality fashion piece from Sekiflex Collections.',
+            images: [url],
+            is_active: true
+          });
+        }
+
+        if (toInsert.length === 0) {
+          status.textContent = 'All GitHub products are already in your store!';
+          alert(status.textContent);
+          return;
+        }
+
+        status.textContent = `Restoring ${toInsert.length} products...`;
+        for (let i = 0; i < toInsert.length; i += 25) {
+          const batch = toInsert.slice(i, i + 25);
+          const { error } = await sb.from('products').insert(batch);
+          if (error) throw new Error('Restore failed: ' + error.message);
+        }
+
+        await loadData();
+        toggleAdminSection('products', true);
+        status.textContent = `Done! Restored ${toInsert.length} products from GitHub!`;
+        alert(status.textContent);
+      } catch (err) {
+        status.textContent = 'Error: ' + (err?.message || err);
+        alert(status.textContent);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Restore Products Now →';
+      }
+    }
 
     async function uploadImageToGitHub(file) {
       const base64Content = await new Promise((resolve, reject) => {
@@ -530,118 +571,11 @@
       return data.url;
     }
 
-    async function migrateUrlToGitHub(sourceUrl) {
-      const { data, error } = await sb.functions.invoke('upload-to-github', {
-        body: { sourceUrl }
-      });
-      if (error || data?.error || !data?.url) {
-        throw new Error(error?.message || data?.error || 'Migration failed');
-      }
-      return data.url;
-    }
-
-    async function migrateOldSupabaseImages() {
-      const btn = document.getElementById('migrateAllBtn');
-      const status = document.getElementById('migrateStatusText');
-      btn.disabled = true;
-      btn.textContent = 'Checking...';
-
-      let moved = 0;
-      let failed = 0;
-
-      try {
-        const [{ data: prods, error: prodErr }, { data: settings, error: setErr }] = await Promise.all([
-          sb.from('products').select('id, name, images'),
-          sb.from('store_settings').select('id, banner_image_url')
-        ]);
-
-        if (prodErr) throw new Error('Products query failed: ' + prodErr.message);
-        if (setErr) throw new Error('Settings query failed: ' + setErr.message);
-
-        const isSupabaseUrl = (u) => typeof u === 'string' && u.includes('supabase.co/storage');
-
-        for (const p of (prods || [])) {
-          let imgs = p.images;
-          const wasString = typeof imgs === 'string';
-          if (wasString) {
-            try {
-              imgs = JSON.parse(imgs);
-            } catch (_) {
-              imgs = imgs ? [imgs] : [];
-            }
-          }
-          if (!Array.isArray(imgs)) continue;
-
-          let changed = false;
-          for (let i = 0; i < imgs.length; i++) {
-            if (isSupabaseUrl(imgs[i])) {
-              status.textContent = `Moving ${p.name || 'product'} (${moved + 1})...`;
-              try {
-                imgs[i] = await migrateUrlToGitHub(imgs[i]);
-                changed = true;
-                moved++;
-              } catch (err) {
-                console.warn('Skipped image:', err);
-                failed++;
-              }
-            }
-          }
-
-          if (changed) {
-            const { error: upErr } = await sb
-              .from('products')
-              .update({ images: wasString ? JSON.stringify(imgs) : imgs })
-              .eq('id', p.id);
-            if (upErr) {
-              console.warn('DB update failed for product:', p.id, upErr.message);
-              failed++;
-            }
-          }
-        }
-
-        for (const s of (settings || [])) {
-          if (isSupabaseUrl(s.banner_image_url)) {
-            status.textContent = `Moving banner ${s.id}...`;
-            try {
-              const newBannerUrl = await migrateUrlToGitHub(s.banner_image_url);
-              await sb.from('store_settings').update({ banner_image_url: newBannerUrl }).eq('id', s.id);
-              moved++;
-            } catch (err) {
-              console.warn('Skipped banner:', err);
-              failed++;
-            }
-          }
-        }
-
-        await loadData();
-        status.textContent = moved === 0 && failed === 0
-          ? 'All done! Zero old Supabase Storage links remain.'
-          : `Finished! Moved ${moved} image(s) to GitHub${failed ? ` (${failed} skipped)` : ''}.`;
-        alert(status.textContent);
-      } catch (err) {
-        status.textContent = 'Error: ' + (err?.message || err);
-        alert(status.textContent);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Migrate Old Images Now →';
-      }
-    }
-
     async function triggerAutoCustomerPush({ title, body, url = 'https://sekiflexcollections.com/' }) {
       if (typeof window.sendSekiflexPushBroadcast !== 'function') return 0;
       try {
-        const { data } = await window.sendSekiflexPushBroadcast({
-          title,
-          body,
-          url,
-          target: 'customers'
-        });
-        await sb.from('push_broadcasts').insert({
-          title,
-          body,
-          url,
-          created_by: 'store-admin-auto'
-        });
+        const { data } = await window.sendSekiflexPushBroadcast({ title, body, url, target: 'customers' });
+        await sb.from('push_broadcasts').insert({ title, body, url, created_by: 'store-admin-auto' });
         return data?.sent ?? 0;
       } catch (err) {
         console.warn('Auto push skipped:', err);
@@ -669,13 +603,7 @@
         return alert('Push broadcast failed: ' + (error?.message || data?.error));
       }
 
-      await sb.from('push_broadcasts').insert({
-        title,
-        body,
-        url,
-        created_by: 'store-admin'
-      });
-
+      await sb.from('push_broadcasts').insert({ title, body, url, created_by: 'store-admin' });
       e.target.reset();
       document.getElementById('pushUrl').value = 'https://sekiflexcollections.com/';
       alert(`Push notification sent! Delivered to ${data?.sent ?? 0} device(s).`);
@@ -751,15 +679,8 @@
         const tag = (document.querySelector(`[data-adm-wall-tag="${idx}"]`)?.value || '').trim() || def.tag;
         const image = (document.querySelector(`[data-adm-wall-img="${idx}"]`)?.value || '').trim() || def.image;
         const categoryKey = document.querySelector(`[data-adm-wall-cat="${idx}"]`)?.value || 'ALL';
-        return {
-          id: existing.id || def.id,
-          title,
-          tag,
-          image,
-          categoryKey
-        };
+        return { id: existing.id || def.id, title, tag, image, categoryKey };
       });
-
       localStorage.setItem('sekiflex_wall_promo_cards_v1', JSON.stringify(updated));
       renderAdminWallPromoForm();
       alert('Wall-Hung Promo Cards saved for your store!');
@@ -806,7 +727,6 @@
 
       btn.disabled = true;
       btn.textContent = 'Saving Hero Video...';
-
       localStorage.setItem('sekiflex_hero_video_v1', JSON.stringify({ active, url: videoUrl }));
 
       const { error } = await sb.from('store_settings').upsert({
@@ -818,7 +738,6 @@
 
       btn.disabled = false;
       btn.textContent = 'Save Hero Video Settings';
-
       if (error) return alert('Error saving hero video: ' + error.message);
       alert('Hero video settings saved!');
     }
@@ -882,11 +801,7 @@
 
       document.getElementById('bannerImgFile').value = '';
       loadData();
-      alert(
-        shouldPush && bannerActive
-          ? `Announcement Banner #1 updated & push alert sent to ${sentCount} customer device(s)!`
-          : 'Announcement Banner #1 updated!'
-      );
+      alert(shouldPush && bannerActive ? `Announcement Banner #1 updated & push alert sent to ${sentCount} customer device(s)!` : 'Announcement Banner #1 updated!');
     }
 
     async function saveSecondBanner(e) {
@@ -928,21 +843,6 @@
           body: banner2Text,
           url: 'https://sekiflexcollections.com/'
         });
-
-        try {
-          await sb.functions.invoke('sekiflex-order-notifications', {
-            body: {
-              event_type: 'new_promo',
-              title: 'Sekiflex Store Notice',
-              message: banner2Text,
-              product_name: 'Promo / Store Notice',
-              discount_text: banner2Text,
-              product_url: 'https://sekiflexcollections.com/'
-            }
-          });
-        } catch (err) {
-          console.warn('Banner 2 email broadcast note:', err);
-        }
       }
 
       btn.disabled = false;
@@ -951,11 +851,7 @@
 
       document.getElementById('banner2ImgFile').value = '';
       loadData();
-      alert(
-        shouldPush && banner2Active
-          ? `Announcement Banner #2 updated & push alert sent to ${sentCount} customer device(s)!`
-          : 'Announcement Banner #2 updated!'
-      );
+      alert(shouldPush && banner2Active ? `Announcement Banner #2 updated & push alert sent to ${sentCount} customer device(s)!` : 'Announcement Banner #2 updated!');
     }
 
     async function addProduct(e) {
@@ -979,7 +875,6 @@
       }
 
       const videoUrl = document.getElementById('pVideoUrl').value.trim() || null;
-
       const rawCompare = document.getElementById('pComparePrice').value.trim();
       const compareVal = rawCompare === '' ? null : Number(rawCompare);
       const prodName = document.getElementById('pName').value.trim();
@@ -993,12 +888,8 @@
         images: imageUrl ? [imageUrl] : [],
         is_active: true
       };
-      if (compareVal !== null && !Number.isNaN(compareVal)) {
-        payload.compare_at_price = compareVal;
-      }
-      if (videoUrl) {
-        payload.video_url = videoUrl;
-      }
+      if (compareVal !== null && !Number.isNaN(compareVal)) payload.compare_at_price = compareVal;
+      if (videoUrl) payload.video_url = videoUrl;
 
       const { data: inserted, error } = await sb.from('products').insert(payload).select().maybeSingle();
 
@@ -1006,13 +897,6 @@
         btn.disabled = false;
         btn.textContent = 'Publish Product to Store';
         return alert(error.message);
-      }
-
-      if (videoUrl) {
-        const vidMap = JSON.parse(localStorage.getItem('sekiflex_product_videos_v1') || '{}');
-        if (inserted?.id) vidMap[String(inserted.id)] = videoUrl;
-        vidMap[prodName.toLowerCase()] = videoUrl;
-        localStorage.setItem('sekiflex_product_videos_v1', JSON.stringify(vidMap));
       }
 
       const productLink = inserted?.id
@@ -1028,36 +912,12 @@
         });
       }
 
-      try {
-        await sb.functions.invoke('sekiflex-order-notifications', {
-          body: {
-            event_type: compareVal && compareVal > prodPrice ? 'new_discount' : 'new_product',
-            title: compareVal && compareVal > prodPrice
-              ? `Price Drop: ${prodName}`
-              : `New Arrival: ${prodName}`,
-            message: `Now available for ₦${prodPrice.toLocaleString()} — tap to view & order before it sells out!`,
-            product_name: prodName,
-            price: prodPrice,
-            discount_text: compareVal && compareVal > prodPrice
-              ? `Was ₦${compareVal.toLocaleString()}, Now ₦${prodPrice.toLocaleString()}`
-              : '',
-            product_url: productLink
-          }
-        });
-      } catch (err) {
-        console.warn('Product email broadcast note:', err);
-      }
-
       btn.disabled = false;
       btn.textContent = 'Publish Product to Store';
       e.target.reset();
       if (document.getElementById('prodAutoPush')) document.getElementById('prodAutoPush').checked = true;
       loadData();
-      alert(
-        shouldPush
-          ? `Product published & push notification sent to ${sentCount} customer device(s)!`
-          : 'Product added to store!'
-      );
+      alert(shouldPush ? `Product published & push notification sent to ${sentCount} customer device(s)!` : 'Product added to store!');
     }
 
     function getProductPicture(prod) {
@@ -1123,18 +983,7 @@
 
       btn.disabled = false;
       btn.textContent = 'Save Changes';
-
       if (error) return alert('Error updating product: ' + error.message);
-
-      const vidMap = JSON.parse(localStorage.getItem('sekiflex_product_videos_v1') || '{}');
-      if (videoUrl) {
-        vidMap[String(id)] = videoUrl;
-        vidMap[name.toLowerCase()] = videoUrl;
-      } else {
-        delete vidMap[String(id)];
-        delete vidMap[name.toLowerCase()];
-      }
-      localStorage.setItem('sekiflex_product_videos_v1', JSON.stringify(vidMap));
 
       closeEditProdModal();
       loadData();
@@ -1144,10 +993,8 @@
     async function deleteProduct(id, name) {
       const ok = confirm(`Delete "${name || 'this product'}" permanently from your store?`);
       if (!ok) return;
-
       const { error } = await sb.from('products').delete().eq('id', id);
       if (error) return alert('Error deleting product: ' + error.message);
-
       loadData();
     }
 
@@ -1163,9 +1010,7 @@
         updated_at: new Date().toISOString()
       });
 
-      if (error) {
-        alert('Could not update Free Shipping mode: ' + error.message);
-      }
+      if (error) alert('Could not update Free Shipping mode: ' + error.message);
     }
 
     async function addZone(e) {
