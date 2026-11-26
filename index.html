@@ -1031,23 +1031,6 @@
           Sekiflex Collections • Proudly operating under <span class="text-amber-300 font-semibold">Sekiflex Limited</span>
         </p>
       </div>
-
-      <!-- RESTRICTED STAFF & ADMIN LOGIN AREA BELOW SOCIAL LINKS -->
-      <div class="bg-red-950/35 border border-red-500/45 rounded-2xl p-4 space-y-2.5">
-        <div class="flex items-center justify-between gap-2">
-          <span class="text-[10px] font-black uppercase tracking-wider text-rose-300 bg-rose-500/15 border border-rose-400/35 px-2.5 py-0.5 rounded-full">
-            ⚠️ Restricted Staff &amp; Admin Only
-          </span>
-        </div>
-        <p class="text-xs font-bold text-rose-200 leading-snug">
-          Warning: Only Sekiflex Collections Staff and Admin have access here. Customers must not open or attempt to use this portal.
-        </p>
-        <button type="button" onclick="openProtectedStaffAdminPortal()"
-          class="w-full bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950 font-extrabold text-xs py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow transition">
-          <span>🔐</span>
-          <span>Staff &amp; Admin Login →</span>
-        </button>
-      </div>
     </div>
   </div>
 
@@ -1541,7 +1524,6 @@
     const STORE_EMAIL = 'sekiflexcollections@gmail.com';
     const TIKTOK_URL = 'https://www.tiktok.com/@sekiflex_collections?_r=1&_t=ZS-9BbSAFjxrZW';
     const FACEBOOK_URL = 'https://www.facebook.com/share/1G3ErASdHa/';
-    const STAFF_ADMIN_PORTAL_URL = 'https://sekiflexcollections.com/admin-hub.html';
     const ROTATION_MINUTES = 1;
     const AKWA_IBOM_SHIPPING_FEE = 2000;
 
@@ -1664,12 +1646,6 @@
       const resolver = __skfAlertResolver;
       __skfAlertResolver = null;
       if (typeof resolver === 'function') resolver(Boolean(result));
-    }
-
-    function lockStaffSessionState() {}
-
-    function openProtectedStaffAdminPortal() {
-      window.location.href = STAFF_ADMIN_PORTAL_URL;
     }
 
     function normalizeEmailRecord(val) {
@@ -1800,7 +1776,7 @@
         html: `
           <span class="skf-policy-badge" style="color:#fbbf24;border-color:rgba(251,191,36,0.45);">Track Your Order • Stay Updated</span>
           <h4 style="color:#fbbf24;">Track Anytime on Web or App</h4>
-          <p>Visit <a href="https://sekiflexcollections.com" target="_blank" rel="noopener" class="underline font-bold text-amber-300">sekiflexcollections.com</a>, open <a href="track.html" class="underline font-bold text-emerald-300">Live Order Tracking</a>, or check your <strong>My Orders</strong> history inside your Account tab.</p>
+          <p>Visit <a href="https://sekiflexcollections.com" target="_blank" rel="noopener" class="underline font-bold text-amber-300">sekiflexcollections.com</a>, open <a href="track.html" class="underline font-bold text-emerald-300">Live Order Tracking</a>, or check your <strong>Order History &amp; Tracking</strong> inside your Account tab.</p>
           <h4 style="color:#34d399;">Order Journey Stages</h4>
           <p>Follow stages such as order received, payment confirmed, order processing, packaged, dispatched, in transit, out for delivery, and delivered.</p>
           <h4 style="color:#38bdf8;">Need Tracking Help?</h4>
@@ -1998,15 +1974,9 @@
       });
 
       document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-          lockStaffSessionState();
-        } else {
+        if (!document.hidden) {
           enforceHeroVideoPlayback();
         }
-      });
-
-      window.addEventListener('pagehide', () => {
-        lockStaffSessionState();
       });
     }
 
@@ -4005,7 +3975,6 @@
     }
 
     async function init() {
-      lockStaffSessionState();
       bindBackButtonGuardsOnce();
       bindScrollPauseWatcher();
       bindCategoryDelegationOnce();
