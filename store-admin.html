@@ -27,7 +27,7 @@
     <header class="bg-white p-4 rounded-2xl shadow-sm flex flex-wrap items-center justify-between gap-2">
       <div>
         <h1 class="font-bold text-lg">Sekiflex Store Manager</h1>
-        <p class="text-xs text-stone-500">Add products at the top, then open any feature button below when needed</p>
+        <p class="text-xs text-stone-500">All image uploads go straight to GitHub &amp; Vercel automatically</p>
       </div>
       <div class="flex gap-2">
         <a href="admin-hub.html" class="text-xs px-3 py-2 rounded-lg border font-medium">Admin Hub</a>
@@ -35,6 +35,18 @@
         <button onclick="logout()" class="text-xs px-3 py-2 rounded-lg bg-stone-200 font-medium">Logout</button>
       </div>
     </header>
+
+    <!-- 1-Click Auto-Migration Banner -->
+    <section class="bg-emerald-50 border border-emerald-300 p-4 rounded-2xl shadow-sm flex flex-wrap items-center justify-between gap-3">
+      <div class="space-y-0.5">
+        <h2 class="font-bold text-sm text-emerald-950">Move Old Supabase Images to GitHub (1-Click)</h2>
+        <p id="migrateStatusText" class="text-xs text-emerald-800">Tap the button to move all existing product &amp; banner images off Supabase Storage automatically.</p>
+      </div>
+      <button type="button" id="migrateAllBtn" onclick="migrateOldSupabaseImages()"
+        class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2.5 rounded-xl text-xs font-bold shrink-0 transition">
+        Migrate Old Images Now →
+      </button>
+    </section>
 
     <!-- Add Product Card (Always at Top) -->
     <section class="bg-white p-5 rounded-2xl shadow-sm space-y-4 border-l-4 border-amber-600">
@@ -516,6 +528,99 @@
         throw new Error(error?.message || data?.error || 'GitHub image upload failed');
       }
       return data.url;
+    }
+
+    async function migrateUrlToGitHub(sourceUrl) {
+      const { data, error } = await sb.functions.invoke('upload-to-github', {
+        body: { sourceUrl }
+      });
+      if (error || data?.error || !data?.url) {
+        throw new Error(error?.message || data?.error || 'Migration failed');
+      }
+      return data.url;
+    }
+
+    async function migrateOldSupabaseImages() {
+      const btn = document.getElementById('migrateAllBtn');
+      const status = document.getElementById('migrateStatusText');
+      btn.disabled = true;
+      btn.textContent = 'Checking...';
+
+      let moved = 0;
+      let failed = 0;
+
+      try {
+        const [{ data: prods }, { data: settings }] = await Promise.all([
+          sb.from('products').select('id, name, images, image_url'),
+          sb.from('store_settings').select('id, banner_image_url')
+        ]);
+
+        const isSupabaseUrl = (u) => typeof u === 'string' && u.includes('supabase.co/storage');
+
+        for (const p of (prods || [])) {
+          const imgs = Array.isArray(p.images) ? [...p.images] : [];
+          let changed = false;
+
+          for (let i = 0; i < imgs.length; i++) {
+            if (isSupabaseUrl(imgs[i])) {
+              status.textContent = `Moving ${p.name || 'product'} (${moved + 1})...`;
+              try {
+                imgs[i] = await migrateUrlToGitHub(imgs[i]);
+                changed = true;
+                moved++;
+              } catch (err) {
+                console.warn('Skipped image:', err);
+                failed++;
+              }
+            }
+          }
+
+          let singleUrl = p.image_url;
+          if (isSupabaseUrl(singleUrl)) {
+            status.textContent = `Moving ${p.name || 'product'} (${moved + 1})...`;
+            try {
+              singleUrl = await migrateUrlToGitHub(singleUrl);
+              changed = true;
+              moved++;
+            } catch (err) {
+              console.warn('Skipped image_url:', err);
+              failed++;
+            }
+          }
+
+          if (changed) {
+            const patch = { images: imgs };
+            if (p.image_url !== undefined) patch.image_url = singleUrl;
+            await sb.from('products').update(patch).eq('id', p.id);
+          }
+        }
+
+        for (const s of (settings || [])) {
+          if (isSupabaseUrl(s.banner_image_url)) {
+            status.textContent = `Moving banner ${s.id}...`;
+            try {
+              const newBannerUrl = await migrateUrlToGitHub(s.banner_image_url);
+              await sb.from('store_settings').update({ banner_image_url: newBannerUrl }).eq('id', s.id);
+              moved++;
+            } catch (err) {
+              console.warn('Skipped banner:', err);
+              failed++;
+            }
+          }
+        }
+
+        await loadData();
+        status.textContent = moved === 0 && failed === 0
+          ? 'All done! Zero old Supabase Storage links remain.'
+          : `Finished! Moved ${moved} image(s) to GitHub${failed ? ` (${failed} skipped)` : ''}.`;
+        alert(status.textContent);
+      } catch (err) {
+        status.textContent = 'Error: ' + (err?.message || err);
+        alert(status.textContent);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Migrate Old Images Now →';
+      }
     }
 
     async function triggerAutoCustomerPush({ title, body, url = 'https://sekiflexcollections.com/' }) {
