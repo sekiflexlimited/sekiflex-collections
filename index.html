@@ -1370,13 +1370,13 @@
     </div>
   </div>
 
-  <!-- STORE SETTINGS MODAL (PASSWORD, SOUND & EMAIL-VERIFIED ACCOUNT DELETION) -->
+  <!-- STORE SETTINGS MODAL (PASSWORD & SOUND ALERTS) -->
   <div id="storeSettingsModal" onclick="if(event.target === this) closeStoreSettingsModal();" class="fixed inset-0 z-[75] hidden bg-black/80 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 overflow-y-auto">
     <div class="bg-[#12141a] text-white border border-amber-400/25 w-full max-w-md rounded-3xl p-5 space-y-3.5 shadow-2xl my-auto max-h-[88vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
         <div>
           <h3 class="font-editorial text-lg font-bold text-white">Account Settings</h3>
-          <p class="text-[11px] text-stone-400">Password, notifications &amp; account deletion</p>
+          <p class="text-[11px] text-stone-400">Password &amp; notification preferences</p>
         </div>
         <button type="button" onclick="closeStoreSettingsModal()" class="w-7 h-7 rounded-full bg-stone-900 hover:bg-stone-800 text-stone-400 hover:text-white font-bold text-base">&times;</button>
       </div>
@@ -1400,31 +1400,6 @@
           onchange="localStorage.setItem('sekiflex_sound_enabled', this.checked ? '1' : '0')"
           class="w-4 h-4 accent-amber-500 rounded" />
       </label>
-
-      <!-- REQUEST & CONFIRM ACCOUNT DELETION WITH EMAIL CODE -->
-      <div class="bg-red-950/30 border border-red-500/40 rounded-2xl p-3 space-y-2.5">
-        <p class="text-xs font-extrabold text-rose-300">Delete My Account</p>
-        <p id="deleteAccountMsg" class="hidden text-[11px] font-semibold p-2 rounded-xl"></p>
-
-        <button type="button" id="sendDeleteCodeBtn" onclick="requestAccountDeletionCode()"
-          class="w-full bg-rose-500/20 hover:bg-rose-500/30 border border-rose-400/40 text-rose-200 py-2 rounded-xl text-xs font-extrabold transition">
-          Send Verification Code to My Email
-        </button>
-
-        <form id="confirmDeleteAccountForm" onsubmit="confirmAndDeleteAccount(event)" class="hidden space-y-2 pt-1">
-          <input required id="deleteVerifyCodeInput" type="text" inputmode="numeric" maxlength="8" pattern="[0-9]{6,8}"
-            placeholder="Enter 8-digit code sent to your email"
-            class="w-full border border-rose-500/40 bg-stone-950 text-white rounded-xl px-3 py-2 text-center font-mono text-xs tracking-widest focus:outline-none focus:border-rose-400" />
-          <label class="flex items-start gap-2 text-[11px] text-rose-100 cursor-pointer">
-            <input required id="confirmDeleteAccountCheck" type="checkbox" class="mt-0.5 accent-rose-500 shrink-0" />
-            <span>I confirm that I want to delete my Sekiflex Collections account and understand this action cannot be undone.</span>
-          </label>
-          <button type="submit" id="confirmDeleteAccountBtn"
-            class="w-full bg-rose-600 hover:bg-rose-500 text-white py-2.5 rounded-xl text-xs font-extrabold transition">
-            Confirm &amp; Delete Account
-          </button>
-        </form>
-      </div>
 
       <button type="button" onclick="closeStoreSettingsModal()" class="w-full bg-stone-800 hover:bg-stone-700 text-white py-2.5 rounded-xl text-xs font-bold">
         Done
@@ -1558,7 +1533,6 @@
     let selectedProductStarRating = 5;
     let customerOrdersCache = [];
     let orderHistoryExpanded = false;
-    let pendingDeleteCode = '';
     let activeCategory = 'ALL';
     let categoryBrowseMode = false;
     let splitSelectedCatKey = 'FEATURED';
@@ -1818,7 +1792,7 @@
           <h4 style="color:#f87171;">5. Anti-Scam &amp; Official Channel Policy</h4>
           <p>Official channels are <a href="https://sekiflexcollections.com" target="_blank" rel="noopener" class="underline text-amber-300">https://sekiflexcollections.com</a>, <a href="mailto:${STORE_EMAIL}" class="underline text-amber-300">${STORE_EMAIL}</a>, and WhatsApp <a href="${STORE_WHATSAPP_URL}" target="_blank" rel="noopener" class="underline text-emerald-300">+234 906 903 7617</a>. Never pay personal accounts or share passwords, PINs, or OTPs.</p>
           <h4 style="color:#34d399;">6–20. Protection, Sharing, Rights &amp; NDPA 2023</h4>
-          <p>We do not sell personal data as a business practice, share only what is needed with payment/delivery/platform providers, honor applicable privacy rights under the Nigeria Data Protection Act 2023, and support account deletion requests via <a href="mailto:${STORE_EMAIL}" class="underline text-amber-300">${STORE_EMAIL}</a>.</p>
+          <p>We do not sell personal data as a business practice, share only what is needed with payment/delivery/platform providers, honor applicable privacy rights under the Nigeria Data Protection Act 2023, and support account assistance requests via <a href="mailto:${STORE_EMAIL}" class="underline text-amber-300">${STORE_EMAIL}</a>.</p>
           ${SAFETY_BLOCK_HTML}
           <div class="skf-policy-tagline">Sekiflex Collections – Your Information. Your Privacy. Your Trust.</div>
         `
@@ -2960,15 +2934,6 @@
       }
       const msg = document.getElementById('changePasswordMsg');
       if (msg) msg.classList.add('hidden');
-      const delMsg = document.getElementById('deleteAccountMsg');
-      if (delMsg) delMsg.classList.add('hidden');
-      const delForm = document.getElementById('confirmDeleteAccountForm');
-      if (delForm) delForm.classList.add('hidden');
-      const delCodeInp = document.getElementById('deleteVerifyCodeInput');
-      if (delCodeInp) delCodeInp.value = '';
-      const delChk = document.getElementById('confirmDeleteAccountCheck');
-      if (delChk) delChk.checked = false;
-      pendingDeleteCode = '';
       document.getElementById('accountNewPassword').value = '';
       document.getElementById('accountConfirmPassword').value = '';
       document.getElementById('storeSettingsModal').classList.remove('hidden');
@@ -2976,86 +2941,6 @@
 
     function closeStoreSettingsModal() {
       document.getElementById('storeSettingsModal').classList.add('hidden');
-    }
-
-    function showDeleteAccountStatus(text, isError = true) {
-      const box = document.getElementById('deleteAccountMsg');
-      if (!box) return;
-      box.textContent = text;
-      box.className = `text-[11px] font-semibold p-2 rounded-xl ${isError ? 'bg-red-950/80 text-red-200 border border-red-500/30' : 'bg-emerald-950/80 text-emerald-200 border border-emerald-500/30'}`;
-      box.classList.remove('hidden');
-    }
-
-    async function requestAccountDeletionCode() {
-      if (!currentCustomer || !currentCustomer.email) {
-        closeStoreSettingsModal();
-        openAuthGate('signin', false, 'Please sign in first to delete your account.');
-        return;
-      }
-      const btn = document.getElementById('sendDeleteCodeBtn');
-      if (btn) {
-        btn.disabled = true;
-        btn.textContent = 'Sending Verification Code...';
-      }
-      pendingDeleteCode = String(Math.floor(10000000 + Math.random() * 90000000));
-      try {
-        await sb.auth.resetPasswordForEmail(currentCustomer.email);
-      } catch (e) {}
-      try {
-        await sb.functions.invoke('sekiflex-order-notifications', {
-          body: {
-            event_type: 'account_deletion_code',
-            customer_name: currentCustomer.name,
-            customer_email: currentCustomer.email,
-            verification_code: pendingDeleteCode
-          }
-        });
-      } catch (e) {}
-      if (btn) {
-        btn.disabled = false;
-        btn.textContent = 'Resend Verification Code to My Email';
-      }
-      document.getElementById('confirmDeleteAccountForm').classList.remove('hidden');
-      showDeleteAccountStatus(`A verification code has been sent to ${currentCustomer.email}. Enter it below and check the confirmation box to delete your account.`, false);
-    }
-
-    async function confirmAndDeleteAccount(e) {
-      e.preventDefault();
-      if (!currentCustomer) return;
-      const codeVal = (document.getElementById('deleteVerifyCodeInput').value || '').trim();
-      const confirmed = document.getElementById('confirmDeleteAccountCheck').checked;
-      if (!confirmed) {
-        return showDeleteAccountStatus('Please tick the confirmation checkbox first.', true);
-      }
-      if (!codeVal || codeVal.length < 6) {
-        return showDeleteAccountStatus('Please enter the verification code sent to your email.', true);
-      }
-      const btn = document.getElementById('confirmDeleteAccountBtn');
-      if (btn) {
-        btn.disabled = true;
-        btn.textContent = 'Deleting Account...';
-      }
-      try {
-        await sb.from('customer_profiles').delete().eq('id', currentCustomer.id);
-      } catch (e) {}
-      try {
-        await sb.functions.invoke('sekiflex-order-notifications', {
-          body: {
-            event_type: 'account_deletion_confirmed',
-            customer_name: currentCustomer.name,
-            customer_email: currentCustomer.email,
-            code_used: codeVal
-          }
-        });
-      } catch (e) {}
-      try {
-        const localRecords = JSON.parse(localStorage.getItem('sekiflex_known_customers_v1') || '[]');
-        const filtered = localRecords.filter(r => normalizeEmailRecord(r.email) !== normalizeEmailRecord(currentCustomer.email));
-        localStorage.setItem('sekiflex_known_customers_v1', JSON.stringify(filtered));
-      } catch (e) {}
-      await sb.auth.signOut();
-      await showSkfAlert('Your Sekiflex Collections account deletion request has been completed and you have been signed out.', 'Account Deleted');
-      location.reload();
     }
 
     function showPasswordChangeStatus(text, isError = true) {
