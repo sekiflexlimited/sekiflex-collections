@@ -23,11 +23,11 @@
   </div>
 
   <!-- Dashboard -->
-  <div id="dashBox" class="hidden max-w-4xl mx-auto p-4 space-y-6">
+  <div id="dashBox" class="hidden max-w-4xl mx-auto p-4 space-y-4">
     <header class="bg-white p-4 rounded-2xl shadow-sm flex flex-wrap items-center justify-between gap-2">
       <div>
         <h1 class="font-bold text-lg">Sekiflex Store Manager</h1>
-        <p class="text-xs text-stone-500">Add new products first, then manage inventory, push broadcasts, hero video, banners, wall cards, stock, &amp; shipping</p>
+        <p class="text-xs text-stone-500">Add products at the top, then open any feature button below when needed</p>
       </div>
       <div class="flex gap-2">
         <a href="admin-hub.html" class="text-xs px-3 py-2 rounded-lg border font-medium">Admin Hub</a>
@@ -36,7 +36,7 @@
       </div>
     </header>
 
-    <!-- 1. Add Product Card (At Top, With Optional Sample Video) -->
+    <!-- Add Product Card (Always at Top) -->
     <section class="bg-white p-5 rounded-2xl shadow-sm space-y-4 border-l-4 border-amber-600">
       <h2 class="font-bold text-base">Add New Product</h2>
       <form onsubmit="addProduct(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -76,23 +76,83 @@
       </form>
     </section>
 
-    <!-- 2. Active Products List -->
-    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3">
-      <h2 class="font-bold text-base">Live Store Products</h2>
+    <!-- Separate Feature Toggle Buttons Row -->
+    <section class="bg-white p-3.5 rounded-2xl shadow-sm space-y-2">
+      <p class="text-[11px] font-bold uppercase tracking-wider text-stone-400">Tap a Button to Open Feature</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <button type="button" id="btnToggleProducts" onclick="toggleAdminSection('products')"
+          class="skf-sec-btn flex items-center justify-between px-3 py-2.5 rounded-xl border text-xs font-bold bg-stone-50 hover:bg-stone-100 transition">
+          <span>🛍️ Products <span id="prodCountBadge" class="text-amber-700">(0)</span></span>
+          <span id="arrowProducts">›</span>
+        </button>
+
+        <button type="button" id="btnTogglePush" onclick="toggleAdminSection('push')"
+          class="skf-sec-btn flex items-center justify-between px-3 py-2.5 rounded-xl border text-xs font-bold bg-stone-50 hover:bg-stone-100 transition">
+          <span>🔔 Push Alerts</span>
+          <span id="arrowPush">›</span>
+        </button>
+
+        <button type="button" id="btnToggleHeroVideo" onclick="toggleAdminSection('heroVideo')"
+          class="skf-sec-btn flex items-center justify-between px-3 py-2.5 rounded-xl border text-xs font-bold bg-stone-50 hover:bg-stone-100 transition">
+          <span>🎬 Hero Video</span>
+          <span id="arrowHeroVideo">›</span>
+        </button>
+
+        <button type="button" id="btnToggleBanner1" onclick="toggleAdminSection('banner1')"
+          class="skf-sec-btn flex items-center justify-between px-3 py-2.5 rounded-xl border text-xs font-bold bg-stone-50 hover:bg-stone-100 transition">
+          <span>📢 Banner #1</span>
+          <span id="arrowBanner1">›</span>
+        </button>
+
+        <button type="button" id="btnToggleBanner2" onclick="toggleAdminSection('banner2')"
+          class="skf-sec-btn flex items-center justify-between px-3 py-2.5 rounded-xl border text-xs font-bold bg-stone-50 hover:bg-stone-100 transition">
+          <span>📣 Banner #2</span>
+          <span id="arrowBanner2">›</span>
+        </button>
+
+        <button type="button" id="btnToggleWallCards" onclick="toggleAdminSection('wallCards')"
+          class="skf-sec-btn flex items-center justify-between px-3 py-2.5 rounded-xl border text-xs font-bold bg-stone-50 hover:bg-stone-100 transition">
+          <span>🖼️ Wall Cards</span>
+          <span id="arrowWallCards">›</span>
+        </button>
+
+        <button type="button" id="btnToggleFreeShip" onclick="toggleAdminSection('freeShip')"
+          class="skf-sec-btn flex items-center justify-between px-3 py-2.5 rounded-xl border text-xs font-bold bg-stone-50 hover:bg-stone-100 transition">
+          <span>🚚 Free Shipping</span>
+          <span id="arrowFreeShip">›</span>
+        </button>
+
+        <button type="button" id="btnToggleShipping" onclick="toggleAdminSection('shipping')"
+          class="skf-sec-btn flex items-center justify-between px-3 py-2.5 rounded-xl border text-xs font-bold bg-stone-50 hover:bg-stone-100 transition">
+          <span>🗺️ Delivery Rates</span>
+          <span id="arrowShipping">›</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 1. Products (Collapsed Until Button Clicked) -->
+    <section id="secProducts" class="hidden bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-amber-500">
+      <div class="flex items-center justify-between gap-2">
+        <h2 class="font-bold text-base">Live Store Products</h2>
+        <button type="button" onclick="toggleAdminSection('products')" class="text-xs font-bold text-stone-500 hover:text-stone-800">Hide ▲</button>
+      </div>
       <div id="adminProducts" class="space-y-2"></div>
     </section>
 
-    <!-- 3. Send Push Notification Broadcast to Customers -->
-    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-purple-600">
+    <!-- 2. Send Push Notification Broadcast to Customers (Collapsed Until Button Clicked) -->
+    <section id="secPush" class="hidden bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-purple-600">
       <div class="flex items-center justify-between gap-2">
         <div>
           <h2 class="font-bold text-base">Send Push Notification to Customers</h2>
           <p class="text-xs text-stone-500">Send a real-time phone alert to all subscribed shoppers (or test on your device)</p>
         </div>
-        <button type="button" onclick="enableSekiflexPush({ isAdmin: true })"
-          class="text-xs px-3 py-1.5 rounded-lg bg-stone-900 text-white font-semibold shrink-0">
-          🔔 Enable My Device
-        </button>
+        <div class="flex items-center gap-2 shrink-0">
+          <button type="button" onclick="enableSekiflexPush({ isAdmin: true })"
+            class="text-xs px-3 py-1.5 rounded-lg bg-stone-900 text-white font-semibold">
+            🔔 Enable My Device
+          </button>
+          <button type="button" onclick="toggleAdminSection('push')" class="text-xs font-bold text-stone-500 hover:text-stone-800">Hide ▲</button>
+        </div>
       </div>
       <form onsubmit="handlePushBroadcast(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <input required id="pushTitle" type="text" placeholder="Alert Title (e.g. New Luxury Denim Drop!)"
@@ -113,17 +173,20 @@
       </form>
     </section>
 
-    <!-- 4. Hero Section Video Card -->
-    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-stone-900">
+    <!-- 3. Hero Section Video Card (Collapsed Until Button Clicked) -->
+    <section id="secHeroVideo" class="hidden bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-stone-900">
       <div class="flex items-center justify-between gap-2">
         <div>
           <h2 class="font-bold text-base">Hero Section Video (Optional)</h2>
           <p class="text-xs text-stone-500">Showcase a highlight or promo video at the top of your storefront</p>
         </div>
-        <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer shrink-0">
-          <input id="heroVideoActive" type="checkbox" class="accent-amber-600 w-4 h-4" />
-          <span>Show Hero Video</span>
-        </label>
+        <div class="flex items-center gap-3 shrink-0">
+          <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer">
+            <input id="heroVideoActive" type="checkbox" class="accent-amber-600 w-4 h-4" />
+            <span>Show Hero Video</span>
+          </label>
+          <button type="button" onclick="toggleAdminSection('heroVideo')" class="text-xs font-bold text-stone-500 hover:text-stone-800">Hide ▲</button>
+        </div>
       </div>
       <form onsubmit="saveHeroVideo(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div class="space-y-1">
@@ -140,14 +203,17 @@
       </form>
     </section>
 
-    <!-- 5. Store Promo / Announcement Banner #1 Card -->
-    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-amber-500">
+    <!-- 4. Store Promo / Announcement Banner #1 Card (Collapsed Until Button Clicked) -->
+    <section id="secBanner1" class="hidden bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-amber-500">
       <div class="flex items-center justify-between gap-2">
         <h2 class="font-bold text-base">Announcement Banner #1 (Store Promo)</h2>
-        <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer shrink-0">
-          <input id="bannerActive" type="checkbox" checked class="accent-amber-600 w-4 h-4" />
-          <span>Show Banner 1</span>
-        </label>
+        <div class="flex items-center gap-3 shrink-0">
+          <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer">
+            <input id="bannerActive" type="checkbox" checked class="accent-amber-600 w-4 h-4" />
+            <span>Show Banner 1</span>
+          </label>
+          <button type="button" onclick="toggleAdminSection('banner1')" class="text-xs font-bold text-stone-500 hover:text-stone-800">Hide ▲</button>
+        </div>
       </div>
       <form onsubmit="saveBanner(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <input required id="bannerText" type="text" placeholder="e.g. Weekend Promo: Discounted prices on top picks!"
@@ -189,14 +255,17 @@
       </form>
     </section>
 
-    <!-- 6. Second Announcement Banner #2 Card -->
-    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-emerald-600">
+    <!-- 5. Second Announcement Banner #2 Card (Collapsed Until Button Clicked) -->
+    <section id="secBanner2" class="hidden bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-emerald-600">
       <div class="flex items-center justify-between gap-2">
         <h2 class="font-bold text-base">Announcement Banner #2 (Second Scrolling Notice)</h2>
-        <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer shrink-0">
-          <input id="banner2Active" type="checkbox" checked class="accent-emerald-600 w-4 h-4" />
-          <span>Show Banner 2</span>
-        </label>
+        <div class="flex items-center gap-3 shrink-0">
+          <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer">
+            <input id="banner2Active" type="checkbox" checked class="accent-emerald-600 w-4 h-4" />
+            <span>Show Banner 2</span>
+          </label>
+          <button type="button" onclick="toggleAdminSection('banner2')" class="text-xs font-bold text-stone-500 hover:text-stone-800">Hide ▲</button>
+        </div>
       </div>
       <form onsubmit="saveSecondBanner(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <input required id="banner2Text" type="text" placeholder="e.g. Fast Dispatch Across 36 States + Free Pickup at Urua Ekpa, Uyo!"
@@ -238,16 +307,19 @@
       </form>
     </section>
 
-    <!-- 7. Wall-Hung Promo Cards Manager (Admin Only) -->
-    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-amber-600">
+    <!-- 6. Wall-Hung Promo Cards Manager (Collapsed Until Button Clicked) -->
+    <section id="secWallCards" class="hidden bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-amber-600">
       <div class="flex flex-wrap items-center justify-between gap-2">
         <div>
           <h2 class="font-bold text-base">Wall-Hung Promo Cards (5 Pinned Cards)</h2>
           <p class="text-xs text-stone-500">Edit titles, badges, and pictures shown on the left sidebar of the Categories view</p>
         </div>
-        <button type="button" onclick="resetAdminWallPromoCards()" class="text-xs px-3 py-1.5 rounded-lg border font-semibold text-stone-700 hover:bg-stone-50">
-          Reset Defaults
-        </button>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="resetAdminWallPromoCards()" class="text-xs px-3 py-1.5 rounded-lg border font-semibold text-stone-700 hover:bg-stone-50">
+            Reset Defaults
+          </button>
+          <button type="button" onclick="toggleAdminSection('wallCards')" class="text-xs font-bold text-stone-500 hover:text-stone-800">Hide ▲</button>
+        </div>
       </div>
       <div id="adminWallPromoFormList" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
       <button type="button" onclick="saveAdminWallPromoCards()" class="w-full bg-stone-900 hover:bg-amber-700 text-white rounded-xl text-xs font-bold py-3 transition">
@@ -255,23 +327,29 @@
       </button>
     </section>
 
-    <!-- 8. Free Shipping Promo Toggle Card -->
-    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-emerald-600">
+    <!-- 7. Free Shipping Promo Toggle Card (Collapsed Until Button Clicked) -->
+    <section id="secFreeShip" class="hidden bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-emerald-600">
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 class="font-bold text-base">Free Shipping Promo Mode</h2>
           <p class="text-xs text-stone-500">Toggle ON to waive delivery fees across checkout (includes Akwa Ibom Payment on Delivery). Toggle OFF to restore normal rates.</p>
         </div>
-        <label class="flex items-center gap-2.5 bg-emerald-50 border border-emerald-200 px-3.5 py-2 rounded-xl cursor-pointer shrink-0">
-          <input id="freeShippingActive" type="checkbox" onchange="saveFreeShippingToggle()" class="accent-emerald-600 w-4 h-4" />
-          <span id="freeShippingStatusText" class="text-xs font-bold text-emerald-900">OFF (Normal Rates)</span>
-        </label>
+        <div class="flex items-center gap-2.5 shrink-0">
+          <label class="flex items-center gap-2.5 bg-emerald-50 border border-emerald-200 px-3.5 py-2 rounded-xl cursor-pointer">
+            <input id="freeShippingActive" type="checkbox" onchange="saveFreeShippingToggle()" class="accent-emerald-600 w-4 h-4" />
+            <span id="freeShippingStatusText" class="text-xs font-bold text-emerald-900">OFF (Normal Rates)</span>
+          </label>
+          <button type="button" onclick="toggleAdminSection('freeShip')" class="text-xs font-bold text-stone-500 hover:text-stone-800">Hide ▲</button>
+        </div>
       </div>
     </section>
 
-    <!-- 9. Shipping Zone Quick Add -->
-    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3">
-      <h2 class="font-bold text-base">Set Delivery Rate by State / Country</h2>
+    <!-- 8. Shipping Zone Quick Add (Collapsed Until Button Clicked) -->
+    <section id="secShipping" class="hidden bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-stone-700">
+      <div class="flex items-center justify-between gap-2">
+        <h2 class="font-bold text-base">Set Delivery Rate by State / Country</h2>
+        <button type="button" onclick="toggleAdminSection('shipping')" class="text-xs font-bold text-stone-500 hover:text-stone-800">Hide ▲</button>
+      </div>
       <form onsubmit="addZone(event)" class="grid grid-cols-2 md:grid-cols-4 gap-2">
         <input required id="zCountry" value="Nigeria" placeholder="Country" class="border rounded-lg px-3 py-2 text-sm" />
         <input id="zState" placeholder="State (leave blank for all)" class="border rounded-lg px-3 py-2 text-sm" />
@@ -332,6 +410,42 @@
     const sb = window.supabase.createClient(window.SEKIFLEX_SUPABASE_URL, window.SEKIFLEX_SUPABASE_KEY);
     let adminProductsCache = [];
     let adminCategoriesCache = [];
+
+    const ADMIN_SECTIONS = {
+      products: { secId: 'secProducts', btnId: 'btnToggleProducts', arrowId: 'arrowProducts' },
+      push: { secId: 'secPush', btnId: 'btnTogglePush', arrowId: 'arrowPush' },
+      heroVideo: { secId: 'secHeroVideo', btnId: 'btnToggleHeroVideo', arrowId: 'arrowHeroVideo' },
+      banner1: { secId: 'secBanner1', btnId: 'btnToggleBanner1', arrowId: 'arrowBanner1' },
+      banner2: { secId: 'secBanner2', btnId: 'btnToggleBanner2', arrowId: 'arrowBanner2' },
+      wallCards: { secId: 'secWallCards', btnId: 'btnToggleWallCards', arrowId: 'arrowWallCards' },
+      freeShip: { secId: 'secFreeShip', btnId: 'btnToggleFreeShip', arrowId: 'arrowFreeShip' },
+      shipping: { secId: 'secShipping', btnId: 'btnToggleShipping', arrowId: 'arrowShipping' }
+    };
+
+    function toggleAdminSection(key, forceOpen = null) {
+      const cfg = ADMIN_SECTIONS[key];
+      if (!cfg) return;
+      const sec = document.getElementById(cfg.secId);
+      const btn = document.getElementById(cfg.btnId);
+      const arrow = document.getElementById(cfg.arrowId);
+      if (!sec) return;
+
+      const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : sec.classList.contains('hidden');
+      sec.classList.toggle('hidden', !shouldOpen);
+
+      if (btn) {
+        btn.classList.toggle('bg-amber-100', shouldOpen);
+        btn.classList.toggle('border-amber-500', shouldOpen);
+        btn.classList.toggle('text-amber-950', shouldOpen);
+        btn.classList.toggle('bg-stone-50', !shouldOpen);
+      }
+      if (arrow) {
+        arrow.textContent = shouldOpen ? '⌄' : '›';
+      }
+      if (shouldOpen) {
+        sec.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
 
     const DEFAULT_ADMIN_WALL_CARDS = [
       {
@@ -937,6 +1051,9 @@
       adminProductsCache = prods || [];
       adminCategoriesCache = cats || [];
       renderAdminWallPromoForm();
+
+      const countBadge = document.getElementById('prodCountBadge');
+      if (countBadge) countBadge.textContent = `(${adminProductsCache.length})`;
 
       const isFreeShip = !!freeShipRow?.banner_active;
       const fsCheckbox = document.getElementById('freeShippingActive');
