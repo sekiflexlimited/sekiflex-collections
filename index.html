@@ -3227,7 +3227,26 @@
                 'track.html'
               );
             }
+        
+        )
+
+                .on(
+            'postgres_changes',
+            { event: 'UPDATE', schema: 'public', table: 'orders' },
+            (payload) => {
+              const ord = payload?.new || {};
+              const st = String(ord.status || '').toLowerCase();
+              if (st.includes('cancel')) {
+                const code = ord.tracking_number || 'Order';
+                showLocalScreenAlert(
+                  `⚠️ Order Cancelled: ${code}`,
+                  `${ord.customer_name || 'Customer'} • ${ord.status || 'Cancelled'} • ${ord.package_description || ''}`,
+                  'track.html'
+                );
+              }
+            }
           )
+   
           .subscribe();
       } catch (e) {}
     }
