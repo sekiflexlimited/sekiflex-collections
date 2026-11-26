@@ -768,6 +768,12 @@
         </div>
       </section>
 
+      <footer class="pt-3 pb-2 text-center">
+        <p class="text-[10px] text-stone-400">
+          Powered by <span class="text-amber-300 font-bold">Sekiflex Collection</span> under <span class="text-amber-300 font-semibold">Sekiflex Limited</span>
+        </p>
+      </footer>
+
     </div>
   </div>
 
@@ -840,6 +846,12 @@
 
         <div id="splitCategoryGrid" class="skf-cat-grid"></div>
       </section>
+
+      <footer class="pt-2 text-center">
+        <p class="text-[10px] text-stone-400">
+          Powered by <span class="text-amber-300 font-bold">Sekiflex Collection</span> under <span class="text-amber-300 font-semibold">Sekiflex Limited</span>
+        </p>
+      </footer>
     </div>
   </div>
 
@@ -1028,7 +1040,7 @@
           </a>
         </div>
         <p class="text-[10px] text-stone-400 pt-1">
-          Sekiflex Collections • Proudly operating under <span class="text-amber-300 font-semibold">Sekiflex Limited</span>
+          Powered by <span class="text-amber-300 font-bold">Sekiflex Collection</span> under <span class="text-amber-300 font-semibold">Sekiflex Limited</span>
         </p>
       </div>
     </div>
@@ -1217,6 +1229,12 @@
           I Have Paid — Confirm Order
         </button>
       </form>
+
+      <footer class="pt-2 text-center">
+        <p class="text-[10px] text-stone-400">
+          Powered by <span class="text-amber-300 font-bold">Sekiflex Collection</span> under <span class="text-amber-300 font-semibold">Sekiflex Limited</span>
+        </p>
+      </footer>
     </div>
   </div>
 
@@ -1765,7 +1783,7 @@
         waLink.href = `${STORE_WHATSAPP_URL}?text=${encodeURIComponent('Hello Sekiflex Collections, I was chatting with Sekiflex AI and need human help with: ' + q)}`;
       }
 
-      const thinkingBubble = appendSkfAiBubble('Checking catalog...', false);
+      const thinkingBubble = appendSkfAiBubble('Preparing your response...', false);
       sendBtn.disabled = true;
 
       const compactProducts = (Array.isArray(allProducts) ? allProducts : []).slice(0, 200).map(p => ({
