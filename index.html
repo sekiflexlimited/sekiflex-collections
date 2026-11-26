@@ -1689,7 +1689,7 @@
 
       const cleanText = raw
         .replace(/\[\[\s*PRODUCT\s*:\s*([^\]]+)\s*\]\]/gi, (_, id) => {
-          const cleanId = String(id || '').trim();
+          const cleanId = String(id || '').replace(/^["']|["']$/g, '').trim();
           if (cleanId && !productIds.includes(cleanId)) productIds.push(cleanId);
           return '';
         })
@@ -1698,8 +1698,22 @@
           if (cleanAct && !actions.includes(cleanAct)) actions.push(cleanAct);
           return '';
         })
+        .replace(/\*\*/g, '')
         .replace(/\n{3,}/g, '\n\n')
         .trim();
+
+      if (!productIds.length && Array.isArray(allProducts) && allProducts.length) {
+        const lowerReply = cleanText.toLowerCase();
+        allProducts.forEach((p) => {
+          const pName = String(p.name || '').trim();
+          if (pName.length >= 4 && lowerReply.includes(pName.toLowerCase())) {
+            const idStr = String(p.id);
+            if (!productIds.includes(idStr) && productIds.length < 4) {
+              productIds.push(idStr);
+            }
+          }
+        });
+      }
 
       div.className = 'mr-3 bg-[#1e1810] border border-amber-400/25 text-stone-100 rounded-2xl p-3 leading-relaxed space-y-2.5';
 
