@@ -1494,9 +1494,9 @@
 
   <!-- SEKIFLEX AI ASSISTANT BUTTON & MODAL -->
   <button type="button" onclick="openSekiflexAiChat()"
-    class="fixed bottom-20 right-3 z-40 inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950 font-extrabold text-xs px-3.5 py-2.5 rounded-full shadow-2xl border border-amber-200/60 transition">
-    <span>✨</span>
-    <span>Ask Sekiflex AI</span>
+    class="fixed bottom-24 right-3 z-40 inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-yellow-300 hover:from-amber-300 hover:to-yellow-200 text-black font-black text-xs px-4 py-2.5 rounded-full shadow-2xl border-2 border-black transition">
+    <span class="text-black">✨</span>
+    <span class="text-black font-black">Ask Sekiflex AI</span>
   </button>
 
   <div id="sekiflexAiModal" onclick="if(event.target === this) closeSekiflexAiChat();"
@@ -1505,7 +1505,7 @@
       <div class="bg-gradient-to-r from-stone-950 via-[#1f170b] to-amber-950/70 px-4 py-3 border-b border-amber-400/25 flex items-center justify-between gap-2">
         <div>
           <h3 class="font-editorial text-base font-bold text-amber-300">✨ Sekiflex AI Assistant</h3>
-          <p class="text-[10px] text-stone-300">Ask about items, prices &amp; delivery • Human handoff anytime</p>
+          <p class="text-[10px] text-stone-300">Ask about a product, price, delivery</p>
         </div>
         <button type="button" onclick="closeSekiflexAiChat()"
           class="w-7 h-7 rounded-full bg-stone-900 text-stone-300 hover:text-white font-bold text-base">&times;</button>
@@ -1513,26 +1513,27 @@
 
       <div id="skfAiMessages" class="p-3.5 space-y-2.5 overflow-y-auto flex-1 text-xs">
         <div class="bg-[#1e1810] border border-amber-400/25 rounded-2xl p-3 text-stone-200 leading-relaxed">
-          Welcome to <strong class="text-amber-300">Sekiflex Collections</strong>! Ask me about any outfit, watch, bag, shoe, or delivery fee—or tap below anytime to chat with a human on WhatsApp.
+          Welcome to <strong class="text-amber-300">Sekiflex Collections</strong>! Tap the box below to ask about a product, price, or delivery.
         </div>
       </div>
 
-      <div class="px-3.5 py-2 bg-stone-950/90 border-t border-stone-800 flex items-center justify-between gap-2">
-        <span class="text-[10px] text-stone-400">Need a real person?</span>
+      <div class="px-4 py-2.5 bg-[#1b150c] border-t border-amber-400/30 flex items-center justify-between gap-3">
+        <span class="text-xs sm:text-sm font-black tracking-wide text-amber-300">Need a real person?</span>
         <a id="skfAiWhatsappHandoff"
           href="https://wa.me/2349069037617?text=Hello%20Sekiflex%20Collections%2C%20I%20would%20like%20to%20speak%20with%20a%20human%20agent."
-          target="_blank" rel="noopener"
-          class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-[11px] px-3 py-1.5 rounded-full transition">
-          <span>📱</span>
-          <span>Chat Human on WhatsApp</span>
+          target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp"
+          class="w-11 h-11 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center shadow-lg shrink-0 transition">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.52 3.48A11.82 11.82 0 0 0 12.04 0C5.46 0 .1 5.36.1 11.94c0 2.1.55 4.15 1.6 5.96L0 24l6.28-1.65a11.9 11.9 0 0 0 5.76 1.47h.01c6.58 0 11.94-5.36 11.94-11.94 0-3.19-1.24-6.19-3.47-8.4zm-8.48 18.33h-.01a9.88 9.88 0 0 1-5.04-1.38l-.36-.21-3.73.98 1-3.64-.24-.37a9.86 9.86 0 0 1-1.51-5.23c0-5.45 4.44-9.89 9.9-9.89 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 7c0 5.45-4.44 9.88-9.89 9.88zm5.42-7.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.09 4.49.71.31 1.27.49 1.7.63.72.23 1.37.2 1.89.12.58-.09 1.76-.72 2.01-1.41.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35z"/>
+          </svg>
         </a>
       </div>
 
       <form onsubmit="sendSekiflexAiMessage(event)" class="p-3 bg-[#0e0c09] border-t border-stone-800 flex items-center gap-2">
-        <input id="skfAiInput" type="text" required placeholder="Ask about products, prices, delivery..."
-          class="flex-1 bg-stone-950 border border-stone-800 focus:border-amber-400 rounded-full px-3.5 py-2 text-xs text-white placeholder:text-stone-500 focus:outline-none" />
+        <input id="skfAiInput" type="text" required placeholder="Ask about a product, price, delivery..."
+          class="flex-1 bg-[#1e1810] border-2 border-amber-400/70 focus:border-amber-300 rounded-2xl px-4 py-3.5 text-sm text-white placeholder:text-stone-200 focus:outline-none" />
         <button type="submit" id="skfAiSendBtn"
-          class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold text-xs px-4 py-2 rounded-full shrink-0 transition">
+          class="bg-amber-400 hover:bg-amber-300 text-black font-black text-xs px-4 py-3.5 rounded-2xl shrink-0 transition">
           Send
         </button>
       </form>
@@ -1626,8 +1627,8 @@
       const box = document.getElementById('skfAiMessages');
       const div = document.createElement('div');
       div.className = isUser
-        ? 'ml-8 bg-amber-500 text-stone-950 font-semibold rounded-2xl px-3 py-2 leading-relaxed whitespace-pre-line'
-        : 'mr-4 bg-[#1e1810] border border-amber-400/25 text-stone-100 rounded-2xl px-3 py-2.5 leading-relaxed whitespace-pre-line';
+        ? 'ml-8 bg-amber-400 text-black font-bold rounded-2xl px-3.5 py-2.5 leading-relaxed whitespace-pre-line'
+        : 'mr-4 bg-[#1e1810] border border-amber-400/25 text-stone-100 rounded-2xl px-3.5 py-2.5 leading-relaxed whitespace-pre-line';
       div.textContent = text;
       box.appendChild(div);
       box.scrollTop = box.scrollHeight;
@@ -1656,13 +1657,16 @@
         const { data, error } = await sb.functions.invoke('sekiflex-ai-chat', {
           body: { message: q, history: skfAiChatHistory }
         });
-        const reply = (!error && data?.reply)
-          ? data.reply
-          : 'I could not reach the AI right now—please tap "Chat Human on WhatsApp" below to reach us directly!';
+        if (error) {
+          thinkingBubble.textContent = `Request failed (${error.message || 'edge function error'}). Tap the WhatsApp icon below for human help.`;
+          return;
+        }
+        const reply = data?.reply || 'No reply text returned. Tap the WhatsApp icon below for human help.';
         thinkingBubble.textContent = reply;
         skfAiChatHistory.push({ role: 'user', text: q }, { role: 'assistant', text: reply });
       } catch (err) {
-        thinkingBubble.textContent = 'Connection issue—tap "Chat Human on WhatsApp" below to message us directly!';
+        const errMsg = err instanceof Error ? err.message : String(err);
+        thinkingBubble.textContent = `Network error: ${errMsg}. Tap the WhatsApp icon below to message us directly.`;
       } finally {
         sendBtn.disabled = false;
       }
