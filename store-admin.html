@@ -801,9 +801,11 @@
       if (!error && banner2Active && banner2Text && shouldPush) {
         sentCount = await triggerAutoCustomerPush({
           title: 'Sekiflex Store Notice',
-        body: banner2Text,
-  url: 'https://sekiflexcollections.com/'
-          try {
+          body: banner2Text,
+          url: 'https://sekiflexcollections.com/'
+        });
+
+        try {
           await sb.functions.invoke('sekiflex-order-notifications', {
             body: {
               event_type: 'new_promo',
@@ -817,8 +819,6 @@
         } catch (err) {
           console.warn('Banner 2 email broadcast note:', err);
         }
-
-        });
       }
 
       btn.disabled = false;
@@ -904,13 +904,14 @@
         if (inserted?.id) vidMap[String(inserted.id)] = videoUrl;
         vidMap[prodName.toLowerCase()] = videoUrl;
         localStorage.setItem('sekiflex_product_videos_v1', JSON.stringify(vidMap));
-     }
-  
-    let sentCount = 0;
+      }
+
+      const productLink = inserted?.id
+        ? `https://sekiflexcollections.com/index.html?product=${encodeURIComponent(String(inserted.id))}`
+        : 'https://sekiflexcollections.com/';
+
+      let sentCount = 0;
       if (shouldPush) {
-        const productLink = inserted?.id
-          ? `https://sekiflexcollections.com/index.html?product=${encodeURIComponent(String(inserted.id))}`
-          : 'https://sekiflexcollections.com/';
         sentCount = await triggerAutoCustomerPush({
           title: `New Arrival: ${prodName}`,
           body: `Now available for ₦${prodPrice.toLocaleString()} — Tap to view & order before it sells out!`,
@@ -918,25 +919,25 @@
         });
       }
 
-              try {
-          await sb.functions.invoke('sekiflex-order-notifications', {
-            body: {
-              event_type: compareVal && compareVal > prodPrice ? 'new_discount' : 'new_product',
-              title: compareVal && compareVal > prodPrice
-                ? `Price Drop: ${prodName}`
-                : `New Arrival: ${prodName}`,
-              message: `Now available for ₦${prodPrice.toLocaleString()} — tap to view & order before it sells out!`,
-              product_name: prodName,
-              price: prodPrice,
-              discount_text: compareVal && compareVal > prodPrice
-                ? `Was ₦${compareVal.toLocaleString()}, Now ₦${prodPrice.toLocaleString()}`
-                : '',
-              product_url: productLink
-            }
-          });
-        } catch (err) {
-          console.warn('Product email broadcast note:', err);
-        }
+      try {
+        await sb.functions.invoke('sekiflex-order-notifications', {
+          body: {
+            event_type: compareVal && compareVal > prodPrice ? 'new_discount' : 'new_product',
+            title: compareVal && compareVal > prodPrice
+              ? `Price Drop: ${prodName}`
+              : `New Arrival: ${prodName}`,
+            message: `Now available for ₦${prodPrice.toLocaleString()} — tap to view & order before it sells out!`,
+            product_name: prodName,
+            price: prodPrice,
+            discount_text: compareVal && compareVal > prodPrice
+              ? `Was ₦${compareVal.toLocaleString()}, Now ₦${prodPrice.toLocaleString()}`
+              : '',
+            product_url: productLink
+          }
+        });
+      } catch (err) {
+        console.warn('Product email broadcast note:', err);
+      }
 
       btn.disabled = false;
       btn.textContent = 'Publish Product to Store';
