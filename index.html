@@ -1653,9 +1653,38 @@
       const thinkingBubble = appendSkfAiBubble('Checking catalog...', false);
       sendBtn.disabled = true;
 
+      const compactProducts = (Array.isArray(allProducts) ? allProducts : []).slice(0, 200).map(p => ({
+        id: p.id,
+        name: p.name,
+        category_id: p.category_id ?? null,
+        description: p.description || '',
+        base_price: p.base_price,
+        discount_price: p.discount_price ?? p.sale_price ?? null,
+        stock_quantity: p.stock_quantity ?? null
+      }));
+
+      const compactCategories = (Array.isArray(allCategories) ? allCategories : []).map(c => ({
+        id: c.id,
+        name: c.name
+      }));
+
+      const compactZones = (Array.isArray(shippingZones) ? shippingZones : []).map(z => ({
+        country_name: z.country_name,
+        state_name: z.state_name,
+        delivery_fee_ngn: z.delivery_fee_ngn,
+        estimated_days: z.estimated_days
+      }));
+
       try {
         const { data, error } = await sb.functions.invoke('sekiflex-ai-chat', {
-          body: { message: q, history: skfAiChatHistory }
+          body: {
+            message: q,
+            history: skfAiChatHistory,
+            products: compactProducts,
+            categories: compactCategories,
+            zones: compactZones,
+            freeShipping: Boolean(freeShippingMode)
+          }
         });
         if (error) {
           thinkingBubble.textContent = `Request failed (${error.message || 'edge function error'}). Tap the WhatsApp icon below for human help.`;
