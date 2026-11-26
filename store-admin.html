@@ -46,7 +46,7 @@
         <input id="pStock" type="number" value="10" placeholder="Stock Quantity" class="border rounded-lg px-3 py-2 text-sm" />
 
         <div class="space-y-1">
-          <label class="block text-[11px] font-semibold text-stone-500">Product Picture (Upload)</label>
+          <label class="block text-[11px] font-semibold text-stone-500">Product Picture (Upload via GitHub)</label>
           <input id="pImgFile" type="file" accept="image/*" class="w-full border rounded-lg px-3 py-1.5 text-xs bg-stone-50" />
         </div>
         <div class="space-y-1">
@@ -55,12 +55,12 @@
         </div>
 
         <div class="space-y-1">
-          <label class="block text-[11px] font-semibold text-stone-500">Optional Sample Video (Upload MP4/MOV)</label>
-          <input id="pVideoFile" type="file" accept="video/*" class="w-full border rounded-lg px-3 py-1.5 text-xs bg-stone-50" />
+          <label class="block text-[11px] font-semibold text-stone-500">Sample Video File (Disabled to Save Bandwidth)</label>
+          <input id="pVideoFile" type="file" accept="video/*" disabled class="w-full border rounded-lg px-3 py-1.5 text-xs bg-stone-100 text-stone-400 cursor-not-allowed" />
         </div>
         <div class="space-y-1">
-          <label class="block text-[11px] font-semibold text-stone-500">Or Paste Sample Video URL (Optional)</label>
-          <input id="pVideoUrl" type="url" placeholder="https://... (optional product sample video)" class="w-full border rounded-lg px-3 py-2 text-sm" />
+          <label class="block text-[11px] font-semibold text-stone-500">Paste Sample Video URL (YouTube / External Link)</label>
+          <input id="pVideoUrl" type="url" placeholder="https://... (optional product sample video link)" class="w-full border rounded-lg px-3 py-2 text-sm" />
         </div>
 
         <textarea id="pDesc" rows="2" placeholder="Product description (sizes, fabric, details)" class="md:col-span-2 border rounded-lg px-3 py-2 text-sm"></textarea>
@@ -178,7 +178,7 @@
       <div class="flex items-center justify-between gap-2">
         <div>
           <h2 class="font-bold text-base">Hero Section Video (Optional)</h2>
-          <p class="text-xs text-stone-500">Showcase a highlight or promo video at the top of your storefront</p>
+          <p class="text-xs text-stone-500">Paste an external video link (YouTube / MP4 URL) at the top of your storefront</p>
         </div>
         <div class="flex items-center gap-3 shrink-0">
           <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer">
@@ -190,12 +190,12 @@
       </div>
       <form onsubmit="saveHeroVideo(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div class="space-y-1">
-          <label class="block text-[11px] font-semibold text-stone-500">Upload Hero Video File (MP4 / WebM)</label>
-          <input id="heroVideoFile" type="file" accept="video/*" class="w-full border rounded-lg px-3 py-1.5 text-xs bg-stone-50" />
+          <label class="block text-[11px] font-semibold text-stone-500">Hero Video File (Disabled to Save Bandwidth)</label>
+          <input id="heroVideoFile" type="file" accept="video/*" disabled class="w-full border rounded-lg px-3 py-1.5 text-xs bg-stone-100 text-stone-400 cursor-not-allowed" />
         </div>
         <div class="space-y-1">
-          <label class="block text-[11px] font-semibold text-stone-500">Or Paste Hero Video URL (Optional)</label>
-          <input id="heroVideoUrl" type="url" placeholder="https://... (MP4 / WebM URL)" class="w-full border rounded-lg px-3 py-2 text-sm" />
+          <label class="block text-[11px] font-semibold text-stone-500">Paste Hero Video URL (Optional)</label>
+          <input id="heroVideoUrl" type="url" placeholder="https://... (YouTube or external video URL)" class="w-full border rounded-lg px-3 py-2 text-sm" />
         </div>
         <button type="submit" id="saveHeroVideoBtn" class="md:col-span-2 bg-stone-900 hover:bg-amber-700 text-white rounded-xl text-xs font-bold py-3 transition">
           Save Hero Video Settings
@@ -226,7 +226,7 @@
         </select>
 
         <div class="space-y-1">
-          <label class="block text-[11px] font-semibold text-stone-500">Optional Banner Picture (Upload)</label>
+          <label class="block text-[11px] font-semibold text-stone-500">Optional Banner Picture (Upload via GitHub)</label>
           <input id="bannerImgFile" type="file" accept="image/*" class="w-full border rounded-lg px-3 py-1.5 text-xs bg-stone-50" />
         </div>
         <div class="space-y-1">
@@ -278,7 +278,7 @@
         </select>
 
         <div class="space-y-1">
-          <label class="block text-[11px] font-semibold text-stone-500">Optional Banner 2 Picture (Upload)</label>
+          <label class="block text-[11px] font-semibold text-stone-500">Optional Banner 2 Picture (Upload via GitHub)</label>
           <input id="banner2ImgFile" type="file" accept="image/*" class="w-full border rounded-lg px-3 py-1.5 text-xs bg-stone-50" />
         </div>
         <div class="space-y-1">
@@ -485,6 +485,39 @@
       }
     ];
 
+    async function uploadImageToGitHub(file) {
+      const base64Content = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error('Could not read image file.'));
+        reader.onload = () => {
+          const img = new Image();
+          img.onerror = () => reject(new Error('Invalid image file.'));
+          img.onload = () => {
+            const maxW = 1000;
+            const scale = img.width > maxW ? maxW / img.width : 1;
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.round(img.width * scale);
+            canvas.height = Math.round(img.height * scale);
+            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+            resolve(dataUrl.split(',')[1]);
+          };
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      const cleanName = (file.name || 'image').replace(/\.[^.]+$/, '') + '.jpg';
+      const { data, error } = await sb.functions.invoke('upload-to-github', {
+        body: { fileName: cleanName, base64Content }
+      });
+
+      if (error || data?.error || !data?.url) {
+        throw new Error(error?.message || data?.error || 'GitHub image upload failed');
+      }
+      return data.url;
+    }
+
     async function triggerAutoCustomerPush({ title, body, url = 'https://sekiflexcollections.com/' }) {
       if (typeof window.sendSekiflexPushBroadcast !== 'function') return 0;
       try {
@@ -589,15 +622,15 @@
     async function handleAdminWallFileUpload(event, idx) {
       const file = event?.target?.files?.[0];
       if (!file) return;
-      const fileName = `wall-card-${idx + 1}-${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
-      const { error } = await sb.storage.from('product-images').upload(fileName, file);
-      if (error) {
-        return alert('Wall image upload failed: ' + error.message);
-      }
-      const { data: pub } = sb.storage.from('product-images').getPublicUrl(fileName);
-      const input = document.querySelector(`[data-adm-wall-img="${idx}"]`);
-      if (input && pub?.publicUrl) {
-        input.value = pub.publicUrl;
+      try {
+        const url = await uploadImageToGitHub(file);
+        const input = document.querySelector(`[data-adm-wall-img="${idx}"]`);
+        if (input) input.value = url;
+        alert('Wall card image uploaded to GitHub!');
+      } catch (err) {
+        alert('Wall image upload failed: ' + (err?.message || err));
+      } finally {
+        event.target.value = '';
       }
     }
 
@@ -660,23 +693,10 @@
       e.preventDefault();
       const btn = document.getElementById('saveHeroVideoBtn');
       const active = document.getElementById('heroVideoActive').checked;
-      let videoUrl = document.getElementById('heroVideoUrl').value.trim() || null;
-      const file = document.getElementById('heroVideoFile').files[0];
+      const videoUrl = document.getElementById('heroVideoUrl').value.trim() || null;
 
       btn.disabled = true;
       btn.textContent = 'Saving Hero Video...';
-
-      if (file) {
-        const fileName = `hero-video-${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
-        const { error: upErr } = await sb.storage.from('product-images').upload(fileName, file);
-        if (upErr) {
-          btn.disabled = false;
-          btn.textContent = 'Save Hero Video Settings';
-          return alert('Hero video upload failed: ' + upErr.message);
-        }
-        const { data: pub } = sb.storage.from('product-images').getPublicUrl(fileName);
-        videoUrl = pub.publicUrl;
-      }
 
       localStorage.setItem('sekiflex_hero_video_v1', JSON.stringify({ active, url: videoUrl }));
 
@@ -689,7 +709,6 @@
 
       btn.disabled = false;
       btn.textContent = 'Save Hero Video Settings';
-      document.getElementById('heroVideoFile').value = '';
 
       if (error) return alert('Error saving hero video: ' + error.message);
       alert('Hero video settings saved!');
@@ -721,15 +740,13 @@
       const file = document.getElementById('bannerImgFile').files[0];
 
       if (file) {
-        const fileName = `banner-${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
-        const { error: upErr } = await sb.storage.from('product-images').upload(fileName, file);
-        if (upErr) {
+        try {
+          bannerImgUrl = await uploadImageToGitHub(file);
+        } catch (upErr) {
           btn.disabled = false;
           btn.textContent = 'Update Banner 1';
-          return alert('Banner image upload failed: ' + upErr.message);
+          return alert('Banner image upload failed: ' + (upErr?.message || upErr));
         }
-        const { data: pub } = sb.storage.from('product-images').getPublicUrl(fileName);
-        bannerImgUrl = pub.publicUrl;
       }
 
       const { error } = await sb.from('store_settings').upsert({
@@ -777,15 +794,13 @@
       const file = document.getElementById('banner2ImgFile').files[0];
 
       if (file) {
-        const fileName = `banner2-${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
-        const { error: upErr } = await sb.storage.from('product-images').upload(fileName, file);
-        if (upErr) {
+        try {
+          banner2ImgUrl = await uploadImageToGitHub(file);
+        } catch (upErr) {
           btn.disabled = false;
           btn.textContent = 'Update Banner 2';
-          return alert('Banner 2 image upload failed: ' + upErr.message);
+          return alert('Banner 2 image upload failed: ' + (upErr?.message || upErr));
         }
-        const { data: pub } = sb.storage.from('product-images').getPublicUrl(fileName);
-        banner2ImgUrl = pub.publicUrl;
       }
 
       const { error } = await sb.from('store_settings').upsert({
@@ -845,31 +860,16 @@
       const imgFile = document.getElementById('pImgFile').files[0];
 
       if (imgFile) {
-        const fileName = `${Date.now()}-${imgFile.name.replace(/\s+/g, '_')}`;
-        const { error: upErr } = await sb.storage.from('product-images').upload(fileName, imgFile);
-        if (upErr) {
+        try {
+          imageUrl = await uploadImageToGitHub(imgFile);
+        } catch (upErr) {
           btn.disabled = false;
           btn.textContent = 'Publish Product to Store';
-          return alert('Image upload failed: ' + upErr.message);
+          return alert('Image upload failed: ' + (upErr?.message || upErr));
         }
-        const { data: pub } = sb.storage.from('product-images').getPublicUrl(fileName);
-        imageUrl = pub.publicUrl;
       }
 
-      let videoUrl = document.getElementById('pVideoUrl').value.trim() || null;
-      const vidFile = document.getElementById('pVideoFile').files[0];
-
-      if (vidFile) {
-        const vidName = `sample-vid-${Date.now()}-${vidFile.name.replace(/\s+/g, '_')}`;
-        const { error: vidErr } = await sb.storage.from('product-images').upload(vidName, vidFile);
-        if (vidErr) {
-          btn.disabled = false;
-          btn.textContent = 'Publish Product to Store';
-          return alert('Sample video upload failed: ' + vidErr.message);
-        }
-        const { data: vidPub } = sb.storage.from('product-images').getPublicUrl(vidName);
-        videoUrl = vidPub.publicUrl;
-      }
+      const videoUrl = document.getElementById('pVideoUrl').value.trim() || null;
 
       const rawCompare = document.getElementById('pComparePrice').value.trim();
       const compareVal = rawCompare === '' ? null : Number(rawCompare);
