@@ -1512,9 +1512,9 @@
 
   <!-- SEKIFLEX AI ASSISTANT CIRCULAR FLOATING BUTTON & MODAL -->
   <button type="button" onclick="openSekiflexAiChat()" aria-label="Ask Sekiflex AI" title="Ask Sekiflex AI"
-    class="fixed right-3 top-1/2 -translate-y-1/2 z-40 w-14 h-14 rounded-full bg-gradient-to-br from-amber-400 via-amber-300 to-yellow-200 hover:from-amber-300 hover:to-yellow-100 text-black flex flex-col items-center justify-center shadow-2xl border-2 border-black transition active:scale-95">
-    <span class="text-sm leading-none text-black">✨</span>
-    <span class="text-[9px] font-black leading-tight tracking-tight text-black mt-0.5">AI</span>
+    class="fixed right-3 top-1/2 -translate-y-1/2 z-40 w-14 h-14 rounded-full bg-[#fffbeb] hover:bg-white text-stone-950 flex flex-col items-center justify-center border-[2.5px] border-amber-400 shadow-[0_0_22px_rgba(251,191,36,0.75),0_8px_24px_rgba(0,0,0,0.85)] transition active:scale-95">
+    <span class="text-sm leading-none text-amber-600">✨</span>
+    <span class="text-[9px] font-black leading-tight tracking-tight text-stone-950 mt-0.5">AI</span>
   </button>
 
   <div id="sekiflexAiModal" onclick="if(event.target === this) closeSekiflexAiChat();"
@@ -1786,7 +1786,25 @@
       const thinkingBubble = appendSkfAiBubble('Preparing your response...', false);
       sendBtn.disabled = true;
 
-      const compactProducts = (Array.isArray(allProducts) ? allProducts : []).slice(0, 200).map(p => ({
+      const qWords = q.toLowerCase().split(/\W+/).filter(w => w.length >= 2);
+      const rawProds = Array.isArray(allProducts) ? allProducts : [];
+      const rankedProds = [...rawProds]
+        .map(p => {
+          const catName = (allCategories.find(c => String(c.id) === String(p.category_id))?.name || '').toLowerCase();
+          const hay = `${p.name || ''} ${catName} ${p.description || ''}`.toLowerCase();
+          let score = 0;
+          qWords.forEach(w => {
+            if ((p.name || '').toLowerCase().includes(w)) score += 4;
+            else if (catName.includes(w)) score += 3;
+            else if (hay.includes(w)) score += 1;
+          });
+          return { p, score };
+        })
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 20)
+        .map(({ p }) => p);
+
+      const compactProducts = rankedProds.map(p => ({
         id: p.id,
         name: p.name,
         category_id: p.category_id ?? null,
@@ -1812,7 +1830,7 @@
         const { data, error } = await sb.functions.invoke('sekiflex-ai-chat', {
           body: {
             message: q,
-            history: skfAiChatHistory,
+            history: skfAiChatHistory.slice(-4),
             products: compactProducts,
             categories: compactCategories,
             zones: compactZones,
