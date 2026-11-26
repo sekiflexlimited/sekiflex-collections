@@ -2922,17 +2922,28 @@
         }
         if (ord) ord.status = 'Cancellation requested';
         renderCustomerOrderHistory();
+
+        const orderTotal = ord ? (Number(ord.order_amount || 0) + Number(ord.delivery_amount || 0)) : 0;
+        const origItems = ord?.package_description || 'Store Order';
+
         try {
           await sb.functions.invoke('sekiflex-order-notifications', {
             body: {
-              event_type: 'cancellation_requested',
+              event_type: 'new_order',
               tracking_number: trackingNumber,
-              customer_name: currentCustomer?.name || '',
-              customer_email: currentCustomer?.email || '',
-              status: 'Cancellation requested'
+              customer_name: `${currentCustomer?.name || ord?.customer_name || 'Customer'} (CANCELLATION REQUEST)`,
+              customer_email: currentCustomer?.email || ord?.customer_email || '',
+              customer_phone: currentCustomer?.phone || ord?.customer_phone || '',
+              destination: ord?.destination || 'See Admin Hub',
+              items: `⚠️ CANCELLATION REQUESTED: ${origItems}`,
+              total_amount: orderTotal,
+              payment_method: ord?.payment_reference || 'Cancellation Review',
+              status: 'Cancellation requested',
+              payment_status: ord?.payment_status || 'Review required'
             }
           });
         } catch (nErr) {}
+
         await showSkfAlert(`Cancellation request sent for ${trackingNumber}. Awaiting admin approval.`, 'Cancellation Requested');
       } catch (err) {
         await showSkfAlert('Error sending cancellation request.', 'Error');
