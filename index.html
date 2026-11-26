@@ -1623,13 +1623,128 @@
       document.getElementById('sekiflexAiModal').classList.add('hidden');
     }
 
+    function triggerSekiflexAiAction(actionKey) {
+      closeSekiflexAiChat();
+      if (actionKey === 'track') {
+        window.location.href = 'track.html';
+      } else if (actionKey === 'cart') {
+        openCartReview();
+      } else if (actionKey === 'categories') {
+        openSplitCategoryStore();
+      } else if (actionKey === 'delivery' || actionKey === 'refund' || actionKey === 'support' || actionKey === 'orders' || actionKey === 'about' || actionKey === 'privacy' || actionKey === 'terms') {
+        openInfoModal(actionKey);
+      }
+    }
+
+    function openProductFromAiChat(productId) {
+      closeSekiflexAiChat();
+      setTimeout(() => {
+        openProductDetail(productId);
+      }, 60);
+    }
+
+    function formatAiTextWithLinks(rawText) {
+      const escaped = String(rawText || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      return escaped.replace(/(https?:\/\/[^\s<]+)/g, (url) => {
+        return `<a href="${url}" target="_blank" rel="noopener" class="underline font-bold text-amber-300 break-all">${url}</a>`;
+      });
+    }
+
     function appendSkfAiBubble(text, isUser = false) {
       const box = document.getElementById('skfAiMessages');
       const div = document.createElement('div');
-      div.className = isUser
-        ? 'ml-8 bg-amber-400 text-black font-bold rounded-2xl px-3.5 py-2.5 leading-relaxed whitespace-pre-line'
-        : 'mr-4 bg-[#1e1810] border border-amber-400/25 text-stone-100 rounded-2xl px-3.5 py-2.5 leading-relaxed whitespace-pre-line';
-      div.textContent = text;
+
+      if (isUser) {
+        div.className = 'ml-8 bg-amber-400 text-black font-bold rounded-2xl px-3.5 py-2.5 leading-relaxed whitespace-pre-line';
+        div.textContent = text;
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+        return div;
+      }
+
+      const raw = String(text || '');
+      const productIds = [];
+      const actions = [];
+
+      const cleanText = raw
+        .replace(/\[\[\s*PRODUCT\s*:\s*([^\]]+)\s*\]\]/gi, (_, id) => {
+          const cleanId = String(id || '').trim();
+          if (cleanId && !productIds.includes(cleanId)) productIds.push(cleanId);
+          return '';
+        })
+        .replace(/\[\[\s*ACTION\s*:\s*([^\]]+)\s*\]\]/gi, (_, act) => {
+          const cleanAct = String(act || '').trim().toLowerCase();
+          if (cleanAct && !actions.includes(cleanAct)) actions.push(cleanAct);
+          return '';
+        })
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+
+      div.className = 'mr-3 bg-[#1e1810] border border-amber-400/25 text-stone-100 rounded-2xl p-3 leading-relaxed space-y-2.5';
+
+      const textNode = document.createElement('div');
+      textNode.className = 'whitespace-pre-line';
+      textNode.innerHTML = formatAiTextWithLinks(cleanText);
+      div.appendChild(textNode);
+
+      if (productIds.length) {
+        const cardsWrap = document.createElement('div');
+        cardsWrap.className = 'space-y-1.5 pt-1 border-t border-amber-400/15';
+        productIds.forEach((pid) => {
+          const prod = allProducts.find(p => String(p.id) === String(pid));
+          if (!prod) return;
+          const img = getOwnProductImage(prod);
+          const { effectivePrice } = getProductPricing(prod);
+          const safeId = String(prod.id).replace(/'/g, "\\'");
+
+          const cardBtn = document.createElement('button');
+          cardBtn.type = 'button';
+          cardBtn.onclick = () => openProductFromAiChat(safeId);
+          cardBtn.className = 'w-full flex items-center gap-2.5 bg-[#14110c] hover:bg-[#261e12] border border-amber-400/45 rounded-xl p-2 text-left transition';
+          cardBtn.innerHTML = `
+            <div class="w-11 h-11 rounded-lg overflow-hidden bg-stone-950 border border-amber-400/30 shrink-0">
+              ${img
+                ? `<img src="${img}" alt="" loading="eager" decoding="sync" class="w-full h-full object-cover object-top" />`
+                : renderBrandedPlaceholderHtml(prod.name)}
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="text-xs font-bold text-white truncate">${String(prod.name || 'Product').replace(/</g, '&lt;')}</p>
+              <p class="text-[11px] font-extrabold text-amber-400">₦${Number(effectivePrice).toLocaleString()}</p>
+            </div>
+            <span class="bg-amber-400 text-black font-black text-[10px] px-2.5 py-1 rounded-full shrink-0">View →</span>
+          `;
+          cardsWrap.appendChild(cardBtn);
+        });
+        if (cardsWrap.children.length) div.appendChild(cardsWrap);
+      }
+
+      const actionLabels = {
+        track: '📦 Track Order',
+        cart: '🛒 Open Cart',
+        categories: '🗂️ Browse Categories',
+        delivery: '🚚 Delivery Policy',
+        refund: '💳 Refund & Payment',
+        support: '🎧 Customer Support'
+      };
+
+      if (actions.length) {
+        const actWrap = document.createElement('div');
+        actWrap.className = 'flex flex-wrap gap-1.5 pt-1';
+        actions.forEach((act) => {
+          if (!actionLabels[act]) return;
+          const actBtn = document.createElement('button');
+          actBtn.type = 'button';
+          actBtn.onclick = () => triggerSekiflexAiAction(act);
+          actBtn.className = 'bg-amber-500/20 hover:bg-amber-500/35 border border-amber-400/45 text-amber-300 font-extrabold text-[11px] px-3 py-1.5 rounded-full transition';
+          actBtn.textContent = `${actionLabels[act]} →`;
+          actWrap.appendChild(actBtn);
+        });
+        if (actWrap.children.length) div.appendChild(actWrap);
+      }
+
       box.appendChild(div);
       box.scrollTop = box.scrollHeight;
       return div;
@@ -1691,7 +1806,8 @@
           return;
         }
         const reply = data?.reply || 'No reply text returned. Tap the WhatsApp icon below for human help.';
-        thinkingBubble.textContent = reply;
+        thinkingBubble.remove();
+        appendSkfAiBubble(reply, false);
         skfAiChatHistory.push({ role: 'user', text: q }, { role: 'assistant', text: reply });
       } catch (err) {
         const errMsg = err instanceof Error ? err.message : String(err);
