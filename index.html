@@ -1510,11 +1510,11 @@
     </div>
   </div>
 
-  <!-- SEKIFLEX AI ASSISTANT BUTTON & MODAL -->
-  <button type="button" onclick="openSekiflexAiChat()"
-    class="fixed bottom-24 right-3 z-40 inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-yellow-300 hover:from-amber-300 hover:to-yellow-200 text-black font-black text-xs px-4 py-2.5 rounded-full shadow-2xl border-2 border-black transition">
-    <span class="text-black">✨</span>
-    <span class="text-black font-black">Ask Sekiflex AI</span>
+  <!-- SEKIFLEX AI ASSISTANT CIRCULAR FLOATING BUTTON & MODAL -->
+  <button type="button" onclick="openSekiflexAiChat()" aria-label="Ask Sekiflex AI" title="Ask Sekiflex AI"
+    class="fixed right-3 top-1/2 -translate-y-1/2 z-40 w-14 h-14 rounded-full bg-gradient-to-br from-amber-400 via-amber-300 to-yellow-200 hover:from-amber-300 hover:to-yellow-100 text-black flex flex-col items-center justify-center shadow-2xl border-2 border-black transition active:scale-95">
+    <span class="text-sm leading-none text-black">✨</span>
+    <span class="text-[9px] font-black leading-tight tracking-tight text-black mt-0.5">AI</span>
   </button>
 
   <div id="sekiflexAiModal" onclick="if(event.target === this) closeSekiflexAiChat();"
