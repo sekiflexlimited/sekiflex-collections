@@ -550,17 +550,29 @@
       let failed = 0;
 
       try {
-        const [{ data: prods }, { data: settings }] = await Promise.all([
-          sb.from('products').select('id, name, images, image_url'),
+        const [{ data: prods, error: prodErr }, { data: settings, error: setErr }] = await Promise.all([
+          sb.from('products').select('id, name, images'),
           sb.from('store_settings').select('id, banner_image_url')
         ]);
+
+        if (prodErr) throw new Error('Products query failed: ' + prodErr.message);
+        if (setErr) throw new Error('Settings query failed: ' + setErr.message);
 
         const isSupabaseUrl = (u) => typeof u === 'string' && u.includes('supabase.co/storage');
 
         for (const p of (prods || [])) {
-          const imgs = Array.isArray(p.images) ? [...p.images] : [];
-          let changed = false;
+          let imgs = p.images;
+          const wasString = typeof imgs === 'string';
+          if (wasString) {
+            try {
+              imgs = JSON.parse(imgs);
+            } catch (_) {
+              imgs = imgs ? [imgs] : [];
+            }
+          }
+          if (!Array.isArray(imgs)) continue;
 
+          let changed = false;
           for (let i = 0; i < imgs.length; i++) {
             if (isSupabaseUrl(imgs[i])) {
               status.textContent = `Moving ${p.name || 'product'} (${moved + 1})...`;
@@ -575,23 +587,15 @@
             }
           }
 
-          let singleUrl = p.image_url;
-          if (isSupabaseUrl(singleUrl)) {
-            status.textContent = `Moving ${p.name || 'product'} (${moved + 1})...`;
-            try {
-              singleUrl = await migrateUrlToGitHub(singleUrl);
-              changed = true;
-              moved++;
-            } catch (err) {
-              console.warn('Skipped image_url:', err);
+          if (changed) {
+            const { error: upErr } = await sb
+              .from('products')
+              .update({ images: wasString ? JSON.stringify(imgs) : imgs })
+              .eq('id', p.id);
+            if (upErr) {
+              console.warn('DB update failed for product:', p.id, upErr.message);
               failed++;
             }
-          }
-
-          if (changed) {
-            const patch = { images: imgs };
-            if (p.image_url !== undefined) patch.image_url = singleUrl;
-            await sb.from('products').update(patch).eq('id', p.id);
           }
         }
 
@@ -1057,7 +1061,11 @@
     }
 
     function getProductPicture(prod) {
-      return (Array.isArray(prod?.images) && prod.images[0]) || prod?.image_url || 'https://placehold.co/120x120?text=No+Photo';
+      let imgs = prod?.images;
+      if (typeof imgs === 'string') {
+        try { imgs = JSON.parse(imgs); } catch (_) { imgs = imgs ? [imgs] : []; }
+      }
+      return (Array.isArray(imgs) && imgs[0]) || 'https://placehold.co/120x120?text=No+Photo';
     }
 
     function getProductSampleVideo(prod) {
