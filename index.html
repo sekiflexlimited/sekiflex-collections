@@ -5282,7 +5282,8 @@
       updatePushBadge();
       trackLiveVisitorHeartbeat();
       lastRotationSlot = Math.floor(Date.now() / (ROTATION_MINUTES * 60 * 1000));
-      applySocialLinks();
+     watchLiveOrdersForScreenPush();
+    applySocialLinks();     
       selectStarRating(5);
       renderReviews();
       populateNigeriaStates();
