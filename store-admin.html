@@ -27,16 +27,62 @@
     <header class="bg-white p-4 rounded-2xl shadow-sm flex flex-wrap items-center justify-between gap-2">
       <div>
         <h1 class="font-bold text-lg">Sekiflex Store Manager</h1>
-        <p class="text-xs text-stone-500">Manage push broadcasts, hero video, promo banners, wall promo cards, products, sample videos, stock, &amp; shipping</p>
+        <p class="text-xs text-stone-500">Add new products first, then manage inventory, push broadcasts, hero video, banners, wall cards, stock, &amp; shipping</p>
       </div>
       <div class="flex gap-2">
-        <a href="admin.html" class="text-xs px-3 py-2 rounded-lg border font-medium">Dispatch Admin</a>
+        <a href="admin-hub.html" class="text-xs px-3 py-2 rounded-lg border font-medium">Admin Hub</a>
         <a href="index.html" target="_blank" class="text-xs px-3 py-2 rounded-lg bg-amber-600 text-white font-semibold">View Store</a>
         <button onclick="logout()" class="text-xs px-3 py-2 rounded-lg bg-stone-200 font-medium">Logout</button>
       </div>
     </header>
 
-    <!-- Send Push Notification Broadcast to Customers -->
+    <!-- 1. Add Product Card (At Top, With Optional Sample Video) -->
+    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-4 border-l-4 border-amber-600">
+      <h2 class="font-bold text-base">Add New Product</h2>
+      <form onsubmit="addProduct(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <input required id="pName" type="text" placeholder="Product Name (e.g. Sekiflex Star Wide-Leg Jeans)" class="border rounded-lg px-3 py-2 text-sm" />
+        <input required id="pPrice" type="number" placeholder="Selling Price in NGN (e.g. 8000)" class="border rounded-lg px-3 py-2 text-sm" />
+        <input id="pComparePrice" type="number" placeholder="Original / Crossed-Out Price in NGN (e.g. 10000, optional)" class="border rounded-lg px-3 py-2 text-sm" />
+        <input id="pStock" type="number" value="10" placeholder="Stock Quantity" class="border rounded-lg px-3 py-2 text-sm" />
+
+        <div class="space-y-1">
+          <label class="block text-[11px] font-semibold text-stone-500">Product Picture (Upload)</label>
+          <input id="pImgFile" type="file" accept="image/*" class="w-full border rounded-lg px-3 py-1.5 text-xs bg-stone-50" />
+        </div>
+        <div class="space-y-1">
+          <label class="block text-[11px] font-semibold text-stone-500">Or Paste Product Image URL</label>
+          <input id="pImgUrl" type="url" placeholder="https://... (optional if uploading photo)" class="w-full border rounded-lg px-3 py-2 text-sm" />
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-[11px] font-semibold text-stone-500">Optional Sample Video (Upload MP4/MOV)</label>
+          <input id="pVideoFile" type="file" accept="video/*" class="w-full border rounded-lg px-3 py-1.5 text-xs bg-stone-50" />
+        </div>
+        <div class="space-y-1">
+          <label class="block text-[11px] font-semibold text-stone-500">Or Paste Sample Video URL (Optional)</label>
+          <input id="pVideoUrl" type="url" placeholder="https://... (optional product sample video)" class="w-full border rounded-lg px-3 py-2 text-sm" />
+        </div>
+
+        <textarea id="pDesc" rows="2" placeholder="Product description (sizes, fabric, details)" class="md:col-span-2 border rounded-lg px-3 py-2 text-sm"></textarea>
+
+        <label class="md:col-span-2 flex items-center gap-2 text-xs font-semibold text-purple-800 bg-purple-50 border border-purple-200 rounded-xl px-3 py-2 cursor-pointer">
+          <input id="prodAutoPush" type="checkbox" checked class="accent-purple-700 w-4 h-4" />
+          <span>🔔 Automatically notify all subscribed customers via Push Notification when published</span>
+        </label>
+
+        <button type="submit" id="saveProdBtn" class="md:col-span-2 bg-stone-900 hover:bg-amber-700 text-white py-2.5 rounded-xl text-sm font-bold transition">
+          Publish Product to Store
+        </button>
+      </form>
+    </section>
+
+    <!-- 2. Active Products List -->
+    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3">
+      <h2 class="font-bold text-base">Live Store Products</h2>
+      <div id="adminProducts" class="space-y-2"></div>
+    </section>
+
+    <!-- 3. Send Push Notification Broadcast to Customers -->
     <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-purple-600">
       <div class="flex items-center justify-between gap-2">
         <div>
@@ -67,7 +113,7 @@
       </form>
     </section>
 
-    <!-- Hero Section Video Card -->
+    <!-- 4. Hero Section Video Card -->
     <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-stone-900">
       <div class="flex items-center justify-between gap-2">
         <div>
@@ -94,7 +140,7 @@
       </form>
     </section>
 
-    <!-- Store Promo / Announcement Banner #1 Card -->
+    <!-- 5. Store Promo / Announcement Banner #1 Card -->
     <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-amber-500">
       <div class="flex items-center justify-between gap-2">
         <h2 class="font-bold text-base">Announcement Banner #1 (Store Promo)</h2>
@@ -143,7 +189,7 @@
       </form>
     </section>
 
-    <!-- Second Announcement Banner #2 Card -->
+    <!-- 6. Second Announcement Banner #2 Card -->
     <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-emerald-600">
       <div class="flex items-center justify-between gap-2">
         <h2 class="font-bold text-base">Announcement Banner #2 (Second Scrolling Notice)</h2>
@@ -192,7 +238,7 @@
       </form>
     </section>
 
-    <!-- Wall-Hung Promo Cards Manager (Admin Only) -->
+    <!-- 7. Wall-Hung Promo Cards Manager (Admin Only) -->
     <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-amber-600">
       <div class="flex flex-wrap items-center justify-between gap-2">
         <div>
@@ -209,47 +255,7 @@
       </button>
     </section>
 
-    <!-- Add Product Card (With Optional Sample Video) -->
-    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-4">
-      <h2 class="font-bold text-base">Add New Product</h2>
-      <form onsubmit="addProduct(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <input required id="pName" type="text" placeholder="Product Name (e.g. Sekiflex Star Wide-Leg Jeans)" class="border rounded-lg px-3 py-2 text-sm" />
-        <input required id="pPrice" type="number" placeholder="Selling Price in NGN (e.g. 8000)" class="border rounded-lg px-3 py-2 text-sm" />
-        <input id="pComparePrice" type="number" placeholder="Original / Crossed-Out Price in NGN (e.g. 10000, optional)" class="border rounded-lg px-3 py-2 text-sm" />
-        <input id="pStock" type="number" value="10" placeholder="Stock Quantity" class="border rounded-lg px-3 py-2 text-sm" />
-
-        <div class="space-y-1">
-          <label class="block text-[11px] font-semibold text-stone-500">Product Picture (Upload)</label>
-          <input id="pImgFile" type="file" accept="image/*" class="w-full border rounded-lg px-3 py-1.5 text-xs bg-stone-50" />
-        </div>
-        <div class="space-y-1">
-          <label class="block text-[11px] font-semibold text-stone-500">Or Paste Product Image URL</label>
-          <input id="pImgUrl" type="url" placeholder="https://... (optional if uploading photo)" class="w-full border rounded-lg px-3 py-2 text-sm" />
-        </div>
-
-        <div class="space-y-1">
-          <label class="block text-[11px] font-semibold text-stone-500">Optional Sample Video (Upload MP4/MOV)</label>
-          <input id="pVideoFile" type="file" accept="video/*" class="w-full border rounded-lg px-3 py-1.5 text-xs bg-stone-50" />
-        </div>
-        <div class="space-y-1">
-          <label class="block text-[11px] font-semibold text-stone-500">Or Paste Sample Video URL (Optional)</label>
-          <input id="pVideoUrl" type="url" placeholder="https://... (optional product sample video)" class="w-full border rounded-lg px-3 py-2 text-sm" />
-        </div>
-
-        <textarea id="pDesc" rows="2" placeholder="Product description (sizes, fabric, details)" class="md:col-span-2 border rounded-lg px-3 py-2 text-sm"></textarea>
-
-        <label class="md:col-span-2 flex items-center gap-2 text-xs font-semibold text-purple-800 bg-purple-50 border border-purple-200 rounded-xl px-3 py-2 cursor-pointer">
-          <input id="prodAutoPush" type="checkbox" checked class="accent-purple-700 w-4 h-4" />
-          <span>🔔 Automatically notify all subscribed customers via Push Notification when published</span>
-        </label>
-
-        <button type="submit" id="saveProdBtn" class="md:col-span-2 bg-stone-900 text-white py-2.5 rounded-xl text-sm font-semibold">
-          Publish Product to Store
-        </button>
-      </form>
-    </section>
-
-    <!-- Free Shipping Promo Toggle Card -->
+    <!-- 8. Free Shipping Promo Toggle Card -->
     <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3 border-l-4 border-emerald-600">
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div>
@@ -263,7 +269,7 @@
       </div>
     </section>
 
-    <!-- Shipping Zone Quick Add -->
+    <!-- 9. Shipping Zone Quick Add -->
     <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3">
       <h2 class="font-bold text-base">Set Delivery Rate by State / Country</h2>
       <form onsubmit="addZone(event)" class="grid grid-cols-2 md:grid-cols-4 gap-2">
@@ -273,12 +279,6 @@
         <button type="submit" class="bg-amber-600 text-white rounded-lg text-xs font-bold py-2">Save Rate</button>
       </form>
       <div id="zonesList" class="text-xs text-stone-600 flex flex-wrap gap-2"></div>
-    </section>
-
-    <!-- Active Products List -->
-    <section class="bg-white p-5 rounded-2xl shadow-sm space-y-3">
-      <h2 class="font-bold text-base">Live Store Products</h2>
-      <div id="adminProducts" class="space-y-2"></div>
     </section>
   </div>
 
